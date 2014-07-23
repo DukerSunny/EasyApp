@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/EasyAppFramework.iml" filepath="$PROJECT_DIR$/EasyAppFramework.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libeasyappframework/libeasyappframework.iml" filepath="$PROJECT_DIR$/libeasyappframework/libeasyappframework.iml" />
+      <module fileurl="file://$PROJECT_DIR$/samples/samples.iml" filepath="$PROJECT_DIR$/samples/samples.iml" />
+    </modules>
+  </component>
+</project>
+

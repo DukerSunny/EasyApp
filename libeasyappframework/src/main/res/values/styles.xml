@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="mm">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="mw">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="ww">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="wm">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="mm.h">
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="mm.v">
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="mw.h">
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="mw.v">
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="ww.h">
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="ww.v">
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="mww">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="mmw">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="mww.v">
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="mww.h">
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="mmw.v">
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="mmw.h">
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+</resources>

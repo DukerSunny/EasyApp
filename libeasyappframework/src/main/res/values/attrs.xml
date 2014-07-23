@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="app">
+        <attr name="buttonGravity" format="integer">
+            <enum name="left" value="0"/>
+            <enum name="right" value="1"/>
+        </attr>
+        <attr name="buttonHeight" format="dimension"/>
+        <attr name="buttonOff" format="reference"/>
+        <attr name="buttonOn" format="reference"/>
+        <attr name="buttonPadding" format="dimension"/>
+        <attr name="buttonWidth" format="dimension"/>
+        <attr name="checked" format="boolean"/>
+        <attr name="emptyText" format="string"/>
+        <attr name="entry" format="reference"/>
+        <attr name="listTextColor" format="color"/>
+        <attr name="listTextSize" format="dimension"/>
+        <attr name="listTextPadding" format="dimension"/>
+        <attr name="ratio" format="float"/>
+        <attr name="retryColor" format="color"/>
+        <attr name="showEmptyRetry" format="boolean"/>
+        <attr name="showProgress" format="boolean"/>
+        <attr name="summary" format="string"/>
+        <attr name="summaryColor" format="color"/>
+        <attr name="summarySize" format="dimension"/>
+        <attr name="summaryOn" format="string"/>
+        <attr name="summaryOff" format="string"/>
+        <attr name="text" format="string"/>
+        <attr name="textBackground" format="reference"/>
+        <attr name="textColor" format="color"/>
+        <attr name="textPadding" format="dimension"/>
+        <attr name="textSize" format="dimension"/>
+        <attr name="thumb" format="reference"/>
+        <attr name="thumbSize" format="dimension"/>
+
+        <attr name="checkSettingViewStyle" format="reference"/>
+        <attr name="childSettingViewStyle" format="reference"/>
+        <attr name="drawableCheckBoxStyle" format="reference"/>
+        <attr name="drawableRadioButtonStyle" format="reference"/>
+        <attr name="infoViewStyle" format="reference"/>
+        <attr name="listSettingViewStyle" format="reference"/>
+        <attr name="ratioImageViewStyle" format="reference"/>
+        <attr name="textSettingViewStyle" format="reference"/>
+        <attr name="toastViewStyle" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="CheckSettingView">
+        <attr name="buttonGravity"/>
+        <attr name="buttonHeight"/>
+        <attr name="buttonOff"/>
+        <attr name="buttonOn"/>
+        <attr name="buttonPadding"/>
+        <attr name="buttonWidth"/>
+        <attr name="checked"/>
+        <attr name="summaryColor"/>
+        <attr name="summaryOn"/>
+        <attr name="summaryOff"/>
+        <attr name="summarySize"/>
+        <attr name="text"/>
+        <attr name="textColor"/>
+        <attr name="textSize"/>
+        <attr name="thumb"/>
+        <attr name="thumbSize"/>
+    </declare-styleable>
+
+    <declare-styleable name="ChildSettingView">
+        <attr name="buttonGravity"/>
+        <attr name="buttonHeight"/>
+        <attr name="buttonOff"/>
+        <attr name="buttonOn"/>
+        <attr name="buttonPadding"/>
+        <attr name="buttonWidth"/>
+        <attr name="checked"/>
+        <attr name="text"/>
+        <attr name="textColor"/>
+        <attr name="textSize"/>
+    </declare-styleable>
+
+    <declare-styleable name="InfoView">
+        <attr name="emptyText"/>
+        <attr name="retryColor"/>
+        <attr name="showEmptyRetry"/>
+        <attr name="text"/>
+        <attr name="textColor"/>
+        <attr name="textSize"/>
+    </declare-styleable>
+
+    <declare-styleable name="ListSettingView">
+        <attr name="buttonGravity"/>
+        <attr name="buttonHeight"/>
+        <attr name="buttonPadding"/>
+        <attr name="buttonWidth"/>
+        <attr name="entry"/>
+        <attr name="listTextColor"/>
+        <attr name="listTextSize"/>
+        <attr name="listTextPadding"/>
+        <attr name="summary"/>
+        <attr name="summaryColor"/>
+        <attr name="summarySize"/>
+        <attr name="text"/>
+        <attr name="textColor"/>
+        <attr name="textSize"/>
+        <attr name="thumb"/>
+        <attr name="thumbSize"/>
+    </declare-styleable>
+
+    <declare-styleable name="RatioImageView">
+        <attr name="ratio"/>
+    </declare-styleable>
+
+    <declare-styleable name="TextSettingView">
+        <attr name="summary"/>
+        <attr name="summaryColor"/>
+        <attr name="summarySize"/>
+        <attr name="text"/>
+        <attr name="textColor"/>
+        <attr name="textSize"/>
+    </declare-styleable>
+
+    <declare-styleable name="ToastView">
+        <attr name="showProgress"/>
+        <attr name="text"/>
+        <attr name="textColor"/>
+        <attr name="textSize"/>
+    </declare-styleable>
+
+</resources>

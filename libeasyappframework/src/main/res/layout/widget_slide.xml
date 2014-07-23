@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    style="@style/mw"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="@dimen/widget_xlarge">
+
+    <com.harreke.utils.widgets.ChildViewPager
+        android:id="@+id/slide_page"
+        style="@style/mw"/>
+
+    <LinearLayout
+        android:id="@+id/slide_indicator"
+        style="@style/ww.h"
+        android:layout_gravity="right|bottom"
+        android:divider="@drawable/shape_dummy_vertical_small"
+        android:gravity="right|center_vertical"
+        android:padding="8dp"
+        android:showDividers="middle"/>
+
+</FrameLayout>

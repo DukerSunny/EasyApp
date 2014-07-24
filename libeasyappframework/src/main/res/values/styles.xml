@@ -45,6 +45,14 @@
         <item name="android:orientation">vertical</item>
     </style>
 
+    <style name="wm.h">
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="wm.v">
+        <item name="android:orientation">vertical</item>
+    </style>
+
     <style name="mww">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -53,6 +61,12 @@
 
     <style name="mmw">
         <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="wmw">
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_weight">1</item>
     </style>
@@ -70,6 +84,14 @@
     </style>
 
     <style name="mmw.h">
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="wmw.v">
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="wmw.h">
         <item name="android:orientation">horizontal</item>
     </style>
 

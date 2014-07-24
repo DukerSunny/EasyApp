@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    style="@style/mw.h"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/mw.h"
     android:gravity="center"
     android:padding="10dp"
     tools:ignore="UseCompoundDrawables">
@@ -12,11 +11,11 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginRight="10dp"
-        android:contentDescription="@null"/>
+        android:contentDescription="@null" />
 
     <TextView
         android:id="@+id/iconpopuplist_title"
         style="@style/ww"
-        android:textSize="@dimen/text_title"/>
+        android:textSize="@dimen/text_title" />
 
 </LinearLayout>

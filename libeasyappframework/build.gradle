@@ -5,7 +5,7 @@ android {
     buildToolsVersion '20.0.0'
 
     defaultConfig {
-        applicationId "com.harreke.utils"
+        applicationId "com.harreke.easyappframework"
         minSdkVersion 14
         targetSdkVersion 'L'
         versionCode 1

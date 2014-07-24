@@ -19,7 +19,7 @@
         <attr name="listTextPadding" format="dimension"/>
         <attr name="ratio" format="float"/>
         <attr name="retryColor" format="color"/>
-        <attr name="showEmptyRetry" format="boolean"/>
+        <attr name="showRetryWhenEmpty" format="boolean"/>
         <attr name="showProgress" format="boolean"/>
         <attr name="summary" format="string"/>
         <attr name="summaryColor" format="color"/>
@@ -80,7 +80,7 @@
     <declare-styleable name="InfoView">
         <attr name="emptyText"/>
         <attr name="retryColor"/>
-        <attr name="showEmptyRetry"/>
+        <attr name="showRetryWhenEmpty"/>
         <attr name="text"/>
         <attr name="textColor"/>
         <attr name="textSize"/>

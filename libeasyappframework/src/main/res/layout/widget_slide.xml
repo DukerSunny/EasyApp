@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/mw"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:padding="@dimen/widget_xlarge">
 
-    <com.harreke.utils.widgets.ChildViewPager
+    <com.harreke.easyappframework.widgets.ChildViewPager
         android:id="@+id/slide_page"
-        style="@style/mw"/>
+        style="@style/mw" />
 
     <LinearLayout
         android:id="@+id/slide_indicator"
@@ -15,6 +14,6 @@
         android:divider="@drawable/shape_dummy_vertical_small"
         android:gravity="right|center_vertical"
         android:padding="8dp"
-        android:showDividers="middle"/>
+        android:showDividers="middle" />
 
 </FrameLayout>

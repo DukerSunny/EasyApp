@@ -1,5 +1,5 @@
 <manifest
-    package="com.harreke.utils"
+    package="com.harreke.easyappframework"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application android:allowBackup="false"/>

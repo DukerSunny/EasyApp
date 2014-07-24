@@ -64,13 +64,11 @@
     <color name="TransparentWhite">#C0FFFFFF</color>
     <color name="TransparentBlue">#8027B6E0</color>
     <color name="TransparentDark">#cc000000</color>
-    <color name="TransparentBright">#33ffffff</color>
+    <color name="TransparentLight">#33ffffff</color>
 
     <color name="Dark">#303030</color>
-    <color name="Fog">#939393</color>
-    <color name="LightGray">#BBBBBB</color>
-
-    <color name="LightBlack">#464646</color>
+    <color name="Gray_Light">#BBBBBB</color>
+    <color name="Black_Light">#464646</color>
 
     <color name="text_title">#303030</color>
     <color name="text_content">#848484</color>
@@ -78,6 +76,6 @@
 
     <color name="Theme">#27B6E0</color>
     <color name="Theme_Light">#7DD3EC</color>
-    <color name="LightBlue_Transparent">#8027B6E0</color>
-    <color name="DarkBlue">#5BA7DD</color>
+    <color name="Themet_Transparent">#8027B6E0</color>
+    <color name="Theme_Dark">#5BA7DD</color>
 </resources>

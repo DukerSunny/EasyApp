@@ -22,7 +22,7 @@
     </style>
 
     <style name="App.Splash" parent="@style/App.NoActionBar">
-        <item name="android:windowBackground">@color/DarkBlue</item>
+        <item name="android:windowBackground">@color/Theme_Dark</item>
     </style>
 
     <style name="App.Activity">
@@ -76,7 +76,7 @@
         <item name="android:padding">8dp</item>
         <item name="emptyText">@string/list_empty</item>
         <item name="retryColor">@color/Theme</item>
-        <item name="showEmptyRetry">true</item>
+        <item name="showRetryWhenEmpty">true</item>
         <item name="text">@string/list_loading</item>
         <item name="textColor">@color/text_content</item>
         <item name="textSize">@dimen/text_content_middle</item>

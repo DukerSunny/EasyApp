@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    style文件里已经预定义好快捷布局样式：
+    style="@style/XYZ.O"
+
+    X代表android:layout_width的值（所有布局通用）
+    Y代表android:layout_height的值（所有布局通用）
+    Z代表android:layout_weight的值（仅在LinearLayout或继承自LinearLayout的布局等有效）
+    .O代表android:orientation的值（仅在LinearLayout或继承自LinearLayout的布局等有效）
+
+    X、Y取值范围：
+    m代表match_parent
+    w代表wrap_content
+
+    Z取值范围：
+    空
+    w代表weight为1
+
+    .O取值范围
+    空
+    h代表orientation为horizontal
+    v代表orientation为vertical
+
+    举例：
+    1、某一LinearLayout布局
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    可以化简为
+    style="@style/mw.v"
+
+    2、某一TextView布局
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:weight="1"
+    可以化简为
+    style="@style/wmw"
+-->
+<LinearLayout
+    style="@style/mm.v"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/Theme"
+    android:gravity="center">
+
+    <TextView
+        style="@style/ww"
+        android:text="@string/splash_welcome"
+        android:textColor="@color/White"
+        android:textSize="48dp"/>
+
+    <TextView
+        style="@style/ww"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/splash_welcome_summary"
+        android:textColor="@color/White"
+        android:textSize="20dp"
+        android:textStyle="bold"/>
+
+</LinearLayout>

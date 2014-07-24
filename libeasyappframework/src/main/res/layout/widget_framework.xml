@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    style="@style/mm"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/mm">
 
     <FrameLayout
-        android:id="@+id/framework_root"
-        style="@style/mm"/>
+        android:id="@+id/framework_content"
+        style="@style/mm" />
 
-    <tv.acfun.widget.InfoView
+    <com.harreke.easyappframework.widgets.InfoView
         android:id="@+id/framework_info"
         style="@style/mm"
         android:background="@color/TransparentWhite"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
-    <tv.acfun.widget.ToastView
+    <com.harreke.easyappframework.widgets.ToastView
         android:id="@+id/framework_toast"
         style="@style/ww"
         android:layout_gravity="bottom|center_horizontal"
         android:layout_marginBottom="64dp"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </FrameLayout>

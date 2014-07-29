@@ -2,16 +2,16 @@
 <animation-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:drawable="@drawable/image_progress1"
+        android:drawable="@drawable/image_info_loading1"
         android:duration="500"/>
     <item
-        android:drawable="@drawable/image_progress2"
+        android:drawable="@drawable/image_info_loading2"
         android:duration="500"/>
     <item
-        android:drawable="@drawable/image_progress3"
+        android:drawable="@drawable/image_info_loading3"
         android:duration="500"/>
     <item
-        android:drawable="@drawable/image_progress4"
+        android:drawable="@drawable/image_info_loading4"
         android:duration="500"/>
 
 </animation-list>

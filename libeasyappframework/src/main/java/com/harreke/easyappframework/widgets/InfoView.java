@@ -3,6 +3,7 @@ package com.harreke.easyappframework.widgets;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -39,12 +40,14 @@ public class InfoView extends LinearLayout {
     public static final int INFO_LOADING = 1;
 
     private ImageView info_empty;
-    private ImageView info_error;
     private ImageView info_loading;
-    private TextView info_retry;
+    private ImageView info_retry;
+    private TextView info_retryhint;
     private TextView info_text;
-    private AnimationDrawable mDrawable;
+    private AnimationDrawable mDrawable = null;
     private String mEmptyText;
+    private String mLoadingText;
+    private String mRetryText;
     private boolean mShowRetryWhenEmpty;
 
     public InfoView(Context context, AttributeSet attrs) {
@@ -56,14 +59,24 @@ public class InfoView extends LinearLayout {
 
         TypedArray style;
         LayoutParams params;
-        int retryColor;
+        Drawable loadingImage;
+        Drawable emptyImage;
+        String retryHint;
+        int retryHintColor;
+        Drawable retryImage;
         int textColor;
         int textSize;
 
         style = context.obtainStyledAttributes(attrs, R.styleable.InfoView, defStyle, 0);
+        loadingImage = style.getDrawable(R.styleable.InfoView_loadingImage);
+        mLoadingText = style.getString(R.styleable.app_loadingText);
+        emptyImage = style.getDrawable(R.styleable.InfoView_emptyImage);
         mEmptyText = style.getString(R.styleable.InfoView_emptyText);
-        retryColor = style.getColor(R.styleable.InfoView_retryColor, 0);
-        mShowRetryWhenEmpty = style.getBoolean(R.styleable.InfoView_showRetryWhenEmpty, false);
+        retryHint = style.getString(R.styleable.InfoView_retryHint);
+        retryHintColor = style.getColor(R.styleable.InfoView_retryHintColor, 0);
+        retryImage = style.getDrawable(R.styleable.InfoView_retryImage);
+        mRetryText = style.getString(R.styleable.InfoView_retryText);
+        mShowRetryWhenEmpty = style.getBoolean(R.styleable.InfoView_showRetryHintWhenEmpty, false);
         textColor = style.getColor(R.styleable.InfoView_textColor, 0);
         textSize = (int) style.getDimension(R.styleable.InfoView_textSize, 0);
         style.recycle();
@@ -72,41 +85,48 @@ public class InfoView extends LinearLayout {
         setGravity(Gravity.CENTER);
 
         info_loading = new ImageView(context);
-        info_empty = new ImageView(context);
-        info_error = new ImageView(context);
-        info_text = new TextView(context);
-        info_retry = new TextView(context);
-
         info_loading.setLayoutParams(new LayoutParams(textSize, textSize));
-        info_loading.setImageResource(R.drawable.anim_loading);
         info_loading.setVisibility(GONE);
-        mDrawable = (AnimationDrawable) info_loading.getDrawable();
+        if (loadingImage != null) {
+            info_loading.setImageDrawable(loadingImage);
+            if (loadingImage instanceof AnimationDrawable) {
+                mDrawable = (AnimationDrawable) loadingImage;
+            }
+        }
         addView(info_loading);
 
+        info_empty = new ImageView(context);
         info_empty.setLayoutParams(new LayoutParams(textSize, textSize));
-        info_empty.setImageResource(R.drawable.image_info_small);
+        if (emptyImage != null) {
+            info_empty.setImageDrawable(emptyImage);
+        }
         addView(info_empty);
 
-        info_error.setLayoutParams(new LayoutParams(textSize, textSize));
-        info_error.setImageResource(R.drawable.image_error_small);
-        info_error.setVisibility(GONE);
-        addView(info_error);
+        info_retry = new ImageView(context);
+        info_retry.setLayoutParams(new LayoutParams(textSize, textSize));
+        if (retryImage != null) {
+            info_retry.setImageDrawable(retryImage);
+        }
+        info_retry.setVisibility(GONE);
+        addView(info_retry);
 
         params = new LayoutParams(-2, -2);
+        info_text = new TextView(context);
         info_text.setLayoutParams(params);
         info_text.setText(mEmptyText);
         info_text.setTextColor(textColor);
         info_text.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
         addView(info_text);
 
-        info_retry.setLayoutParams(new LayoutParams(-2, -2));
-        info_retry.setText(R.string.list_retry);
-        info_retry.setTextColor(retryColor);
-        info_retry.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+        info_retryhint = new TextView(context);
+        info_retryhint.setLayoutParams(new LayoutParams(-2, -2));
+        info_retryhint.setText(retryHint);
+        info_retryhint.setTextColor(retryHintColor);
+        info_retryhint.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
         if (!mShowRetryWhenEmpty) {
-            info_retry.setVisibility(GONE);
+            info_retryhint.setVisibility(GONE);
         }
-        addView(info_retry);
+        addView(info_retryhint);
     }
 
     private void hide() {
@@ -119,7 +139,7 @@ public class InfoView extends LinearLayout {
      * @return 是否正在显示“重试”按钮
      */
     public final boolean isShowingRetry() {
-        return info_retry.getVisibility() == VISIBLE;
+        return info_retryhint.getVisibility() == VISIBLE;
     }
 
     /**
@@ -144,23 +164,23 @@ public class InfoView extends LinearLayout {
                 showEmpty();
                 break;
             case INFO_ERROR:
-                showError();
+                showRetry();
         }
     }
 
     /**
      * 设置“空内容”时是否显示“重试”按钮
      *
-     * @param showRetryWhenEmpty
+     * @param showRetryHintWhenEmpty
      *         “空内容”时是否需要显示“重试”按钮
      */
-    public final void setShowRetryWhenEmpty(boolean showRetryWhenEmpty) {
-        if (mShowRetryWhenEmpty != showRetryWhenEmpty) {
-            mShowRetryWhenEmpty = showRetryWhenEmpty;
-            if (showRetryWhenEmpty) {
-                info_retry.setVisibility(View.VISIBLE);
+    public final void setShowRetryWhenEmpty(boolean showRetryHintWhenEmpty) {
+        if (mShowRetryWhenEmpty != showRetryHintWhenEmpty) {
+            mShowRetryWhenEmpty = showRetryHintWhenEmpty;
+            if (showRetryHintWhenEmpty) {
+                info_retryhint.setVisibility(View.VISIBLE);
             } else {
-                info_retry.setVisibility(View.GONE);
+                info_retryhint.setVisibility(View.GONE);
             }
         }
     }
@@ -170,29 +190,18 @@ public class InfoView extends LinearLayout {
      */
     private void showEmpty() {
         setVisibility(VISIBLE);
-        mDrawable.stop();
+        if (mDrawable != null) {
+            mDrawable.stop();
+        }
         info_loading.setVisibility(View.GONE);
         info_empty.setVisibility(View.VISIBLE);
-        info_error.setVisibility(View.GONE);
+        info_retry.setVisibility(View.GONE);
         info_text.setText(mEmptyText);
         if (mShowRetryWhenEmpty) {
-            info_retry.setVisibility(View.VISIBLE);
+            info_retryhint.setVisibility(View.VISIBLE);
         } else {
-            info_retry.setVisibility(View.GONE);
+            info_retryhint.setVisibility(View.GONE);
         }
-    }
-
-    /**
-     * 显示“加载出错”消息
-     */
-    private void showError() {
-        setVisibility(VISIBLE);
-        mDrawable.stop();
-        info_loading.setVisibility(View.GONE);
-        info_empty.setVisibility(View.GONE);
-        info_error.setVisibility(View.VISIBLE);
-        info_text.setText(R.string.list_error);
-        info_retry.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -200,11 +209,28 @@ public class InfoView extends LinearLayout {
      */
     private void showLoading() {
         setVisibility(VISIBLE);
-        mDrawable.start();
+        if (mDrawable != null) {
+            mDrawable.start();
+        }
         info_loading.setVisibility(View.VISIBLE);
         info_empty.setVisibility(View.GONE);
-        info_error.setVisibility(View.GONE);
-        info_text.setText(R.string.list_loading);
         info_retry.setVisibility(View.GONE);
+        info_text.setText(mLoadingText);
+        info_retryhint.setVisibility(View.GONE);
+    }
+
+    /**
+     * 显示“加载出错”消息
+     */
+    private void showRetry() {
+        setVisibility(VISIBLE);
+        if (mDrawable != null) {
+            mDrawable.stop();
+        }
+        info_loading.setVisibility(View.GONE);
+        info_empty.setVisibility(View.GONE);
+        info_retry.setVisibility(View.VISIBLE);
+        info_text.setText(mRetryText);
+        info_retryhint.setVisibility(View.VISIBLE);
     }
 }

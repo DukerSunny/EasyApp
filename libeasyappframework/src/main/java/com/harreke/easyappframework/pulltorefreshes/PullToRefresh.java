@@ -79,9 +79,9 @@ public abstract class PullToRefresh<LIST extends AbsListView, ITEM, LOADER exten
             }
             context = framework.getActivity();
             mCompleteText = context.getString(R.string.list_complete);
-            mErrorText = context.getString(R.string.list_error);
+            mErrorText = context.getString(R.string.info_retry);
             mLastText = context.getString(R.string.list_last);
-            mLoadingText = context.getString(R.string.list_loading);
+            mLoadingText = context.getString(R.string.info_loading);
             mFramework = framework;
             setRootView(framework.getContent());
             setInfoView(framework.getInfo());

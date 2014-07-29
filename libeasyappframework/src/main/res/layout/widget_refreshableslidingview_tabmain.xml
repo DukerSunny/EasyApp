@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView
+    style="@style/mm"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fadingEdge="none"
+    android:scrollbars="none"
+    android:padding="8dp">
+
+    <com.harreke.easyappframework.widgets.RadioView
+        android:id="@+id/slidingbar_bars_tabs_group"
+        style="@style/mw.h"
+        android:divider="@drawable/shape_dummy_vertical_small"
+        android:showDividers="middle">
+
+        <RadioButton
+            android:id="@+id/slidingbar_bars_tabs_tab1"
+            android:layout_width="96dp"
+            android:layout_height="32dp"
+            android:background="@drawable/btn_radio"
+            android:button="@color/Transparent"
+            android:checked="true"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="Tab1"/>
+
+        <RadioButton
+            android:id="@+id/slidingbar_bars_tabs_tab2"
+            android:layout_width="96dp"
+            android:layout_height="32dp"
+            android:background="@drawable/btn_radio"
+            android:button="@color/Transparent"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="Tab2"/>
+
+        <RadioButton
+            android:id="@+id/slidingbar_bars_tabs_tab3"
+            android:layout_width="96dp"
+            android:layout_height="32dp"
+            android:background="@drawable/btn_radio"
+            android:button="@color/Transparent"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="Tab3"/>
+
+        <RadioButton
+            android:id="@+id/slidingbar_bars_tabs_tab4"
+            android:layout_width="96dp"
+            android:layout_height="32dp"
+            android:background="@drawable/btn_radio"
+            android:button="@color/Transparent"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="Tab4"/>
+
+        <RadioButton
+            android:id="@+id/slidingbar_bars_tabs_tab5"
+            android:layout_width="96dp"
+            android:layout_height="32dp"
+            android:background="@drawable/btn_radio"
+            android:button="@color/Transparent"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="Tab5"/>
+
+    </com.harreke.easyappframework.widgets.RadioView>
+
+</HorizontalScrollView>

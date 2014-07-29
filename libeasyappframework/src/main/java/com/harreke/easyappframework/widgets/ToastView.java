@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -32,8 +33,8 @@ public class ToastView extends LinearLayout {
     private boolean mProgress = false;
     private String mText;
     private Handler mToastHandler;
-    private ImageView toast_progress;
-    private TextView toast_text;
+    private ImageView mToastProgress;
+    private TextView mToastText;
 
     public ToastView(Context context, AttributeSet attrs) {
         this(context, attrs, R.attr.toastViewStyle);
@@ -45,6 +46,7 @@ public class ToastView extends LinearLayout {
         Resources resources = getResources();
         TypedArray style;
         LayoutParams params;
+        Drawable progress;
         boolean showProgress;
         String text;
         int textColor;
@@ -54,6 +56,7 @@ public class ToastView extends LinearLayout {
         widget_xlarge = (int) resources.getDimension(R.dimen.widget_xlarge);
 
         style = context.obtainStyledAttributes(attrs, R.styleable.ToastView, defStyle, 0);
+        progress = style.getDrawable(R.styleable.ToastView_progress);
         showProgress = style.getBoolean(R.styleable.ToastView_showProgress, false);
         text = style.getString(R.styleable.ToastView_text);
         textColor = style.getColor(R.styleable.ToastView_textColor, 0);
@@ -63,24 +66,28 @@ public class ToastView extends LinearLayout {
         setOrientation(HORIZONTAL);
         setGravity(Gravity.CENTER_VERTICAL);
 
-        toast_progress = new ImageView(context);
-        toast_text = new TextView(context);
+        mToastProgress = new ImageView(context);
 
         params = new LayoutParams(textSize, textSize);
         params.setMargins(0, 0, widget_xlarge, 0);
-        toast_progress.setLayoutParams(params);
-        toast_progress.setImageResource(R.drawable.anim_loading);
-        mDrawable = (AnimationDrawable) toast_progress.getDrawable();
-        if (!showProgress) {
-            toast_progress.setVisibility(GONE);
+        mToastProgress.setLayoutParams(params);
+        if (progress != null) {
+            mToastProgress.setImageDrawable(progress);
+            if (progress instanceof AnimationDrawable) {
+                mDrawable = (AnimationDrawable) progress;
+            }
         }
-        addView(toast_progress);
+        if (!showProgress) {
+            mToastProgress.setVisibility(GONE);
+        }
+        addView(mToastProgress);
 
-        toast_text.setLayoutParams(new LayoutParams(-2, -2));
-        toast_text.setText(text);
-        toast_text.setTextColor(textColor);
-        toast_text.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-        addView(toast_text);
+        mToastText = new TextView(context);
+        mToastText.setLayoutParams(new LayoutParams(-2, -2));
+        mToastText.setText(text);
+        mToastText.setTextColor(textColor);
+        mToastText.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+        addView(mToastText);
 
         mFadeIn = new AlphaAnimation(0, 1);
         mFadeIn.setDuration(400);
@@ -169,7 +176,7 @@ public class ToastView extends LinearLayout {
         mToastHandler.post(new Runnable() {
             @Override
             public void run() {
-                toast_text.setText(mText);
+                mToastText.setText(mText);
                 start(mProgress);
             }
         });
@@ -180,11 +187,11 @@ public class ToastView extends LinearLayout {
         setVisibility(GONE);
         startAnimation(mFadeIn);
         if (progress) {
-            toast_progress.setVisibility(View.VISIBLE);
+            mToastProgress.setVisibility(View.VISIBLE);
             mDrawable.start();
         } else {
             mDrawable.stop();
-            toast_progress.setVisibility(View.GONE);
+            mToastProgress.setVisibility(View.GONE);
             mNeedsFadeOut = true;
             mToastHandler.postDelayed(new Runnable() {
                 @Override

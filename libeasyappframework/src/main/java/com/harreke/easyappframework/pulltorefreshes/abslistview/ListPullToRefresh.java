@@ -5,9 +5,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.harreke.easyappframework.adapters.abslistview.ListAdapter;
-import com.harreke.easyappframework.frameworks.IFramework;
-import com.harreke.easyappframework.holders.abslistview.IListHolder;
+import com.harreke.easyappframework.adapters.abslistview.AbsListAdapter;
+import com.harreke.easyappframework.frameworks.bases.IFramework;
+import com.harreke.easyappframework.holders.abslistview.IAbsListHolder;
 import com.harreke.easyappframework.loaders.ILoader;
 import com.harreke.easyappframework.pulltorefreshes.PullToRefresh;
 
@@ -18,9 +18,9 @@ import java.util.Comparator;
  *
  * 下拉刷新AbsListView
  */
-public abstract class ListPullToRefresh<ITEM, HOLDER extends IListHolder<ITEM>, LOADER extends ILoader<ITEM>> extends PullToRefresh<ListView, ITEM, LOADER>
+public abstract class ListPullToRefresh<ITEM, HOLDER extends IAbsListHolder<ITEM>, LOADER extends ILoader<ITEM>> extends PullToRefresh<ListView, ITEM, LOADER>
         implements IList<ITEM, HOLDER>, AdapterView.OnItemClickListener {
-    private Adapter mAdapter;
+    private AdapterAbs mAdapter;
     private int mHeaderCount = 0;
 
     /**
@@ -36,7 +36,7 @@ public abstract class ListPullToRefresh<ITEM, HOLDER extends IListHolder<ITEM>, 
     public ListPullToRefresh(IFramework framework, int listId, int pullToRefreshId) {
         super(framework, listId, pullToRefreshId);
 
-        mAdapter = new Adapter();
+        mAdapter = new AdapterAbs();
         mList.setAdapter(mAdapter);
         mList.setOnItemClickListener(this);
     }
@@ -101,7 +101,7 @@ public abstract class ListPullToRefresh<ITEM, HOLDER extends IListHolder<ITEM>, 
         }
     }
 
-    private class Adapter extends ListAdapter<ITEM> {
+    private class AdapterAbs extends AbsListAdapter<ITEM> {
         @SuppressWarnings("unchecked")
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {

@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.AbsListView;
 
 import com.harreke.easyappframework.R;
-import com.harreke.easyappframework.frameworks.IFramework;
+import com.harreke.easyappframework.frameworks.bases.IFramework;
 import com.harreke.easyappframework.loaders.ILoader;
 import com.harreke.easyappframework.requests.IRequestCallback;
 import com.harreke.easyappframework.requests.RequestBuilder;
@@ -466,9 +466,9 @@ public abstract class PullToRefresh<LIST extends AbsListView, ITEM, LOADER exten
         mRoot = root;
     }
 
-    public final void setShowEmptyRetry(boolean showRetry) {
+    public final void setShowRetryWhenEmpty(boolean showRetryWhenEmpty) {
         if (mInfo != null) {
-            mInfo.setShowRetryWhenEmpty(showRetry);
+            mInfo.setShowRetryWhenEmpty(showRetryWhenEmpty);
         }
     }
 

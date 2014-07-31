@@ -2,19 +2,19 @@
 <animation-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:drawable="@drawable/image_progress_loading1"
+        android:drawable="@drawable/progress_loading1"
         android:duration="400"/>
     <item
-        android:drawable="@drawable/image_progress_loading2"
+        android:drawable="@drawable/progress_loading2"
         android:duration="400"/>
     <item
-        android:drawable="@drawable/image_progress_loading3"
+        android:drawable="@drawable/progress_loading3"
         android:duration="400"/>
     <item
-        android:drawable="@drawable/image_progress_loading4"
+        android:drawable="@drawable/progress_loading4"
         android:duration="400"/>
     <item
-        android:drawable="@drawable/image_progress_loading5"
+        android:drawable="@drawable/progress_loading5"
         android:duration="400"/>
 
 </animation-list>

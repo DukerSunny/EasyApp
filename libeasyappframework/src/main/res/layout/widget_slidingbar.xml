@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<com.harreke.easyappframework.widgets.RefreshableSlidingView
-    style="@style/mm"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:contentMargin="-2dp"
-    app:tabBackground="@drawable/image_refreshableslidingview_tab"
-    app:tabHeaderLayout="@layout/widget_refreshableslidingview_tabheader"
-    app:tabMainLayout="@layout/widget_refreshableslidingview_tabmain"
-    app:tabSubLayout="@layout/widget_refreshableslidingview_tabsub"/>

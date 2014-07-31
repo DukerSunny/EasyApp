@@ -4,4 +4,4 @@
     android:layout_height="16dp"
     android:contentDescription="@null"
     android:padding="4dp"
-    android:src="@drawable/btn_dot" />
+    android:src="@drawable/button_dot" />

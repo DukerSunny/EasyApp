@@ -6,7 +6,7 @@ import android.widget.ExpandableListView;
 
 import com.harreke.easyappframework.adapters.abslistview.ExpandableListAdapter;
 import com.harreke.easyappframework.beans.ExpandableItem;
-import com.harreke.easyappframework.frameworks.IFramework;
+import com.harreke.easyappframework.frameworks.bases.IFramework;
 import com.harreke.easyappframework.holders.abslistview.IExpandableListChildHolder;
 import com.harreke.easyappframework.holders.abslistview.IExpandableListGroupHolder;
 import com.harreke.easyappframework.loaders.ILoader;

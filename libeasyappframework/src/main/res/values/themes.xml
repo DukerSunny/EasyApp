@@ -7,7 +7,7 @@
         <item name="infoViewStyle">@style/App.InfoView</item>
         <item name="listSettingViewStyle">@style/App.ListSettingView</item>
         <item name="ratioImageViewStyle">@style/App.RatioImageView</item>
-        <item name="refreshableSlidingViewStyle">@style/App.RefreshableSlidingView</item>
+        <item name="slidingViewStyle">@style/App.SlidingView</item>
         <item name="textSettingViewStyle">@style/App.TextSettingView</item>
         <item name="toastViewStyle">@style/App.ToastView</item>
     </style>
@@ -29,11 +29,11 @@
     <style name="App.Activity">
         <item name="android:actionBarStyle">@style/App.ActionBar</item>
         <item name="android:actionMenuTextAppearance">@style/App.Text</item>
-        <item name="android:homeAsUpIndicator">@drawable/button_back_small</item>
+        <item name="android:homeAsUpIndicator">@drawable/back_small</item>
     </style>
 
     <style name="App.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@color/Blue</item>
+        <item name="android:background">@color/Theme</item>
         <item name="android:titleTextStyle">@style/App.Text</item>
     </style>
 
@@ -48,15 +48,15 @@
         <item name="buttonGravity">right</item>
         <item name="buttonWidth">64dp</item>
         <item name="buttonHeight">32dp</item>
-        <item name="buttonOff">@drawable/button_check_off</item>
-        <item name="buttonOn">@drawable/button_check_on</item>
+        <item name="buttonOff">@drawable/check_off</item>
+        <item name="buttonOn">@drawable/check_on</item>
         <item name="buttonPadding">@dimen/widget_xlarge</item>
         <item name="checked">false</item>
         <item name="summaryColor">@color/text_content</item>
         <item name="summarySize">@dimen/text_content_small</item>
         <item name="textColor">@color/text_content</item>
         <item name="textSize">@dimen/text_content_large</item>
-        <item name="thumb">@drawable/button_check_thumb</item>
+        <item name="thumb">@drawable/check_thumb</item>
         <item name="thumbSize">32dp</item>
     </style>
 
@@ -64,8 +64,8 @@
         <item name="android:padding">@dimen/widget_xlarge</item>
         <item name="buttonGravity">right</item>
         <item name="buttonHeight">26dp</item>
-        <item name="buttonOff">@drawable/button_select_off</item>
-        <item name="buttonOn">@drawable/button_select_on</item>
+        <item name="buttonOff">@drawable/select_off</item>
+        <item name="buttonOn">@drawable/select_on</item>
         <item name="buttonPadding">@dimen/widget_xlarge</item>
         <item name="buttonWidth">26dp</item>
         <item name="checked">false</item>
@@ -77,7 +77,7 @@
         <item name="android:padding">8dp</item>
         <item name="loadingImage">@drawable/anim_infoloading</item>
         <item name="loadingText">@string/info_loading</item>
-        <item name="emptyImage">@drawable/image_info_empty</item>
+        <item name="emptyImage">@drawable/info_empty</item>
         <item name="emptyText">@string/info_empty</item>
         <item name="retryHint">@string/info_retry</item>
         <item name="retryHintColor">@color/Theme</item>
@@ -98,7 +98,7 @@
         <item name="summarySize">@dimen/text_content_small</item>
         <item name="textColor">@color/text_content</item>
         <item name="textSize">@dimen/text_content_large</item>
-        <item name="thumb">@drawable/button_arrow</item>
+        <item name="thumb">@drawable/arrow</item>
         <item name="thumbSize">26dp</item>
     </style>
 
@@ -106,14 +106,8 @@
         <item name="ratio">-1</item>
     </style>
 
-    <style name="App.RefreshableSlidingView">
-        <item name="tabBackground">@drawable/image_refreshableslidingview_tab</item>
-        <item name="tabHeaderLayout">@null</item>
-        <item name="tabMainLayout">@null</item>
-        <item name="tabSubLayout">@null</item>
-        <item name="contentBackground">@color/Transparent</item>
-        <item name="contentLayout">@null</item>
-        <item name="contentMargin">-2dp</item>
+    <style name="App.SlidingView">
+        <item name="offsetLevel">0</item>
     </style>
 
     <style name="App.TextSettingView">

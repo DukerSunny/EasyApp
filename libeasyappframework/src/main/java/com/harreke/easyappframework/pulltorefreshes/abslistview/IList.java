@@ -2,14 +2,14 @@ package com.harreke.easyappframework.pulltorefreshes.abslistview;
 
 import android.view.View;
 
-import com.harreke.easyappframework.holders.abslistview.IListHolder;
+import com.harreke.easyappframework.holders.abslistview.IAbsListHolder;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/07/24
  *
  * AbsListView的Adapter接口
  */
-public interface IList<ITEM, HOLDER extends IListHolder<ITEM>> {
+public interface IList<ITEM, HOLDER extends IAbsListHolder<ITEM>> {
     /**
      * 生成项目视图容器
      *

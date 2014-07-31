@@ -1,28 +1,36 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.harreke.easyappframework.samples">
+<manifest
+    package="com.harreke.easyappframework.samples"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
+        android:name=".bases.application.Samples"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/App.Activity">
 
         <activity
-            android:name=".entities.activities.SplashActivity"
+            android:name=".bases.activities.MainActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".bases.activities.SlidableActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
+
+        <activity
+            android:name=".bases.activities.SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/App.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".entities.activities.MainActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait" />
 
     </application>
 

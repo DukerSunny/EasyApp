@@ -5,7 +5,7 @@ package com.harreke.easyappframework.listeners;
  *
  * 对话框助手的监听器
  *
- * @see com.harreke.easyappframework.helpers.DialogHelper
+ * @see com.harreke.easyappframework.helpers.inners.DialogHelper
  */
 public interface OnDialogButtonClickListener {
     /**

@@ -7,7 +7,7 @@ package com.harreke.easyappframework.listeners;
  * 注：
  * 支持最多2个点的手势
  *
- * @see com.harreke.easyappframework.helpers.GestureHelper
+ * @see com.harreke.easyappframework.helpers.inners.GestureHelper
  */
 public interface OnGestureListener {
     /**
@@ -52,16 +52,16 @@ public interface OnGestureListener {
      * 注：
      * 仅在未开启多点触摸功能时可用
      *
-     * @param translateX
+     * @param scrollX
      *         滑动的横向总距离（从单点按下时开始计算）
-     * @param translateY
+     * @param scrollY
      *         滑动的纵向总距离（从单点按下时开始计算）
      * @param duration
      *         滑动的总时长（从单点按下时开始计算）
      *
      * @return 如果需要处理该事件，返回true；否则返回false
      */
-    public boolean onScroll(float translateX, float translateY, long duration);
+    public boolean onScroll(float scrollX, float scrollY, long duration);
 
     /**
      * 当点击屏幕时触发

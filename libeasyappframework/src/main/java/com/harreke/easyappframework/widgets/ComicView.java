@@ -11,7 +11,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
-import com.harreke.easyappframework.helpers.GestureHelper;
+import com.harreke.easyappframework.helpers.inners.GestureHelper;
 import com.harreke.easyappframework.listeners.OnGestureListener;
 import com.harreke.easyappframework.listeners.OnImageTapListener;
 
@@ -264,9 +264,9 @@ public class ComicView extends ImageView implements OnGestureListener {
      * 注：
      * 仅在未开启多点触摸功能时可用
      *
-     * @param translateX
+     * @param scrollX
      *         滑动的横向总距离（从单点按下时开始计算）
-     * @param translateY
+     * @param scrollY
      *         滑动的纵向总距离（从单点按下时开始计算）
      * @param duration
      *         滑动的总时长（从单点按下时开始计算）
@@ -274,7 +274,7 @@ public class ComicView extends ImageView implements OnGestureListener {
      * @return 如果需要处理该事件，返回true；否则返回false
      */
     @Override
-    public boolean onScroll(float translateX, float translateY, long duration) {
+    public boolean onScroll(float scrollX, float scrollY, long duration) {
         return false;
     }
 
@@ -312,7 +312,7 @@ public class ComicView extends ImageView implements OnGestureListener {
     /**
      * 当位移时触发
      * 注：
-     * 仅在已开启多点触摸功能时，并且缩放倍率大于最小倍率时可用
+     * 仅在已开启多点触摸功能，并且缩放倍率大于最小倍率时可用
      *
      * @param translateX
      *         位移的横向总距离（从单点按下时开始计算）

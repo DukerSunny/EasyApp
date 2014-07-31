@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.harreke.easyappframework.widgets.slidableview.SlidableView
+    android:id="@+id/slidingView"
+    style="@style/mm"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    app:offsetLevel="2">
+
+    <include layout="@layout/activity_slidable_refreshheader"/>
+
+    <include layout="@layout/activity_slidable_loadoverlay"/>
+
+    <com.harreke.easyappframework.widgets.slidableview.inners.TabView
+        style="@style/mw">
+
+        <LinearLayout
+            style="@style/mw.h"
+            android:background="@color/TransparentBlack"
+            android:gravity="center"
+            android:padding="8dp">
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="32dp"
+                android:layout_weight="1"
+                android:background="@color/White"
+                android:gravity="center_vertical"
+                android:hint="@string/slidable_input"
+                android:padding="4dp"
+                android:textSize="16dp"/>
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginLeft="8dp"
+                android:contentDescription="@null"
+                android:src="@drawable/send"/>
+
+        </LinearLayout>
+
+    </com.harreke.easyappframework.widgets.slidableview.inners.TabView>
+
+    <com.harreke.easyappframework.widgets.slidableview.inners.TabView
+        style="@style/mw">
+
+        <HorizontalScrollView
+            style="@style/mm"
+            android:fadingEdge="none"
+            android:padding="8dp"
+            android:scrollbars="none">
+
+            <com.harreke.easyappframework.widgets.RadioView
+                android:id="@+id/slidingbar_bars_tabs_group"
+                style="@style/mw.h"
+                android:divider="@drawable/shape_dummy_vertical_small"
+                android:showDividers="middle">
+
+                <RadioButton
+                    android:id="@+id/slidingbar_bars_tabs_tab1"
+                    android:layout_width="96dp"
+                    android:layout_height="32dp"
+                    android:background="@drawable/button_radio"
+                    android:button="@color/Transparent"
+                    android:checked="true"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="Tab1"
+                    android:textColor="@color/color_theme_white"/>
+
+                <RadioButton
+                    android:id="@+id/slidingbar_bars_tabs_tab2"
+                    android:layout_width="96dp"
+                    android:layout_height="32dp"
+                    android:background="@drawable/button_radio"
+                    android:button="@color/Transparent"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="Tab2"
+                    android:textColor="@color/color_theme_white"/>
+
+                <RadioButton
+                    android:id="@+id/slidingbar_bars_tabs_tab3"
+                    android:layout_width="96dp"
+                    android:layout_height="32dp"
+                    android:background="@drawable/button_radio"
+                    android:button="@color/Transparent"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="Tab3"
+                    android:textColor="@color/color_theme_white"/>
+
+                <RadioButton
+                    android:id="@+id/slidingbar_bars_tabs_tab4"
+                    android:layout_width="96dp"
+                    android:layout_height="32dp"
+                    android:background="@drawable/button_radio"
+                    android:button="@color/Transparent"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="Tab4"
+                    android:textColor="@color/color_theme_white"/>
+
+                <RadioButton
+                    android:id="@+id/slidingbar_bars_tabs_tab5"
+                    android:layout_width="96dp"
+                    android:layout_height="32dp"
+                    android:background="@drawable/button_radio"
+                    android:button="@color/Transparent"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="Tab5"
+                    android:textColor="@color/color_theme_white"/>
+
+            </com.harreke.easyappframework.widgets.RadioView>
+
+        </HorizontalScrollView>
+
+    </com.harreke.easyappframework.widgets.slidableview.inners.TabView>
+
+    <!--<include layout="@layout/activity_slidable_abslist"/>-->
+
+</com.harreke.easyappframework.widgets.slidableview.SlidableView>

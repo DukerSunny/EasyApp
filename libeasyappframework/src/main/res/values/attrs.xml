@@ -12,9 +12,6 @@
         <attr name="buttonPadding" format="dimension"/>
         <attr name="buttonWidth" format="dimension"/>
         <attr name="checked" format="boolean"/>
-        <attr name="contentBackground" format="reference"/>
-        <attr name="contentLayout" format="reference"/>
-        <attr name="contentMargin" format="dimension"/>
         <attr name="emptyImage" format="reference"/>
         <attr name="emptyText" format="string"/>
         <attr name="entry" format="reference"/>
@@ -36,10 +33,7 @@
         <attr name="summarySize" format="dimension"/>
         <attr name="summaryOn" format="string"/>
         <attr name="summaryOff" format="string"/>
-        <attr name="tabBackground" format="reference"/>
-        <attr name="tabHeaderLayout" format="reference"/>
-        <attr name="tabMainLayout" format="reference"/>
-        <attr name="tabSubLayout" format="reference"/>
+        <attr name="offsetLevel" format="integer"/>
         <attr name="text" format="string"/>
         <attr name="textBackground" format="reference"/>
         <attr name="textColor" format="color"/>
@@ -55,7 +49,7 @@
         <attr name="infoViewStyle" format="reference"/>
         <attr name="listSettingViewStyle" format="reference"/>
         <attr name="ratioImageViewStyle" format="reference"/>
-        <attr name="refreshableSlidingViewStyle" format="reference"/>
+        <attr name="slidingViewStyle" format="reference"/>
         <attr name="textSettingViewStyle" format="reference"/>
         <attr name="toastViewStyle" format="reference"/>
     </declare-styleable>
@@ -130,14 +124,8 @@
         <attr name="ratio"/>
     </declare-styleable>
 
-    <declare-styleable name="RefreshableSlidingView">
-        <attr name="tabBackground"/>
-        <attr name="tabHeaderLayout"/>
-        <attr name="tabMainLayout"/>
-        <attr name="tabSubLayout"/>
-        <attr name="contentBackground"/>
-        <attr name="contentLayout"/>
-        <attr name="contentMargin"/>
+    <declare-styleable name="SlidableView">
+        <attr name="offsetLevel"/>
     </declare-styleable>
 
     <declare-styleable name="TextSettingView">

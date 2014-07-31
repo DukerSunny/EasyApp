@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.harreke.easyappframework.frameworks.IFramework;
+import com.harreke.easyappframework.frameworks.bases.IFramework;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/07/24

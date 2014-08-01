@@ -49,7 +49,6 @@ public class MainActivity extends ActivityFramework {
 
     @Override
     public void startAction() {
-        start(SlidableActivity.create(this));
     }
 
     @Override

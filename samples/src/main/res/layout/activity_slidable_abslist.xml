@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ListView
-    android:id="@+id/absListView"
+<FrameLayout
     style="@style/mm"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:cacheColorHint="@color/Transparent"
-    android:divider="@null"
-    android:dividerHeight="8dp"
-    android:fastScrollEnabled="true"
-    android:padding="8dp"/>
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListView
+        android:id="@+id/absListView"
+        style="@style/mm"
+        android:cacheColorHint="@color/Transparent"
+        android:divider="@null"
+        android:dividerHeight="8dp"
+        android:drawSelectorOnTop="true"
+        android:fastScrollEnabled="true"
+        android:padding="8dp"/>
+
+    <com.harreke.easyappframework.widgets.InfoView
+        android:id="@+id/infoView"
+        style="@style/mm"
+        android:visibility="gone"/>
+
+</FrameLayout>

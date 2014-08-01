@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/EasyAppFramework.iml" filepath="$PROJECT_DIR$/EasyAppFramework.iml" />
-      <module fileurl="file://$PROJECT_DIR$/libeasyappframework/libeasyappframework.iml" filepath="$PROJECT_DIR$/libeasyappframework/libeasyappframework.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
       <module fileurl="file://$PROJECT_DIR$/samples/samples.iml" filepath="$PROJECT_DIR$/samples/samples.iml" />
     </modules>
   </component>

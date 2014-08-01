@@ -3,9 +3,9 @@ package com.harreke.easyappframework.samples.bases.activities;
 import android.content.Intent;
 import android.os.Handler;
 
-import com.harreke.easyappframework.samples.R;
 import com.harreke.easyappframework.beans.ActionBarItem;
 import com.harreke.easyappframework.frameworks.bases.activity.ActivityFramework;
+import com.harreke.easyappframework.samples.R;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/07/23
@@ -25,7 +25,8 @@ public class SplashActivity extends ActivityFramework {
             /**
              * 计时结束，启动主界面
              */
-            start(MainActivity.create(getActivity()), false);
+            //            start(MainActivity.create(getActivity()), false);
+            start(SlidableAbsListActivity.create(getActivity()), true);
             exit(false);
         }
     };
@@ -74,10 +75,10 @@ public class SplashActivity extends ActivityFramework {
      */
     @Override
     public void startAction() {
-//        /**
-//         * 延时3秒后启动主界面
-//         */
-//        splashHandler.postDelayed(splashRunnable, 3000);
+        //        /**
+        //         * 延时3秒后启动主界面
+        //         */
+        //        splashHandler.postDelayed(splashRunnable, 3000);
         splashRunnable.run();
     }
 

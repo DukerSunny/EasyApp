@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.harreke.easyappframework.samples.widgets.LoadOverlay
     style="@style/mw"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:padding="8dp">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
-        style="@style/ww.h"
-        android:layout_gravity="center">
+        style="@style/mw.h"
+        android:background="@color/TransparentBlack"
+        android:gravity="center"
+        android:padding="16dp">
 
         <ImageView
             android:id="@+id/loadoverlay_image"
@@ -22,7 +23,7 @@
             android:layout_marginLeft="8dp"
             android:gravity="center_vertical"
             android:text="@string/loadoverlay_loadinging"
-            android:textColor="@color/text_assist"
+            android:textColor="@color/White"
             android:textSize="20dp"/>
 
     </LinearLayout>

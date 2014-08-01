@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.harreke.easyappframework.widgets.slidableview.SlidableView
-    android:id="@+id/slidingView"
+    android:id="@+id/slidableView"
     style="@style/mm"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -15,30 +15,7 @@
     <com.harreke.easyappframework.widgets.slidableview.inners.TabView
         style="@style/mw">
 
-        <LinearLayout
-            style="@style/mw.h"
-            android:background="@color/TransparentBlack"
-            android:gravity="center"
-            android:padding="8dp">
-
-            <EditText
-                android:layout_width="0dp"
-                android:layout_height="32dp"
-                android:layout_weight="1"
-                android:background="@color/White"
-                android:gravity="center_vertical"
-                android:hint="@string/slidable_input"
-                android:padding="4dp"
-                android:textSize="16dp"/>
-
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginLeft="8dp"
-                android:contentDescription="@null"
-                android:src="@drawable/send"/>
-
-        </LinearLayout>
+        <include layout="@layout/activity_slidable_input"/>
 
     </com.harreke.easyappframework.widgets.slidableview.inners.TabView>
 
@@ -52,13 +29,13 @@
             android:scrollbars="none">
 
             <com.harreke.easyappframework.widgets.RadioView
-                android:id="@+id/slidingbar_bars_tabs_group"
+                android:id="@+id/slidable_radio_group"
                 style="@style/mw.h"
                 android:divider="@drawable/shape_dummy_vertical_small"
                 android:showDividers="middle">
 
                 <RadioButton
-                    android:id="@+id/slidingbar_bars_tabs_tab1"
+                    android:id="@+id/slidable_radio_tab1"
                     android:layout_width="96dp"
                     android:layout_height="32dp"
                     android:background="@drawable/button_radio"
@@ -70,7 +47,7 @@
                     android:textColor="@color/color_theme_white"/>
 
                 <RadioButton
-                    android:id="@+id/slidingbar_bars_tabs_tab2"
+                    android:id="@+id/slidable_radio_tab2"
                     android:layout_width="96dp"
                     android:layout_height="32dp"
                     android:background="@drawable/button_radio"
@@ -81,7 +58,7 @@
                     android:textColor="@color/color_theme_white"/>
 
                 <RadioButton
-                    android:id="@+id/slidingbar_bars_tabs_tab3"
+                    android:id="@+id/slidable_radio_tab3"
                     android:layout_width="96dp"
                     android:layout_height="32dp"
                     android:background="@drawable/button_radio"
@@ -92,7 +69,7 @@
                     android:textColor="@color/color_theme_white"/>
 
                 <RadioButton
-                    android:id="@+id/slidingbar_bars_tabs_tab4"
+                    android:id="@+id/slidable_radio_tab4"
                     android:layout_width="96dp"
                     android:layout_height="32dp"
                     android:background="@drawable/button_radio"
@@ -103,7 +80,7 @@
                     android:textColor="@color/color_theme_white"/>
 
                 <RadioButton
-                    android:id="@+id/slidingbar_bars_tabs_tab5"
+                    android:id="@+id/slidable_radio_tab5"
                     android:layout_width="96dp"
                     android:layout_height="32dp"
                     android:background="@drawable/button_radio"
@@ -119,6 +96,6 @@
 
     </com.harreke.easyappframework.widgets.slidableview.inners.TabView>
 
-    <!--<include layout="@layout/activity_slidable_abslist"/>-->
+    <include layout="@layout/activity_slidable_abslist"/>
 
 </com.harreke.easyappframework.widgets.slidableview.SlidableView>

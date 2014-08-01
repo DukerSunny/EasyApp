@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="App" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+        <item name="checkSettingViewStyle">@style/App.CheckSettingView</item>
+        <item name="childSettingViewStyle">@style/App.ChildSettingView</item>
+        <item name="infoViewStyle">@style/App.InfoView</item>
+        <item name="listSettingViewStyle">@style/App.ListSettingView</item>
+        <item name="ratioImageViewStyle">@style/App.RatioImageView</item>
+        <item name="slidingViewStyle">@style/App.SlidingView</item>
+        <item name="textSettingViewStyle">@style/App.TextSettingView</item>
+        <item name="toastViewStyle">@style/App.ToastView</item>
+    </style>
+
+    <style name="App.NoActionBar">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="App.Fullscreen" parent="App.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="App.Splash" parent="@style/App.NoActionBar">
+        <item name="android:windowBackground">@color/Theme_Dark</item>
+    </style>
+
+    <style name="App.Activity">
+        <item name="android:actionBarStyle">@style/App.ActionBar</item>
+        <item name="android:actionMenuTextAppearance">@style/App.Text</item>
+        <item name="android:homeAsUpIndicator">@drawable/back_small</item>
+    </style>
+
+    <style name="App.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/Theme</item>
+        <item name="android:titleTextStyle">@style/App.Text</item>
+    </style>
+
+    <style name="App.Text">
+        <item name="android:textSize">16dp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/White</item>
+    </style>
+
+    <style name="App.CheckSettingView">
+        <item name="android:padding">@dimen/widget_xlarge</item>
+        <item name="buttonGravity">right</item>
+        <item name="buttonWidth">64dp</item>
+        <item name="buttonHeight">32dp</item>
+        <item name="buttonOff">@drawable/check_off</item>
+        <item name="buttonOn">@drawable/check_on</item>
+        <item name="buttonPadding">@dimen/widget_xlarge</item>
+        <item name="checked">false</item>
+        <item name="summaryColor">@color/text_content</item>
+        <item name="summarySize">@dimen/text_content_small</item>
+        <item name="textColor">@color/text_content</item>
+        <item name="textSize">@dimen/text_content_large</item>
+        <item name="thumb">@drawable/check_thumb</item>
+        <item name="thumbSize">32dp</item>
+    </style>
+
+    <style name="App.ChildSettingView">
+        <item name="android:padding">@dimen/widget_xlarge</item>
+        <item name="buttonGravity">right</item>
+        <item name="buttonHeight">26dp</item>
+        <item name="buttonOff">@drawable/select_off</item>
+        <item name="buttonOn">@drawable/select_on</item>
+        <item name="buttonPadding">@dimen/widget_xlarge</item>
+        <item name="buttonWidth">26dp</item>
+        <item name="checked">false</item>
+        <item name="textColor">@color/text_content</item>
+        <item name="textSize">@dimen/text_content_large</item>
+    </style>
+
+    <style name="App.InfoView">
+        <item name="android:padding">8dp</item>
+        <item name="loadingImage">@drawable/anim_infoloading</item>
+        <item name="loadingText">@string/info_loading</item>
+        <item name="emptyImage">@drawable/info_empty</item>
+        <item name="emptyText">@string/info_empty</item>
+        <item name="retryHint">@string/info_retryhint</item>
+        <item name="retryHintColor">@color/Theme</item>
+        <item name="retryImage">@drawable/info_retry</item>
+        <item name="retryText">@string/info_retry</item>
+        <item name="showRetryHintWhenEmpty">true</item>
+        <item name="text">@string/info_loading</item>
+        <item name="textColor">@color/text_content</item>
+        <item name="textSize">@dimen/text_content_middle</item>
+    </style>
+
+    <style name="App.ListSettingView">
+        <item name="android:padding">@dimen/widget_xlarge</item>
+        <item name="buttonGravity">right</item>
+        <item name="buttonPadding">8dp</item>
+        <item name="listTextColor">@color/text_assist</item>
+        <item name="listTextSize">@dimen/text_content_large</item>
+        <item name="listTextPadding">8dp</item>
+        <item name="summaryColor">@color/text_content</item>
+        <item name="summarySize">@dimen/text_content_small</item>
+        <item name="textColor">@color/text_content</item>
+        <item name="textSize">@dimen/text_content_large</item>
+        <item name="thumb">@drawable/arrow</item>
+        <item name="thumbSize">26dp</item>
+    </style>
+
+    <style name="App.RatioImageView">
+        <item name="ratio">-1</item>
+    </style>
+
+    <style name="App.SlidingView">
+        <item name="offsetLevel">0</item>
+    </style>
+
+    <style name="App.TextSettingView">
+        <item name="android:padding">@dimen/widget_xlarge</item>
+        <item name="summaryColor">@color/text_content</item>
+        <item name="summarySize">@dimen/text_content_small</item>
+        <item name="textColor">@color/text_content</item>
+        <item name="textSize">@dimen/text_content_large</item>
+    </style>
+
+    <style name="App.ToastView">
+        <item name="android:background">@drawable/shape_toast</item>
+        <item name="android:padding">@dimen/widget_xlarge</item>
+        <item name="progress">@drawable/anim_progressloading</item>
+        <item name="showProgress">false</item>
+        <item name="textColor">@color/White</item>
+        <item name="textSize">@dimen/text_content_middle</item>
+    </style>
+
+</resources>

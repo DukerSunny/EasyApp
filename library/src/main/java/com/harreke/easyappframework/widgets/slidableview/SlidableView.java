@@ -11,7 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.harreke.easyappframework.R;
-import com.harreke.easyappframework.helpers.inners.GestureHelper;
+import com.harreke.easyappframework.helpers.GestureHelper;
 import com.harreke.easyappframework.listeners.OnGestureListener;
 import com.harreke.easyappframework.listeners.OnSlidableTriggerListener;
 import com.harreke.easyappframework.widgets.slidableview.inners.ContentView;
@@ -63,7 +63,6 @@ public class SlidableView extends FrameLayout implements ViewGroup.OnHierarchyCh
     private GestureHelper mGesture;
     private LinearLayout mHeaders;
     private int mHeadersHeight;
-    private boolean mInsideSlidableContent = false;
     private boolean mIntercept = false;
     private float mLastScrollY;
     private boolean mLoading = false;

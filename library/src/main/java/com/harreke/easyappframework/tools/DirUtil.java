@@ -75,7 +75,7 @@ public class DirUtil {
         if (files != null) {
             for (File file : files) {
                 if (file.exists() && !file.isDirectory()) {
-                    object = GsonUtil.toBean(FileUtil.readFile(file), classOfT);
+                    object = GsonUtil.toBean(FileUtil.readTxt(file), classOfT);
                     if (object != null) {
                         list.add(object);
                     }
@@ -93,7 +93,7 @@ public class DirUtil {
         if (files != null) {
             for (File file : files) {
                 if (file.exists() && !file.isDirectory()) {
-                    object = GsonUtil.toBean(FileUtil.readFile(file), type);
+                    object = GsonUtil.toBean(FileUtil.readTxt(file), type);
                     if (object != null) {
                         list.add(object);
                     }

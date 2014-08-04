@@ -18,7 +18,7 @@ import com.harreke.easyappframework.beans.ActionBarItem;
 import com.harreke.easyappframework.frameworks.bases.IActionBar;
 import com.harreke.easyappframework.frameworks.bases.IActionBarClickListener;
 import com.harreke.easyappframework.frameworks.bases.IFramework;
-import com.harreke.easyappframework.helpers.outers.VolleyRequestHelper;
+import com.harreke.easyappframework.helpers.RequestHelper;
 import com.harreke.easyappframework.receivers.ExitReceiver;
 import com.harreke.easyappframework.requests.IRequestCallback;
 import com.harreke.easyappframework.requests.RequestBuilder;
@@ -51,7 +51,7 @@ public abstract class ActivityFramework extends FragmentActivity implements IFra
             }
         }
     };
-    private VolleyRequestHelper mRequest = new VolleyRequestHelper();
+    private RequestHelper mRequest = new RequestHelper();
 
     /**
      * 为ActionBar添加一个菜单选项

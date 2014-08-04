@@ -1,5 +1,6 @@
 package com.harreke.easyappframework.requests.volley;
 
+import android.graphics.Bitmap;
 import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
@@ -13,17 +14,22 @@ import com.harreke.easyappframework.requests.IRequestCallback;
  */
 public class VolleyImageListener implements ImageLoader.ImageListener {
     private boolean executing;
-    private IRequestCallback<ImageView> mCallback = null;
+    private IRequestCallback<Bitmap> mBitmapCallback = null;
     private ImageView mImage;
+    private IRequestCallback<ImageView> mImageCallback = null;
     private int mRetryImageId;
 
-    public VolleyImageListener(ImageView image, int retryImageId, IRequestCallback<ImageView> callback) {
-        if (image == null) {
-            throw new IllegalArgumentException("Image must not be null!");
-        }
+    public VolleyImageListener(IRequestCallback<Bitmap> imageCallback) {
+        executing = true;
+        mBitmapCallback = imageCallback;
+    }
+
+    public VolleyImageListener(ImageView image, int loadingImageId, int retryImageId, IRequestCallback<ImageView> imageCallback) {
+        mImage = image;
+        mImage.setImageResource(loadingImageId);
         executing = true;
         mRetryImageId = retryImageId;
-        mCallback = callback;
+        mImageCallback = imageCallback;
     }
 
     public final boolean isExecuting() {
@@ -33,28 +39,37 @@ public class VolleyImageListener implements ImageLoader.ImageListener {
     @Override
     public void onErrorResponse(VolleyError error) {
         executing = false;
-        if (mRetryImageId > 0) {
-            mImage.setImageResource(mRetryImageId);
+        mImage.setImageResource(mRetryImageId);
+        if (mImageCallback != null) {
+            mImageCallback.onFailure();
         }
-        if (mCallback != null) {
-            mCallback.onFailure();
-        }
-        mCallback = null;
+        mImageCallback = null;
         mImage = null;
     }
 
     @Override
     public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+        Bitmap bitmap = response.getBitmap();
+
         executing = false;
-        if (response.getBitmap() != null) {
-            mImage.setImageBitmap(response.getBitmap());
-        } else if (mRetryImageId > 0) {
-            mImage.setImageResource(mRetryImageId);
+        if (mImage == null && mBitmapCallback != null) {
+            if (bitmap != null) {
+                mBitmapCallback.onSuccess(bitmap);
+            } else {
+                mBitmapCallback.onFailure();
+            }
+            mBitmapCallback = null;
+        } else if (mImage != null) {
+            if (bitmap != null) {
+                mImage.setImageBitmap(bitmap);
+            } else if (mRetryImageId > 0) {
+                mImage.setImageResource(mRetryImageId);
+            }
+            if (mImageCallback != null) {
+                mImageCallback.onSuccess(mImage);
+            }
+            mImage = null;
+            mImageCallback = null;
         }
-        if (mCallback != null) {
-            mCallback.onSuccess(mImage);
-        }
-        mCallback = null;
-        mImage = null;
     }
 }

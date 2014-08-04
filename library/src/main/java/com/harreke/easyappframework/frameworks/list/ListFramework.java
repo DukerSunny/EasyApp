@@ -47,9 +47,11 @@ public abstract class ListFramework<ITEM, LOADER extends ILoader<ITEM>>
         implements IList<ITEM>, IListStatusChageListener<ITEM>, IRequestCallback<LOADER>, OnSlidableTriggerListener, View.OnClickListener {
     private static int ACTION_LOAD = 1;
     private static int ACTION_NONE = 0;
+
     private int mActionType = ACTION_NONE;
     private static int ACTION_REFRESH = 2;
     private Comparator<ITEM> mComparator = null;
+    private String mCompleteText;
     private int mCurrentPage = 1;
     private String mErrorText;
     private IFramework mFramework;
@@ -87,6 +89,7 @@ public abstract class ListFramework<ITEM, LOADER extends ILoader<ITEM>>
             context = framework.getActivity();
             mErrorText = context.getString(R.string.info_retry);
             mLastText = context.getString(R.string.list_last);
+            mCompleteText = context.getString(R.string.list_complete);
             mFramework = framework;
             setRootView(framework.getContent());
             setInfoView(framework.getInfo());
@@ -367,7 +370,11 @@ public abstract class ListFramework<ITEM, LOADER extends ILoader<ITEM>>
         if (mActionType == ACTION_REFRESH) {
             setRefreshComplete();
         } else if (mActionType == ACTION_LOAD && !isFirstPage()) {
-            setLoadComplete(mPageSize);
+            if (mSlidableView != null) {
+                setLoadComplete(mPageSize);
+            } else {
+                showToast(String.format(mCompleteText, mPageSize));
+            }
         }
         mActionType = ACTION_NONE;
         if (isEmpty()) {

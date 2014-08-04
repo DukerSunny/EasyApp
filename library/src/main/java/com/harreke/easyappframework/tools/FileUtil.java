@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,7 +13,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 
 /**
@@ -40,35 +40,44 @@ public class FileUtil {
                 success = true;
             } catch (IOException e) {
                 success = false;
-                DevUtil.e("Copy file to " + target.getAbsolutePath() + " error!");
+                DevUtil.e("Copy file " + source.getAbsolutePath() + " to " + target.getAbsolutePath() + " error!");
             }
         }
 
         return success;
     }
 
-    public static boolean copyFile(InputStream inputStream, OutputStream outputStream) {
-        boolean success;
+    public static boolean copyFile(String sourceFilename, String targetFilename) {
+        return sourceFilename != null && sourceFilename.startsWith("file:") && targetFilename != null && targetFilename.startsWith("file:") &&
+                copyFile(new File(sourceFilename), new File(targetFilename));
+    }
+
+    public static boolean copyFile(InputStream inputStream, FileOutputStream fileOutputStream) {
+        BufferedOutputStream outputStream;
+        boolean success = false;
         byte[] buffer = new byte[1024];
         int read;
 
-        try {
-            while ((read = inputStream.read(buffer)) > 0) {
-                outputStream.write(buffer, 0, read);
+        if (inputStream != null && fileOutputStream != null) {
+            try {
+                outputStream = new BufferedOutputStream(fileOutputStream);
+                while ((read = inputStream.read(buffer)) > 0) {
+                    outputStream.write(buffer, 0, read);
+                }
+                outputStream.close();
+                inputStream.close();
+                success = true;
+            } catch (IOException e) {
+                success = false;
+                DevUtil.e("Copy file error!");
             }
-            inputStream.close();
-            outputStream.close();
-            outputStream.flush();
-            success = true;
-        } catch (IOException e) {
-            success = false;
         }
 
         return success;
     }
 
     public static boolean deleteFile(String filename) {
-        return filename != null && filename.length() > 0 && filename.startsWith("file:") && deleteFile(new File(filename));
+        return filename != null && filename.startsWith("file:") && deleteFile(new File(filename));
     }
 
     public static boolean deleteFile(File file) {
@@ -82,7 +91,7 @@ public class FileUtil {
     public static Bitmap readBitmap(String filename, int width, int height) {
         Bitmap bitmap = null;
 
-        if (filename != null && filename.length() > 0 && filename.startsWith("file:")) {
+        if (filename != null && filename.startsWith("file:")) {
             bitmap = BitmapFactory.decodeFile(filename);
             if (width > 0 && height > 0 && width != bitmap.getWidth() && height != bitmap.getHeight()) {
                 bitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
@@ -111,7 +120,7 @@ public class FileUtil {
     public static Drawable readDrawable(String filename, int width, int height) {
         Drawable drawable = null;
 
-        if (filename != null && filename.length() > 0 && filename.startsWith("file:")) {
+        if (filename != null && filename.startsWith("file:")) {
             drawable = Drawable.createFromPath(filename);
             if (drawable != null && width > 0 && height > 0) {
                 drawable.setBounds(0, 0, width, height);
@@ -133,15 +142,15 @@ public class FileUtil {
         }
     }
 
-    public static String readFile(String filename) {
-        if (filename != null && filename.length() > 0 && filename.startsWith("file:")) {
-            return readFile(new File(filename));
+    public static String readTxt(String filename) {
+        if (filename != null && filename.startsWith("file:")) {
+            return readTxt(new File(filename));
         } else {
             return null;
         }
     }
 
-    public static String readFile(File file) {
+    public static String readTxt(File file) {
         BufferedReader bufferedReader;
         InputStreamReader inputStreamReader;
         FileInputStream fileInputStream;
@@ -162,7 +171,7 @@ public class FileUtil {
                 fileInputStream.close();
             } catch (IOException e) {
                 content = null;
-                DevUtil.e(TAG, "Read file " + file.getAbsolutePath() + " error!");
+                DevUtil.e(TAG, "Read txt file " + file.getAbsolutePath() + " error!");
             }
         }
 
@@ -170,7 +179,7 @@ public class FileUtil {
     }
 
     public static boolean writeBitmap(String filename, Bitmap bitmap) {
-        return filename != null && filename.length() > 0 && filename.startsWith("file:") && writeBitmap(new File(filename), bitmap);
+        return filename != null && filename.startsWith("file:") && writeBitmap(new File(filename), bitmap);
     }
 
     public static boolean writeBitmap(File file, Bitmap bitmap) {
@@ -198,7 +207,7 @@ public class FileUtil {
     }
 
     public static boolean writeDrawable(String filename, Drawable drawable) {
-        return filename != null && filename.length() > 0 && filename.startsWith("file:") && writeDrawable(new File(filename), drawable);
+        return filename != null && filename.startsWith("file:") && writeDrawable(new File(filename), drawable);
     }
 
     public static boolean writeDrawable(File file, Drawable drawable) {
@@ -227,11 +236,11 @@ public class FileUtil {
         return success;
     }
 
-    public static boolean writeFile(String filename, String content) {
-        return filename != null && filename.length() > 0 && filename.startsWith("file:") && writeFile(new File(filename), content);
+    public static boolean writeTxt(String filename, String content) {
+        return filename != null && filename.startsWith("file:") && writeTxt(new File(filename), content);
     }
 
-    public static boolean writeFile(File file, String content) {
+    public static boolean writeTxt(File file, String content) {
         PrintWriter printWriter;
         boolean create;
         boolean success = false;

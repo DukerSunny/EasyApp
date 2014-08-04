@@ -19,7 +19,7 @@ import com.harreke.easyappframework.tools.GsonUtil;
  */
 public class VolleyRequestExecutor<RESULT> implements IRequestExecutor, Response.Listener<String>, Response.ErrorListener {
     private IRequestCallback<RESULT> mCallback = null;
-    private Request<String> mRequest = null;
+    private Request mRequest = null;
 
     public VolleyRequestExecutor(Context context, RequestBuilder builder, IRequestCallback<RESULT> callback) {
         VolleyInstance instance = VolleyInstance.getInstance(context);

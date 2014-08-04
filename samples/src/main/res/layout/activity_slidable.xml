@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    app:offsetLevel="2">
+    app:offsetLevel="1">
 
     <include layout="@layout/activity_slidable_refreshheader"/>
 

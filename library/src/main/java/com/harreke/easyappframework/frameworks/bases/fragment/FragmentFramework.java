@@ -12,7 +12,7 @@ import com.harreke.easyappframework.R;
 import com.harreke.easyappframework.frameworks.bases.IActionBar;
 import com.harreke.easyappframework.frameworks.bases.IFramework;
 import com.harreke.easyappframework.frameworks.bases.activity.ActivityFramework;
-import com.harreke.easyappframework.helpers.outers.VolleyRequestHelper;
+import com.harreke.easyappframework.helpers.RequestHelper;
 import com.harreke.easyappframework.requests.IRequestCallback;
 import com.harreke.easyappframework.requests.RequestBuilder;
 import com.harreke.easyappframework.tools.DevUtil;
@@ -38,7 +38,7 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
             }
         }
     };
-    private VolleyRequestHelper mRequest;
+    private RequestHelper mRequest;
 
     /**
      * 为ActionBar添加一个菜单选项
@@ -678,7 +678,7 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
             framework_content = (FrameLayout) framework.findViewById(R.id.framework_content);
             framework_info = (InfoView) framework.findViewById(R.id.framework_info);
             framework_toast = (ToastView) framework.findViewById(R.id.framework_toast);
-            mRequest = new VolleyRequestHelper();
+            mRequest = new RequestHelper();
             framework_info.setOnClickListener(mInfoClickListener);
 
             setLayout();

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ListView
+    android:id="@+id/absListView"
+    style="@style/mm"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:cacheColorHint="@color/Transparent"
+    android:divider="@null"
+    android:dividerHeight="8dp"
+    android:drawSelectorOnTop="true"
+    android:fastScrollEnabled="true"
+    android:padding="8dp"/>

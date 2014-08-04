@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.harreke.easyappframework.samples.R;
-import com.harreke.easyappframework.tools.DevUtil;
 import com.harreke.easyappframework.widgets.slidableview.RefreshHeaderView;
 
 /**
@@ -28,8 +27,8 @@ public class RefreshHeader extends RefreshHeaderView {
         Resources resources = getResources();
 
         mRefreshComplete = resources.getDrawable(R.drawable.image_load_complete);
-        mRefreshing = (AnimationDrawable) resources.getDrawable(R.drawable.anim_progressloading);
-        mRefreshProgress = (AnimationDrawable) resources.getDrawable(R.drawable.anim_refreshprogress);
+        mRefreshing = (AnimationDrawable) resources.getDrawable(R.drawable.anim_progress_ring);
+        mRefreshProgress = (AnimationDrawable) resources.getDrawable(R.drawable.anim_progress_refresh);
     }
 
     @Override

@@ -11,7 +11,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
-import com.harreke.easyappframework.helpers.inners.GestureHelper;
+import com.harreke.easyappframework.helpers.GestureHelper;
 import com.harreke.easyappframework.listeners.OnGestureListener;
 import com.harreke.easyappframework.listeners.OnImageTapListener;
 

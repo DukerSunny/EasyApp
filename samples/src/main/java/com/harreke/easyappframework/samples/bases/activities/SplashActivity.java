@@ -26,7 +26,7 @@ public class SplashActivity extends ActivityFramework {
              * 计时结束，启动主界面
              */
             //            start(MainActivity.create(getActivity()), false);
-            start(SlidableAbsListActivity.create(getActivity()), true);
+            start(DBActivity.create(getActivity()), true);
             exit(false);
         }
     };

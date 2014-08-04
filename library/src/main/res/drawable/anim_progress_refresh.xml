@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:drawable="@drawable/progress_refresh1"
+        android:duration="400"/>
+    <item
+        android:drawable="@drawable/progress_refresh2"
+        android:duration="400"/>
+    <item
+        android:drawable="@drawable/progress_refresh3"
+        android:duration="400"/>
+    <item
+        android:drawable="@drawable/progress_refresh4"
+        android:duration="400"/>
+    <item
+        android:drawable="@drawable/progress_refresh5"
+        android:duration="400"/>
+    <item
+        android:drawable="@drawable/progress_refresh6"
+        android:duration="400"/>
+
+</animation-list>

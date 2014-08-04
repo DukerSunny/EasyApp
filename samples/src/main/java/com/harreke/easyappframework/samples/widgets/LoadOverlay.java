@@ -27,7 +27,7 @@ public class LoadOverlay extends LoadOverlayView {
         Resources resources = getResources();
 
         mLoadComplete = resources.getDrawable(R.drawable.image_load_complete);
-        mLoading = (AnimationDrawable) resources.getDrawable(R.drawable.anim_progressloading);
+        mLoading = (AnimationDrawable) resources.getDrawable(R.drawable.anim_progress_ring);
 
         mLoadCompletePageSize = resources.getString(R.string.loadoverlay_loadcomplete_pagesize);
     }

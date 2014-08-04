@@ -75,7 +75,7 @@
 
     <style name="App.InfoView">
         <item name="android:padding">8dp</item>
-        <item name="loadingImage">@drawable/anim_infoloading</item>
+        <item name="loadingImage">@drawable/anim_progress_info</item>
         <item name="loadingText">@string/info_loading</item>
         <item name="emptyImage">@drawable/info_empty</item>
         <item name="emptyText">@string/info_empty</item>
@@ -123,7 +123,7 @@
     <style name="App.ToastView">
         <item name="android:background">@drawable/shape_toast</item>
         <item name="android:padding">@dimen/widget_xlarge</item>
-        <item name="progress">@drawable/anim_progressloading</item>
+        <item name="progress">@drawable/anim_progress_ring</item>
         <item name="showProgress">false</item>
         <item name="textColor">@color/White</item>
         <item name="textSize">@dimen/text_content_middle</item>

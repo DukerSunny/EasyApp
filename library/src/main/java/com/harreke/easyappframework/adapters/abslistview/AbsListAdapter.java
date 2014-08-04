@@ -20,7 +20,8 @@ public abstract class AbsListAdapter<ITEM> extends BaseAdapter {
      * 添加一个条目
      *
      * @param itemId
-     *         条目Id（唯一）
+     *         条目Id，大于等于0，用于检测是否有重复条目
+     *         若为-1，则不检测重复条目
      * @param item
      *         条目对象
      */

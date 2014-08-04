@@ -7,7 +7,7 @@ package com.harreke.easyappframework.listeners;
  * 注：
  * 支持最多2个点的手势
  *
- * @see com.harreke.easyappframework.helpers.inners.GestureHelper
+ * @see com.harreke.easyappframework.helpers.GestureHelper
  */
 public interface OnGestureListener {
     /**

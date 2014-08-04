@@ -6,7 +6,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
-import com.harreke.easyappframework.imageloaders.volley.VolleyImageCache;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/07/24
@@ -28,7 +27,7 @@ public class VolleyInstance {
         return mInstance;
     }
 
-    public final Request<String> add(Request<String> request) {
+    public final Request add(Request<String> request) {
         return mQueue.add(request);
     }
 

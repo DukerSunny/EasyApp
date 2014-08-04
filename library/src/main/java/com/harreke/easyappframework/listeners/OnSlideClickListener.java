@@ -5,7 +5,7 @@ package com.harreke.easyappframework.listeners;
  *
  * 幻灯助手的接口
  *
- * @see com.harreke.easyappframework.helpers.inners.SlideHelper
+ * @see com.harreke.easyappframework.helpers.SlideHelper
  */
 public interface OnSlideClickListener {
     /**

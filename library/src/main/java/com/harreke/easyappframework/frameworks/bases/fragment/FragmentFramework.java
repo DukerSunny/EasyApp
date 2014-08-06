@@ -193,6 +193,38 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
     }
 
     /**
+     * 布局新增视图
+     *
+     * @param view
+     *         视图
+     * @param params
+     *         布局参数
+     */
+    @Override
+    public final void addContentView(View view, FrameLayout.LayoutParams params) {
+        framework_content.addView(view, params);
+    }
+
+    /**
+     * 取消正在执行的Http请求
+     */
+    @Override
+    public final void cancelRequest() {
+        mRequest.cancel();
+    }
+
+    /**
+     * 输出调试信息
+     *
+     * @param message
+     *         调试信息
+     */
+    @Override
+    public void debug(String message) {
+        DevUtil.e(TAG, message);
+    }
+
+    /**
      * 禁用ActionBar的Home键上的图标
      */
     @Override
@@ -217,6 +249,74 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
     }
 
     /**
+     * 执行一个Http请求
+     *
+     * 注：同一时间只能执行一个请求，新增请求前会先取消正在执行的请求
+     *
+     * @param builder
+     *         Http请求
+     * @param callback
+     *         Http请求回调
+     */
+    @Override
+    public final void executeRequest(RequestBuilder builder, IRequestCallback<String> callback) {
+        mRequest.execute(getActivity(), builder, callback);
+    }
+
+    private ActivityFramework getActivityFramework() {
+        ActivityFramework activityFramework;
+
+        try {
+            activityFramework = (ActivityFramework) getActivity();
+        } catch (ClassCastException e) {
+            activityFramework = null;
+        }
+
+        return activityFramework;
+    }
+
+    /**
+     * 获得内容层视图
+     *
+     * 框架拥有两层视图，内容层和消息层
+     *
+     * 内容层为xml文件中编写的实际布局内容
+     *
+     * @return 内容层视图
+     */
+    @Override
+    public final View getContent() {
+        return framework_content;
+    }
+
+    /**
+     * 获得框架
+     *
+     * @return 框架
+     */
+    @Override
+    public final IFramework getFramework() {
+        return this;
+    }
+
+    /**
+     * 获得消息层视图
+     *
+     * 框架拥有两层视图，内容层和消息层
+     * 消息层为一个InfoView（消息视图），盖在内容层上，用来提示相关信息（如加载中）
+     * 框架因执行启动、刷新数据等异步操作，而导致内容层里的内容不可用时，会显示出消息层
+     * 当异步操作完成后，消息层会隐藏，重新显示出内容层
+     *
+     * @return 消息层视图
+     *
+     * @see com.harreke.easyappframework.widgets.InfoView
+     */
+    @Override
+    public final InfoView getInfo() {
+        return framework_info;
+    }
+
+    /**
      * 隐藏ActoinBar上的指定菜单选项
      */
     @Override
@@ -226,6 +326,25 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
         if (activity != null) {
             activity.hideActionBarItem(position);
         }
+    }
+
+    /**
+     * 隐藏Toast
+     *
+     * @param animate
+     *         是否显示动画
+     */
+    @Override
+    public final void hideToast(boolean animate) {
+        framework_toast.hide(animate);
+    }
+
+    /**
+     * 隐藏Toast
+     */
+    @Override
+    public final void hideToast() {
+        framework_toast.hide();
     }
 
     /**
@@ -253,6 +372,78 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
         ActivityFramework activity = getActivityFramework();
 
         return activity != null && activity.isActionBarShowing();
+    }
+
+    /**
+     * 是否正在执行一个Http请求
+     *
+     * @return boolean
+     */
+    @Override
+    public boolean isRequestExecuting() {
+        return mRequest.isExecuting();
+    }
+
+    @Override
+    public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        FrameLayout framework = (FrameLayout) inflater.inflate(R.layout.widget_framework, null);
+
+        if (framework != null) {
+            framework_content = (FrameLayout) framework.findViewById(R.id.framework_content);
+            framework_info = (InfoView) framework.findViewById(R.id.framework_info);
+            framework_toast = (ToastView) framework.findViewById(R.id.framework_toast);
+            mRequest = new RequestHelper();
+            framework_info.setOnClickListener(mInfoClickListener);
+
+            setLayout();
+            initData(getArguments());
+            queryLayout();
+            newEvents();
+            assignEvents();
+        }
+
+        return framework;
+    }
+
+    @Override
+    public void onDestroyView() {
+        hideToast(false);
+        cancelRequest();
+        mCreated = false;
+        super.onDestroyView();
+    }
+
+    /**
+     * 当消息层被点击时触发
+     */
+    @Override
+    public void onInfoClick() {
+        if (!isRequestExecuting()) {
+            startAction();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (!mCreated) {
+            mCreated = true;
+            startAction();
+        }
+    }
+
+    /**
+     * 查找视图
+     *
+     * @param viewId
+     *         视图id
+     *
+     * @return 视图
+     */
+    @Override
+    public final View queryContent(int viewId) {
+        return framework_content.findViewById(viewId);
     }
 
     /**
@@ -388,158 +579,13 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
     }
 
     /**
-     * 显示ActionBar上的指定菜单选项
-     *
-     * @param position
-     *         菜单选项位置
-     */
-    @Override
-    public void showActionBarItem(int position) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.showActionBarItem(position);
-        }
-    }
-
-    /**
-     * 布局新增视图
-     *
-     * @param view
-     *         视图
-     * @param params
-     *         布局参数
-     */
-    @Override
-    public final void addContentView(View view, FrameLayout.LayoutParams params) {
-        framework_content.addView(view, params);
-    }
-
-    /**
-     * 取消正在执行的Http请求
-     */
-    @Override
-    public final void cancelRequest() {
-        mRequest.cancel();
-    }
-
-    /**
-     * 输出调试信息
-     *
-     * @param message
-     *         调试信息
-     */
-    @Override
-    public void debug(String message) {
-        DevUtil.e(TAG, message);
-    }
-
-    /**
-     * 执行一个Http请求
-     *
-     * 注：同一时间只能执行一个请求，新增请求前会先取消正在执行的请求
-     *
-     * @param builder
-     *         Http请求
-     * @param callback
-     *         Http请求回调
-     */
-    @Override
-    public final <RESULT> void executeRequest(RequestBuilder builder, IRequestCallback<RESULT> callback) {
-        mRequest.execute(getActivity(), builder, callback);
-    }
-
-    /**
-     * 获得内容层视图
-     *
-     * 框架拥有两层视图，内容层和消息层
-     *
-     * 内容层为xml文件中编写的实际布局内容
-     *
-     * @return 内容层视图
-     */
-    @Override
-    public final View getContent() {
-        return framework_content;
-    }
-
-    /**
-     * 获得框架
-     *
-     * @return 框架
-     */
-    @Override
-    public final IFramework getFramework() {
-        return this;
-    }
-
-    /**
-     * 获得消息层视图
-     *
-     * 框架拥有两层视图，内容层和消息层
-     * 消息层为一个InfoView（消息视图），盖在内容层上，用来提示相关信息（如加载中）
-     * 框架因执行启动、刷新数据等异步操作，而导致内容层里的内容不可用时，会显示出消息层
-     * 当异步操作完成后，消息层会隐藏，重新显示出内容层
-     *
-     * @return 消息层视图
-     *
-     * @see com.harreke.easyappframework.widgets.InfoView
-     */
-    @Override
-    public final InfoView getInfo() {
-        return framework_info;
-    }
-
-    /**
-     * 隐藏Toast
-     *
-     * @param animate
-     *         是否显示动画
-     */
-    @Override
-    public final void hideToast(boolean animate) {
-        framework_toast.hide(animate);
-    }
-
-    /**
-     * 隐藏Toast
-     */
-    @Override
-    public final void hideToast() {
-        framework_toast.hide();
-    }
-
-    /**
-     * 是否正在执行一个Http请求
-     *
-     * @return boolean
-     */
-    @Override
-    public boolean isRequestExecuting() {
-        return mRequest.isExecuting();
-    }
-
-    /**
-     * 查找视图
-     *
-     * @param viewId
-     *         视图id
-     *
-     * @return 视图
-     */
-    @Override
-    public final View queryContent(int viewId) {
-        return framework_content.findViewById(viewId);
-    }
-
-    /**
      * 设置内容层布局
      *
      * @param view
      *         布局视图
      */
     @Override
-    public final void setContent(View view) {
+    public final void setContentView(View view) {
         framework_content.removeAllViews();
         framework_content.addView(view);
     }
@@ -551,7 +597,7 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
      *         布局Id
      */
     @Override
-    public final void setContent(int layoutId) {
+    public final void setContentView(int layoutId) {
         framework_content.removeAllViews();
         View.inflate(getActivity(), layoutId, framework_content);
     }
@@ -584,6 +630,21 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
     @Override
     public void setInfoVisibility(int infoVisibility) {
         framework_info.setInfoVisibility(infoVisibility);
+    }
+
+    /**
+     * 显示ActionBar上的指定菜单选项
+     *
+     * @param position
+     *         菜单选项位置
+     */
+    @Override
+    public void showActionBarItem(int position) {
+        ActivityFramework activity = getActivityFramework();
+
+        if (activity != null) {
+            activity.showActionBarItem(position);
+        }
     }
 
     /**
@@ -655,67 +716,6 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
             hideToast(false);
             startActivityForResult(intent, requestCode);
             activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-        }
-    }
-
-    private ActivityFramework getActivityFramework() {
-        ActivityFramework activityFramework;
-
-        try {
-            activityFramework = (ActivityFramework) getActivity();
-        } catch (ClassCastException e) {
-            activityFramework = null;
-        }
-
-        return activityFramework;
-    }
-
-    @Override
-    public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        FrameLayout framework = (FrameLayout) inflater.inflate(R.layout.widget_framework, null);
-
-        if (framework != null) {
-            framework_content = (FrameLayout) framework.findViewById(R.id.framework_content);
-            framework_info = (InfoView) framework.findViewById(R.id.framework_info);
-            framework_toast = (ToastView) framework.findViewById(R.id.framework_toast);
-            mRequest = new RequestHelper();
-            framework_info.setOnClickListener(mInfoClickListener);
-
-            setLayout();
-            initData(getArguments());
-            queryLayout();
-            newEvents();
-            assignEvents();
-        }
-
-        return framework;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        if (!mCreated) {
-            mCreated = true;
-            startAction();
-        }
-    }
-
-    @Override
-    public void onDestroyView() {
-        hideToast(false);
-        cancelRequest();
-        mCreated = false;
-        super.onDestroyView();
-    }
-
-    /**
-     * 当消息层被点击时触发
-     */
-    @Override
-    public void onInfoClick() {
-        if (!isRequestExecuting()) {
-            startAction();
         }
     }
 }

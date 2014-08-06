@@ -9,7 +9,6 @@ import com.harreke.easyappframework.adapters.abslistview.AbsListAdapter;
 import com.harreke.easyappframework.frameworks.bases.IFramework;
 import com.harreke.easyappframework.frameworks.list.ListFramework;
 import com.harreke.easyappframework.holders.abslistview.IAbsListHolder;
-import com.harreke.easyappframework.loaders.ILoader;
 
 import java.util.Comparator;
 
@@ -19,13 +18,11 @@ import java.util.Comparator;
  * AbsListView框架
  *
  * @param <ITEM>
- *         列表条目类型
+ *         条目类型
  * @param <HOLDER>
- *         列表Holder类型
- * @param <LOADER>
- *         列表Loader类型
+ *         条目容器类型
  */
-public abstract class AbsListFramework<ITEM, HOLDER extends IAbsListHolder<ITEM>, LOADER extends ILoader<ITEM>> extends ListFramework<ITEM, LOADER>
+public abstract class AbsListFramework<ITEM, HOLDER extends IAbsListHolder<ITEM>> extends ListFramework<ITEM>
         implements IAbsList<ITEM, HOLDER>, IAbsListItemClickListener<ITEM>, AdapterView.OnClickListener, AdapterView.OnItemClickListener,
         AbsListView.OnScrollListener {
     private AbsListView mAbsListView;
@@ -37,15 +34,19 @@ public abstract class AbsListFramework<ITEM, HOLDER extends IAbsListHolder<ITEM>
     }
 
     /**
-     * 向Adapter添加一个条目
+     * 添加一个条目
      *
      * @param itemId
-     *         条目Id（唯一）
+     *         条目Id，大于等于0，用于检测是否有重复条目
+     *         若为-1，则不检测重复条目
      * @param item
      *         条目对象
+     *
+     * @return 如果添加成功，返回true，否则返回false
      */
-    public final void addItem(int itemId, ITEM item) {
-        mAdapter.addItem(itemId, item);
+    @Override
+    public final boolean addItem(int itemId, ITEM item) {
+        return mAdapter.addItem(itemId, item);
     }
 
     @Override

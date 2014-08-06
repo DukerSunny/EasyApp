@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    style="@style/mw.h"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/group_tag"
+        android:layout_width="96dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="-4dp"
+        android:background="@drawable/shape_corner_gray"
+        android:gravity="center"
+        android:padding="4dp"
+        android:textColor="@color/White"
+        android:textSize="20dp"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="8dp"
+        android:background="@drawable/divider_horizontal"/>
+
+</LinearLayout>

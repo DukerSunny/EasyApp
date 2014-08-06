@@ -55,7 +55,7 @@ public interface IFramework extends IInfoClickListener {
      * @param callback
      *         Http请求回调
      */
-    public <RESULT> void executeRequest(RequestBuilder builder, IRequestCallback<RESULT> callback);
+    public void executeRequest(RequestBuilder builder, IRequestCallback<String> callback);
 
     /**
      * 获得当前Activity
@@ -145,7 +145,7 @@ public interface IFramework extends IInfoClickListener {
      * @param view
      *         布局视图
      */
-    public void setContent(View view);
+    public void setContentView(View view);
 
     /**
      * 设置内容层布局
@@ -153,7 +153,7 @@ public interface IFramework extends IInfoClickListener {
      * @param layoutId
      *         布局Id
      */
-    public void setContent(int layoutId);
+    public void setContentView(int layoutId);
 
     /**
      * 设置内容层是否可见

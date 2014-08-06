@@ -54,7 +54,7 @@ public class DBActivity extends ActivityFramework {
 
     @Override
     public void setLayout() {
-        setContent(R.layout.activity_db);
+        setContentView(R.layout.activity_db);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class DBActivity extends ActivityFramework {
         DBItem dbItem;
         DBItem.SubItem subItem;
         String table = "DBItems";
-        String primaryKey = "mId";
+        String primaryKey = "id";
         String text = "";
         int i;
         int j;
@@ -120,7 +120,7 @@ public class DBActivity extends ActivityFramework {
          */
         text += "\n删除第一条数据\n\n";
         mTextView.setText(text);
-        mDatabase.delete(table, "mId", String.valueOf(list.get(0).getId()));
+        mDatabase.delete(table, primaryKey, String.valueOf(list.get(0).getId()));
         /**
          * 查询表数据
          */

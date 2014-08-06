@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ExpandableListView
+    android:id="@+id/exListView"
+    style="@style/mm"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:cacheColorHint="@color/Transparent"
+    android:childIndicator="@null"
+    android:divider="@null"
+    android:drawSelectorOnTop="true"
+    android:fastScrollEnabled="true"
+    android:groupIndicator="@null"
+    android:padding="8dp"/>

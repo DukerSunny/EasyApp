@@ -3,7 +3,7 @@ package com.harreke.easyappframework.samples.entities.beans;
 import java.util.ArrayList;
 
 /**
- * ÓÉ Harreke£¨harreke@live.cn£© ´´½¨ÓÚ 2014/08/04
+ * ç”± Harrekeï¼ˆharreke@live.cnï¼‰ åˆ›å»ºäº 2014/08/04
  */
 public class DBItem {
     private String mDesc;

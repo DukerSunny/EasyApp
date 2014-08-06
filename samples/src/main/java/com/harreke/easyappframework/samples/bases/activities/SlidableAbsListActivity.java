@@ -10,7 +10,6 @@ import com.harreke.easyappframework.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyappframework.frameworks.list.abslistview.AbsListFramework;
 import com.harreke.easyappframework.samples.R;
 import com.harreke.easyappframework.samples.entities.beans.AbsListItem;
-import com.harreke.easyappframework.samples.entities.loaders.AbsListItemLoader;
 import com.harreke.easyappframework.samples.holders.SlidableAbsListItemHolder;
 import com.harreke.easyappframework.widgets.InfoView;
 
@@ -59,7 +58,7 @@ public class SlidableAbsListActivity extends ActivityFramework {
 
     @Override
     public void setLayout() {
-        setContent(R.layout.activity_slidable);
+        setContentView(R.layout.activity_slidable);
     }
 
     @Override
@@ -80,7 +79,7 @@ public class SlidableAbsListActivity extends ActivityFramework {
         mAbsList.from(list);
     }
 
-    private class AbsList extends AbsListFramework<AbsListItem, SlidableAbsListItemHolder, AbsListItemLoader> {
+    private class AbsList extends AbsListFramework<AbsListItem, SlidableAbsListItemHolder> {
         public AbsList(IFramework framework, int listId, int slidableViewId) {
             super(framework, listId, slidableViewId);
         }
@@ -106,8 +105,8 @@ public class SlidableAbsListActivity extends ActivityFramework {
         }
 
         @Override
-        public void onParseItem(AbsListItem item) {
-            addItem(getItemCount(), item);
+        public int parseItemId(AbsListItem absListItem) {
+            return absListItem.getId();
         }
     }
 }

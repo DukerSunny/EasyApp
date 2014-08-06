@@ -10,6 +10,11 @@
         android:theme="@style/App.Activity">
 
         <activity
+            android:name=".bases.activities.ExListActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
+
+        <activity
             android:name=".bases.activities.DBActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"/>
@@ -41,6 +46,13 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".bases.activities.SurfaceActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/App.Fullscreen"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustResize"/>
 
     </application>
 

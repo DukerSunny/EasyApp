@@ -5,23 +5,18 @@ import android.content.Context;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.google.gson.reflect.TypeToken;
 import com.harreke.easyappframework.requests.IRequestCallback;
 import com.harreke.easyappframework.requests.IRequestExecutor;
 import com.harreke.easyappframework.requests.RequestBuilder;
-import com.harreke.easyappframework.tools.GsonUtil;
 
 /**
  * Volley Http请求执行器
- *
- * @param <RESULT>
- *         目标类型，可以为自定义Java bean或String
  */
-public class VolleyRequestExecutor<RESULT> implements IRequestExecutor, Response.Listener<String>, Response.ErrorListener {
-    private IRequestCallback<RESULT> mCallback = null;
+public class VolleyRequestExecutor implements IRequestExecutor, Response.Listener<String>, Response.ErrorListener {
+    private IRequestCallback<String> mCallback = null;
     private Request mRequest = null;
 
-    public VolleyRequestExecutor(Context context, RequestBuilder builder, IRequestCallback<RESULT> callback) {
+    public VolleyRequestExecutor(Context context, RequestBuilder builder, IRequestCallback<String> callback) {
         VolleyInstance instance = VolleyInstance.getInstance(context);
         int volleyMethod = 0;
 
@@ -57,16 +52,12 @@ public class VolleyRequestExecutor<RESULT> implements IRequestExecutor, Response
 
     @Override
     public void onResponse(String result) {
-        RESULT bean;
-
         mRequest = null;
         if (mCallback != null) {
-            bean = GsonUtil.toBean(result, new TypeToken<RESULT>() {
-            }.getType());
-            if (bean == null) {
+            if (result == null) {
                 mCallback.onFailure();
             } else {
-                mCallback.onSuccess(bean);
+                mCallback.onSuccess(result);
             }
         }
     }

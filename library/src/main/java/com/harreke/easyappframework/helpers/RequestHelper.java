@@ -29,7 +29,7 @@ public class RequestHelper {
      * @param callback
      *         回调
      */
-    public final <RESULT> void execute(Context context, RequestBuilder builder, IRequestCallback<RESULT> callback) {
+    public final void execute(Context context, RequestBuilder builder, IRequestCallback<String> callback) {
         if (context != null) {
             cancel();
             mExecutor = RequestExecutorConfig.create(context, builder, callback);

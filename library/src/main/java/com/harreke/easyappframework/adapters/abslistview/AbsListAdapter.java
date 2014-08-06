@@ -25,13 +25,17 @@ public abstract class AbsListAdapter<ITEM> extends BaseAdapter {
      * @param item
      *         条目对象
      */
-    public final void addItem(int itemId, ITEM item) {
+    public final boolean addItem(int itemId, ITEM item) {
         /**
          通过条目Id判断是否重复添加
          */
         if (!mKeySet.contains(itemId)) {
             mKeySet.add(itemId);
             mItemList.add(item);
+
+            return true;
+        } else {
+            return false;
         }
     }
 

@@ -12,12 +12,35 @@ import java.util.Comparator;
 
 public interface IList<ITEM> {
     /**
+     * 添加一个条目
+     *
+     * @param itemId
+     *         条目Id，大于等于0，用于检测是否有重复条目
+     *         若为-1，则不检测重复条目
+     * @param item
+     *         条目对象
+     *
+     * @return 如果添加成功，返回true，否则返回false
+     */
+    public boolean addItem(int itemId, ITEM item);
+
+    /**
      * 清空列表
      */
     public void clear();
 
     /**
-     * 获取条目总数
+     * 获得指定条目
+     *
+     * @param position
+     *         条目位置
+     *
+     * @return 指定条目
+     */
+    public ITEM getItem(int position);
+
+    /**
+     * 获得条目总数
      *
      * @return int
      */
@@ -26,9 +49,23 @@ public interface IList<ITEM> {
     /**
      * 判断列表是否为空
      *
-     * @return boolean
+     * @return 列表是否为空
      */
     public boolean isEmpty();
+
+    /**
+     * 解析条目Id
+     *
+     * @param item
+     *         条目对象
+     *
+     * @return 条目Id
+     *
+     * 条目Id是用来标识是否重复的依据
+     *
+     * @see #addItem(int, ITEM)
+     */
+    public int parseItemId(ITEM item);
 
     /**
      * 刷新列表

@@ -15,14 +15,6 @@ public interface IListStatusChageListener<ITEM> {
     public void onError();
 
     /**
-     * 解析条目
-     *
-     * @param item
-     *         条目类型
-     */
-    public void onParseItem(ITEM item);
-
-    /**
      * 当列表加载完成时触发
      */
     public void onPostAction();

@@ -26,7 +26,8 @@ public class SplashActivity extends ActivityFramework {
              * 计时结束，启动主界面
              */
             //            start(MainActivity.create(getActivity()), false);
-            start(DBActivity.create(getActivity()), true);
+            //            start(SurfaceActivity.create(getActivity()), true);
+            start(ExListActivity.create(getActivity()), true);
             exit(false);
         }
     };
@@ -41,12 +42,55 @@ public class SplashActivity extends ActivityFramework {
     }
 
     /**
+     * 初始化Activity配置信息
+     *
+     * 如设置屏幕样式，屏幕亮度，是否全屏等
+     */
+    @Override
+    public void configActivity() {
+        super.configActivity();
+    }
+
+    /**
+     * 初始化Activity传参数据
+     */
+    @Override
+    public void initData(Intent intent) {
+    }
+
+    /**
      * 初始化事件
      *
      * 创建回调与监听器
      */
     @Override
     public void newEvents() {
+    }
+
+    /**
+     * 当ActionBar的菜单选项被点击时触发
+     *
+     * @param position
+     *         菜单选项的位置
+     */
+    @Override
+    public void onActionBarItemClick(int position, ActionBarItem item) {
+    }
+
+    /**
+     * 当Activity的ActionBar菜单被创建时触发
+     */
+    @Override
+    public void onActionBarMenuCreate() {
+    }
+
+    @Override
+    public void onBackPressed() {
+        /**
+         * 如果在计时结束前按下返回键，则直接退出，不再继续启动MainActivity
+         */
+        splashHandler.removeCallbacks(splashRunnable);
+        exit(false);
     }
 
     /**
@@ -65,7 +109,7 @@ public class SplashActivity extends ActivityFramework {
      */
     @Override
     public void setLayout() {
-        setContent(R.layout.activity_splash);
+        setContentView(R.layout.activity_splash);
     }
 
     /**
@@ -80,48 +124,5 @@ public class SplashActivity extends ActivityFramework {
         //         */
         //        splashHandler.postDelayed(splashRunnable, 3000);
         splashRunnable.run();
-    }
-
-    /**
-     * 初始化Activity配置信息
-     *
-     * 如设置屏幕样式，屏幕亮度，是否全屏等
-     */
-    @Override
-    public void configActivity() {
-        super.configActivity();
-    }
-
-    @Override
-    public void onBackPressed() {
-        /**
-         * 如果在计时结束前按下返回键，则直接退出，不再继续启动MainActivity
-         */
-        splashHandler.removeCallbacks(splashRunnable);
-        exit(false);
-    }
-
-    /**
-     * 初始化Activity传参数据
-     */
-    @Override
-    public void initData(Intent intent) {
-    }
-
-    /**
-     * 当Activity的ActionBar菜单被创建时触发
-     */
-    @Override
-    public void onActionBarMenuCreate() {
-    }
-
-    /**
-     * 当ActionBar的菜单选项被点击时触发
-     *
-     * @param position
-     *         菜单选项的位置
-     */
-    @Override
-    public void onActionBarItemClick(int position, ActionBarItem item) {
     }
 }

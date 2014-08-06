@@ -2,6 +2,8 @@
 
     <string name="app_name">Samples</string>
 
+    <string name="dialog_input_room_number">请输入斗鱼房间号</string>
+
     <string name="splash_welcome">欢迎！</string>
     <string name="splash_welcome_summary">这是一个欢迎屏，你可以在此布局中放入任何logo或文本</string>
 

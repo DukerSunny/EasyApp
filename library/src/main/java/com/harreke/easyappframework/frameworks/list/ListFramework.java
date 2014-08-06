@@ -7,7 +7,7 @@ import android.widget.AbsListView;
 import com.harreke.easyappframework.R;
 import com.harreke.easyappframework.frameworks.bases.IFramework;
 import com.harreke.easyappframework.listeners.OnSlidableTriggerListener;
-import com.harreke.easyappframework.loaders.ILoader;
+import com.harreke.easyappframework.listparsers.IListParser;
 import com.harreke.easyappframework.requests.IRequestCallback;
 import com.harreke.easyappframework.requests.RequestBuilder;
 import com.harreke.easyappframework.widgets.InfoView;
@@ -29,22 +29,21 @@ import java.util.Comparator;
  * 不支持不依靠Adapter管理数据的视图
  *
  * 注：
- * ListView和GridView架构相近（视图单元是一个简单单元），GridView可以直接使用ListView的实现类；
+ * 1.ListView和GridView架构相近（视图单元是一个简单单元），GridView可以直接使用ListView的实现类；
  * 虽然ExpandableListView同样衍生于AbsListView，但是由于架构的不同（视图单元是一个复合单元，由一个父单元和多个子单元复合而成），不能直接使用ListView的实现类，需要另外实现ExpandableListView的方法
  * 其他架构有别于ListView的视图，也需要另外实现对应的方法
+ *
+ * 2.发起网络请求时，必须先设置网络数据解析器，以便解析识别从网络获得的数据
  *
  * @param <ITEM>
  *         列表条目类型
  *
  *         列表视图单元的类型，是列表的最基本组成
- * @param <LOADER>
- *         列表Loader类型
- *         列表填充数据时，数据的结构类型
  *
- *         待填充进列表的数据需按一定结构储存，以便被框架识别与解析
+ * @see com.harreke.easyappframework.listparsers.IListParser
  */
-public abstract class ListFramework<ITEM, LOADER extends ILoader<ITEM>>
-        implements IList<ITEM>, IListStatusChageListener<ITEM>, IRequestCallback<LOADER>, OnSlidableTriggerListener, View.OnClickListener {
+public abstract class ListFramework<ITEM>
+        implements IList<ITEM>, IListStatusChageListener<ITEM>, IRequestCallback<String>, OnSlidableTriggerListener, View.OnClickListener {
     private static int ACTION_LOAD = 1;
     private static int ACTION_NONE = 0;
 
@@ -57,6 +56,7 @@ public abstract class ListFramework<ITEM, LOADER extends ILoader<ITEM>>
     private IFramework mFramework;
     private InfoView mInfo = null;
     private String mLastText;
+    private IListParser<ITEM> mListParser = null;
     private boolean mLoadEnabled = false;
     private int mPageSize = 0;
     private boolean mReverseScroll = false;
@@ -130,7 +130,7 @@ public abstract class ListFramework<ITEM, LOADER extends ILoader<ITEM>>
      * 填充列表视图
      *
      * @param list
-     *         项目列表
+     *         条目列表
      */
     public final void from(ArrayList<ITEM> list) {
         from(list, false);
@@ -140,37 +140,26 @@ public abstract class ListFramework<ITEM, LOADER extends ILoader<ITEM>>
      * 填充列表视图
      *
      * @param list
-     *         项目列表
+     *         条目列表
      * @param reverse
      *         是否倒转列表顺序
      */
+    @SuppressWarnings("unchecked")
     public final void from(ArrayList<ITEM> list, boolean reverse) {
-        int i;
+        ITEM[] items = null;
 
         if (list != null) {
-            onPreAction();
-            mPageSize = list.size();
-            if (reverse) {
-                for (i = mPageSize - 1; i > -1; i--) {
-                    onParseItem(list.get(i));
-                }
-            } else {
-                for (i = 0; i < mPageSize; i++) {
-                    onParseItem(list.get(i));
-                }
-            }
-            if (mComparator != null) {
-                sort(mComparator);
-            }
-            onPostAction();
+            items = (ITEM[]) new Object[list.size()];
+            list.toArray(items);
         }
+        from(items, reverse);
     }
 
     /**
      * 填充列表视图
      *
      * @param list
-     *         项目列表
+     *         条目列表
      */
     public final void from(ITEM[] list) {
         from(list, false);
@@ -179,30 +168,41 @@ public abstract class ListFramework<ITEM, LOADER extends ILoader<ITEM>>
     /**
      * 填充列表视图
      *
-     * @param list
-     *         项目列表
+     * @param items
+     *         条目列表
      * @param reverse
      *         是否倒转列表顺序
      */
-    public final void from(ITEM[] list, boolean reverse) {
+    public final void from(ITEM[] items, boolean reverse) {
+        ITEM item;
+        int size;
         int i;
 
-        if (list != null) {
+        if (items != null) {
             onPreAction();
-            mPageSize = list.length;
+            mPageSize = 0;
+            size = items.length;
             if (reverse) {
-                for (i = mPageSize - 1; i > -1; i--) {
-                    onParseItem(list[i]);
+                for (i = size - 1; i > -1; i--) {
+                    item = items[i];
+                    if (addItem(parseItemId(item), item)) {
+                        mPageSize++;
+                    }
                 }
             } else {
-                for (i = 0; i < mPageSize; i++) {
-                    onParseItem(list[i]);
+                for (i = 0; i < size; i++) {
+                    item = items[i];
+                    if (addItem(parseItemId(item), item)) {
+                        mPageSize++;
+                    }
                 }
             }
             if (mComparator != null) {
                 sort(mComparator);
             }
             onPostAction();
+        } else {
+            onError();
         }
     }
 
@@ -213,10 +213,14 @@ public abstract class ListFramework<ITEM, LOADER extends ILoader<ITEM>>
      *         Http请求
      */
     public final void from(RequestBuilder builder) {
-        if (builder != null) {
-            onPreAction();
-            mFramework.executeRequest(builder, this);
+        if (mListParser == null) {
+            throw new IllegalStateException("Must set a list parser befor load network data!");
         }
+        if (builder == null) {
+            throw new IllegalArgumentException("Request builder must not be null!");
+        }
+        onPreAction();
+        mFramework.executeRequest(builder, this);
     }
 
     /**
@@ -243,9 +247,9 @@ public abstract class ListFramework<ITEM, LOADER extends ILoader<ITEM>>
     }
 
     /**
-     * 获得列表上一次加载的项目数量
+     * 获得列表上一次加载的条目数量
      *
-     * @return 上一次加载的项目数量
+     * @return 上一次加载的条目数量
      */
     public final int getPageSize() {
         return mPageSize;
@@ -370,9 +374,8 @@ public abstract class ListFramework<ITEM, LOADER extends ILoader<ITEM>>
         if (mActionType == ACTION_REFRESH) {
             setRefreshComplete();
         } else if (mActionType == ACTION_LOAD && !isFirstPage()) {
-            if (mSlidableView != null) {
-                setLoadComplete(mPageSize);
-            } else {
+            setLoadComplete(mPageSize);
+            if (mSlidableView == null) {
                 showToast(String.format(mCompleteText, mPageSize));
             }
         }
@@ -429,29 +432,17 @@ public abstract class ListFramework<ITEM, LOADER extends ILoader<ITEM>>
     }
 
     @Override
-    public void onSuccess(LOADER loader) {
+    public void onSuccess(String result) {
         ArrayList<ITEM> list;
-        int i;
 
-        if (loader.isSuccess()) {
-            loader.parse();
-            list = loader.getList();
-            if (list == null) {
-                list = new ArrayList<ITEM>();
-            }
-            mPageSize = list.size();
-            if (mPageSize == 0) {
-                previousPage();
-                mTotalPage = mCurrentPage;
+        if (mListParser != null) {
+            mListParser.parse(result);
+            if (mListParser.isSuccess()) {
+                list = mListParser.getList();
+                from(list);
             } else {
-                for (i = 0; i < mPageSize; i++) {
-                    onParseItem(list.get(i));
-                }
+                onError();
             }
-            if (mComparator != null) {
-                sort(mComparator);
-            }
-            onPostAction();
         } else {
             onError();
         }
@@ -522,6 +513,20 @@ public abstract class ListFramework<ITEM, LOADER extends ILoader<ITEM>>
         if (mSlidableView != null) {
             mSlidableView.setLoadStart();
         }
+    }
+
+    /**
+     * 设置网络数据解析器
+     *
+     * 解析器会将从网络加载的字符串数据反序列化、运算后，处理成可以直接调用的条目列表
+     *
+     * @param listPaser
+     *         网络数据解析器
+     *
+     *         为空表示不需要解析网络数据
+     */
+    public final void setParser(IListParser<ITEM> listPaser) {
+        mListParser = listPaser;
     }
 
     /**

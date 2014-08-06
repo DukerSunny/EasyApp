@@ -11,7 +11,7 @@ import java.util.Iterator;
  *
  * Http请求构造器，支持GET和POST请求
  */
-public abstract class RequestBuilder {
+public class RequestBuilder {
     public static final String METHOD_GET = "GET";
     public static final String METHOD_POST = "POST";
 

@@ -173,6 +173,71 @@ public abstract class ActivityFramework extends FragmentActivity implements IFra
         addActionBarItem(title, imageId, null, items, flag);
     }
 
+    private void addActionBarItem(String title, int imageId, View view, String[] items, int flag) {
+        ActionBarItem actionBarItem;
+        ActionBarItem subItem;
+        int index;
+        int i;
+
+        if (mActionBar != null) {
+            index = mActionBarItemList.size();
+            actionBarItem = new ActionBarItem(title, index);
+            actionBarItem.setImageId(imageId);
+            actionBarItem.setView(view);
+            actionBarItem.setFlag(flag);
+            if (items != null) {
+                index++;
+                for (i = 0; i < items.length; i++) {
+                    subItem = new ActionBarItem(title, index);
+                    mActionBarItemList.add(subItem);
+                }
+                actionBarItem.setSubItemCount(items.length);
+            }
+            mActionBarItemList.add(actionBarItem);
+        }
+    }
+
+    /**
+     * 布局新增视图
+     *
+     * @param view
+     *         视图
+     * @param params
+     *         布局参数
+     */
+    @Override
+    public void addContentView(View view, FrameLayout.LayoutParams params) {
+        framework_content.addView(view, params);
+    }
+
+    /**
+     * 取消正在执行的Http请求
+     */
+    @Override
+    public void cancelRequest() {
+        mRequest.cancel();
+    }
+
+    /**
+     * 初始化Activity配置信息
+     *
+     * 如设置屏幕样式，屏幕亮度，是否全屏等
+     */
+    @Override
+    public void configActivity() {
+    }
+
+    /**
+     * 输出调试信息
+     *
+     * @param message
+     *         调试信息
+     */
+    @Override
+    public void debug(String message) {
+        DevUtil.e(TAG, message);
+    }
+
     /**
      * 禁用ActionBar的Home键上的图标
      */
@@ -194,6 +259,91 @@ public abstract class ActivityFramework extends FragmentActivity implements IFra
     }
 
     /**
+     * 执行一个Http请求
+     *
+     * 注：同一时间只能执行一个请求，新增请求前会先取消正在执行的请求
+     *
+     * @param builder
+     *         Http请求
+     * @param callback
+     *         Http请求回调
+     */
+    @Override
+    public void executeRequest(RequestBuilder builder, IRequestCallback<String> callback) {
+        mRequest.execute(this, builder, callback);
+    }
+
+    /**
+     * 退出Activity
+     */
+    public final void exit() {
+        exit(true);
+    }
+
+    /**
+     * 退出Activity
+     *
+     * @param animate
+     *         是否显示动画
+     */
+    public final void exit(boolean animate) {
+        finish();
+        if (animate) {
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        }
+    }
+
+    /**
+     * 获得当前Activity
+     *
+     * @return 当前Activity
+     */
+    @Override
+    public Activity getActivity() {
+        return this;
+    }
+
+    /**
+     * 获得内容层视图
+     *
+     * 框架拥有两层视图，内容层和消息层
+     * 内容层为xml文件中编写的实际布局内容
+     *
+     * @return 内容层视图
+     */
+    @Override
+    public final FrameLayout getContent() {
+        return framework_content;
+    }
+
+    /**
+     * 获得框架
+     *
+     * @return 框架
+     */
+    @Override
+    public final IFramework getFramework() {
+        return this;
+    }
+
+    /**
+     * 获得消息层视图
+     *
+     * 框架拥有两层视图，内容层和消息层
+     * 消息层为一个InfoView（消息视图），盖在内容层上，用来提示相关信息（如加载中）
+     * 框架因执行启动、刷新数据等异步操作，而导致内容层里的内容不可用时，会显示出消息层
+     * 当异步操作完成后，消息层会隐藏，重新显示出内容层
+     *
+     * @return 消息层视图
+     *
+     * @see com.harreke.easyappframework.widgets.InfoView
+     */
+    @Override
+    public final InfoView getInfo() {
+        return framework_info;
+    }
+
+    /**
      * 隐藏ActoinBar上的指定菜单选项
      */
     @Override
@@ -201,6 +351,25 @@ public abstract class ActivityFramework extends FragmentActivity implements IFra
         if (mActionBar != null && position >= 0 && position < mActionBarItemList.size()) {
             mActionBarItemList.get(position).setVisible(false);
         }
+    }
+
+    /**
+     * 隐藏Toast
+     *
+     * @param animate
+     *         是否显示动画
+     */
+    @Override
+    public final void hideToast(boolean animate) {
+        framework_toast.hide(animate);
+    }
+
+    /**
+     * 隐藏Toast
+     */
+    @Override
+    public final void hideToast() {
+        framework_toast.hide();
     }
 
     /**
@@ -217,6 +386,148 @@ public abstract class ActivityFramework extends FragmentActivity implements IFra
     @Override
     public final boolean isActionBarShowing() {
         return mActionBar != null && mActionBar.isShowing();
+    }
+
+    /**
+     * 隐藏Toast
+     */
+    @Override
+    public final boolean isRequestExecuting() {
+        return mRequest.isExecuting();
+    }
+
+    /**
+     * 当ActionBar的Home键被点击时触发
+     */
+    @Override
+    public void onActionBarHomeClick() {
+        onBackPressed();
+    }
+
+    @Override
+    public void onBackPressed() {
+        exit();
+    }
+
+    @Override
+    public final void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        FrameLayout framework;
+
+        registerReceiver(mExitReceiver, new IntentFilter(getPackageName() + ".EXIT"));
+        NetUtil.checkConnection(this);
+
+        configActivity();
+
+        framework = (FrameLayout) LayoutInflater.from(this).inflate(R.layout.widget_framework, null);
+        framework_content = (FrameLayout) framework.findViewById(R.id.framework_content);
+        framework_info = (InfoView) framework.findViewById(R.id.framework_info);
+        framework_toast = (ToastView) framework.findViewById(R.id.framework_toast);
+        framework_info.setOnClickListener(mInfoClickListener);
+
+        super.setContentView(framework);
+
+        mActionBar = getActionBar();
+
+        setLayout();
+        initData(getIntent());
+        onActionBarMenuCreate();
+        queryLayout();
+        newEvents();
+        assignEvents();
+    }
+
+    @Override
+    public final boolean onCreateOptionsMenu(Menu menu) {
+        MenuItem menuItem;
+        SubMenu subMenu;
+        ActionBarItem actionBarItem;
+        ActionBarItem subItem;
+        int i;
+        int index = 0;
+
+        if (mActionBar != null) {
+            while (index < mActionBarItemList.size()) {
+                actionBarItem = mActionBarItemList.get(index);
+                if (actionBarItem.getSubItemCount() == 0) {
+                    menuItem = menu.add(0, index, index, actionBarItem.getTitle());
+                    index++;
+                } else {
+                    subMenu = menu.addSubMenu(0, index, index, actionBarItem.getTitle());
+                    for (i = 0; i < actionBarItem.getSubItemCount(); i++) {
+                        subItem = mActionBarItemList.get(index + i);
+                        subMenu.add(0, index + i, i, subItem.getTitle());
+                    }
+                    menuItem = subMenu.getItem();
+                    index += actionBarItem.getSubItemCount() + 1;
+                }
+                if (actionBarItem.getImageId() > 0) {
+                    menuItem.setIcon(actionBarItem.getImageId());
+                } else if (actionBarItem.getView() != null) {
+                    menuItem.setActionView(actionBarItem.getView());
+                }
+                if (actionBarItem.getFlag() > -1) {
+                    menuItem.setShowAsAction(actionBarItem.getFlag());
+                }
+            }
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(mExitReceiver);
+        hideToast(false);
+        cancelRequest();
+        mCreated = false;
+        super.onDestroy();
+    }
+
+    /**
+     * 当消息层被点击时触发
+     */
+    @Override
+    public void onInfoClick() {
+        if (!isRequestExecuting()) {
+            startAction();
+        }
+    }
+
+    @Override
+    public final boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onActionBarHomeClick();
+        } else {
+            onActionBarItemClick(item.getItemId(), mActionBarItemList.get(item.getItemId()));
+        }
+
+        return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (!mCreated) {
+            mCreated = true;
+            startAction();
+        }
+    }
+
+    /**
+     * 查找视图
+     *
+     * @param viewId
+     *         视图id
+     *
+     * @return 视图
+     */
+    @Override
+    public final View queryContent(int viewId) {
+        return framework_content.findViewById(viewId);
     }
 
     /**
@@ -370,187 +681,13 @@ public abstract class ActivityFramework extends FragmentActivity implements IFra
     }
 
     /**
-     * 显示ActionBar上的指定菜单选项
-     *
-     * @param position
-     *         菜单选项位置
-     */
-    @Override
-    public final void showActionBarItem(int position) {
-        if (mActionBar != null && position >= 0 && position < mActionBarItemList.size()) {
-            mActionBarItemList.get(position).setVisible(true);
-        }
-    }
-
-    private void addActionBarItem(String title, int imageId, View view, String[] items, int flag) {
-        ActionBarItem actionBarItem;
-        ActionBarItem subItem;
-        int index;
-        int i;
-
-        if (mActionBar != null) {
-            index = mActionBarItemList.size();
-            actionBarItem = new ActionBarItem(title, index);
-            actionBarItem.setImageId(imageId);
-            actionBarItem.setView(view);
-            actionBarItem.setFlag(flag);
-            if (items != null) {
-                index++;
-                for (i = 0; i < items.length; i++) {
-                    subItem = new ActionBarItem(title, index);
-                    mActionBarItemList.add(subItem);
-                }
-                actionBarItem.setSubItemCount(items.length);
-            }
-            mActionBarItemList.add(actionBarItem);
-        }
-    }
-
-    /**
-     * 布局新增视图
-     *
-     * @param view
-     *         视图
-     * @param params
-     *         布局参数
-     */
-    @Override
-    public void addContentView(View view, FrameLayout.LayoutParams params) {
-        framework_content.addView(view, params);
-    }
-
-    /**
-     * 取消正在执行的Http请求
-     */
-    @Override
-    public void cancelRequest() {
-        mRequest.cancel();
-    }
-
-    /**
-     * 输出调试信息
-     *
-     * @param message
-     *         调试信息
-     */
-    @Override
-    public void debug(String message) {
-        DevUtil.e(TAG, message);
-    }
-
-    /**
-     * 执行一个Http请求
-     *
-     * 注：同一时间只能执行一个请求，新增请求前会先取消正在执行的请求
-     *
-     * @param builder
-     *         Http请求
-     * @param callback
-     *         Http请求回调
-     */
-    @Override
-    public <RESULT> void executeRequest(RequestBuilder builder, IRequestCallback<RESULT> callback) {
-        mRequest.execute(this, builder, callback);
-    }
-
-    /**
-     * 获得当前Activity
-     *
-     * @return 当前Activity
-     */
-    @Override
-    public Activity getActivity() {
-        return this;
-    }
-
-    /**
-     * 获得内容层视图
-     *
-     * 框架拥有两层视图，内容层和消息层
-     * 内容层为xml文件中编写的实际布局内容
-     *
-     * @return 内容层视图
-     */
-    @Override
-    public final FrameLayout getContent() {
-        return framework_content;
-    }
-
-    /**
-     * 获得框架
-     *
-     * @return 框架
-     */
-    @Override
-    public final IFramework getFramework() {
-        return this;
-    }
-
-    /**
-     * 获得消息层视图
-     *
-     * 框架拥有两层视图，内容层和消息层
-     * 消息层为一个InfoView（消息视图），盖在内容层上，用来提示相关信息（如加载中）
-     * 框架因执行启动、刷新数据等异步操作，而导致内容层里的内容不可用时，会显示出消息层
-     * 当异步操作完成后，消息层会隐藏，重新显示出内容层
-     *
-     * @return 消息层视图
-     *
-     * @see com.harreke.easyappframework.widgets.InfoView
-     */
-    @Override
-    public final InfoView getInfo() {
-        return framework_info;
-    }
-
-    /**
-     * 隐藏Toast
-     *
-     * @param animate
-     *         是否显示动画
-     */
-    @Override
-    public final void hideToast(boolean animate) {
-        framework_toast.hide(animate);
-    }
-
-    /**
-     * 隐藏Toast
-     */
-    @Override
-    public final void hideToast() {
-        framework_toast.hide();
-    }
-
-    /**
-     * 隐藏Toast
-     */
-    @Override
-    public final boolean isRequestExecuting() {
-        return mRequest.isExecuting();
-    }
-
-    /**
-     * 查找视图
-     *
-     * @param viewId
-     *         视图id
-     *
-     * @return 视图
-     */
-    @Override
-    public final View queryContent(int viewId) {
-        return framework_content.findViewById(viewId);
-    }
-
-    /**
      * 设置内容层布局
      *
      * @param view
      *         布局视图
      */
     @Override
-    public final void setContent(View view) {
+    public final void setContentView(View view) {
         framework_content.removeAllViews();
         framework_content.addView(view);
     }
@@ -562,7 +699,7 @@ public abstract class ActivityFramework extends FragmentActivity implements IFra
      *         布局id
      */
     @Override
-    public final void setContent(int layoutId) {
+    public final void setContentView(int layoutId) {
         framework_content.removeAllViews();
         View.inflate(this, layoutId, framework_content);
     }
@@ -595,6 +732,19 @@ public abstract class ActivityFramework extends FragmentActivity implements IFra
     @Override
     public void setInfoVisibility(int infoVisibility) {
         framework_info.setInfoVisibility(infoVisibility);
+    }
+
+    /**
+     * 显示ActionBar上的指定菜单选项
+     *
+     * @param position
+     *         菜单选项位置
+     */
+    @Override
+    public final void showActionBarItem(int position) {
+        if (mActionBar != null && position >= 0 && position < mActionBarItemList.size()) {
+            mActionBarItemList.get(position).setVisible(true);
+        }
     }
 
     /**
@@ -667,156 +817,6 @@ public abstract class ActivityFramework extends FragmentActivity implements IFra
             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivityForResult(intent, requestCode);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-        }
-    }
-
-    /**
-     * 初始化Activity配置信息
-     *
-     * 如设置屏幕样式，屏幕亮度，是否全屏等
-     */
-    @Override
-    public void configActivity() {
-    }
-
-    /**
-     * 退出Activity
-     */
-    public final void exit() {
-        exit(true);
-    }
-
-    /**
-     * 退出Activity
-     *
-     * @param animate
-     *         是否显示动画
-     */
-    public final void exit(boolean animate) {
-        finish();
-        if (animate) {
-            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-        }
-    }
-
-    /**
-     * 当ActionBar的Home键被点击时触发
-     */
-    @Override
-    public void onActionBarHomeClick() {
-        onBackPressed();
-    }
-
-    @Override
-    public void onBackPressed() {
-        exit();
-    }
-
-    @Override
-    public final void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        FrameLayout framework;
-
-        registerReceiver(mExitReceiver, new IntentFilter(getPackageName() + ".EXIT"));
-        NetUtil.checkConnection(this);
-
-        configActivity();
-
-        framework = (FrameLayout) LayoutInflater.from(this).inflate(R.layout.widget_framework, null);
-        framework_content = (FrameLayout) framework.findViewById(R.id.framework_content);
-        framework_info = (InfoView) framework.findViewById(R.id.framework_info);
-        framework_toast = (ToastView) framework.findViewById(R.id.framework_toast);
-        framework_info.setOnClickListener(mInfoClickListener);
-
-        super.setContentView(framework);
-
-        mActionBar = getActionBar();
-
-        setLayout();
-        initData(getIntent());
-        onActionBarMenuCreate();
-        queryLayout();
-        newEvents();
-        assignEvents();
-    }
-
-    @Override
-    protected void onDestroy() {
-        unregisterReceiver(mExitReceiver);
-        hideToast(false);
-        cancelRequest();
-        mCreated = false;
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (!mCreated) {
-            mCreated = true;
-            startAction();
-        }
-    }
-
-    @Override
-    public final boolean onCreateOptionsMenu(Menu menu) {
-        MenuItem menuItem;
-        SubMenu subMenu;
-        ActionBarItem actionBarItem;
-        ActionBarItem subItem;
-        int i;
-        int index = 0;
-
-        if (mActionBar != null) {
-            while (index < mActionBarItemList.size()) {
-                actionBarItem = mActionBarItemList.get(index);
-                if (actionBarItem.getSubItemCount() == 0) {
-                    menuItem = menu.add(0, index, index, actionBarItem.getTitle());
-                    index++;
-                } else {
-                    subMenu = menu.addSubMenu(0, index, index, actionBarItem.getTitle());
-                    for (i = 0; i < actionBarItem.getSubItemCount(); i++) {
-                        subItem = mActionBarItemList.get(index + i);
-                        subMenu.add(0, index + i, i, subItem.getTitle());
-                    }
-                    menuItem = subMenu.getItem();
-                    index += actionBarItem.getSubItemCount() + 1;
-                }
-                if (actionBarItem.getImageId() > 0) {
-                    menuItem.setIcon(actionBarItem.getImageId());
-                } else if (actionBarItem.getView() != null) {
-                    menuItem.setActionView(actionBarItem.getView());
-                }
-                if (actionBarItem.getFlag() > -1) {
-                    menuItem.setShowAsAction(actionBarItem.getFlag());
-                }
-            }
-
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public final boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onActionBarHomeClick();
-        } else {
-            onActionBarItemClick(item.getItemId(), mActionBarItemList.get(item.getItemId()));
-        }
-
-        return true;
-    }
-
-    /**
-     * 当消息层被点击时触发
-     */
-    @Override
-    public void onInfoClick() {
-        if (!isRequestExecuting()) {
-            startAction();
         }
     }
 }

@@ -23,12 +23,10 @@ public class RequestExecutorConfig {
      *         请求构造器
      * @param callback
      *         请求回调
-     * @param <RESULT>
-     *         目标类型
      *
      * @return Volley Http请求执行器
      */
-    public static <RESULT> IRequestExecutor create(Context context, RequestBuilder builder, IRequestCallback<RESULT> callback) {
-        return new VolleyRequestExecutor<RESULT>(context, builder, callback);
+    public static IRequestExecutor create(Context context, RequestBuilder builder, IRequestCallback<String> callback) {
+        return new VolleyRequestExecutor(context, builder, callback);
     }
 }

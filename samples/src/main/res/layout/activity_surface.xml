@@ -16,33 +16,4 @@
         android:src="@drawable/anim_progress_radiant"
         android:visibility="gone"/>
 
-    <LinearLayout
-        android:id="@+id/dialog"
-        style="@style/ww.h"
-        android:layout_gravity="center"
-        android:background="@drawable/whitecard"
-        android:gravity="center_vertical"
-        android:padding="16dp">
-
-        <EditText
-            android:id="@+id/input"
-            android:layout_width="240dp"
-            android:layout_height="48dp"
-            android:background="@drawable/edittext"
-            android:gravity="center_vertical"
-            android:hint="@string/dialog_input_room_number"
-            android:padding="4dp"
-            android:textColor="@color/text_content"
-            android:textColorHint="@color/text_assist"
-            android:textSize="20dp"/>
-
-        <ImageView
-            android:id="@+id/send"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginLeft="8dp"
-            android:src="@drawable/button_send"/>
-
-    </LinearLayout>
-
 </FrameLayout>

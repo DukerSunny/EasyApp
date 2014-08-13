@@ -5,7 +5,7 @@ android {
     buildToolsVersion '20.0.0'
 
     defaultConfig {
-        applicationId "com.harreke.easyappframework"
+        applicationId "com.harreke.easyapp"
         minSdkVersion 14
         targetSdkVersion 20
         versionCode 1
@@ -20,7 +20,7 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:recyclerview-v7:+'
-    compile 'com.android.support:support-v13:+'
+    compile 'com.android.support:support-v4:+'
     compile 'com.google.code.gson:gson:+'
+    compile files('libs/volley.jar')
 }

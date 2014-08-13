@@ -28,6 +28,10 @@
         <attr name="retryText" format="string"/>
         <attr name="showRetryHintWhenEmpty" format="boolean"/>
         <attr name="showProgress" format="boolean"/>
+        <attr name="slideShowIndicator" format="reference"/>
+        <attr name="slideShowIndicatorCount" format="integer"/>
+        <attr name="slideShowIndicatorHeight" format="dimension"/>
+        <attr name="slideShowIndicatorWidth" format="dimension"/>
         <attr name="summary" format="string"/>
         <attr name="summaryColor" format="color"/>
         <attr name="summarySize" format="dimension"/>
@@ -49,7 +53,8 @@
         <attr name="infoViewStyle" format="reference"/>
         <attr name="listSettingViewStyle" format="reference"/>
         <attr name="ratioImageViewStyle" format="reference"/>
-        <attr name="slidingViewStyle" format="reference"/>
+        <attr name="slidableViewStyle" format="reference"/>
+        <attr name="slideShowIndicatorStyle" format="reference"/>
         <attr name="textSettingViewStyle" format="reference"/>
         <attr name="toastViewStyle" format="reference"/>
     </declare-styleable>
@@ -126,6 +131,12 @@
 
     <declare-styleable name="SlidableView">
         <attr name="offsetLevel"/>
+    </declare-styleable>
+
+    <declare-styleable name="SlideShowIndicator">
+        <attr name="slideShowIndicator"/>
+        <attr name="slideShowIndicatorHeight"/>
+        <attr name="slideShowIndicatorWidth"/>
     </declare-styleable>
 
     <declare-styleable name="TextSettingView">

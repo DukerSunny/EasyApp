@@ -1,5 +1,5 @@
 <manifest
-    package="com.harreke.easyappframework.samples"
+    package="com.harreke.easyapp.samples"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
@@ -25,6 +25,11 @@
             android:screenOrientation="portrait"/>
 
         <activity
+            android:name=".bases.activities.ImageRecyclerActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
+
+        <activity
             android:name=".bases.activities.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"/>
@@ -34,6 +39,11 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"/>
+
+        <activity
+            android:name=".bases.activities.SlideShowActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".bases.activities.SplashActivity"
@@ -50,8 +60,8 @@
         <activity
             android:name=".bases.activities.SurfaceActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/App.Fullscreen"
             android:screenOrientation="landscape"
+            android:theme="@style/App.Fullscreen"
             android:windowSoftInputMode="adjustResize"/>
 
     </application>

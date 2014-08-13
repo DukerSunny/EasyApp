@@ -6,13 +6,13 @@
         android:id="@+id/framework_content"
         style="@style/mm" />
 
-    <com.harreke.easyappframework.widgets.InfoView
+    <com.harreke.easyapp.widgets.InfoView
         android:id="@+id/framework_info"
         style="@style/mm"
         android:background="@color/TransparentWhite"
         android:visibility="gone" />
 
-    <com.harreke.easyappframework.widgets.ToastView
+    <com.harreke.easyapp.widgets.ToastView
         android:id="@+id/framework_toast"
         style="@style/ww"
         android:layout_gravity="bottom|center_horizontal"

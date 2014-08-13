@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    style="@style/mm"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="8dp">
+
+    <com.harreke.easyapp.widgets.slideshowview.SlideShowView
+        android:id="@+id/slideShow"
+        style="@style/mw"/>
+
+</FrameLayout>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.harreke.easyappframework.widgets.slidableview.SlidableView
+<com.harreke.easyapp.widgets.slidableview.SlidableView
     android:id="@+id/slidableView"
     style="@style/mm"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -12,14 +12,14 @@
 
     <include layout="@layout/activity_slidable_loadoverlay"/>
 
-    <com.harreke.easyappframework.widgets.slidableview.inners.TabView
+    <com.harreke.easyapp.widgets.slidableview.inners.TabView
         style="@style/mw">
 
         <include layout="@layout/activity_slidable_input"/>
 
-    </com.harreke.easyappframework.widgets.slidableview.inners.TabView>
+    </com.harreke.easyapp.widgets.slidableview.inners.TabView>
 
-    <com.harreke.easyappframework.widgets.slidableview.inners.TabView
+    <com.harreke.easyapp.widgets.slidableview.inners.TabView
         style="@style/mw">
 
         <HorizontalScrollView
@@ -28,7 +28,7 @@
             android:padding="8dp"
             android:scrollbars="none">
 
-            <com.harreke.easyappframework.widgets.RadioView
+            <com.harreke.easyapp.widgets.RadioView
                 android:id="@+id/slidable_radio_group"
                 style="@style/mw.h"
                 android:divider="@drawable/shape_dummy_vertical_small"
@@ -90,12 +90,12 @@
                     android:text="Tab5"
                     android:textColor="@color/color_theme_white"/>
 
-            </com.harreke.easyappframework.widgets.RadioView>
+            </com.harreke.easyapp.widgets.RadioView>
 
         </HorizontalScrollView>
 
-    </com.harreke.easyappframework.widgets.slidableview.inners.TabView>
+    </com.harreke.easyapp.widgets.slidableview.inners.TabView>
 
     <include layout="@layout/activity_slidable_abslist"/>
 
-</com.harreke.easyappframework.widgets.slidableview.SlidableView>
+</com.harreke.easyapp.widgets.slidableview.SlidableView>

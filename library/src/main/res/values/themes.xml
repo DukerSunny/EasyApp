@@ -7,7 +7,8 @@
         <item name="infoViewStyle">@style/App.InfoView</item>
         <item name="listSettingViewStyle">@style/App.ListSettingView</item>
         <item name="ratioImageViewStyle">@style/App.RatioImageView</item>
-        <item name="slidingViewStyle">@style/App.SlidingView</item>
+        <item name="slidableViewStyle">@style/App.SlidableView</item>
+        <item name="slideShowIndicatorStyle">@style/App.SlideShowIndicator</item>
         <item name="textSettingViewStyle">@style/App.TextSettingView</item>
         <item name="toastViewStyle">@style/App.ToastView</item>
     </style>
@@ -108,8 +109,13 @@
         <item name="ratio">-1</item>
     </style>
 
-    <style name="App.SlidingView">
+    <style name="App.SlidableView">
         <item name="offsetLevel">0</item>
+    </style>
+
+    <style name="App.SlideShowIndicator">
+        <item name="slideShowIndicatorWidth">16dp</item>
+        <item name="slideShowIndicatorHeight">16dp</item>
     </style>
 
     <style name="App.TextSettingView">

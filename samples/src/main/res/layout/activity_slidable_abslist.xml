@@ -13,7 +13,7 @@
         android:fastScrollEnabled="true"
         android:padding="8dp"/>
 
-    <com.harreke.easyappframework.widgets.InfoView
+    <com.harreke.easyapp.widgets.InfoView
         android:id="@+id/infoView"
         style="@style/mm"
         android:visibility="gone"/>

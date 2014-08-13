@@ -3,7 +3,7 @@
     style="@style/mw"
     android:padding="@dimen/widget_xlarge">
 
-    <com.harreke.easyappframework.widgets.ChildViewPager
+    <com.harreke.easyapp.widgets.ChildViewPager
         android:id="@+id/slide_page"
         style="@style/mw" />
 

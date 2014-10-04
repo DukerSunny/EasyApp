@@ -12,6 +12,8 @@
         <attr name="buttonPadding" format="dimension"/>
         <attr name="buttonWidth" format="dimension"/>
         <attr name="checked" format="boolean"/>
+        <attr name="drawableWidth" format="dimension"/>
+        <attr name="drawableHeight" format="dimension"/>
         <attr name="emptyImage" format="reference"/>
         <attr name="emptyText" format="string"/>
         <attr name="entry" format="reference"/>
@@ -41,20 +43,22 @@
         <attr name="text" format="string"/>
         <attr name="textBackground" format="reference"/>
         <attr name="textColor" format="color"/>
-        <attr name="textPadding" format="dimension"/>
         <attr name="textSize" format="dimension"/>
         <attr name="thumb" format="reference"/>
         <attr name="thumbSize" format="dimension"/>
 
         <attr name="checkSettingViewStyle" format="reference"/>
         <attr name="childSettingViewStyle" format="reference"/>
+        <attr name="childTabViewStyle" format="reference"/>
         <attr name="drawableCheckBoxStyle" format="reference"/>
         <attr name="drawableRadioButtonStyle" format="reference"/>
+        <attr name="drawableTextViewStyle" format="reference"/>
         <attr name="infoViewStyle" format="reference"/>
         <attr name="listSettingViewStyle" format="reference"/>
         <attr name="ratioImageViewStyle" format="reference"/>
         <attr name="slidableViewStyle" format="reference"/>
         <attr name="slideShowIndicatorStyle" format="reference"/>
+        <attr name="tabViewStyle" format="reference"/>
         <attr name="textSettingViewStyle" format="reference"/>
         <attr name="toastViewStyle" format="reference"/>
     </declare-styleable>
@@ -89,6 +93,11 @@
         <attr name="text"/>
         <attr name="textColor"/>
         <attr name="textSize"/>
+    </declare-styleable>
+
+    <declare-styleable name="DrawableTextView">
+        <attr name="drawableWidth"/>
+        <attr name="drawableHeight"/>
     </declare-styleable>
 
     <declare-styleable name="InfoView">

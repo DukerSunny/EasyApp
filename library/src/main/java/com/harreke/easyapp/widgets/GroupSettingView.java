@@ -22,6 +22,10 @@ public class GroupSettingView extends LinearLayout implements OnHierarchyChangeL
     private int mCheckedPosition = -1;
     private OnGroupSettingChangeListener mGroupSettingChangeListener = null;
 
+    public GroupSettingView(Context context) {
+        super(context, null);
+    }
+
     public GroupSettingView(Context context, AttributeSet attrs) {
         super(context, attrs);
 

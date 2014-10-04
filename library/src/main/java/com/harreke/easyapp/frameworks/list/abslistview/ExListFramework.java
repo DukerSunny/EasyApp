@@ -5,9 +5,9 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 
-import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.adapters.abslistview.ExListAdapter;
 import com.harreke.easyapp.beans.ExItem;
+import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.list.ListFramework;
 import com.harreke.easyapp.holders.abslistview.IExListHolder;
 
@@ -36,8 +36,8 @@ public abstract class ExListFramework<GROUP, GROUPHOLDER extends IExListHolder.G
     private ExpandableListView mExpandableListView;
     private int mScrollState = SCROLL_STATE_IDLE;
 
-    public ExListFramework(IFramework framework, int listId, int slidableViewId) {
-        super(framework, listId, slidableViewId);
+    public ExListFramework(IFramework framework, int listId) {
+        super(framework, listId);
     }
 
     /**
@@ -54,6 +54,15 @@ public abstract class ExListFramework<GROUP, GROUPHOLDER extends IExListHolder.G
     @Override
     public final boolean addItem(int itemId, ExItem<GROUP, CHILD> item) {
         return mAdapter.addItem(itemId, item);
+    }
+
+    /**
+     * 设置数据适配器
+     */
+    @Override
+    public void bindAdapter() {
+        mAdapter = new Adapter();
+        mExpandableListView.setAdapter(mAdapter);
     }
 
     @Override
@@ -231,9 +240,9 @@ public abstract class ExListFramework<GROUP, GROUPHOLDER extends IExListHolder.G
         if (isLoadEnabled()) {
             if (mScrollState != SCROLL_STATE_IDLE && !isLastPage() && !isLoading()) {
                 if (!isReverseScroll() && firstVisibleItem + visibleItemCount >= totalItemCount - 1) {
-                    onLoadTrigger();
+                    onAction();
                 } else if (isReverseScroll() && firstVisibleItem == 0) {
-                    onLoadTrigger();
+                    onAction();
                 }
             }
         }
@@ -251,9 +260,7 @@ public abstract class ExListFramework<GROUP, GROUPHOLDER extends IExListHolder.G
 
     @Override
     public void setListView(View listView) {
-        mAdapter = new Adapter();
         mExpandableListView = (ExpandableListView) listView;
-        mExpandableListView.setAdapter(mAdapter);
         mExpandableListView.setOnGroupClickListener(this);
         mExpandableListView.setOnChildClickListener(this);
         mExpandableListView.setOnScrollListener(this);

@@ -81,7 +81,7 @@ public class ExListActivity extends ActivityFramework {
 
     @Override
     public void queryLayout() {
-        mExList = new ExList(this, R.id.exListView, 0);
+        mExList = new ExList(this, R.id.exListView);
         mExList.setLoadEnabled(true);
         mExList.setTotalPage(5);
     }
@@ -116,8 +116,8 @@ public class ExListActivity extends ActivityFramework {
     }
 
     private class ExList extends ExListFramework<ExListGroupItem, ExListGroupHolder, ExListChildItem, ExListChildHolder> {
-        public ExList(IFramework framework, int listId, int slidableViewId) {
-            super(framework, listId, slidableViewId);
+        public ExList(IFramework framework, int listId) {
+            super(framework, listId);
         }
 
         @Override
@@ -164,6 +164,11 @@ public class ExListActivity extends ActivityFramework {
                 setGroupChecked(i, false);
             }
             setGroupChecked(groupPosition, true);
+        }
+
+        @Override
+        public ArrayList<ExItem<ExListGroupItem, ExListChildItem>> onParse(String json) {
+            return null;
         }
 
         @Override

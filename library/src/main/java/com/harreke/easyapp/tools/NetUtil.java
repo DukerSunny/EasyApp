@@ -67,4 +67,8 @@ public class NetUtil {
     public static boolean isConnected() {
         return mMobConnected || mWifiConnected;
     }
+
+    public static boolean isStatusOk(int status) {
+        return status >= 200 && status < 300;
+    }
 }

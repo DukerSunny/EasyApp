@@ -8,9 +8,9 @@ import android.widget.AdapterView;
 import android.widget.ListPopupWindow;
 import android.widget.PopupWindow;
 
-import com.harreke.easyapp.holders.abslistview.IAbsListHolder;
 import com.harreke.easyapp.adapters.abslistview.AbsListAdapter;
 import com.harreke.easyapp.frameworks.list.abslistview.IAbsList;
+import com.harreke.easyapp.holders.abslistview.IAbsListHolder;
 
 import java.util.ArrayList;
 
@@ -46,8 +46,8 @@ public abstract class PopupAbsListHelper<ITEM, HOLDER extends IAbsListHolder<ITE
         popupWindow.setAdapter(mAdapter);
     }
 
-    public final void add(ITEM item) {
-        mAdapter.addItem(-1, item);
+    public final void add(int itemId, ITEM item) {
+        mAdapter.addItem(itemId, item);
     }
 
     public final void clear() {
@@ -73,6 +73,10 @@ public abstract class PopupAbsListHelper<ITEM, HOLDER extends IAbsListHolder<ITE
         popupWindow.dismiss();
     }
 
+    public final boolean isShowing() {
+        return popupWindow.isShowing();
+    }
+
     public final void setOnDismissListener(PopupWindow.OnDismissListener dismissListener) {
         popupWindow.setOnDismissListener(dismissListener);
     }
@@ -85,6 +89,14 @@ public abstract class PopupAbsListHelper<ITEM, HOLDER extends IAbsListHolder<ITE
         popupWindow.show();
     }
 
+    public final void toggle() {
+        if (isShowing()) {
+            hide();
+        } else {
+            show();
+        }
+    }
+
     private class Adapter extends AbsListAdapter<ITEM> {
         @SuppressWarnings("unchecked")
         @Override
@@ -95,11 +107,11 @@ public abstract class PopupAbsListHelper<ITEM, HOLDER extends IAbsListHolder<ITE
             if (convertView != null) {
                 holder = (HOLDER) convertView.getTag();
             } else {
-                convertView = createView(position, item);
-                holder = createHolder(position, convertView);
+                convertView = createView(item);
+                holder = createHolder(convertView);
                 convertView.setTag(holder);
             }
-            holder.setItem(item);
+            holder.setItem(position, item);
 
             return convertView;
         }

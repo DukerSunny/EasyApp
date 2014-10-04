@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    style="@style/mm.v"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="8dp">
+
+    <TextView
+        style="@style/ww"
+        android:padding="8dp"
+        android:text="@string/setting_misc"
+        android:textColor="@color/Content"
+        android:textSize="16dp"/>
+
+    <com.harreke.easyapp.widgets.AutoFitDrawableTextView
+        style="@style/mw"
+        android:background="@drawable/button_white"
+        android:drawablePadding="8dp"
+        android:drawableRight="@drawable/button_check"
+        android:gravity="center_vertical"
+        android:padding="8dp"
+        android:text="@string/setting_autoloadimage"
+        android:textColor="@color/Title"
+        android:textSize="16dp"/>
+
+    <TextView
+        style="@style/ww"
+        android:layout_marginTop="8dp"
+        android:padding="8dp"
+        android:text="@string/setting_other"
+        android:textColor="@color/Content"
+        android:textSize="16dp"/>
+
+    <TextView
+        style="@style/mw"
+        android:background="@drawable/button_white"
+        android:gravity="center_vertical"
+        android:padding="8dp"
+        android:text="@string/setting_aboutus"
+        android:textColor="@color/Title"
+        android:textSize="16dp"/>
+
+</LinearLayout>

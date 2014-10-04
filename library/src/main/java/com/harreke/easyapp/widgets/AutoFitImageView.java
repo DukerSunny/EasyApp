@@ -12,16 +12,12 @@ import android.widget.ImageView;
  * 自适应图像高宽比的ImageView
  */
 public class AutoFitImageView extends ImageView {
+    private int mThreshold;
+
     public AutoFitImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        setScaleType(ScaleType.FIT_XY);
-    }
-
-    @Override
-    public final void setImageDrawable(Drawable drawable) {
-        super.setImageDrawable(drawable);
-        requestLayout();
+        mThreshold = context.getResources().getDisplayMetrics().widthPixels / 4;
     }
 
     @Override
@@ -35,22 +31,28 @@ public class AutoFitImageView extends ImageView {
         float scale;
 
         if (drawable != null) {
-            scale = (float) drawable.getIntrinsicWidth() / (float) drawable.getIntrinsicHeight();
-            layoutParams = getLayoutParams();
-            fitWidth = layoutParams.height == ViewGroup.LayoutParams.WRAP_CONTENT;
-            fitHeight = layoutParams.width == ViewGroup.LayoutParams.WRAP_CONTENT;
-            if (fitWidth != fitHeight) {
-                if (fitWidth) {
-                    width = MeasureSpec.getSize(widthMeasureSpec);
-                    height = (int) (width / scale);
+            if (drawable.getIntrinsicWidth() >= mThreshold || drawable.getIntrinsicHeight() >= mThreshold) {
+                scale = (float) drawable.getIntrinsicWidth() / (float) drawable.getIntrinsicHeight();
+                layoutParams = getLayoutParams();
+                fitWidth = layoutParams.height == ViewGroup.LayoutParams.WRAP_CONTENT;
+                fitHeight = layoutParams.width == ViewGroup.LayoutParams.WRAP_CONTENT;
+                if (fitWidth != fitHeight) {
+                    if (fitWidth) {
+                        width = MeasureSpec.getSize(widthMeasureSpec);
+                        height = (int) (width / scale);
+                    } else {
+                        height = MeasureSpec.getSize(widthMeasureSpec);
+                        width = (int) (height * scale);
+                    }
+                    setMeasuredDimension(width, height);
                 } else {
-                    height = MeasureSpec.getSize(heightMeasureSpec);
-                    width = (int) (height * scale);
+                    super.onMeasure(widthMeasureSpec, heightMeasureSpec);
                 }
-                setMeasuredDimension(width, height);
             } else {
                 super.onMeasure(widthMeasureSpec, heightMeasureSpec);
             }
+        } else {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
     }
 }

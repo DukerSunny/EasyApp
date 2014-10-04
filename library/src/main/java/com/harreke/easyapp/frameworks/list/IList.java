@@ -73,6 +73,11 @@ public interface IList<ITEM> {
     public void refresh();
 
     /**
+     * 设置数据适配器
+     */
+    public void bindAdapter();
+
+    /**
      * 设置列表视图
      *
      * @param listView

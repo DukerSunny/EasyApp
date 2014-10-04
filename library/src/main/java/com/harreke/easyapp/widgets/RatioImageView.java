@@ -30,8 +30,6 @@ public class RatioImageView extends ImageView {
         style = context.obtainStyledAttributes(attrs, R.styleable.RatioImageView, defStyle, 0);
         mRatio = style.getFloat(R.styleable.RatioImageView_ratio, 0);
         style.recycle();
-
-        setScaleType(ScaleType.FIT_XY);
     }
 
     @SuppressWarnings("ConstantConditions")

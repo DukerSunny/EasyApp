@@ -9,7 +9,7 @@ import android.util.AttributeSet;
 import android.widget.EditText;
 
 import com.harreke.easyapp.tools.FileUtil;
-import com.harreke.easyapp.tools.RegularUtil;
+import com.harreke.easyapp.tools.StringUtil;
 
 import java.util.regex.Matcher;
 
@@ -48,7 +48,7 @@ public class EmotionEditText extends EditText {
             builder = new SpannableStringBuilder(getText());
             emotionUBB = manager.getPrimaryClip().getItemAt(0).getText();
             if (emotionUBB != null && emotionUBB.length() > 0) {
-                matcher = RegularUtil.getMatcher("\\[emot=([\\S\\s]+?)/\\]", emotionUBB);
+                matcher = StringUtil.getMatcher("\\[emot=([\\S\\s]+?)/\\]", emotionUBB);
                 while (matcher.find()) {
                     emotion = matcher.group(1).split(",");
                     builder.setSpan(new ImageSpan(FileUtil.readDrawable(mCacheDir + "/" + emotion[0] + "/" + emotion[1], mEmotionSize, mEmotionSize)),

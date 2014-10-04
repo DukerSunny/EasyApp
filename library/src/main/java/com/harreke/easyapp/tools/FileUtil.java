@@ -119,8 +119,8 @@ public class FileUtil {
 
     public static Drawable readDrawable(String filename, int width, int height) {
         Drawable drawable = null;
-
-        if (filename != null && filename.startsWith("file:")) {
+        
+        if (filename != null && filename.length() > 0) {
             drawable = Drawable.createFromPath(filename);
             if (drawable != null && width > 0 && height > 0) {
                 drawable.setBounds(0, 0, width, height);

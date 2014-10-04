@@ -66,7 +66,7 @@ public class ImageAbsListActivity extends ActivityFramework {
 
     @Override
     public void queryLayout() {
-        mAbsList = new AbsList(this, R.id.absListView, 0);
+        mAbsList = new AbsList(this, R.id.absListView);
         mAbsList.setLoadEnabled(true);
         mAbsList.setTotalPage(5);
     }
@@ -82,17 +82,17 @@ public class ImageAbsListActivity extends ActivityFramework {
     }
 
     private class AbsList extends AbsListFramework<AbsListItem, ImageAbsListHolder> {
-        public AbsList(IFramework framework, int listId, int slidableViewId) {
-            super(framework, listId, slidableViewId);
+        public AbsList(IFramework framework, int listId) {
+            super(framework, listId);
         }
 
         @Override
-        public ImageAbsListHolder createHolder(int position, View convertView) {
+        public ImageAbsListHolder createHolder(View convertView) {
             return new ImageAbsListHolder(convertView);
         }
 
         @Override
-        public View createView(int position, AbsListItem absListItem) {
+        public View createView(AbsListItem absListItem) {
             return View.inflate(getActivity(), R.layout.item_image_abslist, null);
         }
 
@@ -104,6 +104,11 @@ public class ImageAbsListActivity extends ActivityFramework {
         @Override
         public void onItemClick(int position, AbsListItem absListItem) {
             showToast("点击了第" + (position + 1) + "个条目", false);
+        }
+
+        @Override
+        public ArrayList<AbsListItem> onParse(String json) {
+            return null;
         }
 
         @Override

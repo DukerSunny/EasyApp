@@ -11,12 +11,5 @@ public class Samples extends ApplicationFramework {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        DevUtil.setDebug(BuildConfig.DEBUG);
-
-        copyAsset("placeholder_1x1.png");
-        copyAsset("placeholder_3x4.png");
-        copyAsset("placeholder_4x3.png");
-        copyAsset("placeholder_16x9.png");
     }
 }

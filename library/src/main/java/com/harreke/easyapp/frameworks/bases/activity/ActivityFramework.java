@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,16 +14,15 @@ import android.view.SubMenu;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.harreke.easyapp.frameworks.bases.IActionBarClickListener;
-import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.R;
 import com.harreke.easyapp.beans.ActionBarItem;
 import com.harreke.easyapp.frameworks.bases.IActionBar;
+import com.harreke.easyapp.frameworks.bases.IActionBarClickListener;
+import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.helpers.RequestHelper;
 import com.harreke.easyapp.receivers.ExitReceiver;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
-import com.harreke.easyapp.tools.DevUtil;
 import com.harreke.easyapp.tools.NetUtil;
 import com.harreke.easyapp.widgets.InfoView;
 import com.harreke.easyapp.widgets.ToastView;
@@ -235,7 +235,7 @@ public abstract class ActivityFramework extends FragmentActivity implements IFra
      */
     @Override
     public void debug(String message) {
-        DevUtil.e(TAG, message);
+        Log.e(TAG, message);
     }
 
     /**
@@ -270,6 +270,7 @@ public abstract class ActivityFramework extends FragmentActivity implements IFra
      */
     @Override
     public void executeRequest(RequestBuilder builder, IRequestCallback<String> callback) {
+        builder.print();
         mRequest.execute(this, builder, callback);
     }
 
@@ -291,6 +292,19 @@ public abstract class ActivityFramework extends FragmentActivity implements IFra
         if (animate) {
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         }
+    }
+
+    /**
+     * 查找视图
+     *
+     * @param viewId
+     *         视图id
+     *
+     * @return 视图
+     */
+    @Override
+    public final View findContentView(int viewId) {
+        return framework_content.findViewById(viewId);
     }
 
     /**
@@ -515,19 +529,6 @@ public abstract class ActivityFramework extends FragmentActivity implements IFra
             mCreated = true;
             startAction();
         }
-    }
-
-    /**
-     * 查找视图
-     *
-     * @param viewId
-     *         视图id
-     *
-     * @return 视图
-     */
-    @Override
-    public final View queryContent(int viewId) {
-        return framework_content.findViewById(viewId);
     }
 
     /**

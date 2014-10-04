@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="Selection_1st">#008B8B</color>
+    <color name="Selection_2nd">#D2691E</color>
+    <color name="Selection_3rd">#8B008B</color>
+    <color name="Selection_4th">#228B22</color>
+    <color name="Selection_5th">#DC143C</color>
+    <color name="Selection_Lesser">#00008B</color>
+
+    <color name="Search_Misc">#800000</color>
+    <color name="Search_Work_Emotion">#DDA0DD</color>
+    <color name="Search_DramaCulture">#CD853F</color>
+    <color name="Search_Comic_Novel">#808000</color>
+
+    <color name="User">#B22222</color>
+
+</resources>

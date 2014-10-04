@@ -25,10 +25,10 @@ public class SplashActivity extends ActivityFramework {
             /**
              * 计时结束，启动主界面
              */
-            start(SlidableAbsListActivity.create(getActivity()), false);
+            //            start(SlidableAbsListActivity.create(getActivity()), false);
             //            start(MainActivity.create(getActivity()), false);
             //            start(SurfaceActivity.create(getActivity()), true);
-            //            start(SlideShowActivity.create(getActivity()), true);
+            start(TabActivity.create(getActivity()), true);
             exit(false);
         }
     };
@@ -123,7 +123,7 @@ public class SplashActivity extends ActivityFramework {
         /**
          * 延时3秒后启动主界面
          */
-        splashHandler.postDelayed(splashRunnable, 3000);
-        //        splashRunnable.run();
+        //        splashHandler.postDelayed(splashRunnable, 3000);
+        splashRunnable.run();
     }
 }

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    style="@style/mm.v"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.harreke.easyapp.widgets.GroupTabView
+        android:id="@+id/scrolllayout"
+        style="@style/mw.h">
+
+        <com.harreke.easyapp.widgets.ChildTabView
+            android:id="@+id/test1"
+            style="@style/mww"
+            android:background="@drawable/button_radio"
+            android:checked="true"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="test1"
+            android:textSize="24dp"/>
+
+        <com.harreke.easyapp.widgets.ChildTabView
+            android:id="@+id/test2"
+            style="@style/mww"
+            android:background="@drawable/button_radio"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="test2"
+            android:textSize="24dp"/>
+
+        <com.harreke.easyapp.widgets.ChildTabView
+            android:id="@+id/test3"
+            style="@style/mww"
+            android:background="@drawable/button_radio"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="test3"
+            android:textSize="24dp"/>
+
+    </com.harreke.easyapp.widgets.GroupTabView>
+
+</LinearLayout>

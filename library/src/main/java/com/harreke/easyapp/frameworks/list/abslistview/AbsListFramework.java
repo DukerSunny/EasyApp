@@ -4,6 +4,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ListView;
 
 import com.harreke.easyapp.adapters.abslistview.AbsListAdapter;
 import com.harreke.easyapp.frameworks.bases.IFramework;
@@ -27,10 +28,18 @@ public abstract class AbsListFramework<ITEM, HOLDER extends IAbsListHolder<ITEM>
         AbsListView.OnScrollListener {
     private AbsListView mAbsListView;
     private Adapter mAdapter;
+    private int mHeaderCount = 0;
     private int mScrollState = SCROLL_STATE_IDLE;
 
-    public AbsListFramework(IFramework framework, int listId, int slidableViewId) {
-        super(framework, listId, slidableViewId);
+    public AbsListFramework(IFramework framework, int listId) {
+        super(framework, listId);
+    }
+
+    public final void addHeaderView(View view) {
+        if (mAbsListView instanceof ListView) {
+            ((ListView) mAbsListView).addHeaderView(view);
+            mHeaderCount++;
+        }
     }
 
     /**
@@ -47,6 +56,15 @@ public abstract class AbsListFramework<ITEM, HOLDER extends IAbsListHolder<ITEM>
     @Override
     public final boolean addItem(int itemId, ITEM item) {
         return mAdapter.addItem(itemId, item);
+    }
+
+    /**
+     * 设置数据适配器
+     */
+    @Override
+    public void bindAdapter() {
+        mAdapter = new Adapter();
+        mAbsListView.setAdapter(mAdapter);
     }
 
     /**
@@ -92,7 +110,11 @@ public abstract class AbsListFramework<ITEM, HOLDER extends IAbsListHolder<ITEM>
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        onItemClick(position, mAdapter.getItem(position));
+        if (position < mHeaderCount) {
+            onItemClick(position, null);
+        } else {
+            onItemClick(position, mAdapter.getItem(position - mHeaderCount));
+        }
     }
 
     @Override
@@ -100,9 +122,9 @@ public abstract class AbsListFramework<ITEM, HOLDER extends IAbsListHolder<ITEM>
         if (isLoadEnabled()) {
             if (mScrollState != SCROLL_STATE_IDLE && !isLastPage() && !isLoading()) {
                 if (!isReverseScroll() && firstVisibleItem + visibleItemCount >= totalItemCount - 1) {
-                    onLoadTrigger();
+                    onAction();
                 } else if (isReverseScroll() && firstVisibleItem == 0) {
-                    onLoadTrigger();
+                    onAction();
                 }
             }
         }
@@ -129,9 +151,7 @@ public abstract class AbsListFramework<ITEM, HOLDER extends IAbsListHolder<ITEM>
      */
     @Override
     public void setListView(View listView) {
-        mAdapter = new Adapter();
         mAbsListView = (AbsListView) listView;
-        mAbsListView.setAdapter(mAdapter);
         mAbsListView.setOnItemClickListener(this);
         mAbsListView.setOnScrollListener(this);
     }
@@ -169,11 +189,11 @@ public abstract class AbsListFramework<ITEM, HOLDER extends IAbsListHolder<ITEM>
             if (convertView != null) {
                 holder = (HOLDER) convertView.getTag();
             } else {
-                convertView = createView(position, item);
-                holder = createHolder(position, convertView);
+                convertView = createView(item);
+                holder = createHolder(convertView);
                 convertView.setTag(holder);
             }
-            holder.setItem(item);
+            holder.setItem(position, item);
 
             return convertView;
         }

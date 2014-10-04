@@ -22,7 +22,7 @@
             android:layout_marginLeft="8dp"
             android:gravity="center_vertical"
             android:text="@string/refreshheader_pulltorefresh"
-            android:textColor="@color/text_assist"
+            android:textColor="@color/Assist"
             android:textSize="24dp"/>
 
     </LinearLayout>

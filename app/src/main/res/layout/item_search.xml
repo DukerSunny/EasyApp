@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    style="@style/mw.v"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/White"
+    android:padding="8dp">
+
+    <FrameLayout
+        style="@style/mw.h"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/search_channel"
+            android:layout_width="64dp"
+            android:layout_height="24dp"
+            android:background="@color/Search_Misc"
+            android:gravity="center"
+            android:text="@string/channel_misc"
+            android:textColor="@color/White"
+            android:textSize="12dp"/>
+
+        <TextView
+            android:id="@+id/search_title"
+            style="@style/mw"
+            android:text="@string/content_title"
+            android:textColor="@color/Title"
+            android:textSize="20dp"/>
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/search_description"
+        style="@style/mw"
+        android:layout_marginTop="8dp"
+        android:text="@string/content_description"
+        android:textColor="@color/Content"
+        android:textSize="12dp"/>
+
+</LinearLayout>

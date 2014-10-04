@@ -12,8 +12,10 @@ public interface IAbsListHolder<ITEM> {
     /**
      * 当设置数据时触发，用于填充数据至该项目视图
      *
+     * @param position
+     *         项目位置
      * @param item
      *         项目对象
      */
-    public void setItem(ITEM item);
+    public void setItem(int position, ITEM item);
 }

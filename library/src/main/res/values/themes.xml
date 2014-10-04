@@ -4,6 +4,8 @@
     <style name="App" parent="@android:style/Theme.Holo.Light.DarkActionBar">
         <item name="checkSettingViewStyle">@style/App.CheckSettingView</item>
         <item name="childSettingViewStyle">@style/App.ChildSettingView</item>
+        <item name="childTabViewStyle">@style/App.ChildTabView</item>
+        <item name="drawableTextViewStyle">@style/App.DrawableTextView</item>
         <item name="infoViewStyle">@style/App.InfoView</item>
         <item name="listSettingViewStyle">@style/App.ListSettingView</item>
         <item name="ratioImageViewStyle">@style/App.RatioImageView</item>
@@ -24,7 +26,7 @@
     </style>
 
     <style name="App.Splash" parent="@style/App.NoActionBar">
-        <item name="android:windowBackground">@color/Theme_Dark</item>
+        <item name="android:windowBackground">@color/Theme</item>
     </style>
 
     <style name="App.Activity">
@@ -53,9 +55,9 @@
         <item name="buttonOn">@drawable/check_on</item>
         <item name="buttonPadding">@dimen/widget_xlarge</item>
         <item name="checked">false</item>
-        <item name="summaryColor">@color/text_content</item>
+        <item name="summaryColor">@color/Content</item>
         <item name="summarySize">@dimen/text_content_small</item>
-        <item name="textColor">@color/text_content</item>
+        <item name="textColor">@color/Content</item>
         <item name="textSize">@dimen/text_content_large</item>
         <item name="thumb">@drawable/check_thumb</item>
         <item name="thumbSize">32dp</item>
@@ -70,8 +72,18 @@
         <item name="buttonPadding">@dimen/widget_xlarge</item>
         <item name="buttonWidth">26dp</item>
         <item name="checked">false</item>
-        <item name="textColor">@color/text_content</item>
+        <item name="textColor">@color/Content</item>
         <item name="textSize">@dimen/text_content_large</item>
+    </style>
+
+    <style name="App.ChildTabView">
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="App.DrawableTextView">
+        <item name="drawableWidth">-1dp</item>
+        <item name="drawableHeight">-1dp</item>
     </style>
 
     <style name="App.InfoView">
@@ -86,7 +98,7 @@
         <item name="retryText">@string/info_retry</item>
         <item name="showRetryHintWhenEmpty">true</item>
         <item name="text">@string/info_loading</item>
-        <item name="textColor">@color/text_content</item>
+        <item name="textColor">@color/Content</item>
         <item name="textSize">@dimen/text_content_middle</item>
     </style>
 
@@ -94,12 +106,12 @@
         <item name="android:padding">@dimen/widget_xlarge</item>
         <item name="buttonGravity">right</item>
         <item name="buttonPadding">8dp</item>
-        <item name="listTextColor">@color/text_assist</item>
+        <item name="listTextColor">@color/Assist</item>
         <item name="listTextSize">@dimen/text_content_large</item>
         <item name="listTextPadding">8dp</item>
-        <item name="summaryColor">@color/text_content</item>
+        <item name="summaryColor">@color/Content</item>
         <item name="summarySize">@dimen/text_content_small</item>
-        <item name="textColor">@color/text_content</item>
+        <item name="textColor">@color/Content</item>
         <item name="textSize">@dimen/text_content_large</item>
         <item name="thumb">@drawable/arrow</item>
         <item name="thumbSize">26dp</item>
@@ -120,9 +132,9 @@
 
     <style name="App.TextSettingView">
         <item name="android:padding">@dimen/widget_xlarge</item>
-        <item name="summaryColor">@color/text_content</item>
+        <item name="summaryColor">@color/Content</item>
         <item name="summarySize">@dimen/text_content_small</item>
-        <item name="textColor">@color/text_content</item>
+        <item name="textColor">@color/Content</item>
         <item name="textSize">@dimen/text_content_large</item>
     </style>
 

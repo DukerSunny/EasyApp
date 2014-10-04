@@ -1,0 +1,14 @@
+<LinearLayout
+    style="@style/mm.v"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.jeremyfeinstein.slidingmenu.lib.SlidingMenu
+        android:id="@+id/main_slidingmenu"
+        style="@style/mm"
+        app:behindWidth="240dp"
+        app:touchModeAbove="fullscreen"
+        app:viewAbove="@layout/activity_main_content"
+        app:viewBehind="@layout/activity_main_menu"/>
+
+</LinearLayout>

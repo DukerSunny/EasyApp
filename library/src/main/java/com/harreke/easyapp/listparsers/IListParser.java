@@ -50,6 +50,9 @@ public interface IListParser<ITEM> {
 
     /**
      * 开始解析
+     *
+     * @param json
+     *         json字符串
      */
     public void parse(String json);
 }

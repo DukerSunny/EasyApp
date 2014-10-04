@@ -5,10 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.harreke.easyapp.frameworks.bases.IFramework;
-import com.harreke.easyapp.holders.recyclerview.RecyclerHolder;
 import com.harreke.easyapp.adapters.recyclerview.RecyclerAdapter;
+import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.list.ListFramework;
+import com.harreke.easyapp.holders.recyclerview.RecyclerHolder;
 
 import java.util.Comparator;
 
@@ -29,13 +29,19 @@ public abstract class RecyclerFramework<ITEM, HOLDER extends RecyclerHolder<ITEM
     private RecyclerView mRecyclerView;
     private int mScrollState = RecyclerView.SCROLL_STATE_IDLE;
 
-    public RecyclerFramework(IFramework framework, int listId, int slidableViewId) {
-        super(framework, listId, slidableViewId);
+    public RecyclerFramework(IFramework framework, int listId) {
+        super(framework, listId);
     }
 
     @Override
     public boolean addItem(int itemId, ITEM item) {
         return mAdapter.addItem(itemId, item);
+    }
+
+    @Override
+    public void bindAdapter() {
+        mAdapter = new Adapter();
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     /**
@@ -81,9 +87,7 @@ public abstract class RecyclerFramework<ITEM, HOLDER extends RecyclerHolder<ITEM
 
     @Override
     public void setListView(View listView) {
-        mAdapter = new Adapter();
         mRecyclerView = (RecyclerView) listView;
-        mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setHasFixedSize(false);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(listView.getContext()));
         mRecyclerView.setOnScrollListener(this);

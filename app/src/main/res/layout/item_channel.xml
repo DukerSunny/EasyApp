@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    style="@style/mw.h"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/White"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@color/DarkCyan"
+        android:orientation="vertical"
+        android:padding="4dp">
+
+        <TextView
+            android:id="@+id/channel_comments"
+            style="@style/mw"
+            android:gravity="end"
+            android:lines="1"
+            android:text="0"
+            android:textColor="@color/White"
+            android:textSize="20dp"/>
+
+        <TextView
+            style="@style/mw"
+            android:gravity="end"
+            android:text="@string/content_comments"
+            android:textColor="@color/White"
+            android:textSize="12dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/mw.v"
+        android:layout_marginLeft="8dp">
+
+        <TextView
+            android:id="@+id/channel_title"
+            style="@style/mw"
+            android:text="@string/content_title"
+            android:textColor="@color/Title"
+            android:textSize="20dp"/>
+
+        <TextView
+            android:id="@+id/channel_description"
+            style="@style/mw"
+            android:layout_marginTop="8dp"
+            android:text="@string/content_description"
+            android:textColor="@color/Content"
+            android:textSize="12dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

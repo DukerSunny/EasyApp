@@ -63,8 +63,8 @@ public abstract class SlideHelper implements IPager<String, ImageView>, ViewPage
         mPageLayoutId = imageLayoutId;
         mIndicatorLayoutId = indicatorLayoutId;
 
-        slide_page = (ViewPager) framework.queryContent(R.id.slide_page);
-        slide_indicator = (LinearLayout) framework.queryContent(R.id.slide_indicator);
+        slide_page = (ViewPager) framework.findContentView(R.id.slide_page);
+        slide_indicator = (LinearLayout) framework.findContentView(R.id.slide_indicator);
 
         mAdapter = new Adapter();
         slide_page.setAdapter(mAdapter);

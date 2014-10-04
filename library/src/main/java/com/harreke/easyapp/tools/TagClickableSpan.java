@@ -11,16 +11,16 @@ import com.harreke.easyapp.listeners.OnTagClickListener;
  * 带有标签的可点击Span
  */
 public class TagClickableSpan extends ClickableSpan {
-    private String tag;
-    private OnTagClickListener tagClickEvent;
+    private String mTag;
+    private OnTagClickListener mTagClickListener;
 
-    public TagClickableSpan(String tag, OnTagClickListener tagClickEvent) {
-        this.tag = tag;
-        this.tagClickEvent = tagClickEvent;
+    public TagClickableSpan(String tag, OnTagClickListener tagClickListener) {
+        this.mTag = tag;
+        this.mTagClickListener = tagClickListener;
     }
 
     @Override
     public void onClick(View widget) {
-        tagClickEvent.onTagClick(tag);
+        mTagClickListener.onTagClick(mTag);
     }
 }

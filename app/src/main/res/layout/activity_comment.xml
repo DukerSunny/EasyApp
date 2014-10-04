@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    style="@style/mm"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/comment_pager"
+        style="@style/mm">
+
+        <android.support.v4.view.PagerTabStrip
+            android:id="@+id/comment_pager_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:visibility="gone"/>
+
+    </android.support.v4.view.ViewPager>
+
+    <LinearLayout
+        style="@style/mw.v"
+        android:background="@drawable/shape_bar_transparent">
+
+        <FrameLayout
+            android:id="@+id/comment_blank"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            style="@style/mw.h"
+            android:gravity="end">
+
+            <ImageView
+                android:id="@+id/comment_refresh_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="8dp"
+                android:src="@drawable/image_refresh"/>
+
+            <ImageView
+                android:id="@+id/comment_locate_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="8dp"
+                android:src="@drawable/image_locate"/>
+
+            <ImageView
+                android:id="@+id/comment_reply_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="8dp"
+                android:src="@drawable/image_reply"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

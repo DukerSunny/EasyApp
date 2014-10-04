@@ -5,7 +5,8 @@ import android.content.Context;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.IRequestExecutor;
 import com.harreke.easyapp.requests.RequestBuilder;
-import com.harreke.easyapp.requests.volley.VolleyRequestExecutor;
+import com.harreke.easyapp.requests.asynchttpclient.AsyncHttpClientExecutor;
+import com.loopj.android.http.AsyncHttpClient;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/08/04
@@ -27,6 +28,6 @@ public class RequestExecutorConfig {
      * @return Volley Http请求执行器
      */
     public static IRequestExecutor create(Context context, RequestBuilder builder, IRequestCallback<String> callback) {
-        return new VolleyRequestExecutor(context, builder, callback);
+        return new AsyncHttpClientExecutor(context, builder, callback);
     }
 }

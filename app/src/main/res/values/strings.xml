@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">AcFun阅读</string>
+
+    <string name="main_channel">频道</string>
+    <string name="main_recommend">推荐</string>
+
+    <string name="menu_login">点击登录</string>
+
+    <string name="channel_misc">综合</string>
+    <string name="channel_work_emotion">工作•情感</string>
+    <string name="channel_dramaculture">动漫文化</string>
+    <string name="channel_comic_novel">漫画•轻小说</string>
+
+    <string name="channel_search">输入AC号或关键字</string>
+
+    <string name="comment_date">发表于 yyyy-MM-dd HH:mm:SS</string>
+    <string name="comment_text">评论内容</string>
+    <string name="comment_user_name"># 评论者</string>
+
+    <string name="comment_quote_text">引用内容</string>
+    <string name="comment_quote_user_name"># 引用者</string>
+
+    <string name="comment_repeat">重复引用已隐藏，点击展开</string>
+
+    <string name="comment_pager_title">第%s页</string>
+
+    <string name="content_comments">评论</string>
+    <string name="content_date">MM月dd日（E）HH时mm分</string>
+    <string name="content_description">简介</string>
+    <string name="content_info">/ %1$s条评论 / %2$s人围观</string>
+    <string name="content_title">标题</string>
+
+    <string name="menu_at">有人召唤</string>
+    <string name="menu_favourite">收藏稿件</string>
+    <string name="menu_history">浏览记录</string>
+    <string name="menu_mail">站内私信</string>
+    <string name="menu_pattern_day">白天</string>
+    <string name="menu_pattern_night">夜间</string>
+    <string name="menu_setting">设置</string>
+
+    <string name="recommend_date">yyyy年MM月dd日</string>
+
+    <string name="search_sortresult">结果排序</string>
+    <string name="search_sortresult_relative">相关度</string>
+    <string name="search_sortresult_releasedate">发布日期</string>
+    <string name="search_sortresult_views">点击数</string>
+    <string name="search_sortresult_comments">评论数</string>
+    <string name="search_sortresult_stows">收藏数</string>
+    <string name="search_target">搜索项目</string>
+    <string name="search_target_title_tag">标题和标签</string>
+    <string name="search_target_content_description">内容和简介</string>
+    <string name="search_target_username">用户名</string>
+    <string name="search_range">搜索范围</string>
+    <string name="search_range_all">全部</string>
+    <string name="search_range_misc">综合</string>
+    <string name="search_range_work_emotion">工作•情感</string>
+    <string name="search_range_dramaculture">动漫文化</string>
+    <string name="search_range_comic_novel">漫画•轻小说</string>
+    <string name="search_sortorder">排序方式</string>
+    <string name="search_sortorder_default">默认排序</string>
+    <string name="search_sortorder_reverse">反向排序</string>
+
+    <string name="search_inputtoshort">关键字过短，请重新输入！</string>
+
+    <string name="setting_aboutus">关于我们</string>
+    <string name="setting_autoloadimage">2G/3G网络下自动加载图片</string>
+    <string name="setting_misc">综合</string>
+    <string name="setting_other">其他</string>
+
+    <string name="time">E </string>
+    <string name="time_early">清晨</string>
+    <string name="time_morning">上午</string>
+    <string name="time_noon">中午</string>
+    <string name="time_afternoon">上午</string>
+    <string name="time_nightfall">傍晚</string>
+    <string name="time_evening">夜晚</string>
+    <string name="time_night">深夜</string>
+
+    <string name="user_name">用户名</string>
+    <string name="user_signature">签名</string>
+
+</resources>

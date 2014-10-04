@@ -11,26 +11,22 @@ import com.harreke.easyapp.holders.abslistview.IAbsListHolder;
  */
 public interface IAbsList<ITEM, HOLDER extends IAbsListHolder<ITEM>> {
     /**
-     * 生成条目视图容器
+     * 生成项目视图容器
      *
-     * @param position
-     *         条目位置
      * @param convertView
-     *         条目视图
+     *         项目视图
      *
-     * @return 条目视图容器
+     * @return 项目视图容器
      */
-    public HOLDER createHolder(int position, View convertView);
+    public HOLDER createHolder(View convertView);
 
     /**
-     * 生成条目视图
+     * 生成项目视图
      *
-     * @param position
-     *         条目位置
      * @param item
-     *         条目对象
+     *         项目对象
      *
-     * @return 条目视图
+     * @return 项目视图
      */
-    public View createView(int position, ITEM item);
+    public View createView(ITEM item);
 }

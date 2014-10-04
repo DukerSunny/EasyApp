@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    style="@style/mw.v"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <FrameLayout
+        style="@style/mw">
+
+        <com.harreke.easyapp.widgets.AutoFitImageView
+            android:id="@+id/selection_image"
+            style="@style/mw"
+            android:src="@drawable/placeholder"/>
+
+        <FrameLayout
+            android:id="@+id/selection_mask"
+            style="@style/mw"
+            android:layout_gravity="bottom"
+            android:background="@drawable/image_selection_mask"/>
+
+        <FrameLayout
+            android:id="@+id/selection_mask_white"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_gravity="bottom"
+            android:background="@color/White"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            style="@style/mw.h"
+            android:layout_gravity="bottom"
+            android:paddingLeft="8dp">
+
+            <TextView
+                android:id="@+id/recommend_number"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/shape_circle_1st"
+                android:gravity="center"
+                android:text="1"
+                android:textColor="@color/White"
+                android:textSize="16dp"/>
+
+            <TextView
+                android:id="@+id/recommend_channel"
+                android:layout_width="match_parent"
+                android:layout_height="24dp"
+                android:layout_marginLeft="8dp"
+                android:gravity="center_vertical"
+                android:text="@string/channel_misc"
+                android:textColor="@color/Selection_1st"
+                android:textSize="16dp"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <LinearLayout
+        style="@style/mw.v"
+        android:background="@drawable/whitecard"
+        android:gravity="center_vertical"
+        android:paddingBottom="8dp"
+        android:paddingLeft="40dp"
+        android:paddingRight="8dp"
+        android:paddingTop="8dp">
+
+        <TextView
+            android:id="@+id/recommend_title"
+            style="@style/mw"
+            android:text="标题"
+            android:textColor="@color/Title"
+            android:textSize="20dp"/>
+
+        <TextView
+            android:id="@+id/recommend_description"
+            style="@style/mw"
+            android:layout_marginTop="8dp"
+            android:text="简介"
+            android:textColor="@color/Content"
+            android:textSize="12dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

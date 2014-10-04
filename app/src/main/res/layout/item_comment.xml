@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    style="@style/mw"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:id="@+id/comment_quote"
+        style="@style/mw.v"
+        android:background="@drawable/image_lightyellow"
+        android:padding="8dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/comment_quote_text"
+            style="@style/ww"
+            android:text="@string/comment_quote_text"
+            android:textColor="@color/Content"
+            android:textSize="16dp"/>
+
+        <TextView
+            android:id="@+id/comment_quote_user_name"
+            style="@style/ww"
+            android:layout_marginTop="4dp"
+            android:text="@string/comment_quote_user_name"
+            android:textColor="@color/Assist"
+            android:textSize="12dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/comment"
+        style="@style/mw.v">
+
+        <TextView
+            android:id="@+id/comment_repeat"
+            style="@style/mw"
+            android:background="@drawable/shape_comment_repeat"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="@string/comment_repeat"
+            android:textColor="@color/Assist"
+            android:textSize="12dp"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            style="@style/mw.h"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/whitecard"
+            android:padding="8dp">
+
+            <ImageView
+                android:id="@+id/comment_user_avatar"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/image_avatar"/>
+
+            <LinearLayout
+                style="@style/mw.v"
+                android:layout_marginLeft="8dp">
+
+                <TextView
+                    android:id="@+id/comment_user_name"
+                    style="@style/mw"
+                    android:text="@string/comment_user_name"
+                    android:textColor="@color/Assist"
+                    android:textSize="12dp"/>
+
+                <TextView
+                    android:id="@+id/comment_text"
+                    style="@style/mw"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/comment_text"
+                    android:textColor="@color/Content"
+                    android:textSize="16dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

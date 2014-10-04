@@ -67,7 +67,7 @@ public class ImageRecyclerActivity extends ActivityFramework {
 
     @Override
     public void queryLayout() {
-        mRecycler = new Recycler(this, R.id.recyclerView, 0);
+        mRecycler = new Recycler(this, R.id.recyclerView);
         mRecycler.setLoadEnabled(true);
         mRecycler.setTotalPage(5);
     }
@@ -83,8 +83,8 @@ public class ImageRecyclerActivity extends ActivityFramework {
     }
 
     private class Recycler extends RecyclerFramework<RecyclerItem, ImageRecyclerHolder> {
-        public Recycler(IFramework framework, int listId, int slidableViewId) {
-            super(framework, listId, slidableViewId);
+        public Recycler(IFramework framework, int listId) {
+            super(framework, listId);
         }
 
         @Override
@@ -100,6 +100,11 @@ public class ImageRecyclerActivity extends ActivityFramework {
         @Override
         public void onAction() {
             startAction();
+        }
+
+        @Override
+        public ArrayList<RecyclerItem> onParse(String json) {
+            return null;
         }
 
         @Override

@@ -1,7 +1,8 @@
 package com.harreke.easyapp.requests;
 
+import android.util.Log;
+
 import com.harreke.easyapp.tools.GsonUtil;
-import com.harreke.easyapp.tools.DevUtil;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -12,13 +13,11 @@ import java.util.Iterator;
  * Http请求构造器，支持GET和POST请求
  */
 public class RequestBuilder {
-    public static final String METHOD_GET = "GET";
-    public static final String METHOD_POST = "POST";
-
+    private final String TAG = "RequestBuilder";
     private String mBaseUrl;
     private HashMap<String, String> mBodyMap = new HashMap<String, String>();
     private HashMap<String, String> mHeaderMap = new HashMap<String, String>();
-    private String mMethod;
+    private Method mMethod;
     private HashMap<String, String> mQueryMap = new HashMap<String, String>();
 
     /**
@@ -26,15 +25,11 @@ public class RequestBuilder {
      *
      * @param method
      *         请求方式
-     *         {@link #METHOD_GET}
-     *         {@link #METHOD_POST}
+     *         {@link com.harreke.easyapp.requests.RequestBuilder.Method}
      * @param baseUrl
      *         目标Url
      */
-    public RequestBuilder(String method, String baseUrl) {
-        if (!METHOD_GET.equals(method) && !METHOD_POST.equals(method)) {
-            throw new IllegalArgumentException("Unsupported method!");
-        }
+    public RequestBuilder(Method method, String baseUrl) {
         mMethod = method;
         mBaseUrl = baseUrl;
     }
@@ -95,7 +90,7 @@ public class RequestBuilder {
         return mHeaderMap;
     }
 
-    public final String getMethod() {
+    public final Method getMethod() {
         return mMethod;
     }
 
@@ -121,6 +116,20 @@ public class RequestBuilder {
     }
 
     public final void print() {
-        DevUtil.e("\nMethod:" + mMethod + "\nUrl:" + getUrl() + "\nHeaders:\n" + GsonUtil.toString(mHeaderMap) + "Bodys:\n" + GsonUtil.toString(mBodyMap));
+        String print = "";
+
+        switch (mMethod) {
+            case GET:
+                print = "GET " + getUrl();
+                break;
+            case POST:
+                print = "POST " + getUrl() + "\nHeaders:\n" + GsonUtil.toString(mHeaderMap) + "\nBodies:\n" + GsonUtil.toString(mBodyMap);
+        }
+        Log.e(TAG, print);
+    }
+
+    public enum Method {
+        GET,
+        POST
     }
 }

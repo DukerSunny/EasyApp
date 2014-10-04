@@ -130,7 +130,7 @@ public interface IFramework extends IInfoClickListener {
      *
      * @return 视图
      */
-    public View queryContent(int viewId);
+    public View findContentView(int viewId);
 
     /**
      * 查询布局

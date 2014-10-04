@@ -51,26 +51,35 @@ public class SlideShowView extends ViewGroup implements OnGestureListener {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         View child;
         int size = getChildCount();
-        int target;
+        int left;
+        int right;
         int leftWidth;
         int rightWidth;
         int i;
 
-        if (size > 0) {
-            target = getChildCount() / 2;
-            leftWidth = 0;
-            for (i = target - 1; i > -1; i--) {
-                child = getChildAt(i);
-                leftWidth += child.getMeasuredWidth();
-                child.layout((int) (l + mOffset - leftWidth), t, (int) (r + mOffset - leftWidth), b);
-            }
-            rightWidth = 0;
-            for (i = target; i < size; i++) {
-                child = getChildAt(i);
-                child.layout((int) (l + mOffset + rightWidth), t, (int) (r + mOffset + rightWidth), b);
-                rightWidth += child.getMeasuredWidth();
-            }
-        }
+//        if (size > 0) {
+//            left = mPosition - 1;
+//            if (left < 0) {
+//                left = size - 1;
+//                leftWidth = getChildAt
+//            }
+//            right = mPosition + 1;
+//            if (right == size) {
+//                right = 0;
+//            }
+//            leftWidth = 0;
+//            for (i = target - 1; i > -1; i--) {
+//                child = getChildAt(i);
+//                leftWidth += child.getMeasuredWidth();
+//                child.layout((int) (l + mOffset - leftWidth), t, (int) (r + mOffset - leftWidth), b);
+//            }
+//            rightWidth = 0;
+//            for (i = target; i < size; i++) {
+//                child = getChildAt(i);
+//                child.layout((int) (l + mOffset + rightWidth), t, (int) (r + mOffset + rightWidth), b);
+//                rightWidth += child.getMeasuredWidth();
+//            }
+//        }
     }
 
     @Override
@@ -110,7 +119,6 @@ public class SlideShowView extends ViewGroup implements OnGestureListener {
         if (Math.abs(scrollX) > mGesture.getThreshold()) {
             mOffset = mStartOffset + scrollX;
 
-            DevUtil.e("invalidata");
             requestLayout();
 
             return true;

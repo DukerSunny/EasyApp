@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    style="@style/mm.v"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/Background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/White"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/search_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/button_transparent"
+            android:src="@drawable/back"/>
+
+        <EditText
+            android:id="@+id/search_input"
+            style="@style/mmw"
+            android:layout_marginLeft="8dp"
+            android:hint="@string/channel_search"
+            android:lines="1"
+            android:padding="8dp"
+            android:textColor="@color/Title"
+            android:textColorHint="@color/Content"
+            android:textSize="16dp"/>
+
+        <ImageView
+            android:id="@+id/search_go"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/button_transparent"
+            android:padding="8dp"
+            android:src="@drawable/image_search"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/mw.h"
+        android:background="@color/White">
+
+        <TextView
+            android:id="@+id/search_sortresult"
+            style="@style/mww"
+            android:background="@drawable/button_spinner"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="@string/search_sortresult_releasedate"
+            android:textColor="@color/Content"/>
+
+        <TextView
+            android:id="@+id/search_target"
+            style="@style/mww"
+            android:background="@drawable/button_spinner"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="@string/search_target_title_tag"
+            android:textColor="@color/Content"/>
+
+        <TextView
+            android:id="@+id/search_range"
+            style="@style/mww"
+            android:background="@drawable/button_spinner"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="@string/search_range_misc"
+            android:textColor="@color/Content"/>
+
+        <TextView
+            android:id="@+id/search_sortorder"
+            style="@style/mww"
+            android:background="@drawable/button_spinner"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="@string/search_sortorder_default"
+            android:textColor="@color/Content"/>
+
+    </LinearLayout>
+
+
+    <FrameLayout
+        style="@style/mm">
+
+        <ListView
+            android:id="@+id/search_list"
+            style="@style/mm"
+            android:divider="@color/Transparent"
+            android:dividerHeight="16dp"
+            android:listSelector="@drawable/button_transparent"
+            android:padding="8dp"/>
+
+        <com.harreke.easyapp.widgets.InfoView
+            android:id="@+id/search_info"
+            style="@style/mm"
+            android:background="@color/TransparentWhite"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+
+</LinearLayout>

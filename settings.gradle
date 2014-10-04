@@ -1,2 +1,2 @@
-include ':samples'
+include ':samples', ':app', ':libSlidingMenu', ':libCircleImageView'
 include ':library'

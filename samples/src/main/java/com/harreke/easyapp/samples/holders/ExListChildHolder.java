@@ -4,22 +4,20 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.harreke.easyapp.holders.abslistview.ExListHolder;
+import com.harreke.easyapp.holders.abslistview.IExListHolder;
 import com.harreke.easyapp.samples.R;
 import com.harreke.easyapp.samples.entities.beans.ExListChildItem;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/08/06
  */
-public class ExListChildHolder extends ExListHolder.Child<ExListChildItem> {
+public class ExListChildHolder implements IExListHolder.Child<ExListChildItem> {
     private ImageView mChildNode;
     private TextView mChildTitle;
     private int mColorGray;
     private int mColorTheme;
 
     public ExListChildHolder(View convertView) {
-        super(convertView);
-
         mChildNode = (ImageView) convertView.findViewById(R.id.child_node);
         mChildTitle = (TextView) convertView.findViewById(R.id.child_title);
         mColorGray = convertView.getResources().getColor(R.color.Gray);

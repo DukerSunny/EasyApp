@@ -20,7 +20,7 @@ public class SlidableAbsListItemHolder implements IAbsListHolder<AbsListItem> {
     }
 
     @Override
-    public void setItem(AbsListItem item) {
+    public void setItem(int position, AbsListItem item) {
         mTitle.setText(String.valueOf(item.getTitle()));
         mDesc.setText(item.getDesc());
     }

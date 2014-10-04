@@ -3,13 +3,10 @@ package com.harreke.easyapp.frameworks.list;
 import android.content.Context;
 import android.view.View;
 
+import com.harreke.easyapp.R;
 import com.harreke.easyapp.frameworks.bases.IFramework;
-import com.harreke.easyapp.listeners.OnSlidableTriggerListener;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
-import com.harreke.easyapp.widgets.slidableview.SlidableView;
-import com.harreke.easyapp.R;
-import com.harreke.easyapp.listparsers.IListParser;
 import com.harreke.easyapp.widgets.InfoView;
 
 import java.util.ArrayList;
@@ -41,13 +38,7 @@ import java.util.Comparator;
  *
  * @see com.harreke.easyapp.listparsers.IListParser
  */
-public abstract class ListFramework<ITEM>
-        implements IList<ITEM>, IListActionListener<ITEM>, IRequestCallback<String>, OnSlidableTriggerListener, View.OnClickListener {
-    private static int ACTION_LOAD = 1;
-    private static int ACTION_NONE = 0;
-
-    private int mActionType = ACTION_NONE;
-    private static int ACTION_REFRESH = 2;
+public abstract class ListFramework<ITEM> implements IList<ITEM>, IListActionListener<ITEM>, IRequestCallback<String>, View.OnClickListener {
     private Comparator<ITEM> mComparator = null;
     private String mCompleteText;
     private int mCurrentPage = 1;
@@ -55,36 +46,25 @@ public abstract class ListFramework<ITEM>
     private IFramework mFramework;
     private InfoView mInfo = null;
     private String mLastText;
-    private IListParser<ITEM> mListParser = null;
     private boolean mLoadEnabled = false;
     private int mPageSize = 0;
     private boolean mReverseScroll = false;
     private View mRoot = null;
-    private SlidableView mSlidableView = null;
+    private boolean mSortReverse = false;
     private int mTotalPage = 1;
 
-    public ListFramework(IFramework framework, int listId, int slidableViewId) {
+    public ListFramework(IFramework framework, int listId) {
         Context context;
         View listView;
-        View slidableView;
 
         if (framework == null) {
             throw new IllegalArgumentException("Framework must not be null!");
         } else {
-            listView = framework.queryContent(listId);
+            listView = framework.findContentView(listId);
             if (listView == null) {
                 throw new IllegalArgumentException("Invalid listId!");
             }
             setListView(listView);
-            if (slidableViewId > 0) {
-                slidableView = framework.queryContent(slidableViewId);
-                if (slidableView == null || !(slidableView instanceof SlidableView)) {
-                    throw new IllegalArgumentException("Invalid slidableViewId!");
-                }
-                mSlidableView = (SlidableView) slidableView;
-                mSlidableView.setSlidableContentView(listId);
-                mSlidableView.setOnSlidableTriggerListener(this);
-            }
             context = framework.getActivity();
             mErrorText = context.getString(R.string.info_retry);
             mLastText = context.getString(R.string.list_last);
@@ -100,11 +80,6 @@ public abstract class ListFramework<ITEM>
      */
     public final void cancel() {
         mFramework.cancelRequest();
-        if (mActionType != ACTION_NONE) {
-            mActionType = ACTION_NONE;
-            setRefreshComplete();
-            setLoadComplete(-1);
-        }
     }
 
     /**
@@ -212,28 +187,24 @@ public abstract class ListFramework<ITEM>
      *         Http请求
      */
     public final void from(RequestBuilder builder) {
-        if (mListParser == null) {
-            throw new IllegalStateException("Must set a list parser befor load network data!");
-        }
+        from(builder, false);
+    }
+
+    /**
+     * 填充列表视图，从网络加载内容
+     *
+     * @param builder
+     *         Http请求
+     * @param reverse
+     *         是否倒转列表顺序
+     */
+    public final void from(RequestBuilder builder, boolean reverse) {
         if (builder == null) {
             throw new IllegalArgumentException("Request builder must not be null!");
         }
         onPreAction();
+        mSortReverse = reverse;
         mFramework.executeRequest(builder, this);
-    }
-
-    /**
-     * 获得动作类型
-     *
-     * {@link #ACTION_LOAD}
-     * 加载列表
-     * {@link #ACTION_REFRESH}
-     * 刷新列表
-     *
-     * @return 动作类型
-     */
-    public final int getActionType() {
-        return mActionType;
     }
 
     /**
@@ -318,7 +289,8 @@ public abstract class ListFramework<ITEM>
 
     @Override
     public void onClick(View v) {
-        onRefreshTrigger();
+        clear();
+        onAction();
     }
 
     /**
@@ -352,33 +324,11 @@ public abstract class ListFramework<ITEM>
     }
 
     /**
-     * 触发开始加载
-     */
-    @Override
-    public void onLoadTrigger() {
-        if (!isLoading()) {
-            setLoadStart();
-            mActionType = ACTION_LOAD;
-            nextPage();
-            onAction();
-        }
-    }
-
-    /**
      * 当列表加载完成时触发
      */
     @Override
     public void onPostAction() {
         refresh();
-        if (mActionType == ACTION_REFRESH) {
-            setRefreshComplete();
-        } else if (mActionType == ACTION_LOAD && !isFirstPage()) {
-            setLoadComplete(mPageSize);
-            if (mSlidableView == null) {
-                showToast(String.format(mCompleteText, mPageSize));
-            }
-        }
-        mActionType = ACTION_NONE;
         if (isEmpty()) {
             if (mRoot != null) {
                 mRoot.setVisibility(View.GONE);
@@ -411,36 +361,19 @@ public abstract class ListFramework<ITEM>
             if (mInfo != null) {
                 mInfo.setInfoVisibility(InfoView.INFO_LOADING);
             }
-        } else if (mActionType == ACTION_LOAD) {
-            setLoadStart();
-        }
-    }
-
-    /**
-     * 触发开始刷新
-     */
-    @Override
-    public void onRefreshTrigger() {
-        if (!isLoading()) {
-            setRefreshStart();
-            mActionType = ACTION_REFRESH;
-            clear();
-            refresh();
-            onAction();
         }
     }
 
     @Override
     public void onSuccess(String result) {
-        ArrayList<ITEM> list;
+        ArrayList<ITEM> list = onParse(result);
 
-        if (mListParser != null) {
-            mListParser.parse(result);
-            if (mListParser.isSuccess()) {
-                list = mListParser.getList();
-                from(list);
+        if (list != null) {
+            if (mSortReverse) {
+                from(list, true);
+                mSortReverse = false;
             } else {
-                onError();
+                from(list);
             }
         } else {
             onError();
@@ -480,20 +413,6 @@ public abstract class ListFramework<ITEM>
     }
 
     /**
-     * 手动触发结束加载状态
-     *
-     * @param pageSize
-     *         页面加载的条目数
-     *
-     *         -1为不需要显示加载条目数
-     */
-    public final void setLoadComplete(int pageSize) {
-        if (mSlidableView != null) {
-            mSlidableView.setLoadComplete(pageSize);
-        }
-    }
-
-    /**
      * 设置是否启用加载更多功能
      *
      * 当列表滑动至底部时，是否触发加载更多状态，以便自动加载下一页
@@ -503,47 +422,6 @@ public abstract class ListFramework<ITEM>
      */
     public final void setLoadEnabled(boolean loadEnabled) {
         mLoadEnabled = loadEnabled;
-    }
-
-    /**
-     * 手动触发开始加载状态
-     */
-    public final void setLoadStart() {
-        if (mSlidableView != null) {
-            mSlidableView.setLoadStart();
-        }
-    }
-
-    /**
-     * 设置网络数据解析器
-     *
-     * 解析器会将从网络加载的字符串数据反序列化、运算后，处理成可以直接调用的条目列表
-     *
-     * @param listPaser
-     *         网络数据解析器
-     *
-     *         为空表示不需要解析网络数据
-     */
-    public final void setParser(IListParser<ITEM> listPaser) {
-        mListParser = listPaser;
-    }
-
-    /**
-     * 手动触发结束刷新状态
-     */
-    public final void setRefreshComplete() {
-        if (mSlidableView != null) {
-            mSlidableView.setRefreshComplete();
-        }
-    }
-
-    /**
-     * 手动触发开始刷新状态
-     */
-    public final void setRefreshStart() {
-        if (mSlidableView != null) {
-            mSlidableView.setRefreshStart();
-        }
     }
 
     /**

@@ -61,8 +61,8 @@ public class ImageSlideHelper extends ImagePageFramework<String> {
         mFramework = framework;
         mImageLayoutId = imageLayoutId;
 
-        slide_page = (ViewPager) framework.queryContent(pageId);
-        slide_indicator = (ViewGroup) framework.queryContent(indicatorId);
+        slide_page = (ViewPager) framework.findContentView(pageId);
+        slide_indicator = (ViewGroup) framework.findContentView(indicatorId);
     }
 
     private void check(int position) {

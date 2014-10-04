@@ -8,13 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.harreke.easyapp.frameworks.bases.IFramework;
-import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
-import com.harreke.easyapp.requests.IRequestCallback;
-import com.harreke.easyapp.requests.RequestBuilder;
 import com.harreke.easyapp.R;
 import com.harreke.easyapp.frameworks.bases.IActionBar;
+import com.harreke.easyapp.frameworks.bases.IFramework;
+import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.helpers.RequestHelper;
+import com.harreke.easyapp.requests.IRequestCallback;
+import com.harreke.easyapp.requests.RequestBuilder;
 import com.harreke.easyapp.tools.DevUtil;
 import com.harreke.easyapp.widgets.InfoView;
 import com.harreke.easyapp.widgets.ToastView;
@@ -39,6 +39,9 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
         }
     };
     private RequestHelper mRequest;
+
+    public FragmentFramework() {
+    }
 
     /**
      * 为ActionBar添加一个菜单选项
@@ -260,7 +263,21 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
      */
     @Override
     public final void executeRequest(RequestBuilder builder, IRequestCallback<String> callback) {
+        builder.print();
         mRequest.execute(getActivity(), builder, callback);
+    }
+
+    /**
+     * 查找视图
+     *
+     * @param viewId
+     *         视图id
+     *
+     * @return 视图
+     */
+    @Override
+    public final View findContentView(int viewId) {
+        return framework_content.findViewById(viewId);
     }
 
     private ActivityFramework getActivityFramework() {
@@ -434,19 +451,6 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
     }
 
     /**
-     * 查找视图
-     *
-     * @param viewId
-     *         视图id
-     *
-     * @return 视图
-     */
-    @Override
-    public final View queryContent(int viewId) {
-        return framework_content.findViewById(viewId);
-    }
-
-    /**
      * 刷新ActionBar上的菜单选项
      */
     @Override
@@ -470,6 +474,21 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
 
         if (activity != null) {
             activity.setActionBarHomeClickable(clickable);
+        }
+    }
+
+    /**
+     * 设置ActionBar的Home键上的图标
+     *
+     * @param iconId
+     *         图标Id
+     */
+    @Override
+    public void setActionBarHomeIcon(int iconId) {
+        ActivityFramework activity = getActivityFramework();
+
+        if (activity != null) {
+            activity.setActionBarHomeIcon(iconId);
         }
     }
 
@@ -545,6 +564,21 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
 
         if (activity != null) {
             activity.setActionBarItemsVisible(visible);
+        }
+    }
+
+    /**
+     * 设置ActionBar的视图
+     *
+     * @param view
+     *         ActionBar的视图
+     */
+    @Override
+    public void setActionBarView(View view) {
+        ActivityFramework activity = getActivityFramework();
+
+        if (activity != null) {
+            activity.setActionBarView(view);
         }
     }
 

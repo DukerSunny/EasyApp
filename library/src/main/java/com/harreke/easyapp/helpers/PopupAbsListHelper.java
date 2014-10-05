@@ -107,7 +107,7 @@ public abstract class PopupAbsListHelper<ITEM, HOLDER extends IAbsListHolder<ITE
             if (convertView != null) {
                 holder = (HOLDER) convertView.getTag();
             } else {
-                convertView = createView(item);
+                convertView = createView();
                 holder = createHolder(convertView);
                 convertView.setTag(holder);
             }

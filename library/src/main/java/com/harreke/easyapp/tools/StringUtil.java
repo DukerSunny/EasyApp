@@ -64,6 +64,14 @@ public class StringUtil {
         return input;
     }
 
+    public static String convertUBB(String input) {
+        Matcher matcher;
+
+        input = input.replaceAll("\\[emot=([a-z]+?),([0-9]+?)/\\]", "<img src='$1/$2'/>");
+
+        return input;
+    }
+
     public static Matcher getMatcher(String pattern, CharSequence input) {
         return Pattern.compile(pattern).matcher(input);
     }

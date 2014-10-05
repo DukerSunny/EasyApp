@@ -99,7 +99,7 @@ public class ChannelFragment extends FragmentFramework {
         }
 
         @Override
-        public View createView(Content content) {
+        public View createView() {
             return View.inflate(getActivity(), R.layout.item_channel, null);
         }
 

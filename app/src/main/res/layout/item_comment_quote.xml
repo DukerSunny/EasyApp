@@ -2,8 +2,7 @@
 <LinearLayout
     style="@style/mw.v"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_marginLeft="48dp"
-    android:background="@drawable/image_lightyellow"
+    android:background="@drawable/button_lightyellow"
     android:padding="8dp">
 
     <TextView

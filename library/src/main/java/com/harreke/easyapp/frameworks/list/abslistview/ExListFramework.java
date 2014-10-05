@@ -310,11 +310,11 @@ public abstract class ExListFramework<GROUP, GROUPHOLDER extends IExListHolder.G
             if (convertView != null) {
                 holder = (CHILDHOLDER) convertView.getTag();
             } else {
-                convertView = createChildView(groupPosition, childPosition, child);
-                holder = createChildHolder(groupPosition, childPosition, convertView);
+                convertView = createChildView();
+                holder = createChildHolder(convertView);
                 convertView.setTag(holder);
             }
-            holder.setItem(child);
+            holder.setItem(groupPosition, childPosition, child);
 
             return convertView;
         }
@@ -328,11 +328,11 @@ public abstract class ExListFramework<GROUP, GROUPHOLDER extends IExListHolder.G
             if (convertView != null) {
                 holder = (GROUPHOLDER) convertView.getTag();
             } else {
-                convertView = createGroupView(groupPosition, group);
-                holder = createGroupHolder(groupPosition, convertView);
+                convertView = createGroupView();
+                holder = createGroupHolder(convertView);
                 convertView.setTag(holder);
             }
-            holder.setItem(group);
+            holder.setItem(groupPosition, group);
 
             return convertView;
         }

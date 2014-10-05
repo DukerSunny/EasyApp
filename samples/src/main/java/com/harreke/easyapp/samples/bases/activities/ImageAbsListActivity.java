@@ -11,7 +11,7 @@ import com.harreke.easyapp.frameworks.list.abslistview.AbsListFramework;
 import com.harreke.easyapp.samples.R;
 import com.harreke.easyapp.samples.bases.application.Samples;
 import com.harreke.easyapp.samples.entities.beans.AbsListItem;
-import com.harreke.easyapp.samples.holders.ImageAbsListHolder;
+import com.harreke.easyapp.samples.holders.ImageHolder;
 
 import java.util.ArrayList;
 
@@ -81,14 +81,14 @@ public class ImageAbsListActivity extends ActivityFramework {
         mAbsList.from(generateAbsListItems(20));
     }
 
-    private class AbsList extends AbsListFramework<AbsListItem, ImageAbsListHolder> {
+    private class AbsList extends AbsListFramework<AbsListItem, ImageHolder> {
         public AbsList(IFramework framework, int listId) {
             super(framework, listId);
         }
 
         @Override
-        public ImageAbsListHolder createHolder(View convertView) {
-            return new ImageAbsListHolder(convertView);
+        public ImageHolder createHolder(View convertView) {
+            return new ImageHolder(convertView);
         }
 
         @Override

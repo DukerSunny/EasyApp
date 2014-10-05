@@ -17,7 +17,7 @@ public class IExListHolder {
          * @param child
          *         子条目对象
          */
-        public void setItem(CHILD child);
+        public void setItem(int groupPosition, int childPosition, CHILD child);
     }
 
     /**
@@ -33,6 +33,6 @@ public class IExListHolder {
          * @param group
          *         父条目对象
          */
-        public void setItem(GROUP group);
+        public void setItem(int groupPosition, GROUP group);
     }
 }

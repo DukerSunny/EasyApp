@@ -26,9 +26,9 @@ import java.util.Comparator;
 public abstract class AbsListFramework<ITEM, HOLDER extends IAbsListHolder<ITEM>> extends ListFramework<ITEM>
         implements IAbsList<ITEM, HOLDER>, IAbsListItemClickListener<ITEM>, AdapterView.OnClickListener, AdapterView.OnItemClickListener,
         AbsListView.OnScrollListener {
-    private AbsListView mAbsListView;
     private Adapter mAdapter;
     private int mHeaderCount = 0;
+    private AbsListView mListView;
     private int mScrollState = SCROLL_STATE_IDLE;
 
     public AbsListFramework(IFramework framework, int listId) {
@@ -36,8 +36,8 @@ public abstract class AbsListFramework<ITEM, HOLDER extends IAbsListHolder<ITEM>
     }
 
     public final void addHeaderView(View view) {
-        if (mAbsListView instanceof ListView) {
-            ((ListView) mAbsListView).addHeaderView(view);
+        if (mListView instanceof ListView) {
+            ((ListView) mListView).addHeaderView(view);
             mHeaderCount++;
         }
     }
@@ -64,7 +64,7 @@ public abstract class AbsListFramework<ITEM, HOLDER extends IAbsListHolder<ITEM>
     @Override
     public void bindAdapter() {
         mAdapter = new Adapter();
-        mAbsListView.setAdapter(mAdapter);
+        mListView.setAdapter(mAdapter);
     }
 
     /**
@@ -143,6 +143,10 @@ public abstract class AbsListFramework<ITEM, HOLDER extends IAbsListHolder<ITEM>
         mAdapter.refresh();
     }
 
+    public void setEnabled(boolean enabled) {
+        mAdapter.setEnabled(enabled);
+    }
+
     /**
      * 设置列表视图
      *
@@ -151,9 +155,9 @@ public abstract class AbsListFramework<ITEM, HOLDER extends IAbsListHolder<ITEM>
      */
     @Override
     public void setListView(View listView) {
-        mAbsListView = (AbsListView) listView;
-        mAbsListView.setOnItemClickListener(this);
-        mAbsListView.setOnScrollListener(this);
+        mListView = (AbsListView) listView;
+        mListView.setOnItemClickListener(this);
+        mListView.setOnScrollListener(this);
     }
 
     /**
@@ -164,7 +168,7 @@ public abstract class AbsListFramework<ITEM, HOLDER extends IAbsListHolder<ITEM>
      */
     public final void setSelection(int position) {
         if (position >= 0 && position < mAdapter.getCount()) {
-            mAbsListView.setSelection(position);
+            mListView.setSelection(position);
         }
     }
 
@@ -189,7 +193,7 @@ public abstract class AbsListFramework<ITEM, HOLDER extends IAbsListHolder<ITEM>
             if (convertView != null) {
                 holder = (HOLDER) convertView.getTag();
             } else {
-                convertView = createView(item);
+                convertView = createView();
                 holder = createHolder(convertView);
                 convertView.setTag(holder);
             }

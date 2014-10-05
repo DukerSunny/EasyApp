@@ -4,12 +4,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:padding="8dp">
 
-    <ExpandableListView
+    <ListView
         android:id="@+id/comment_list"
         style="@style/mm"
         android:divider="@color/Transparent"
-        android:dividerHeight="0dp"
-        android:drawSelectorOnTop="true"
-        android:listSelector="@drawable/button_transparent"/>
+        android:dividerHeight="16dp"/>
 
 </FrameLayout>

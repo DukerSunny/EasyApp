@@ -8,7 +8,7 @@ import java.util.HashMap;
  */
 public class CommentListPage {
     private ArrayList<Integer> list;
-    private HashMap<String, Comment> map;
+    private HashMap<String, Conversion> map;
     private int pageSize;
     private int totalCount;
 
@@ -16,7 +16,7 @@ public class CommentListPage {
         return list;
     }
 
-    public HashMap<String, Comment> getMap() {
+    public HashMap<String, Conversion> getMap() {
         return map;
     }
 

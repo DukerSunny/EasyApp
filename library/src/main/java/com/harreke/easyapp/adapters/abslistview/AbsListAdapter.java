@@ -16,6 +16,7 @@ import java.util.HashSet;
  *         条目类型
  */
 public abstract class AbsListAdapter<ITEM> extends BaseAdapter {
+    private boolean mEnabled = true;
     private ArrayList<ITEM> mItemList = new ArrayList<ITEM>();
     private HashSet<Integer> mKeySet = new HashSet<Integer>();
 
@@ -67,8 +68,17 @@ public abstract class AbsListAdapter<ITEM> extends BaseAdapter {
         return position;
     }
 
+    @Override
+    public boolean isEnabled(int position) {
+        return mEnabled;
+    }
+
     public final void refresh() {
         notifyDataSetChanged();
+    }
+
+    public void setEnabled(boolean enabled) {
+        mEnabled = enabled;
     }
 
     /**

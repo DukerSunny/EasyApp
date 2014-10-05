@@ -269,7 +269,7 @@ public class SearchActivity extends ActivityFramework {
         }
 
         @Override
-        public View createView(String s) {
+        public View createView() {
             return View.inflate(getActivity(), R.layout.item_popuplist, null);
         }
     }
@@ -285,7 +285,7 @@ public class SearchActivity extends ActivityFramework {
         }
 
         @Override
-        public View createView(Search search) {
+        public View createView() {
             return View.inflate(getActivity(), R.layout.item_search, null);
         }
 

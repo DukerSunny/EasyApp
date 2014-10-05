@@ -4,10 +4,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@color/Background">
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@color/White">
+        android:background="@color/White"
+        android:orientation="horizontal">
 
         <FrameLayout
             android:id="@+id/content_user_avatar"
@@ -35,8 +36,9 @@
 
         <com.harreke.easyapp.widgets.GroupTabView
             android:id="@+id/content_group"
-            style="@style/wm"
+            style="@style/mmw"
             android:layout_gravity="center"
+            android:layout_marginLeft="8dp"
             android:background="@color/White"
             android:divider="@drawable/divider_vertical_dot"
             android:dividerPadding="8dp"
@@ -45,8 +47,7 @@
 
             <com.harreke.easyapp.widgets.ChildTabView
                 android:id="@+id/content_selection"
-                android:layout_width="96dp"
-                android:layout_height="match_parent"
+                style="@style/mmw"
                 android:background="@drawable/button_tab_underline"
                 android:checked="true"
                 android:drawableRight="@drawable/button_dropdown"
@@ -58,8 +59,7 @@
 
             <tv.acfun.read.widgets.RepeatCheckableChildTabView
                 android:id="@+id/content_channel"
-                android:layout_width="96dp"
-                android:layout_height="match_parent"
+                style="@style/mmw"
                 android:background="@drawable/button_tab_underline"
                 android:drawableRight="@drawable/button_dropdown"
                 android:gravity="center"
@@ -75,11 +75,12 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="end"
+            android:layout_marginLeft="8dp"
             android:background="@drawable/button_transparent"
             android:padding="8dp"
             android:src="@drawable/image_setting"/>
 
-    </FrameLayout>
+    </LinearLayout>
 
     <FrameLayout
         android:layout_width="match_parent"

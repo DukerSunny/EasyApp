@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.FrameLayout;
 
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.fragment.FragmentFramework;
@@ -17,8 +15,8 @@ import java.util.ArrayList;
 
 import tv.acfun.read.R;
 import tv.acfun.read.api.API;
-import tv.acfun.read.beans.ConvertedComment;
-import tv.acfun.read.holders.CommentHolder;
+import tv.acfun.read.beans.FullConversion;
+import tv.acfun.read.holders.FullConversionHolder;
 import tv.acfun.read.listeners.OnTotalPageChangedListener;
 import tv.acfun.read.parsers.CommentListParser;
 
@@ -28,7 +26,9 @@ import tv.acfun.read.parsers.CommentListParser;
 public class CommentFragment extends FragmentFramework implements IRequestCallback<String> {
     private int mContentId;
     private Helper mHelper;
+    private View.OnClickListener mOptionsClickListener;
     private int mPageNo;
+    private View.OnClickListener mQuoteExpandClickListener;
     private OnTotalPageChangedListener mTotalPageChangedListener;
     private Task task = null;
 
@@ -55,7 +55,12 @@ public class CommentFragment extends FragmentFramework implements IRequestCallba
 
     @Override
     public void newEvents() {
-
+        mOptionsClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = (Integer) v.getTag();
+            }
+        };
     }
 
     @Override
@@ -87,10 +92,8 @@ public class CommentFragment extends FragmentFramework implements IRequestCallba
     @Override
     public void queryLayout() {
         mHelper = new Helper(this, R.id.comment_list);
-        FrameLayout blank = new FrameLayout(getActivity());
-        blank.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, (int) (32 * getResources().getDisplayMetrics().density)));
-        mHelper.addHeaderView(blank);
         mHelper.bindAdapter();
+        mHelper.setEnabled(false);
     }
 
     @Override
@@ -103,18 +106,23 @@ public class CommentFragment extends FragmentFramework implements IRequestCallba
         executeRequest(API.getContentComment(mContentId, 50, mPageNo), this);
     }
 
-    private class Helper extends AbsListFramework<ConvertedComment, CommentHolder> {
+    private class Helper extends AbsListFramework<FullConversion, FullConversionHolder> {
         public Helper(IFramework framework, int listId) {
             super(framework, listId);
         }
 
         @Override
-        public CommentHolder createHolder(View convertView) {
-            return new CommentHolder(convertView);
+        public FullConversionHolder createHolder(View convertView) {
+            FullConversionHolder holder = new FullConversionHolder(convertView);
+
+            holder.setOnOptionsClickListener(mOptionsClickListener);
+            holder.setOnQuoteExpandClickListener(mQuoteExpandClickListener);
+
+            return holder;
         }
 
         @Override
-        public View createView(ConvertedComment convertedComment) {
+        public View createView() {
             return View.inflate(getActivity(), R.layout.item_comment, null);
         }
 
@@ -123,24 +131,25 @@ public class CommentFragment extends FragmentFramework implements IRequestCallba
         }
 
         @Override
-        public void onItemClick(int position, ConvertedComment convertedComment) {
+        public void onItemClick(int position, FullConversion fullConversion) {
+
         }
 
         @Override
-        public ArrayList<ConvertedComment> onParse(String json) {
+        public ArrayList<FullConversion> onParse(String json) {
             return null;
         }
 
         @Override
-        public int parseItemId(ConvertedComment convertedComment) {
-            return convertedComment.getCommentId();
+        public int parseItemId(FullConversion fullConversion) {
+            return fullConversion.getContent().getId();
         }
     }
 
-    private class Task extends AsyncTask<String, Void, ArrayList<ConvertedComment>> {
+    private class Task extends AsyncTask<String, Void, ArrayList<FullConversion>> {
         @Override
-        protected ArrayList<ConvertedComment> doInBackground(String... params) {
-            CommentListParser parser = CommentListParser.parse(getActivity(), params[0]);
+        protected ArrayList<FullConversion> doInBackground(String... params) {
+            CommentListParser parser = CommentListParser.parse(getActivity(), params[0], 3);
 
             if (parser != null) {
                 if (mTotalPageChangedListener != null) {
@@ -159,7 +168,7 @@ public class CommentFragment extends FragmentFramework implements IRequestCallba
         }
 
         @Override
-        protected void onPostExecute(ArrayList<ConvertedComment> result) {
+        protected void onPostExecute(ArrayList<FullConversion> result) {
             task = null;
             if (result != null) {
                 setInfoVisibility(InfoView.INFO_HIDE);

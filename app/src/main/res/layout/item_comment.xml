@@ -1,82 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    style="@style/mw"
+<LinearLayout
+    style="@style/mw.v"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
-        android:id="@+id/comment_quote"
-        style="@style/mw.v"
-        android:background="@drawable/image_lightyellow"
-        android:padding="8dp"
-        android:visibility="gone">
+        style="@style/mw.v">
 
         <TextView
-            android:id="@+id/comment_quote_text"
-            style="@style/ww"
-            android:text="@string/comment_quote_text"
+            android:id="@+id/comment_quote_expand"
+            style="@style/mw"
+            android:background="@drawable/button_lightyellow"
+            android:gravity="center_horizontal"
+            android:padding="8dp"
+            android:text="@string/comment_quote_expand"
             android:textColor="@color/Content"
-            android:textSize="16dp"/>
+            android:textSize="12dp"/>
 
         <TextView
-            android:id="@+id/comment_quote_user_name"
-            style="@style/ww"
-            android:layout_marginTop="4dp"
-            android:text="@string/comment_quote_user_name"
-            android:textColor="@color/Assist"
+            android:id="@+id/comment_quote_repeat"
+            style="@style/mw"
+            android:background="@drawable/button_lightyellow"
+            android:gravity="center_horizontal"
+            android:padding="8dp"
+            android:text="@string/comment_quote_repeat"
+            android:textColor="@color/Content"
             android:textSize="12dp"/>
+
+        <include
+            android:id="@+id/comment_quote1"
+            layout="@layout/item_comment_quote"/>
+
+        <include
+            android:id="@+id/comment_quote2"
+            layout="@layout/item_comment_quote"/>
+
+        <include
+            android:id="@+id/comment_quote3"
+            layout="@layout/item_comment_quote"/>
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/comment"
-        style="@style/mw.v">
+        style="@style/mw.h"
+        android:background="@color/White"
+        android:padding="8dp">
 
-        <TextView
-            android:id="@+id/comment_repeat"
-            style="@style/mw"
-            android:background="@drawable/shape_comment_repeat"
-            android:gravity="center"
-            android:padding="8dp"
-            android:text="@string/comment_repeat"
-            android:textColor="@color/Assist"
-            android:textSize="12dp"
-            android:visibility="gone"/>
+        <ImageView
+            android:id="@+id/comment_userImg"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/image_avatar"/>
 
         <LinearLayout
-            style="@style/mw.h"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/whitecard"
-            android:padding="8dp">
-
-            <ImageView
-                android:id="@+id/comment_user_avatar"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/image_avatar"/>
+            style="@style/mw.v"
+            android:layout_marginLeft="8dp">
 
             <LinearLayout
-                style="@style/mw.v"
-                android:layout_marginLeft="8dp">
+                style="@style/mw.h">
 
-                <TextView
-                    android:id="@+id/comment_user_name"
-                    style="@style/mw"
-                    android:text="@string/comment_user_name"
-                    android:textColor="@color/Assist"
-                    android:textSize="12dp"/>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/comment_text"
-                    style="@style/mw"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/comment_text"
-                    android:textColor="@color/Content"
-                    android:textSize="16dp"/>
+                    <TextView
+                        android:id="@+id/comment_username"
+                        style="@style/ww"
+                        android:text="@string/comment_username"
+                        android:textColor="@color/User"
+                        android:textSize="12dp"/>
+
+                    <TextView
+                        android:id="@+id/comment_date"
+                        style="@style/ww"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/comment_date"
+                        android:textColor="@color/Assist"
+                        android:textSize="12dp"/>
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/comment_options"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/button_transparent"
+                    android:src="@drawable/image_comment_expand"/>
 
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/comment_text"
+                style="@style/mw"
+                android:layout_marginTop="8dp"
+                android:text="@string/comment_text"
+                android:textColor="@color/Content"
+                android:textSize="16dp"/>
 
         </LinearLayout>
 
     </LinearLayout>
 
-</FrameLayout>
+</LinearLayout>

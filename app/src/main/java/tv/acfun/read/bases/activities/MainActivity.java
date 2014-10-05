@@ -265,7 +265,7 @@ public class MainActivity extends ActivityFramework {
         }
 
         @Override
-        public View createView(String item) {
+        public View createView() {
             return View.inflate(getActivity(), R.layout.item_channelselect, null);
         }
     }

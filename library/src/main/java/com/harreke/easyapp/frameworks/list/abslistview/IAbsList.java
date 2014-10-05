@@ -23,10 +23,7 @@ public interface IAbsList<ITEM, HOLDER extends IAbsListHolder<ITEM>> {
     /**
      * 生成项目视图
      *
-     * @param item
-     *         项目对象
-     *
      * @return 项目视图
      */
-    public View createView(ITEM item);
+    public View createView();
 }

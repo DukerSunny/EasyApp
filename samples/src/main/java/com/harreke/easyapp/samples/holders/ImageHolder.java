@@ -12,12 +12,12 @@ import com.harreke.easyapp.samples.entities.beans.AbsListItem;
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/08/01
  */
-public class ImageAbsListHolder implements IAbsListHolder<AbsListItem> {
+public class ImageHolder implements IAbsListHolder<AbsListItem> {
     private TextView mDesc;
     private ImageView mImage;
     private TextView mTitle;
 
-    public ImageAbsListHolder(View convertView) {
+    public ImageHolder(View convertView) {
         mImage = (ImageView) convertView.findViewById(R.id.image);
         mTitle = (TextView) convertView.findViewById(R.id.title);
         mDesc = (TextView) convertView.findViewById(R.id.desc);

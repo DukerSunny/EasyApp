@@ -10,11 +10,11 @@ import com.harreke.easyapp.samples.entities.beans.AbsListItem;
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/08/01
  */
-public class SlidableAbsListItemHolder implements IAbsListHolder<AbsListItem> {
+public class SlidableItemHolder implements IAbsListHolder<AbsListItem> {
     private TextView mDesc;
     private TextView mTitle;
 
-    public SlidableAbsListItemHolder(View convertView) {
+    public SlidableItemHolder(View convertView) {
         mTitle = (TextView) convertView.findViewById(R.id.title);
         mDesc = (TextView) convertView.findViewById(R.id.desc);
     }

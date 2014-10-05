@@ -65,9 +65,9 @@
     <color name="TransparentGray">#80000000</color>
     <color name="TransparentWhite">#C0FFFFFF</color>
 
-    <color name="Title">#303030</color>
-    <color name="Content">#848484</color>
-    <color name="Assist">#aeaeae</color>
+    <color name="Title">#4B565E</color>
+    <color name="Content">#333333</color>
+    <color name="Assist">#999999</color>
 
     <color name="Theme">#00BFFF</color>
     <color name="Theme_Transparent">#8000BFFF</color>

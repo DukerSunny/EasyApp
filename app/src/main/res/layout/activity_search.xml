@@ -17,12 +17,13 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@drawable/button_transparent"
+            android:padding="8dp"
             android:src="@drawable/back"/>
 
         <EditText
             android:id="@+id/search_input"
             style="@style/mmw"
-            android:layout_marginLeft="8dp"
+            android:gravity="center_vertical"
             android:hint="@string/channel_search"
             android:lines="1"
             android:padding="8dp"
@@ -34,7 +35,6 @@
             android:id="@+id/search_go"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_marginLeft="8dp"
             android:background="@drawable/button_transparent"
             android:padding="8dp"
             android:src="@drawable/image_search"/>

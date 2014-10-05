@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.TextView;
 
 import com.harreke.easyapp.adapters.fragment.FragmentPageAdapter;
 import com.harreke.easyapp.beans.ActionBarItem;
@@ -25,8 +26,10 @@ import tv.acfun.read.listeners.OnTotalPageChangedListener;
  */
 public class CommentActivity extends ActivityFramework implements OnTotalPageChangedListener {
     private Adapter adapter;
-    private View comment_blank;
+    private View comment_back;
+    private TextView comment_id;
     private PagerTabStrip comment_pager_indicator;
+    private View.OnClickListener mClickListener;
     private Content mContent;
     private Handler mHandler = new Handler(new Handler.Callback() {
         @Override
@@ -49,16 +52,14 @@ public class CommentActivity extends ActivityFramework implements OnTotalPageCha
 
     @Override
     public void assignEvents() {
-
+        comment_back.setOnClickListener(mClickListener);
     }
 
     private void checkTotalPage() {
         if (mTotalPage > 1) {
             comment_pager_indicator.setVisibility(View.VISIBLE);
-            comment_blank.setVisibility(View.VISIBLE);
         } else {
             comment_pager_indicator.setVisibility(View.GONE);
-            comment_blank.setVisibility(View.GONE);
         }
     }
 
@@ -70,7 +71,16 @@ public class CommentActivity extends ActivityFramework implements OnTotalPageCha
 
     @Override
     public void newEvents() {
-
+        mClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.comment_back:
+                        onBackPressed();
+                        break;
+                }
+            }
+        };
     }
 
     @Override
@@ -91,23 +101,22 @@ public class CommentActivity extends ActivityFramework implements OnTotalPageCha
 
     @Override
     public void onTotalPageChanged(int totalPage) {
-//        if (totalPage < mTotalPage) {
-//            adapter.clear();
-//        }
         mTotalPage = totalPage;
-//        mHandler.sendEmptyMessage(0);
     }
 
     @Override
     public void queryLayout() {
         ViewPager comment_pager = (ViewPager) findContentView(R.id.comment_pager);
+        TextView comment_id = (TextView) findContentView(R.id.comment_id);
+
+        comment_back = findContentView(R.id.comment_back);
 
         comment_pager_indicator = (PagerTabStrip) findContentView(R.id.comment_pager_indicator);
 
         comment_pager_indicator.setTabIndicatorColorResource(R.color.Theme);
         comment_pager_indicator.setTextColor(getResources().getColor(R.color.Title));
 
-        comment_blank = findContentView(R.id.comment_blank);
+        comment_id.setText("ac" + mContent.getContentId());
 
         adapter = new Adapter(getSupportFragmentManager());
         comment_pager.setAdapter(adapter);

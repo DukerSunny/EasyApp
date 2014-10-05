@@ -23,7 +23,7 @@ public class ArticleUtil {
         String src;
 
         input = input.replaceAll(" style=\"[\\S\\s]+?\"", "");
-        input = input.replace("[NextPage]", "[break][page]").replace("[/NextPage]", "");
+        input = input.replace("[NextPage]", "[break]").replace("[/NextPage]", "");
         imgMatcher = StringUtil.getMatcher("<img [\\S\\s]+?/>", input);
         while (imgMatcher.find()) {
             img = imgMatcher.group();

@@ -1,27 +1,26 @@
 package tv.acfun.read.parsers;
 
-import android.util.Log;
-
 import com.harreke.easyapp.tools.GsonUtil;
 import com.harreke.easyapp.tools.NetUtil;
+import com.harreke.easyapp.tools.StringUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Matcher;
 
-import tv.acfun.read.beans.ArticleContent;
+import tv.acfun.read.beans.ArticlePage;
 import tv.acfun.read.beans.Content;
 import tv.acfun.read.beans.FullArticle;
-import tv.acfun.read.tools.ArticleUtil;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/25
  */
 public class ContentListParser {
+    private static String TAG = "ContentListParser";
+
     private HashMap<String, FullArticle> data;
     private Content mContent;
-    private ArrayList<ArrayList<ArticleContent>> mPageList;
-    private ArrayList<String> mPageTitleList;
-    private int mTotalPage;
+    private ArrayList<ArticlePage> mPageList;
     private String msg;
     private int status;
 
@@ -44,48 +43,27 @@ public class ContentListParser {
     }
 
     private void decode(FullArticle fullArticle) {
-        ArrayList<ArticleContent> page;
-        ArticleContent articleContent;
+        Matcher matcher;
+        ArticlePage articlePage;
         String input;
-        String[] array;
-        String string;
-        int i;
-
-        mTotalPage = 0;
-        mPageList = new ArrayList<ArrayList<ArticleContent>>();
-        mPageTitleList = new ArrayList<String>();
         mContent = fullArticle;
 
-        input = ArticleUtil.convertUBBTags(fullArticle.getTxt());
-        page = new ArrayList<ArticleContent>();
-        array = input.split("\\[break\\]");
-        if (array.length != 0) {
-            for (i = 0; i < array.length; i++) {
-                string = array[i].replaceAll("^[\\s]+", "");
-                if (string.length() > 0) {
-                    if (string.startsWith("[img]")) {
-                        articleContent = new ArticleContent();
-                        articleContent.setContent(string.substring(5));
-                        articleContent.setImage(true);
-                        page.add(articleContent);
-                    } else if (string.startsWith("[page]")) {
-                        mTotalPage++;
-                        mPageList.add(page);
-                        mPageTitleList.add(string.substring(6));
-                        page = new ArrayList<ArticleContent>();
-                    } else {
-                        articleContent = new ArticleContent();
-                        articleContent.setContent("　　" + string);
-                        articleContent.setImage(false);
-                        page.add(articleContent);
-                    }
-                }
-            }
-            mPageList.add(page);
-            if (mTotalPage == 0) {
-                mTotalPage = 1;
-                mPageTitleList.add("");
-            }
+        mPageList = new ArrayList<ArticlePage>();
+
+        input = fullArticle.getTxt();
+        //        input = input.replace("<p>", "").replaceAll("<p[\\S\\s]+?>", "").replace("</p>", "");
+        //        input = input.replace("<div>", "").replaceAll("<div[\\S\\s]+?>", "").replace("</div>", "");
+        //        input = input.replace("<span>", "").replaceAll("<span[\\S\\s]+?>", "").replace("</span>", "");
+        //        input = input.replaceAll(" style=[\\S\\s]+?", "");
+
+        matcher = StringUtil.getMatcher("(\\S\\s)+?\\[NextPage\\]([\\S\\s]+?)\\[/NextPage\\]", input);
+        while (matcher.find()) {
+            articlePage = new ArticlePage(matcher.group(2), matcher.group(1));
+            mPageList.add(articlePage);
+        }
+        if (mPageList.size() == 0) {
+            articlePage = new ArticlePage(null, input);
+            mPageList.add(articlePage);
         }
     }
 
@@ -93,15 +71,7 @@ public class ContentListParser {
         return mContent;
     }
 
-    public ArrayList<ArrayList<ArticleContent>> getPageList() {
+    public ArrayList<ArticlePage> getPageList() {
         return mPageList;
-    }
-
-    public ArrayList<String> getPageTitleList() {
-        return mPageTitleList;
-    }
-
-    public int getTotalPage() {
-        return mTotalPage;
     }
 }

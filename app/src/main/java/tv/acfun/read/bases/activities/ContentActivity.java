@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.TextView;
 
 import com.harreke.easyapp.beans.ActionBarItem;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 import tv.acfun.read.R;
 import tv.acfun.read.api.API;
 import tv.acfun.read.bases.fragments.ContentFragment;
-import tv.acfun.read.beans.ArticleContent;
+import tv.acfun.read.beans.ArticlePage;
 import tv.acfun.read.beans.Content;
 import tv.acfun.read.parsers.ContentListParser;
 
@@ -28,10 +29,11 @@ import tv.acfun.read.parsers.ContentListParser;
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/25
  */
 public class ContentActivity extends ActivityFramework {
-    private View content_blank;
+    private View content_back;
     private View content_comments_button;
     private View content_favourite_add_button;
     private View content_favourtie_remove_button;
+    private TextView content_id;
     private ViewPager content_pager;
     private PagerTabStrip content_pager_indicator;
     private View content_share_button;
@@ -39,10 +41,8 @@ public class ContentActivity extends ActivityFramework {
     private View.OnClickListener mClickListener;
     private Content mContent;
     private int mContentId;
-    private ArrayList<ArrayList<ArticleContent>> mPageList;
-    private ArrayList<String> mPageTitleList;
+    private ArrayList<ArticlePage> mPageList;
     private Task mTask;
-    private int mTotalPage = 0;
 
     public static Intent create(Context context, int contentId) {
         Intent intent = new Intent(context, ContentActivity.class);
@@ -68,6 +68,9 @@ public class ContentActivity extends ActivityFramework {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
+                    case R.id.content_back:
+                        onBackPressed();
+                        break;
                     case R.id.content_comments_button:
                         start(CommentActivity.create(getActivity(), mContent), false);
                         getActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.fade_out);
@@ -116,11 +119,14 @@ public class ContentActivity extends ActivityFramework {
         content_pager_indicator.setTabIndicatorColorResource(R.color.Theme);
         content_pager_indicator.setTextColor(getResources().getColor(R.color.Title));
 
-        content_blank = findContentView(R.id.content_blank);
+        content_back = findContentView(R.id.content_back);
+        content_id = (TextView) findContentView(R.id.content_id);
         content_comments_button = findContentView(R.id.content_comments_button);
         content_favourite_add_button = findContentView(R.id.content_favourite_add_button);
         content_favourtie_remove_button = findContentView(R.id.content_favourtie_remove_button);
         content_share_button = findContentView(R.id.content_share_button);
+
+        content_id.setText("ac" + mContentId);
     }
 
     @Override
@@ -141,7 +147,7 @@ public class ContentActivity extends ActivityFramework {
 
         @Override
         public int getCount() {
-            return mTotalPage;
+            return mPageList.size();
         }
 
         @Override
@@ -151,7 +157,7 @@ public class ContentActivity extends ActivityFramework {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return mPageTitleList.get(position);
+            return mPageList.get(position).getTitle();
         }
     }
 
@@ -162,9 +168,7 @@ public class ContentActivity extends ActivityFramework {
 
             if (parser != null) {
                 mContent = parser.getContent();
-                mTotalPage = parser.getTotalPage();
                 mPageList = parser.getPageList();
-                mPageTitleList = parser.getPageTitleList();
 
                 return true;
             } else {
@@ -182,16 +186,14 @@ public class ContentActivity extends ActivityFramework {
         protected void onPostExecute(Boolean result) {
             mTask = null;
             if (result) {
-                if (mTotalPage == 0) {
+                if (mPageList.size() == 0) {
                     setInfoVisibility(InfoView.INFO_ERROR);
                 } else {
                     setInfoVisibility(InfoView.INFO_HIDE);
-                    if (mTotalPage == 1) {
+                    if (mPageList.size() == 1) {
                         content_pager_indicator.setVisibility(View.GONE);
-                        content_blank.setVisibility(View.GONE);
                     } else {
                         content_pager_indicator.setVisibility(View.VISIBLE);
-                        content_blank.setVisibility(View.VISIBLE);
                     }
                     content_pager.setAdapter(new Adapter(getSupportFragmentManager()));
                 }

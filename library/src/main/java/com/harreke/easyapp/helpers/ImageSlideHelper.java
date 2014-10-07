@@ -6,9 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.harreke.easyapp.R;
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.pages.imagepage.ImagePageFramework;
-import com.harreke.easyapp.R;
 import com.harreke.easyapp.listeners.OnSlideClickListener;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.tools.FrameworkInflater;
@@ -159,12 +159,12 @@ public class ImageSlideHelper extends ImagePageFramework<String> {
         }
 
         @Override
-        public void onFailure() {
+        public void onFailure(String requestUrl) {
             setLoaded(mTtargetPosition, false);
         }
 
         @Override
-        public void onSuccess(ImageView imageView) {
+        public void onSuccess(String requestUrl, ImageView imageView) {
             setLoaded(mTtargetPosition, true);
         }
     }

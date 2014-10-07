@@ -9,7 +9,7 @@ package com.harreke.easyapp.requests;
  *         目标类型
  */
 public interface IRequestCallback<RESULT> {
-    public void onFailure();
+    public void onFailure(String requestUrl);
 
-    public void onSuccess(RESULT result);
+    public void onSuccess(String requestUrl, RESULT result);
 }

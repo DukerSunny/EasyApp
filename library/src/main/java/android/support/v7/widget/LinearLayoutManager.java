@@ -234,7 +234,7 @@ public class LinearLayoutManager extends RecyclerView.LayoutManager {
     }
 
     /**
-     * Sets the orientation of the layout. {@link LinearLayoutManager}
+     * Sets the orientation of the layout. {@link android.support.v7.widget.LinearLayoutManager}
      * will do its best to keep scroll position.
      *
      * @param orientation {@link #HORIZONTAL} or {@link #VERTICAL}
@@ -324,7 +324,7 @@ public class LinearLayoutManager extends RecyclerView.LayoutManager {
 
     /**
      * <p>Returns the amount of extra space that should be rendered by LinearLayoutManager.
-     * By default, {@link LinearLayoutManager} lays out 1 extra page of
+     * By default, {@link android.support.v7.widget.LinearLayoutManager} lays out 1 extra page of
      * items while smooth scrolling and 0 otherwise. You can override this method to implement your
      * custom layout pre-cache logic.</p>
      * <p>Laying out invisible elements will eventually come with performance cost. On the other
@@ -973,7 +973,7 @@ public class LinearLayoutManager extends RecyclerView.LayoutManager {
 
     /**
      * The magic functions :). Fills the given layout, defined by the renderState. This is fairly
-     * independent from the rest of the {@link LinearLayoutManager}
+     * independent from the rest of the {@link android.support.v7.widget.LinearLayoutManager}
      * and with little change, can be made publicly available as a helper class.
      *
      * @param recycler        Current recycler that is attached to RecyclerView

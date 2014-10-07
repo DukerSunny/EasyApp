@@ -396,7 +396,6 @@ public class ComicView extends ImageView implements OnGestureListener {
         }
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         return !mAnimateRunnable.isAnimating() && mGesture.onTouch(event);
@@ -477,16 +476,6 @@ public class ComicView extends ImageView implements OnGestureListener {
     }
 
     /**
-     * 设置图片点击监听器
-     *
-     * @param imageTapListener
-     *         图片点击监听器
-     */
-    public final void seOnImageTapListener(OnImageTapListener imageTapListener) {
-        mImageTapListener = imageTapListener;
-    }
-
-    /**
      * 设置是否开启回弹效果
      *
      * @param bounceEnabled
@@ -553,6 +542,16 @@ public class ComicView extends ImageView implements OnGestureListener {
         if (mMaxScale < mMinScale) {
             mMaxScale = mMinScale;
         }
+    }
+
+    /**
+     * 设置图片点击监听器
+     *
+     * @param imageTapListener
+     *         图片点击监听器
+     */
+    public final void setOnImageTapListener(OnImageTapListener imageTapListener) {
+        mImageTapListener = imageTapListener;
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.harreke.easyapp.configs;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.widget.ImageView;
 
 import com.harreke.easyapp.R;
@@ -26,11 +27,12 @@ public class ImageExecutorConfig {
     public static int retryImageId = R.drawable.progress_retry;
 
     public static void config(Context context) {
-        ImageLoaderConfiguration configuration = new ImageLoaderConfiguration.Builder(context)
-                .diskCache(new UnlimitedDiscCache(new File(ApplicationFramework.CacheDir + "/" + ApplicationFramework.DIR_CACHES))).defaultDisplayImageOptions(
-                        new DisplayImageOptions.Builder().showImageForEmptyUri(retryImageId).showImageOnFail(retryImageId).showImageOnLoading(loadingImageId)
-                                .cacheOnDisk(true).build()).
-                        build();
+        ImageLoaderConfiguration configuration = new ImageLoaderConfiguration.Builder(context).diskCache(
+                new UnlimitedDiscCache(new File(ApplicationFramework.CacheDir + "/" + ApplicationFramework.DIR_CACHES)))
+                .defaultDisplayImageOptions(
+                        new DisplayImageOptions.Builder().showImageForEmptyUri(retryImageId).showImageOnFail(retryImageId)
+                                .showImageOnLoading(loadingImageId).cacheOnDisk(true).build()
+                ).build();
         ImageLoader.getInstance().init(configuration);
     }
 
@@ -62,5 +64,17 @@ public class ImageExecutorConfig {
         //        }
 
         return new UniversalImageExecutor(image, imageUrl, callback);
+    }
+
+    public static IRequestExecutor create(String imageUrl, IRequestCallback<Bitmap> callback) {
+        return new UniversalImageExecutor(imageUrl, callback);
+    }
+
+    public static String getImageCachePathByUrl(String imageUrl) {
+        if (imageUrl != null) {
+            return ApplicationFramework.CacheDir + "/" + ApplicationFramework.DIR_CACHES + "/" + imageUrl.hashCode();
+        } else {
+            return null;
+        }
     }
 }

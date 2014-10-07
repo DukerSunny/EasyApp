@@ -38,7 +38,8 @@ import java.util.Comparator;
  *
  * @see com.harreke.easyapp.listparsers.IListParser
  */
-public abstract class ListFramework<ITEM> implements IList<ITEM>, IListActionListener<ITEM>, IRequestCallback<String>, View.OnClickListener {
+public abstract class ListFramework<ITEM>
+        implements IList<ITEM>, IListActionListener<ITEM>, IRequestCallback<String>, View.OnClickListener {
     private Comparator<ITEM> mComparator = null;
     private String mCompleteText;
     private int mCurrentPage = 1;
@@ -319,7 +320,7 @@ public abstract class ListFramework<ITEM> implements IList<ITEM>, IListActionLis
     }
 
     @Override
-    public void onFailure() {
+    public void onFailure(String requestUrl) {
         onError();
     }
 
@@ -365,7 +366,7 @@ public abstract class ListFramework<ITEM> implements IList<ITEM>, IListActionLis
     }
 
     @Override
-    public void onSuccess(String result) {
+    public void onSuccess(String requestUrl, String result) {
         ArrayList<ITEM> list = onParse(result);
 
         if (list != null) {

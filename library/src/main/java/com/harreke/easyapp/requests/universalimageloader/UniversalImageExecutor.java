@@ -14,21 +14,27 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/26
  */
 public class UniversalImageExecutor implements ImageLoadingListener, IRequestExecutor {
-    private IRequestCallback<ImageView> mCallback = null;
+    private IRequestCallback<Bitmap> mBitmapCallback = null;
     private boolean mExecuting = false;
     private ImageView mImage;
+    private IRequestCallback<ImageView> mImageCallback = null;
 
-    public UniversalImageExecutor(ImageView image, String imageUrl, IRequestCallback<ImageView> callback) {
+    public UniversalImageExecutor(ImageView image, String imageUrl, IRequestCallback<ImageView> imageCallback) {
         mImage = image;
-        mCallback = callback;
+        mImageCallback = imageCallback;
         ImageLoader.getInstance().displayImage(imageUrl, image, this);
+    }
+
+    public UniversalImageExecutor(String imageUrl, IRequestCallback<Bitmap> bitmapCallback) {
+        mBitmapCallback = bitmapCallback;
+        ImageLoader.getInstance().loadImage(imageUrl, this);
     }
 
     @Override
     public void cancel() {
         ImageLoader.getInstance().cancelDisplayTask(mImage);
         mExecuting = false;
-        mCallback = null;
+        mImageCallback = null;
         mImage = null;
     }
 
@@ -41,26 +47,32 @@ public class UniversalImageExecutor implements ImageLoadingListener, IRequestExe
     public void onLoadingCancelled(String imageUri, View view) {
         mExecuting = false;
         mImage = null;
-        mCallback = null;
+        mImageCallback = null;
     }
 
     @Override
     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
         mExecuting = false;
-        if (mCallback != null) {
-            mCallback.onSuccess(mImage);
+        if (mImageCallback != null) {
+            mImageCallback.onSuccess(imageUri, mImage);
             mImage = null;
-            mCallback = null;
+            mImageCallback = null;
+        } else if (mBitmapCallback != null) {
+            mBitmapCallback.onSuccess(imageUri, loadedImage);
+            mBitmapCallback = null;
         }
     }
 
     @Override
     public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
         mExecuting = false;
-        if (mCallback != null) {
-            mCallback.onFailure();
+        if (mImageCallback != null) {
+            mImageCallback.onFailure(imageUri);
             mImage = null;
-            mCallback = null;
+            mImageCallback = null;
+        } else if (mBitmapCallback != null) {
+            mBitmapCallback.onFailure(imageUri);
+            mBitmapCallback = null;
         }
     }
 

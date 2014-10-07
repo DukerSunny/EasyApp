@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EditText
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/comic_save_dialog_input"
+    style="@style/mw"
+    android:background="@drawable/button_tab_unchecked"
+    android:hint="@string/comic_save_input"
+    android:lines="1"
+    android:padding="8dp"
+    android:textColor="@color/Title"
+    android:textColorHint="@color/Assist"
+    android:textSize="16dp"/>

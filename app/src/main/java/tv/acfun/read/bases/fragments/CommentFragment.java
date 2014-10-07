@@ -23,7 +23,8 @@ import tv.acfun.read.parsers.CommentListParser;
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/26
  */
-public class CommentFragment extends FragmentFramework implements IRequestCallback<String> {
+public class CommentFragment extends FragmentFramework {
+    private IRequestCallback<String> mCallback;
     private int mContentId;
     private Helper mHelper;
     private View.OnClickListener mOptionsClickListener;
@@ -55,6 +56,18 @@ public class CommentFragment extends FragmentFramework implements IRequestCallba
 
     @Override
     public void newEvents() {
+        mCallback = new IRequestCallback<String>() {
+            @Override
+            public void onFailure(String requestUrl) {
+                setInfoVisibility(InfoView.INFO_ERROR);
+            }
+
+            @Override
+            public void onSuccess(String requestUrl, String result) {
+                task = new Task();
+                task.execute(result);
+            }
+        };
         mOptionsClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,17 +92,6 @@ public class CommentFragment extends FragmentFramework implements IRequestCallba
     }
 
     @Override
-    public void onFailure() {
-        setInfoVisibility(InfoView.INFO_ERROR);
-    }
-
-    @Override
-    public void onSuccess(String result) {
-        task = new Task();
-        task.execute(result);
-    }
-
-    @Override
     public void queryLayout() {
         mHelper = new Helper(this, R.id.comment_list);
         mHelper.bindAdapter();
@@ -103,7 +105,7 @@ public class CommentFragment extends FragmentFramework implements IRequestCallba
 
     @Override
     public void startAction() {
-        executeRequest(API.getContentComment(mContentId, 50, mPageNo), this);
+        executeRequest(API.getContentComment(mContentId, 50, mPageNo), mCallback);
     }
 
     private class Helper extends AbsListFramework<FullConversion, FullConversionHolder> {

@@ -2,7 +2,6 @@ package com.harreke.easyapp.databases;
 
 import android.database.Cursor;
 
-import com.harreke.easyapp.tools.DevUtil;
 import com.harreke.easyapp.tools.GsonUtil;
 
 import java.lang.reflect.Field;
@@ -34,7 +33,6 @@ public class DBUtil {
             json += "\"" + keys[i] + "\":" + cursor.getString(i) + ",";
         }
         json += "\"" + keys[keys.length - 1] + "\":" + cursor.getString(keys.length - 1) + "}";
-        DevUtil.e("json=" + json);
 
         return GsonUtil.toBean(json, classOfBean);
     }

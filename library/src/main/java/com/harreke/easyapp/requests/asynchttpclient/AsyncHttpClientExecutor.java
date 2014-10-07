@@ -22,6 +22,7 @@ public class AsyncHttpClientExecutor extends TextHttpResponseHandler implements 
     private IRequestCallback<String> mCallback = null;
     private boolean mExecuting = false;
     private RequestHandle mHandle = null;
+    private String mRequestUrl;
 
     public AsyncHttpClientExecutor(Context context, RequestBuilder builder, IRequestCallback<String> callback) {
         AsyncHttpClient client;
@@ -38,12 +39,13 @@ public class AsyncHttpClientExecutor extends TextHttpResponseHandler implements 
             key = iterator.next();
             client.addHeader(key, map.get(key));
         }
+        mRequestUrl = builder.getUrl();
         switch (builder.getMethod()) {
             case GET:
-                mHandle = client.get(context, builder.getUrl(), this);
+                mHandle = client.get(context, mRequestUrl, this);
                 break;
             case POST:
-                mHandle = client.post(context, builder.getUrl(), new RequestParams(builder.getBody()), this);
+                mHandle = client.post(context, mRequestUrl, new RequestParams(builder.getBody()), this);
         }
     }
 
@@ -72,9 +74,10 @@ public class AsyncHttpClientExecutor extends TextHttpResponseHandler implements 
     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
         mExecuting = false;
         if (mCallback != null) {
-            mCallback.onFailure();
+            mCallback.onFailure(mRequestUrl);
             mHandle = null;
             mCallback = null;
+            mRequestUrl = null;
         }
     }
 
@@ -87,9 +90,10 @@ public class AsyncHttpClientExecutor extends TextHttpResponseHandler implements 
     public void onSuccess(int statusCode, Header[] headers, String responseString) {
         mExecuting = false;
         if (mCallback != null) {
-            mCallback.onSuccess(responseString);
+            mCallback.onSuccess(mRequestUrl, responseString);
             mHandle = null;
             mCallback = null;
+            mRequestUrl = null;
         }
     }
 }

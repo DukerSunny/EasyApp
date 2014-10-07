@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
  *
  * 标签组视图是一个线性布局，放入该布局的子标签视图{@link com.harreke.easyapp.widgets.ChildTabView}将成为互斥状态，即单选模式
  *
- * 标签组视图的选择模式{@link TabMode}有两种：固定和滑动。
+ * 标签组视图的选择模式{@link com.harreke.easyapp.widgets.GroupTabView.TabMode}有两种：固定和滑动。
  *
  * 无论哪种选择模式，在按下时，手指所处的子标签将获得焦点，通过滑动手势可改变焦点，松手时将选中获得焦点的子标签。
  */

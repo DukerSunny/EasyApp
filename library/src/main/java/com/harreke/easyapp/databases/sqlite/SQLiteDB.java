@@ -5,10 +5,10 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.harreke.easyapp.databases.DBUtil;
 import com.harreke.easyapp.databases.IDB;
-import com.harreke.easyapp.tools.DevUtil;
 
 import java.util.ArrayList;
 
@@ -18,6 +18,8 @@ import java.util.ArrayList;
  * SqliteOpenHelper的封装
  */
 public class SQLiteDB extends SQLiteOpenHelper implements IDB {
+    private final static String TAG = "SQLiteDB";
+
     public SQLiteDB(Context context, String databaseName, int version) {
         super(context, databaseName, null, version);
     }
@@ -113,10 +115,10 @@ public class SQLiteDB extends SQLiteOpenHelper implements IDB {
         Cursor cursor;
 
         try {
-            DevUtil.e("raw query sql=" + sql);
+            Log.e(TAG, "raw query sql=" + sql);
             cursor = getReadableDatabase().rawQuery(sql, null);
         } catch (SQLException e) {
-            DevUtil.e("Raw query execute error!");
+            Log.e(TAG, "Raw query execute error!");
             cursor = null;
         }
 
@@ -127,11 +129,11 @@ public class SQLiteDB extends SQLiteOpenHelper implements IDB {
         boolean success;
 
         try {
-            DevUtil.e("raw read sql=" + sql);
+            Log.e(TAG, "raw read sql=" + sql);
             getReadableDatabase().execSQL(sql);
             success = true;
         } catch (SQLException e) {
-            DevUtil.e("Raw read execute error!");
+            Log.e(TAG, "Raw read execute error!");
             success = false;
         }
 
@@ -143,11 +145,11 @@ public class SQLiteDB extends SQLiteOpenHelper implements IDB {
         boolean success;
 
         try {
-            DevUtil.e("raw write sql=" + sql);
+            Log.e(TAG, "raw write sql=" + sql);
             getWritableDatabase().execSQL(sql);
             success = true;
         } catch (SQLException e) {
-            DevUtil.e("Raw write execute error!");
+            Log.e(TAG, "Raw write execute error!");
             success = false;
         }
 

@@ -8,11 +8,4 @@
         android:id="@+id/content_web"
         style="@style/mm"/>
 
-    <!--<ListView-->
-    <!--android:id="@+id/content_list"-->
-    <!--style="@style/mm"-->
-    <!--android:divider="@color/Transparent"-->
-    <!--android:dividerHeight="16dp"-->
-    <!--android:listSelector="@color/Transparent"/>-->
-
 </FrameLayout>

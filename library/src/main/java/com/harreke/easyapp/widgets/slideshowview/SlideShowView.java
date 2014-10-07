@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import com.harreke.easyapp.helpers.GestureHelper;
 import com.harreke.easyapp.listeners.OnGestureListener;
-import com.harreke.easyapp.tools.DevUtil;
 
 import java.util.ArrayList;
 
@@ -57,29 +56,29 @@ public class SlideShowView extends ViewGroup implements OnGestureListener {
         int rightWidth;
         int i;
 
-//        if (size > 0) {
-//            left = mPosition - 1;
-//            if (left < 0) {
-//                left = size - 1;
-//                leftWidth = getChildAt
-//            }
-//            right = mPosition + 1;
-//            if (right == size) {
-//                right = 0;
-//            }
-//            leftWidth = 0;
-//            for (i = target - 1; i > -1; i--) {
-//                child = getChildAt(i);
-//                leftWidth += child.getMeasuredWidth();
-//                child.layout((int) (l + mOffset - leftWidth), t, (int) (r + mOffset - leftWidth), b);
-//            }
-//            rightWidth = 0;
-//            for (i = target; i < size; i++) {
-//                child = getChildAt(i);
-//                child.layout((int) (l + mOffset + rightWidth), t, (int) (r + mOffset + rightWidth), b);
-//                rightWidth += child.getMeasuredWidth();
-//            }
-//        }
+        //        if (size > 0) {
+        //            left = mPosition - 1;
+        //            if (left < 0) {
+        //                left = size - 1;
+        //                leftWidth = getChildAt
+        //            }
+        //            right = mPosition + 1;
+        //            if (right == size) {
+        //                right = 0;
+        //            }
+        //            leftWidth = 0;
+        //            for (i = target - 1; i > -1; i--) {
+        //                child = getChildAt(i);
+        //                leftWidth += child.getMeasuredWidth();
+        //                child.layout((int) (l + mOffset - leftWidth), t, (int) (r + mOffset - leftWidth), b);
+        //            }
+        //            rightWidth = 0;
+        //            for (i = target; i < size; i++) {
+        //                child = getChildAt(i);
+        //                child.layout((int) (l + mOffset + rightWidth), t, (int) (r + mOffset + rightWidth), b);
+        //                rightWidth += child.getMeasuredWidth();
+        //            }
+        //        }
     }
 
     @Override

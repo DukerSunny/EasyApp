@@ -3,6 +3,9 @@
 
     <string name="app_name">AcFun阅读</string>
 
+    <string name="app_cancel">取消</string>
+    <string name="app_ok">确定</string>
+
     <string name="main_channel">频道</string>
     <string name="main_recommend">推荐</string>
 
@@ -14,6 +17,12 @@
     <string name="channel_comic_novel">漫画•轻小说</string>
 
     <string name="channel_search">输入AC号或关键字</string>
+
+    <string name="comic_save">保存图片</string>
+    <string name="comic_save_illegal">文件名包含非法字符</string>
+    <string name="comic_save_input">请输入文件名</string>
+    <string name="comic_save_overwrite">已有同名文件存在，确认覆盖？</string>
+    <string name="comic_save_empty">文件名为空</string>
 
     <string name="comment_date">发表于 yyyy-MM-dd HH:mm:SS</string>
     <string name="comment_text">评论内容</string>

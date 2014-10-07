@@ -79,12 +79,12 @@ public class ContentActivity extends ActivityFramework {
         };
         mCallback = new IRequestCallback<String>() {
             @Override
-            public void onFailure() {
+            public void onFailure(String requestUrl) {
                 setInfoVisibility(InfoView.INFO_ERROR);
             }
 
             @Override
-            public void onSuccess(String result) {
+            public void onSuccess(String requestUrl, String result) {
                 mTask = new Task();
                 mTask.execute(result);
             }

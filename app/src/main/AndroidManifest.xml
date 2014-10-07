@@ -16,6 +16,12 @@
             android:screenOrientation="portrait"/>
 
         <activity
+            android:name=".bases.activities.ComicActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
+
+        <activity
             android:name=".bases.activities.CommentActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"/>

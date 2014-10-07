@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -40,7 +41,7 @@ public class FileUtil {
                 success = true;
             } catch (IOException e) {
                 success = false;
-                DevUtil.e("Copy file " + source.getAbsolutePath() + " to " + target.getAbsolutePath() + " error!");
+                Log.e(TAG, "Copy file " + source.getAbsolutePath() + " to " + target.getAbsolutePath() + " error!");
             }
         }
 
@@ -48,7 +49,8 @@ public class FileUtil {
     }
 
     public static boolean copyFile(String sourceFilename, String targetFilename) {
-        return sourceFilename != null && sourceFilename.startsWith("file:") && targetFilename != null && targetFilename.startsWith("file:") &&
+        return sourceFilename != null && sourceFilename.startsWith("file:") && targetFilename != null &&
+                targetFilename.startsWith("file:") &&
                 copyFile(new File(sourceFilename), new File(targetFilename));
     }
 
@@ -69,7 +71,7 @@ public class FileUtil {
                 success = true;
             } catch (IOException e) {
                 success = false;
-                DevUtil.e("Copy file error!");
+                Log.e(TAG, "Copy file error!");
             }
         }
 
@@ -119,7 +121,7 @@ public class FileUtil {
 
     public static Drawable readDrawable(String filename, int width, int height) {
         Drawable drawable = null;
-        
+
         if (filename != null && filename.length() > 0) {
             drawable = Drawable.createFromPath(filename);
             if (drawable != null && width > 0 && height > 0) {
@@ -171,7 +173,7 @@ public class FileUtil {
                 fileInputStream.close();
             } catch (IOException e) {
                 content = null;
-                DevUtil.e(TAG, "Read txt file " + file.getAbsolutePath() + " error!");
+                Log.e(TAG, "Read txt file " + file.getAbsolutePath() + " error!");
             }
         }
 
@@ -199,7 +201,7 @@ public class FileUtil {
                 }
             } catch (IOException e) {
                 success = false;
-                DevUtil.e("Write bitmap " + file.getAbsolutePath() + " error!");
+                Log.e(TAG, "Write bitmap " + file.getAbsolutePath() + " error!");
             }
         }
 
@@ -229,7 +231,7 @@ public class FileUtil {
                 }
             } catch (IOException e) {
                 success = false;
-                DevUtil.e("Write drawable " + file.getAbsolutePath() + " error!");
+                Log.e(TAG, "Write drawable " + file.getAbsolutePath() + " error!");
             }
         }
 
@@ -257,7 +259,7 @@ public class FileUtil {
                 }
             } catch (IOException e) {
                 success = false;
-                DevUtil.e("Write file " + file.getAbsolutePath() + " error!");
+                Log.e(TAG, "Write file " + file.getAbsolutePath() + " error!");
             }
         }
 

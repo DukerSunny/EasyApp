@@ -3,6 +3,7 @@ package com.harreke.easyapp.frameworks.bases.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,6 @@ import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.helpers.RequestHelper;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
-import com.harreke.easyapp.tools.DevUtil;
 import com.harreke.easyapp.widgets.InfoView;
 import com.harreke.easyapp.widgets.ToastView;
 
@@ -26,6 +26,7 @@ import com.harreke.easyapp.widgets.ToastView;
  */
 public abstract class FragmentFramework extends Fragment implements IFramework, IFragment, IActionBar {
     private static final String TAG = "FragmentFramework";
+
     private FrameLayout framework_content;
     private InfoView framework_info;
     private ToastView framework_toast;
@@ -224,7 +225,7 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
      */
     @Override
     public void debug(String message) {
-        DevUtil.e(TAG, message);
+        Log.e(TAG, message);
     }
 
     /**

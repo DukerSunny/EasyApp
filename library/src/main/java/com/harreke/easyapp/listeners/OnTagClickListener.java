@@ -13,6 +13,8 @@ public interface OnTagClickListener {
      *
      * @param tag
      *         Span的标签
+     * @param link
+     *         Span的链接
      */
-    public void onTagClick(String tag);
+    public void onTagClick(String tag, String link);
 }

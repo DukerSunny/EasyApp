@@ -228,6 +228,7 @@ public class SearchActivity extends ActivityFramework {
         mSearchSortOrderHelper.add(2, getString(R.string.search_sortorder_reverse));
 
         mSearchListHelper = new SearchListHelper(this, R.id.search_list);
+        mSearchListHelper.setLoadEnabled(true);
         mSearchListHelper.setRootView(findContentView(R.id.search_list));
         mSearchListHelper.setInfoView((com.harreke.easyapp.widgets.InfoView) findContentView(R.id.search_info));
         mSearchListHelper.bindAdapter();
@@ -254,7 +255,9 @@ public class SearchActivity extends ActivityFramework {
     @Override
     public void startAction() {
         if (mQuery != null) {
-            mSearchListHelper.from(API.getSearch(mQuery, mChannelId, mOrderBy, mOrderId, 20, mSearchListHelper.getCurrentPage()), mReverse);
+            mSearchListHelper
+                    .from(API.getSearch(mQuery, mChannelId, mOrderBy, mOrderId, 20, mSearchListHelper.getCurrentPage()),
+                            mReverse);
         }
     }
 

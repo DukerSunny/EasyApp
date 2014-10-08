@@ -54,6 +54,8 @@ public class ContentActivity extends ActivityFramework {
 
     @Override
     public void assignEvents() {
+        content_back.setOnClickListener(mClickListener);
+        ;
         content_comments_button.setOnClickListener(mClickListener);
     }
 
@@ -152,7 +154,7 @@ public class ContentActivity extends ActivityFramework {
 
         @Override
         public Fragment getItem(int position) {
-            return ContentFragment.create(mContent, mPageList.get(position));
+            return ContentFragment.create(mContent, position, mPageList.get(position));
         }
 
         @Override

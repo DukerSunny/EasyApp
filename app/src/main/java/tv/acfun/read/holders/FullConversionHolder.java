@@ -1,6 +1,7 @@
 package tv.acfun.read.holders;
 
 import android.content.res.Resources;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -44,6 +45,8 @@ public class FullConversionHolder implements IAbsListHolder<FullConversion> {
         comment_date = (TextView) convertView.findViewById(R.id.comment_date);
         comment_options = convertView.findViewById(R.id.comment_options);
         comment_text = (TextView) convertView.findViewById(R.id.comment_text);
+
+        comment_text.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     @Override

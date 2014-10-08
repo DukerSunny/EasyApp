@@ -1,7 +1,6 @@
 package tv.acfun.read.bases.application;
 
 import android.graphics.drawable.Drawable;
-import android.text.Html;
 
 import com.harreke.easyapp.frameworks.bases.application.ApplicationFramework;
 import com.harreke.easyapp.tools.FileUtil;
@@ -13,17 +12,12 @@ import java.io.File;
  */
 public class AcFunRead extends ApplicationFramework {
     public static final String DIR_HISTORIES = "histories";
-    public Html.ImageGetter emotGetter = new Html.ImageGetter() {
-        @Override
-        public Drawable getDrawable(String source) {
-            return FileUtil.readDrawable(CacheDir + "/" + DIR_ASSETS + "/" + source, (int) (48 * Density), (int) (48 * Density));
-        }
-    };
     private boolean mHistoriesEnabled;
 
     public static Drawable readEmot(String emotName, String emotIndex) {
         if (emotName != null && emotName.length() > 0 && emotIndex != null && emotIndex.length() > 0) {
-            return FileUtil.readDrawable(CacheDir + "/" + DIR_ASSETS + "/" + emotName + "/" + emotIndex, (int) (32 * Density), (int) (32 * Density));
+            return FileUtil.readDrawable(CacheDir + "/" + DIR_ASSETS + "/" + emotName + "/" + emotIndex, (int) (32 * Density),
+                    (int) (32 * Density));
         } else {
             return null;
         }

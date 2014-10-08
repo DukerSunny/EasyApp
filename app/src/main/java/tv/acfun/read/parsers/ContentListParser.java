@@ -2,11 +2,9 @@ package tv.acfun.read.parsers;
 
 import com.harreke.easyapp.tools.GsonUtil;
 import com.harreke.easyapp.tools.NetUtil;
-import com.harreke.easyapp.tools.StringUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.regex.Matcher;
 
 import tv.acfun.read.beans.ArticlePage;
 import tv.acfun.read.beans.Content;
@@ -43,7 +41,6 @@ public class ContentListParser {
     }
 
     private void decode(FullArticle fullArticle) {
-        Matcher matcher;
         ArticlePage articlePage;
         String input;
         mContent = fullArticle;
@@ -51,16 +48,6 @@ public class ContentListParser {
         mPageList = new ArrayList<ArticlePage>();
 
         input = fullArticle.getTxt();
-        //        input = input.replace("<p>", "").replaceAll("<p[\\S\\s]+?>", "").replace("</p>", "");
-        //        input = input.replace("<div>", "").replaceAll("<div[\\S\\s]+?>", "").replace("</div>", "");
-        //        input = input.replace("<span>", "").replaceAll("<span[\\S\\s]+?>", "").replace("</span>", "");
-        //        input = input.replaceAll(" style=[\\S\\s]+?", "");
-
-        matcher = StringUtil.getMatcher("(\\S\\s)+?\\[NextPage\\]([\\S\\s]+?)\\[/NextPage\\]", input);
-        while (matcher.find()) {
-            articlePage = new ArticlePage(matcher.group(2), matcher.group(1));
-            mPageList.add(articlePage);
-        }
         if (mPageList.size() == 0) {
             articlePage = new ArticlePage(null, input);
             mPageList.add(articlePage);

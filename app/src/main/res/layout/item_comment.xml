@@ -96,7 +96,7 @@
                 android:layout_marginTop="8dp"
                 android:text="@string/comment_text"
                 android:textColor="@color/Content"
-                android:textSize="16dp"/>
+                android:textSize="14dp"/>
 
         </LinearLayout>
 

@@ -25,4 +25,5 @@ dependencies {
     compile project(':libSlidingMenu')
     compile project(':libCircleImageView')
     compile project(':libPhotoView')
+    compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
 }

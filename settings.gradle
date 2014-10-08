@@ -1,2 +1,3 @@
-include ':app', ':libSlidingMenu', ':libCircleImageView', ':library', ':libPhotoView'
+include ':app'
+include ':libCircleImageView', ':libPhotoView', ':libSlidingMenu'
 include ':library'

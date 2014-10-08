@@ -10,7 +10,7 @@
         style="@style/ww"
         android:text="@string/comment_quote_text"
         android:textColor="@color/Content"
-        android:textSize="16dp"/>
+        android:textSize="14dp"/>
 
     <TextView
         android:id="@+id/comment_quote_username"

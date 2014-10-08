@@ -1,16 +1,16 @@
 package tv.acfun.read.beans;
 
 import android.content.Context;
-import android.text.Html;
 import android.text.Spanned;
 
 import com.google.gson.annotations.Expose;
-import com.harreke.easyapp.tools.StringUtil;
+import com.harreke.easyapp.listeners.OnTagClickListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import tv.acfun.read.R;
+import tv.acfun.read.tools.CommentUtil;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/26
@@ -46,8 +46,8 @@ public class Conversion extends Comment {
         mQuotedCount++;
     }
 
-    public void parse(Context context, Html.ImageGetter emotGetter) {
+    public void parse(Context context, OnTagClickListener tagClickListener) {
         mDate = new SimpleDateFormat(context.getString(R.string.comment_date)).format(new Date(getTime()));
-        mSpanned = Html.fromHtml(StringUtil.convertUBB(getContent()), emotGetter, null);
+        mSpanned = CommentUtil.convertUBB(getContent(), tagClickListener);
     }
 }

@@ -160,8 +160,7 @@
         style="@style/mmw"/>
 
     <LinearLayout
-        style="@style/mw.h"
-        android:visibility="gone">
+        style="@style/mw.h">
 
         <LinearLayout
             android:id="@+id/menu_setting"

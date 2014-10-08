@@ -8,6 +8,7 @@ import android.view.View;
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.fragment.FragmentFramework;
 import com.harreke.easyapp.frameworks.list.abslistview.AbsListFramework;
+import com.harreke.easyapp.listeners.OnTagClickListener;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.widgets.InfoView;
 
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 
 import tv.acfun.read.R;
 import tv.acfun.read.api.API;
+import tv.acfun.read.bases.activities.ComicActivity;
 import tv.acfun.read.beans.FullConversion;
 import tv.acfun.read.holders.FullConversionHolder;
 import tv.acfun.read.listeners.OnTotalPageChangedListener;
@@ -30,6 +32,7 @@ public class CommentFragment extends FragmentFramework {
     private View.OnClickListener mOptionsClickListener;
     private int mPageNo;
     private View.OnClickListener mQuoteExpandClickListener;
+    private OnTagClickListener mTagClickListener;
     private OnTotalPageChangedListener mTotalPageChangedListener;
     private Task task = null;
 
@@ -72,6 +75,14 @@ public class CommentFragment extends FragmentFramework {
             @Override
             public void onClick(View v) {
                 int position = (Integer) v.getTag();
+            }
+        };
+        mTagClickListener = new OnTagClickListener() {
+            @Override
+            public void onTagClick(String tag, String link) {
+                if ("img".equals(tag)) {
+                    start(ComicActivity.create(getActivity(), link));
+                }
             }
         };
     }
@@ -151,7 +162,7 @@ public class CommentFragment extends FragmentFramework {
     private class Task extends AsyncTask<String, Void, ArrayList<FullConversion>> {
         @Override
         protected ArrayList<FullConversion> doInBackground(String... params) {
-            CommentListParser parser = CommentListParser.parse(getActivity(), params[0], 3);
+            CommentListParser parser = CommentListParser.parse(getActivity(), params[0], 3, mTagClickListener);
 
             if (parser != null) {
                 if (mTotalPageChangedListener != null) {

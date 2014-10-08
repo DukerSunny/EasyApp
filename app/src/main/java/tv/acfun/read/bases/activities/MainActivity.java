@@ -30,7 +30,6 @@ public class MainActivity extends ActivityFramework {
     private RepeatCheckableChildTabView content_channel;
     private GroupTabView content_group;
     private ViewPager content_pager;
-    private View content_setting;
     private View content_user_avatar;
     private ImageView content_user_avatar_image;
     private Adapter mAdapter;
@@ -48,6 +47,7 @@ public class MainActivity extends ActivityFramework {
     private View menu_history;
     private View menu_mail;
     private TextView menu_mail_text;
+    private View menu_setting;
     //    private View menu_pattern;
     private View menu_user;
     private ImageView menu_user_avatar;
@@ -56,7 +56,7 @@ public class MainActivity extends ActivityFramework {
     @Override
     public void assignEvents() {
         content_user_avatar.setOnClickListener(mClickListener);
-        content_setting.setOnClickListener(mClickListener);
+        menu_setting.setOnClickListener(mClickListener);
         content_group.setOnCheckedChangeListener(mCheckedChangeListener);
         content_channel.setOnRepeatCheckedListener(mRepeatCheckedListener);
         content_pager.setOnPageChangeListener(mPageChangeListener);
@@ -112,7 +112,7 @@ public class MainActivity extends ActivityFramework {
                             main_slidingmenu.showMenu(true);
                         }
                         break;
-                    case R.id.content_setting:
+                    case R.id.menu_setting:
                         start(SettingActivity.create(getActivity()));
                 }
             }
@@ -194,7 +194,7 @@ public class MainActivity extends ActivityFramework {
 
         content_user_avatar = findContentView(R.id.content_user_avatar);
         content_user_avatar_image = (ImageView) findContentView(R.id.content_user_avatar_image);
-        content_setting = findContentView(R.id.content_setting);
+        menu_setting = findContentView(R.id.menu_setting);
 
         content_group = (GroupTabView) findContentView(R.id.content_group);
         content_channel = (RepeatCheckableChildTabView) findContentView(R.id.content_channel);

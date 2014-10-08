@@ -28,8 +28,8 @@ public class ArticlePage {
             srcMatcher = StringUtil.getMatcher("src=\"([\\S\\s]+?)\"", img);
             if (srcMatcher.find()) {
                 src = srcMatcher.group(1);
-                //                mArticle = mArticle.replace(img, "<a href='" + src + "'>" + img + "</a>");
-                mArticle = mArticle.replace(img, "<img src='" + src + "' onClick='content.onSingleClicked(\"" + src + "\")'/>");
+                mArticle = mArticle.replace(img,
+                        "<img src=\"" + src + "\" onClick=\"content.onSingleClicked(\"" + src + "\")\"/>");
                 mImageList.add(srcMatcher.group(1));
             }
         }

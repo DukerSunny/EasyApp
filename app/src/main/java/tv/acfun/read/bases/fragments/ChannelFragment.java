@@ -74,6 +74,7 @@ public class ChannelFragment extends FragmentFramework {
         mScrollTopAnimation = new ViewAlphaAnimation(channel_scrolltop_button);
 
         mHelper = new Helper(this, R.id.channel_list);
+        mHelper.setLoadEnabled(true);
         mHelper.addHeaderView(header_channel);
         mHelper.bindAdapter();
     }

@@ -122,8 +122,10 @@ public abstract class AbsListFramework<ITEM, HOLDER extends IAbsListHolder<ITEM>
         if (isLoadEnabled()) {
             if (mScrollState != SCROLL_STATE_IDLE && !isLastPage() && !isLoading()) {
                 if (!isReverseScroll() && firstVisibleItem + visibleItemCount >= totalItemCount - 1) {
+                    nextPage();
                     onAction();
                 } else if (isReverseScroll() && firstVisibleItem == 0) {
+                    nextPage();
                     onAction();
                 }
             }

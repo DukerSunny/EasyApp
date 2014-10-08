@@ -1,8 +1,8 @@
 package tv.acfun.read.parsers;
 
 import android.content.Context;
-import android.text.Html;
 
+import com.harreke.easyapp.listeners.OnTagClickListener;
 import com.harreke.easyapp.tools.GsonUtil;
 import com.harreke.easyapp.tools.NetUtil;
 
@@ -24,7 +24,7 @@ public class CommentListParser {
     private String msg;
     private int status;
 
-    public static CommentListParser parse(Context context, String json, int maxQuote) {
+    public static CommentListParser parse(Context context, String json, int maxQuote, OnTagClickListener tagClickListener) {
         CommentListParser parser = GsonUtil.toBean(json, CommentListParser.class);
         CommentListPage page;
 
@@ -32,7 +32,7 @@ public class CommentListParser {
             if (NetUtil.isStatusOk(parser.status) && parser.data != null) {
                 page = parser.data.get("page");
                 if (page != null) {
-                    parser.decode(context, page, maxQuote);
+                    parser.decode(context, page, maxQuote, tagClickListener);
 
                     return parser;
                 }
@@ -42,8 +42,8 @@ public class CommentListParser {
         return null;
     }
 
-    private void decode(Context context, CommentListPage page, int maxQuote) {
-        Html.ImageGetter emotGetter = ((AcFunRead) AcFunRead.getInstance()).emotGetter;
+    private void decode(Context context, CommentListPage page, int maxQuote, OnTagClickListener tagClickListener) {
+        AcFunRead acFunRead = (AcFunRead) AcFunRead.getInstance();
         Conversion content;
         Conversion quote;
         FullConversion fullConversion;
@@ -64,7 +64,7 @@ public class CommentListParser {
             commentId = list.get(i);
             content = map.get("c" + commentId);
             if (content.getSpanned() == null) {
-                content.parse(context, emotGetter);
+                content.parse(context, tagClickListener);
             }
             quoteList = new ArrayList<Conversion>();
             quoteId = content.getQuoteId();
@@ -76,7 +76,7 @@ public class CommentListParser {
 
                 quote = map.get("c" + quoteId);
                 if (quote.getSpanned() == null) {
-                    quote.parse(context, emotGetter);
+                    quote.parse(context, tagClickListener);
                 }
                 quote.newQuoted();
                 if (repeatQuoteId == 0 && quote.getQuotedCount() > 1) {

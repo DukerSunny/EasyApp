@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.WeakHashMap;
 
 import tv.acfun.read.R;
 import tv.acfun.read.bases.activities.ComicActivity;
@@ -43,13 +42,14 @@ public class ContentFragment extends FragmentFramework {
     private Content mContent;
     private Handler mHandler;
     private ArrayList<String> mImageList;
-    private WeakHashMap<String, Bitmap> mMap = new WeakHashMap<String, Bitmap>();
+    private int mPagePosition;
 
-    public static ContentFragment create(Content content, ArticlePage articlePage) {
+    public static ContentFragment create(Content content, int pagePosition, ArticlePage articlePage) {
         ContentFragment fragment = new ContentFragment();
         Bundle bundle = new Bundle();
 
         bundle.putString("content", GsonUtil.toString(content));
+        bundle.putInt("pagePosition", pagePosition);
         bundle.putString("articlePage", GsonUtil.toString(articlePage));
         fragment.setArguments(bundle);
 
@@ -116,6 +116,7 @@ public class ContentFragment extends FragmentFramework {
         ArticlePage articlePage = GsonUtil.toBean(bundle.getString("articlePage"), ArticlePage.class);
 
         mContent = GsonUtil.toBean(bundle.getString("content"), Content.class);
+        mPagePosition = bundle.getInt("pagePosition");
         mArticle = articlePage.getArticle();
         mImageList = articlePage.getImageList();
     }
@@ -125,7 +126,7 @@ public class ContentFragment extends FragmentFramework {
         mHandler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
-                start(ComicActivity.create(getActivity(), mImageList, msg.what));
+                start(ComicActivity.create(getActivity(), mContent.getContentId(), mPagePosition, mImageList, msg.what));
 
                 return false;
             }

@@ -18,20 +18,23 @@ public class ArticlePage {
         Matcher srcMatcher;
         String img;
         String src;
+        int position;
 
         mTitle = title;
         mArticle = article;
         mImageList = new ArrayList<String>();
         imgMatcher = StringUtil.getMatcher("<img[\\S\\s]+?/>", article);
+        position = 0;
         while (imgMatcher.find()) {
             img = imgMatcher.group();
             srcMatcher = StringUtil.getMatcher("src=\"([\\S\\s]+?)\"", img);
             if (srcMatcher.find()) {
                 src = srcMatcher.group(1);
                 mArticle = mArticle.replace(img,
-                        "<img src=\"" + src + "\" onClick=\"content.onSingleClicked(\"" + src + "\")\"/>");
+                        "<img src=\"" + src + "\" onClick=\"content.onSingleClicked(" + position + ")\"/>");
                 mImageList.add(srcMatcher.group(1));
             }
+            position++;
         }
     }
 

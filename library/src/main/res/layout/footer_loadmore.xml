@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:id="@+id/channel_search"
+    style="@style/mw.h"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="48dp"
-    android:background="@color/White"
+    android:background="@drawable/button_white"
     android:gravity="center"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:padding="8dp">
 
     <ImageView
+        android:id="@+id/loadmore_icon"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:padding="4dp"
-        android:src="@drawable/image_search"/>
+        android:src="@drawable/info_empty"/>
 
     <TextView
+        android:id="@+id/loadmore_text"
         style="@style/ww"
-        android:text="@string/channel_search"
+        android:text="@string/loadmore_idle"
         android:textColor="@color/Assist"
         android:textSize="16dp"/>
 

@@ -24,15 +24,20 @@ import java.util.Comparator;
  *         条目容器类型
  */
 public abstract class AbsListFramework<ITEM, HOLDER extends IAbsListHolder<ITEM>> extends ListFramework<ITEM>
-        implements IAbsList<ITEM, HOLDER>, IAbsListItemClickListener<ITEM>, AdapterView.OnClickListener, AdapterView.OnItemClickListener,
-        AbsListView.OnScrollListener {
+        implements IAbsList<ITEM, HOLDER>, IAbsListItemClickListener<ITEM>, AdapterView.OnClickListener,
+        AdapterView.OnItemClickListener {
     private Adapter mAdapter;
     private int mHeaderCount = 0;
     private AbsListView mListView;
-    private int mScrollState = SCROLL_STATE_IDLE;
 
     public AbsListFramework(IFramework framework, int listId) {
         super(framework, listId);
+    }
+
+    public final void addFooterView(View view) {
+        if (mListView instanceof ListView) {
+            ((ListView) mListView).addFooterView(view);
+        }
     }
 
     public final void addHeaderView(View view) {
@@ -117,26 +122,6 @@ public abstract class AbsListFramework<ITEM, HOLDER extends IAbsListHolder<ITEM>
         }
     }
 
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if (isLoadEnabled()) {
-            if (mScrollState != SCROLL_STATE_IDLE && !isLastPage() && !isLoading()) {
-                if (!isReverseScroll() && firstVisibleItem + visibleItemCount >= totalItemCount - 1) {
-                    nextPage();
-                    onAction();
-                } else if (isReverseScroll() && firstVisibleItem == 0) {
-                    nextPage();
-                    onAction();
-                }
-            }
-        }
-    }
-
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-        mScrollState = scrollState;
-    }
-
     /**
      * 刷新列表
      */
@@ -159,7 +144,6 @@ public abstract class AbsListFramework<ITEM, HOLDER extends IAbsListHolder<ITEM>
     public void setListView(View listView) {
         mListView = (AbsListView) listView;
         mListView.setOnItemClickListener(this);
-        mListView.setOnScrollListener(this);
     }
 
     /**

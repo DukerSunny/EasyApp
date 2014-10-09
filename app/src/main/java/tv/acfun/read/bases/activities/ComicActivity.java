@@ -338,6 +338,8 @@ public class ComicActivity extends ActivityFramework {
         public Object instantiateItem(ViewGroup container, int position) {
             PhotoView photoView = (PhotoView) View.inflate(getActivity(), R.layout.activity_comic_page, null);
 
+            photoView.setMediumScale(2f);
+            photoView.setMaximumScale(6f);
             photoView.setOnPhotoTapListener(mTapListener);
             ImageLoaderHelper.loadImage(photoView, mImageList.get(position));
             container.addView(photoView);

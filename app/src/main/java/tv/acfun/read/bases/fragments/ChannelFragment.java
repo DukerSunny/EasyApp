@@ -4,11 +4,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.widget.AbsListView;
 
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.fragment.FragmentFramework;
 import com.harreke.easyapp.frameworks.list.abslistview.AbsListFramework;
+import com.harreke.easyapp.frameworks.list.abslistview.FooterLoadStatus;
 
 import java.util.ArrayList;
 
@@ -67,15 +67,15 @@ public class ChannelFragment extends FragmentFramework {
 
     @Override
     public void queryLayout() {
-        View header_channel = View.inflate(getActivity(), R.layout.header_channel, null);
+        View footer_loadmore = View.inflate(getActivity(), R.layout.footer_loadmore, null);
 
         channel_scrolltop_button = findContentView(R.id.channel_scrolltop_button);
 
         mScrollTopAnimation = new ViewAlphaAnimation(channel_scrolltop_button);
 
         mHelper = new Helper(this, R.id.channel_list);
-        mHelper.setLoadEnabled(true);
-        mHelper.addHeaderView(header_channel);
+        mHelper.addFooterView(footer_loadmore);
+        mHelper.setLoadMore(new FooterLoadStatus(footer_loadmore));
         mHelper.bindAdapter();
     }
 
@@ -128,21 +128,6 @@ public class ChannelFragment extends FragmentFramework {
                 return listParser.getItemList();
             } else {
                 return null;
-            }
-        }
-
-        @Override
-        public void onScrollStateChanged(AbsListView view, int scrollState) {
-            super.onScrollStateChanged(view, scrollState);
-
-            if (scrollState != SCROLL_STATE_IDLE) {
-                if (isScrollTopShowing() && !mScrollTopAnimation.isAnimating()) {
-                    mScrollTopAnimation.fadeOut();
-                }
-            } else {
-                if (!isScrollTopShowing() && !mScrollTopAnimation.isAnimating() && mNeedShowScrollTop) {
-                    mScrollTopAnimation.fadeIn();
-                }
             }
         }
 

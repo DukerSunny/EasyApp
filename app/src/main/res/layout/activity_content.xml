@@ -29,13 +29,6 @@
             android:textSize="16dp"/>
 
         <ImageView
-            android:id="@+id/content_share_button"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:padding="8dp"
-            android:src="@drawable/image_share"/>
-
-        <ImageView
             android:id="@+id/content_favourite_add_button"
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -49,6 +42,13 @@
             android:padding="8dp"
             android:src="@drawable/image_favourite_remove"
             android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/content_share_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="8dp"
+            android:src="@drawable/image_share"/>
 
         <ImageView
             android:id="@+id/content_comments_button"

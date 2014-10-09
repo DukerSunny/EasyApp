@@ -25,6 +25,11 @@ public interface IList<ITEM> {
     public boolean addItem(int itemId, ITEM item);
 
     /**
+     * 设置数据适配器
+     */
+    public void bindAdapter();
+
+    /**
      * 清空列表
      */
     public void clear();
@@ -73,17 +78,22 @@ public interface IList<ITEM> {
     public void refresh();
 
     /**
-     * 设置数据适配器
-     */
-    public void bindAdapter();
-
-    /**
      * 设置列表视图
      *
      * @param listView
      *         列表视图
      */
     public void setListView(View listView);
+
+    /**
+     * 设置加载更多功能接口
+     *
+     * 为列表添加加载更多功能
+     *
+     * @param loadMore
+     *         加载更多功能接口
+     */
+    public void setLoadMore(ILoadStatus loadMore);
 
     /**
      * 排序列表条目

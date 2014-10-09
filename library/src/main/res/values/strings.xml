@@ -8,15 +8,9 @@
     <string name="info_retry">加载失败</string>
     <string name="info_retryhint">，重试</string>
 
-    <string name="list_complete">加载了%s条项目</string>
-    <string name="list_last">没有更多了</string>
-
-    <string name="loadoverlay_loadinging">正在加载…</string>
-    <string name="loadoverlay_loadcomplete">加载完成</string>
-    <string name="loadoverlay_loadcomplete_pagesize">加载了%s条项目…</string>
-    <string name="refreshheader_pulltorefresh">下拉刷新</string>
-    <string name="refreshheader_refreshing">正在刷新…</string>
-    <string name="refreshheader_refreshcomplete">刷新完成</string>
-    <string name="refreshheader_releasetorefresh">松开刷新</string>
+    <string name="loadmore_idle">点击加载下一页</string>
+    <string name="loadmore_loading">数据加载中 …</string>
+    <string name="loadmore_retry">加载错误，点击重试</string>
+    <string name="loadmore_last">没有更多了</string>
 
 </resources>

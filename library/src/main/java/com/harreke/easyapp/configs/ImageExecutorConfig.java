@@ -23,7 +23,7 @@ import java.io.File;
  */
 public class ImageExecutorConfig {
     public static int imageCacheSize = 48 * 1024 * 1024;
-    public static int loadingImageId = R.drawable.progress_loading;
+    public static int loadingImageId = R.drawable.anim_progress_radiant;
     public static int retryImageId = R.drawable.progress_retry;
 
     public static void config(Context context) {
@@ -31,38 +31,11 @@ public class ImageExecutorConfig {
                 new UnlimitedDiscCache(new File(ApplicationFramework.CacheDir + "/" + ApplicationFramework.DIR_CACHES)))
                 .defaultDisplayImageOptions(
                         new DisplayImageOptions.Builder().showImageForEmptyUri(retryImageId).showImageOnFail(retryImageId)
-                                .showImageOnLoading(loadingImageId).cacheOnDisk(true).build()
-                ).build();
+                                .showImageOnLoading(loadingImageId).cacheOnDisk(true).build()).build();
         ImageLoader.getInstance().init(configuration);
     }
 
-    //    /**
-    //     * 创建一个Http图片请求执行器
-    //     *
-    //     * 默认使用Volley的Http图片库
-    //     * 若需要使用其他Http图片库，请重写该函数
-    //     *
-    //     * @param image
-    //     *         ImageView
-    //     * @param imageUrl
-    //     *         请求图片Url
-    //     * @param loadingImageId
-    //     *         加载中图片Id
-    //     * @param retryImageId
-    //     *         重试图片Id
-    //     * @param callback
-    //     *         请求回调
-    //     *
-    //     * @return Volley Http图片请求执行器
-    //     */
     public static IRequestExecutor create(ImageView image, String imageUrl, IRequestCallback<ImageView> callback) {
-        //        if (loadingImageId <= 0) {
-        //            loadingImageId = ImageExecutorConfig.loadingImageId;
-        //        }
-        //        if (retryImageId <= 0) {
-        //            retryImageId = ImageExecutorConfig.retryImageId;
-        //        }
-
         return new UniversalImageExecutor(image, imageUrl, callback);
     }
 

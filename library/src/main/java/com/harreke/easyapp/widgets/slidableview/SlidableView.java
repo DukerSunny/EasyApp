@@ -2,7 +2,6 @@ package com.harreke.easyapp.widgets.slidableview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -10,13 +9,13 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import com.harreke.easyapp.widgets.slidableview.inners.HeaderView;
-import com.harreke.easyapp.widgets.slidableview.inners.OverlayView;
 import com.harreke.easyapp.R;
 import com.harreke.easyapp.helpers.GestureHelper;
 import com.harreke.easyapp.listeners.OnGestureListener;
 import com.harreke.easyapp.listeners.OnSlidableTriggerListener;
 import com.harreke.easyapp.widgets.slidableview.inners.ContentView;
+import com.harreke.easyapp.widgets.slidableview.inners.HeaderView;
+import com.harreke.easyapp.widgets.slidableview.inners.OverlayView;
 import com.harreke.easyapp.widgets.slidableview.inners.TabView;
 
 import java.util.ArrayList;
@@ -114,7 +113,8 @@ public class SlidableView extends FrameLayout implements ViewGroup.OnHierarchyCh
         addView(mContent);
 
         mOverlays = new LinearLayout(context);
-        mOverlays.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        mOverlays.setLayoutParams(
+                new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         mOverlays.setOrientation(LinearLayout.VERTICAL);
         addView(mOverlays);
 
@@ -308,7 +308,7 @@ public class SlidableView extends FrameLayout implements ViewGroup.OnHierarchyCh
     }
 
     @Override
-    public boolean onTouchEvent(@NonNull MotionEvent event) {
+    public boolean onTouchEvent(MotionEvent event) {
         return !mIntercept || mGesture.onTouch(event);
     }
 

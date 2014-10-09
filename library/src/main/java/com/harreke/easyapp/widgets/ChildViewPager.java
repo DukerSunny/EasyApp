@@ -25,6 +25,15 @@ public class ChildViewPager extends ViewPager {
     }
 
     @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        try {
+            return super.onInterceptTouchEvent(ev);
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
         mNowPoint.x = event.getX();
         mNowPoint.y = event.getY();

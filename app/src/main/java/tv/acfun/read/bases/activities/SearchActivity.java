@@ -12,7 +12,9 @@ import com.harreke.easyapp.beans.ActionBarItem;
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.frameworks.list.abslistview.AbsListFramework;
+import com.harreke.easyapp.frameworks.list.abslistview.FooterLoadStatus;
 import com.harreke.easyapp.helpers.PopupAbsListHelper;
+import com.harreke.easyapp.widgets.InfoView;
 
 import java.util.ArrayList;
 
@@ -197,6 +199,8 @@ public class SearchActivity extends ActivityFramework {
 
     @Override
     public void queryLayout() {
+        View footer_loadmore = View.inflate(getActivity(), R.layout.footer_loadmore, null);
+
         search_back = findContentView(R.id.search_back);
         search_input = (EditText) findContentView(R.id.search_input);
         search_go = findContentView(R.id.search_go);
@@ -228,10 +232,12 @@ public class SearchActivity extends ActivityFramework {
         mSearchSortOrderHelper.add(2, getString(R.string.search_sortorder_reverse));
 
         mSearchListHelper = new SearchListHelper(this, R.id.search_list);
-        mSearchListHelper.setLoadEnabled(true);
+        mSearchListHelper.addFooterView(footer_loadmore);
+        mSearchListHelper.setLoadMore(new FooterLoadStatus(footer_loadmore));
         mSearchListHelper.setRootView(findContentView(R.id.search_list));
-        mSearchListHelper.setInfoView((com.harreke.easyapp.widgets.InfoView) findContentView(R.id.search_info));
+        mSearchListHelper.setInfoView((InfoView) findContentView(R.id.search_info));
         mSearchListHelper.bindAdapter();
+        mSearchListHelper.onPostAction();
     }
 
     private void searchGo() {

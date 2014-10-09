@@ -2,7 +2,6 @@ package com.harreke.easyapp.frameworks.list.abslistview;
 
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 
 import com.harreke.easyapp.adapters.abslistview.ExListAdapter;
@@ -30,11 +29,10 @@ import java.util.Comparator;
  */
 public abstract class ExListFramework<GROUP, GROUPHOLDER extends IExListHolder.Group<GROUP>, CHILD, CHILDHOLDER extends IExListHolder.Child<CHILD>>
         extends ListFramework<ExItem<GROUP, CHILD>>
-        implements IExList<GROUP, GROUPHOLDER, CHILD, CHILDHOLDER>, IExItemClickListener<GROUP, CHILD>, ExpandableListView.OnGroupClickListener,
-        ExpandableListView.OnChildClickListener, AbsListView.OnScrollListener {
+        implements IExList<GROUP, GROUPHOLDER, CHILD, CHILDHOLDER>, IExItemClickListener<GROUP, CHILD>,
+        ExpandableListView.OnGroupClickListener, ExpandableListView.OnChildClickListener {
     private Adapter mAdapter;
     private ExpandableListView mExpandableListView;
-    private int mScrollState = SCROLL_STATE_IDLE;
 
     public ExListFramework(IFramework framework, int listId) {
         super(framework, listId);
@@ -236,24 +234,6 @@ public abstract class ExListFramework<GROUP, GROUPHOLDER extends IExListHolder.G
     }
 
     @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if (isLoadEnabled()) {
-            if (mScrollState != SCROLL_STATE_IDLE && !isLastPage() && !isLoading()) {
-                if (!isReverseScroll() && firstVisibleItem + visibleItemCount >= totalItemCount - 1) {
-                    onAction();
-                } else if (isReverseScroll() && firstVisibleItem == 0) {
-                    onAction();
-                }
-            }
-        }
-    }
-
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-        mScrollState = scrollState;
-    }
-
-    @Override
     public void refresh() {
         mAdapter.refresh();
     }
@@ -263,7 +243,6 @@ public abstract class ExListFramework<GROUP, GROUPHOLDER extends IExListHolder.G
         mExpandableListView = (ExpandableListView) listView;
         mExpandableListView.setOnGroupClickListener(this);
         mExpandableListView.setOnChildClickListener(this);
-        mExpandableListView.setOnScrollListener(this);
     }
 
     /**
@@ -303,7 +282,8 @@ public abstract class ExListFramework<GROUP, GROUPHOLDER extends IExListHolder.G
     private class Adapter extends ExListAdapter<GROUP, CHILD> {
         @SuppressWarnings("unchecked")
         @Override
-        public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView,
+                ViewGroup parent) {
             CHILDHOLDER holder;
             CHILD child = getChild(groupPosition, childPosition);
 

@@ -38,7 +38,6 @@
             android:id="@+id/content_group"
             style="@style/mmw"
             android:layout_gravity="center"
-            android:layout_marginLeft="8dp"
             android:background="@color/White"
             android:divider="@drawable/divider_vertical_dot"
             android:dividerPadding="8dp"
@@ -50,7 +49,6 @@
                 style="@style/mmw"
                 android:background="@drawable/button_tab_underline"
                 android:checked="true"
-                android:drawableRight="@drawable/button_dropdown"
                 android:gravity="center"
                 android:padding="8dp"
                 android:text="@string/main_recommend"
@@ -61,7 +59,6 @@
                 android:id="@+id/content_channel"
                 style="@style/mmw"
                 android:background="@drawable/button_tab_underline"
-                android:drawableRight="@drawable/button_dropdown"
                 android:gravity="center"
                 android:padding="8dp"
                 android:text="@string/channel_misc"
@@ -69,6 +66,14 @@
                 android:textSize="16dp"/>
 
         </com.harreke.easyapp.widgets.GroupTabView>
+
+        <ImageView
+            android:id="@+id/content_search"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/button_transparent"
+            android:padding="8dp"
+            android:src="@drawable/image_search"/>
 
     </LinearLayout>
 

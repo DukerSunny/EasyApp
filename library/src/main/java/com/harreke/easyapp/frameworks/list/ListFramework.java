@@ -39,17 +39,14 @@ import java.util.Comparator;
  * @see com.harreke.easyapp.listparsers.IListParser
  */
 public abstract class ListFramework<ITEM>
-        implements IList<ITEM>, IListActionListener<ITEM>, IRequestCallback<String>, View.OnClickListener {
+        implements IList<ITEM>, IListActionListener<ITEM>, IRequestCallback<String>, View.OnClickListener, OnLoadListener {
     private Comparator<ITEM> mComparator = null;
-    private String mCompleteText;
     private int mCurrentPage = 1;
-    private String mErrorText;
     private IFramework mFramework;
     private InfoView mInfo = null;
-    private String mLastText;
-    private boolean mLoadEnabled = false;
+    private ILoadStatus mLoadMore = null;
     private int mPageSize = 0;
-    private boolean mReverseScroll = false;
+    private String mRetryText;
     private View mRoot = null;
     private boolean mSortReverse = false;
     private int mTotalPage = 1;
@@ -58,22 +55,13 @@ public abstract class ListFramework<ITEM>
         Context context;
         View listView;
 
-        if (framework == null) {
-            throw new IllegalArgumentException("Framework must not be null!");
-        } else {
-            listView = framework.findContentView(listId);
-            if (listView == null) {
-                throw new IllegalArgumentException("Invalid listId!");
-            }
-            setListView(listView);
-            context = framework.getActivity();
-            mErrorText = context.getString(R.string.info_retry);
-            mLastText = context.getString(R.string.list_last);
-            mCompleteText = context.getString(R.string.list_complete);
-            mFramework = framework;
-            setRootView(framework.getContent());
-            setInfoView(framework.getInfo());
-        }
+        listView = framework.findContentView(listId);
+        setListView(listView);
+        context = framework.getActivity();
+        mRetryText = context.getString(R.string.info_retry);
+        mFramework = framework;
+        setRootView(framework.getContent());
+        setInfoView(framework.getInfo());
     }
 
     /**
@@ -249,30 +237,12 @@ public abstract class ListFramework<ITEM>
     }
 
     /**
-     * 判断是否启用加载更多功能
-     *
-     * @return 是否启用加载更多功能
-     */
-    public final boolean isLoadEnabled() {
-        return mLoadEnabled;
-    }
-
-    /**
      * 判断是否正在访问网络
      *
      * @return 是否正在访问网络
      */
     public boolean isLoading() {
         return mFramework != null && mFramework.isRequestExecuting();
-    }
-
-    /**
-     * 判断是否反转“加载更多”的触发条件
-     *
-     * @return 如果为false，则向下滑动至末尾会触发“加载更多”；否则为向上滑动至顶端会触发“加载更多”
-     */
-    public final boolean isReverseScroll() {
-        return mReverseScroll;
     }
 
     public final boolean isShowingRetry() {
@@ -308,6 +278,9 @@ public abstract class ListFramework<ITEM>
             if (mInfo != null) {
                 mInfo.setInfoVisibility(InfoView.INFO_ERROR);
             }
+            if (mLoadMore != null) {
+                mLoadMore.setVisibility(View.GONE);
+            }
         } else {
             if (mRoot != null) {
                 mRoot.setVisibility(View.VISIBLE);
@@ -315,13 +288,22 @@ public abstract class ListFramework<ITEM>
             if (mInfo != null) {
                 mInfo.setInfoVisibility(InfoView.INFO_HIDE);
             }
-            mFramework.showToast(mErrorText, false);
+            if (mLoadMore != null) {
+                mLoadMore.setVisibility(View.VISIBLE);
+                mLoadMore.setLoadStatus(LoadStatus.Retry);
+            }
         }
     }
 
     @Override
     public void onFailure(String requestUrl) {
         onError();
+    }
+
+    @Override
+    public void onLoad() {
+        nextPage();
+        onAction();
     }
 
     /**
@@ -337,6 +319,9 @@ public abstract class ListFramework<ITEM>
             if (mInfo != null) {
                 mInfo.setInfoVisibility(InfoView.INFO_EMPTY);
             }
+            if (mLoadMore != null) {
+                mLoadMore.setVisibility(View.GONE);
+            }
         } else {
             if (mRoot != null) {
                 mRoot.setVisibility(View.VISIBLE);
@@ -344,8 +329,13 @@ public abstract class ListFramework<ITEM>
             if (mInfo != null) {
                 mInfo.setInfoVisibility(InfoView.INFO_HIDE);
             }
-            if (mCurrentPage > 1 && isLastPage()) {
-                showToast(mLastText);
+            if (mLoadMore != null) {
+                mLoadMore.setVisibility(View.VISIBLE);
+                if (isLastPage()) {
+                    mLoadMore.setLoadStatus(LoadStatus.Last);
+                } else {
+                    mLoadMore.setLoadStatus(LoadStatus.Idle);
+                }
             }
         }
     }
@@ -414,25 +404,19 @@ public abstract class ListFramework<ITEM>
     }
 
     /**
-     * 设置是否启用加载更多功能
+     * 设置加载更多功能接口
      *
-     * 当列表滑动至底部时，是否触发加载更多状态，以便自动加载下一页
+     * 为列表添加加载更多功能
      *
-     * @param loadEnabled
-     *         是否启用加载更多功能
+     * @param loadMore
+     *         加载更多功能接口
      */
-    public final void setLoadEnabled(boolean loadEnabled) {
-        mLoadEnabled = loadEnabled;
-    }
-
-    /**
-     * 设置是否反转“加载更多”的触发条件
-     *
-     * @param reverseScroll
-     *         如果为false，则向下滑动至末尾会触发“加载更多”；否则为向上滑动至顶端会触发“加载更多”
-     */
-    public final void setReverseScroll(boolean reverseScroll) {
-        mReverseScroll = reverseScroll;
+    @Override
+    public void setLoadMore(ILoadStatus loadMore) {
+        mLoadMore = loadMore;
+        if (mLoadMore != null) {
+            mLoadMore.setOnLoadListener(this);
+        }
     }
 
     /**
@@ -465,9 +449,5 @@ public abstract class ListFramework<ITEM>
      */
     public final void setTotalPage(int totalPage) {
         mTotalPage = totalPage;
-    }
-
-    private void showToast(String text) {
-        mFramework.showToast(text);
     }
 }

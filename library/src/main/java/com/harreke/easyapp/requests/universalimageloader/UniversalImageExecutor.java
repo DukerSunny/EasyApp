@@ -16,11 +16,9 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 public class UniversalImageExecutor implements ImageLoadingListener, IRequestExecutor {
     private IRequestCallback<Bitmap> mBitmapCallback = null;
     private boolean mExecuting = false;
-    private ImageView mImage;
     private IRequestCallback<ImageView> mImageCallback = null;
 
     public UniversalImageExecutor(ImageView image, String imageUrl, IRequestCallback<ImageView> imageCallback) {
-        mImage = image;
         mImageCallback = imageCallback;
         ImageLoader.getInstance().displayImage(imageUrl, image, this);
     }
@@ -32,10 +30,9 @@ public class UniversalImageExecutor implements ImageLoadingListener, IRequestExe
 
     @Override
     public void cancel() {
-        ImageLoader.getInstance().cancelDisplayTask(mImage);
         mExecuting = false;
         mImageCallback = null;
-        mImage = null;
+        mBitmapCallback = null;
     }
 
     @Override
@@ -46,16 +43,20 @@ public class UniversalImageExecutor implements ImageLoadingListener, IRequestExe
     @Override
     public void onLoadingCancelled(String imageUri, View view) {
         mExecuting = false;
-        mImage = null;
-        mImageCallback = null;
+        if (mImageCallback != null) {
+            mImageCallback.onSuccess(imageUri, (ImageView) view);
+            mImageCallback = null;
+        } else if (mBitmapCallback != null) {
+            mBitmapCallback.onSuccess(imageUri, null);
+            mBitmapCallback = null;
+        }
     }
 
     @Override
     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
         mExecuting = false;
         if (mImageCallback != null) {
-            mImageCallback.onSuccess(imageUri, mImage);
-            mImage = null;
+            mImageCallback.onSuccess(imageUri, (ImageView) view);
             mImageCallback = null;
         } else if (mBitmapCallback != null) {
             mBitmapCallback.onSuccess(imageUri, loadedImage);
@@ -68,7 +69,6 @@ public class UniversalImageExecutor implements ImageLoadingListener, IRequestExe
         mExecuting = false;
         if (mImageCallback != null) {
             mImageCallback.onFailure(imageUri);
-            mImage = null;
             mImageCallback = null;
         } else if (mBitmapCallback != null) {
             mBitmapCallback.onFailure(imageUri);

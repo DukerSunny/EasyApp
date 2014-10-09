@@ -5,12 +5,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.TextView;
 
 import com.harreke.easyapp.configs.ImageExecutorConfig;
 import com.harreke.easyapp.frameworks.bases.fragment.FragmentFramework;
@@ -37,7 +35,6 @@ public class ContentFragment extends FragmentFramework {
     private final static String TAG = "ContentFragment";
     private WebView content_web;
     private String mArticle;
-    private IRequestCallback<Bitmap> mCallback;
     private WebViewClient mClient;
     private Content mContent;
     private Handler mHandler;
@@ -85,7 +82,7 @@ public class ContentFragment extends FragmentFramework {
                 "body > .content p," +
                 "body > .content span," +
                 "body > .content div{white-space:normal !important;word-break:break-all !important}" +
-                "body > .content img[src*='editor/dialogs/emotion/images']{max-width:80px !important}" +
+                "body > .content img[src*=\"editor/dialogs/emotion/images\"]{max-width:80px !important}" +
                 "body > .content img," +
                 "body > .content embed," +
                 "body > .content iframe," +
@@ -95,17 +92,17 @@ public class ContentFragment extends FragmentFramework {
                 "</style>" +
                 "</header>" +
                 "<body>" +
-                "<div class='header'>" +
-                "<p class='title'>" + mContent.getTitle() +
+                "<div class=\"header\">" +
+                "<p class=\"title\">" + mContent.getTitle() +
                 "</p>" +
-                "<p class='username'>" + mContent.getUser().getUsername() +
+                "<p class=\"username\">" + mContent.getUser().getUsername() +
                 "</p>" +
-                "<p class='info'>" +
+                "<p class=\"info\">" +
                 new SimpleDateFormat(getString(R.string.content_date)).format(new Date(mContent.getReleaseDate())) + " " +
                 getString(R.string.content_info, mContent.getComments(), mContent.getViews()) +
                 "</p>" +
                 "</div>" +
-                "<div class='content'>" +
+                "<div class=\"content\">" +
                 article +
                 "</div>" +
                 "</body>";
@@ -131,24 +128,13 @@ public class ContentFragment extends FragmentFramework {
                 return false;
             }
         });
-        mCallback = new IRequestCallback<Bitmap>() {
-            @Override
-            public void onFailure(String requestUrl) {
-            }
-
-            @Override
-            public void onSuccess(String requestUrl, Bitmap bitmap) {
-                saveBitmap(requestUrl, bitmap);
-                replaceImageUrl(requestUrl);
-            }
-        };
         mClient = new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
                 int i;
 
                 for (i = 0; i < mImageList.size(); i++) {
-                    ImageLoaderHelper.loadBitmap(mImageList.get(i), mCallback);
+                    ImageLoaderHelper.loadBitmap(mImageList.get(i), new ReplaceCallback(i));
                 }
             }
         };
@@ -156,23 +142,11 @@ public class ContentFragment extends FragmentFramework {
 
     @Override
     public void queryLayout() {
-        View header_content = View.inflate(getActivity(), R.layout.header_content, null);
-        TextView content_title = (TextView) header_content.findViewById(R.id.content_title);
-        TextView content_user_name = (TextView) header_content.findViewById(R.id.content_user_name);
-        TextView content_date = (TextView) header_content.findViewById(R.id.content_date);
-        TextView content_info = (TextView) header_content.findViewById(R.id.content_info);
-
-        content_title.setText(mContent.getTitle());
-        content_user_name.setText(mContent.getUser().getUsername());
-        content_date
-                .setText(new SimpleDateFormat(getString(R.string.content_date)).format(new Date(mContent.getReleaseDate())));
-        content_info.setText(getString(R.string.content_info, mContent.getComments(), mContent.getViews()));
-
         content_web = (WebView) findContentView(R.id.content_web);
     }
 
-    private void replaceImageUrl(String imageUrl) {
-        int position = mImageList.indexOf(imageUrl);
+    private void replaceImageUrl(int position) {
+        String imageUrl = mImageList.get(position);
 
         content_web.loadUrl("javascript:(" +
                 "function(){" +
@@ -207,17 +181,35 @@ public class ContentFragment extends FragmentFramework {
         int i;
 
         for (i = 0; i < mImageList.size(); i++) {
-            article = article.replace("src='" + mImageList.get(i), "src='file:///android_asset/web_loading.gif");
+            article = article.replace(mImageList.get(i), "file:///android_asset/web_loading.gif");
         }
         content_web.loadDataWithBaseURL(null, generateHtml(article), "text/html", "UTF-8", null);
     }
 
     private class JsInterface {
         @JavascriptInterface
-        public void onSingleClicked(String url) {
-            if (mImageList != null && mImageList.contains(url)) {
-                mHandler.sendEmptyMessage(mImageList.indexOf(url));
+        public void onSingleClicked(int position) {
+            mHandler.sendEmptyMessage(position);
+        }
+    }
+
+    private class ReplaceCallback implements IRequestCallback<Bitmap> {
+        private int mPosition;
+
+        public ReplaceCallback(int position) {
+            mPosition = position;
+        }
+
+        @Override
+        public void onFailure(String requestUrl) {
+        }
+
+        @Override
+        public void onSuccess(String requestUrl, Bitmap bitmap) {
+            if (bitmap != null) {
+                saveBitmap(requestUrl, bitmap);
             }
+            replaceImageUrl(mPosition);
         }
     }
 }

@@ -27,9 +27,11 @@ import tv.acfun.read.holders.ChannelSelectHolder;
 import tv.acfun.read.widgets.RepeatCheckableChildTabView;
 
 public class MainActivity extends ActivityFramework {
+    private String app_dropdown;
     private RepeatCheckableChildTabView content_channel;
     private GroupTabView content_group;
     private ViewPager content_pager;
+    private View content_search;
     private View content_user_avatar;
     private ImageView content_user_avatar_image;
     private Adapter mAdapter;
@@ -47,8 +49,8 @@ public class MainActivity extends ActivityFramework {
     private View menu_history;
     private View menu_mail;
     private TextView menu_mail_text;
+    private View menu_pattern;
     private View menu_setting;
-    //    private View menu_pattern;
     private View menu_user;
     private ImageView menu_user_avatar;
     private TextView menu_user_name;
@@ -56,6 +58,7 @@ public class MainActivity extends ActivityFramework {
     @Override
     public void assignEvents() {
         content_user_avatar.setOnClickListener(mClickListener);
+        content_search.setOnClickListener(mClickListener);
         menu_setting.setOnClickListener(mClickListener);
         content_group.setOnCheckedChangeListener(mCheckedChangeListener);
         content_channel.setOnRepeatCheckedListener(mRepeatCheckedListener);
@@ -65,7 +68,7 @@ public class MainActivity extends ActivityFramework {
         menu_mail.setOnClickListener(mClickListener);
         menu_favourite.setOnClickListener(mClickListener);
         menu_history.setOnClickListener(mClickListener);
-        //        menu_pattern.setOnClickListener(mClickListener);
+        menu_pattern.setOnClickListener(mClickListener);
         mHelper.setOnItemClickListener(mItemClickListener);
     }
 
@@ -97,6 +100,8 @@ public class MainActivity extends ActivityFramework {
         AcFunRead acFunRead = (AcFunRead) AcFunRead.getInstance();
 
         mPosition = acFunRead.readInt("lastChannelPosition", 0);
+
+        app_dropdown = getString(R.string.app_dropdown);
     }
 
     @Override
@@ -111,6 +116,9 @@ public class MainActivity extends ActivityFramework {
                         } else {
                             main_slidingmenu.showMenu(true);
                         }
+                        break;
+                    case R.id.content_search:
+                        start(SearchActivity.create(getActivity()));
                         break;
                     case R.id.menu_setting:
                         start(SettingActivity.create(getActivity()));
@@ -152,7 +160,7 @@ public class MainActivity extends ActivityFramework {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mHelper.hide();
-                content_channel.setText(mHelper.getItem(position));
+                content_channel.setText(mHelper.getItem(position) + " " + app_dropdown);
                 if (mPosition != position) {
                     mPosition = position;
                     mAdapter.remove(1);
@@ -194,7 +202,7 @@ public class MainActivity extends ActivityFramework {
 
         content_user_avatar = findContentView(R.id.content_user_avatar);
         content_user_avatar_image = (ImageView) findContentView(R.id.content_user_avatar_image);
-        menu_setting = findContentView(R.id.menu_setting);
+        content_search = findContentView(R.id.content_search);
 
         content_group = (GroupTabView) findContentView(R.id.content_group);
         content_channel = (RepeatCheckableChildTabView) findContentView(R.id.content_channel);
@@ -209,7 +217,8 @@ public class MainActivity extends ActivityFramework {
         menu_mail_text = (TextView) findContentView(R.id.menu_mail_text);
         menu_favourite = findContentView(R.id.menu_favourite);
         menu_history = findContentView(R.id.menu_history);
-        //        menu_pattern = findContentView(R.id.menu_pattern);
+        menu_setting = findContentView(R.id.menu_setting);
+        menu_pattern = findContentView(R.id.menu_pattern);
 
         mHelper = new Helper(getActivity(), findContentView(R.id.content_channel));
         mHelper.add(0, resources.getString(R.string.channel_misc));
@@ -217,7 +226,7 @@ public class MainActivity extends ActivityFramework {
         mHelper.add(2, resources.getString(R.string.channel_dramaculture));
         mHelper.add(3, resources.getString(R.string.channel_comic_novel));
 
-        content_channel.setText(mHelper.getItem(mPosition));
+        content_channel.setText(mHelper.getItem(mPosition) + " " + app_dropdown);
     }
 
     @Override

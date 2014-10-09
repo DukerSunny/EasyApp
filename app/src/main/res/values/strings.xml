@@ -5,6 +5,8 @@
 
     <string name="app_cancel">取消</string>
     <string name="app_ok">确定</string>
+    <string name="app_nextpage">点击加载下一页</string>
+    <string name="app_dropdown">▼</string>
 
     <string name="main_channel">频道</string>
     <string name="main_recommend">推荐</string>

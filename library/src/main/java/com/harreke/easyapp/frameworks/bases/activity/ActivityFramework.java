@@ -34,7 +34,8 @@ import java.util.ArrayList;
  *
  * Activity框架
  */
-public abstract class ActivityFramework extends FragmentActivity implements IFramework, IActivity, IActionBar, IActionBarClickListener {
+public abstract class ActivityFramework extends FragmentActivity
+        implements IFramework, IActivity, IActionBar, IActionBarClickListener {
     private static final String TAG = "ActivityFramework";
     private FrameLayout framework_content;
     private InfoView framework_info;
@@ -288,7 +289,7 @@ public abstract class ActivityFramework extends FragmentActivity implements IFra
      *         是否显示动画
      */
     public final void exit(boolean animate) {
-        finish();
+        super.onBackPressed();
         if (animate) {
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         }
@@ -303,7 +304,7 @@ public abstract class ActivityFramework extends FragmentActivity implements IFra
      * @return 视图
      */
     @Override
-    public final View findContentView(int viewId) {
+    public final View findViewById(int viewId) {
         return framework_content.findViewById(viewId);
     }
 
@@ -394,7 +395,8 @@ public abstract class ActivityFramework extends FragmentActivity implements IFra
      */
     @Override
     public final boolean isActionBarItemShowing(int position) {
-        return mActionBar != null && position >= 0 && position < mActionBarItemList.size() && mActionBarItemList.get(position).isVisible();
+        return mActionBar != null && position >= 0 && position < mActionBarItemList.size() &&
+                mActionBarItemList.get(position).isVisible();
     }
 
     @Override
@@ -762,6 +764,17 @@ public abstract class ActivityFramework extends FragmentActivity implements IFra
     /**
      * 显示Toast
      *
+     * @param textId
+     *         文本
+     */
+    @Override
+    public final void showToast(int textId) {
+        framework_toast.show(textId, false);
+    }
+
+    /**
+     * 显示Toast
+     *
      * @param text
      *         文本
      * @param progress
@@ -770,6 +783,19 @@ public abstract class ActivityFramework extends FragmentActivity implements IFra
     @Override
     public final void showToast(String text, boolean progress) {
         framework_toast.show(text, progress);
+    }
+
+    /**
+     * 显示Toast
+     *
+     * @param textId
+     *         文本Id
+     * @param progress
+     *         是否显示进度条
+     */
+    @Override
+    public final void showToast(int textId, boolean progress) {
+        framework_toast.show(textId, progress);
     }
 
     /**

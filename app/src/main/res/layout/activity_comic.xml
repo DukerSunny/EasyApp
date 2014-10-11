@@ -21,7 +21,7 @@
             android:layout_height="48dp"
             android:background="@drawable/button_transparent"
             android:padding="8dp"
-            android:src="@drawable/back"/>
+            android:src="@drawable/image_back"/>
 
         <ImageView
             android:id="@+id/comic_save"

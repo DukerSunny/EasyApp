@@ -88,6 +88,7 @@
     <orderEntry type="library" exported="" name="tagsoup-1.2.1" level="project" />
     <orderEntry type="module" module-name="libSlidingMenu" exported="" />
     <orderEntry type="module" module-name="libCircleImageView" exported="" />
+    <orderEntry type="module" module-name="libColorPicker" exported="" />
     <orderEntry type="module" module-name="library" exported="" />
     <orderEntry type="module" module-name="libPhotoView" exported="" />
   </component>

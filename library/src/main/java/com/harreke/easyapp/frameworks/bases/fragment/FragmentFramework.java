@@ -277,7 +277,7 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
      * @return 视图
      */
     @Override
-    public final View findContentView(int viewId) {
+    public final View findViewById(int viewId) {
         return framework_content.findViewById(viewId);
     }
 
@@ -682,15 +682,27 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
         }
     }
 
+
     /**
      * 显示Toast
      *
      * @param text
-     *         Toast文本
+     *         文本
      */
     @Override
     public final void showToast(String text) {
         framework_toast.show(text, false);
+    }
+
+    /**
+     * 显示Toast
+     *
+     * @param textId
+     *         文本
+     */
+    @Override
+    public final void showToast(int textId) {
+        framework_toast.show(getString(textId), false);
     }
 
     /**
@@ -704,6 +716,19 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
     @Override
     public final void showToast(String text, boolean progress) {
         framework_toast.show(text, progress);
+    }
+
+    /**
+     * 显示Toast
+     *
+     * @param textId
+     *         文本Id
+     * @param progress
+     *         是否显示进度条
+     */
+    @Override
+    public final void showToast(int textId, boolean progress) {
+        framework_toast.show(getString(textId), progress);
     }
 
     /**

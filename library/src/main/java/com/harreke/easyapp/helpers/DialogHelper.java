@@ -34,6 +34,10 @@ public class DialogHelper {
         this(context, titleId, positiveId, negativeId, neutralId, 0, null, null, clickListener);
     }
 
+    public DialogHelper(Context context) {
+        mDialog = new AlertDialog.Builder(context).create();
+    }
+
     private DialogHelper(Context context, int titleId, int positiveId, int negativeId, int neutralId, int contentId,
             String[] items, View view, DialogInterface.OnClickListener clickListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -86,6 +90,42 @@ public class DialogHelper {
 
     public final boolean isShowing() {
         return mDialog.isShowing();
+    }
+
+    public void setNegativeButton(int textId, DialogInterface.OnClickListener clickListener) {
+        setNegativeButton(mDialog.getContext().getString(textId), clickListener);
+    }
+
+    public void setNegativeButton(String text, DialogInterface.OnClickListener clickListener) {
+        mDialog.setButton(DialogInterface.BUTTON_NEGATIVE, text, clickListener);
+    }
+
+    public void setNeutralButton(int textId, DialogInterface.OnClickListener clickListener) {
+        setNeutralButton(mDialog.getContext().getString(textId), clickListener);
+    }
+
+    public void setNeutralButton(String text, DialogInterface.OnClickListener clickListener) {
+        mDialog.setButton(DialogInterface.BUTTON_NEUTRAL, text, clickListener);
+    }
+
+    public void setPositiveButton(int textId, DialogInterface.OnClickListener clickListener) {
+        setPositiveButton(mDialog.getContext().getString(textId), clickListener);
+    }
+
+    public void setPositiveButton(String text, DialogInterface.OnClickListener clickListener) {
+        mDialog.setButton(DialogInterface.BUTTON_POSITIVE, text, clickListener);
+    }
+
+    public void setTitle(String text) {
+        mDialog.setTitle(text);
+    }
+
+    public void setTitle(int textId) {
+        mDialog.setTitle(textId);
+    }
+
+    public void setView(View view) {
+        mDialog.setView(view);
     }
 
     public final void show() {

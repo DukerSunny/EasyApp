@@ -6,6 +6,5 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:padding="8dp"
-    android:text="@string/channel_misc"
     android:textColor="@color/Content"
     android:textSize="16dp"/>

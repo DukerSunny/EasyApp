@@ -69,7 +69,7 @@ public class ChannelFragment extends FragmentFramework {
     public void queryLayout() {
         View footer_loadmore = View.inflate(getActivity(), R.layout.footer_loadmore, null);
 
-        channel_scrolltop_button = findContentView(R.id.channel_scrolltop_button);
+        channel_scrolltop_button = findViewById(R.id.channel_scrolltop_button);
 
         mScrollTopAnimation = new ViewAlphaAnimation(channel_scrolltop_button);
 

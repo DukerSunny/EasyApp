@@ -2,16 +2,20 @@
 <resources>
 
     <string name="app_name">Ac阅读</string>
+    <string name="app_profile">账号信息</string>
 
     <string name="app_cancel">取消</string>
-    <string name="app_ok">确定</string>
-    <string name="app_nextpage">点击加载下一页</string>
     <string name="app_dropdown">▼</string>
+    <string name="app_exit">再按一次返回键退出</string>
+    <string name="app_login">登录</string>
+    <string name="app_logout">注销</string>
+    <string name="app_ok">确定</string>
+    <string name="app_reset">重置</string>
 
     <string name="main_channel">频道</string>
     <string name="main_recommend">推荐</string>
 
-    <string name="menu_login">点击登录</string>
+    <string name="menu_login">请先登录</string>
 
     <string name="channel_misc">综合</string>
     <string name="channel_work_emotion">工作•情感</string>
@@ -47,6 +51,20 @@
     <string name="content_info">/ %1$s条评论 / %2$s人围观</string>
     <string name="content_title">标题</string>
 
+    <string name="content_redirect_ac">该链接指向投稿 ac%s，确认跳转？</string>
+    <string name="content_redirect_aa">该链接指向合辑 ac%s，请使用视频客户端浏览</string>
+
+    <string name="login_account">账号</string>
+    <string name="login_accessing">正在登录 …</string>
+    <string name="login_account_tooshort">账号过短！</string>
+    <string name="login_account_toolong">账号过长！</string>
+    <string name="login_denied">账号或密码不符，请重试！</string>
+    <string name="login_password">密码</string>
+    <string name="login_password_tooshort">密码过短！</string>
+    <string name="login_password_toolong">密码过长！</string>
+    <string name="login_remember">记住账号</string>
+    <string name="login_timeout">登录超时，请重试！</string>
+
     <string name="menu_at">有人召唤</string>
     <string name="menu_favourite">收藏稿件</string>
     <string name="menu_history">浏览记录</string>
@@ -56,6 +74,14 @@
     <string name="menu_setting">设置</string>
 
     <string name="recommend_date">yyyy年MM月dd日</string>
+
+    <string name="reply_id">回复</string>
+    <string name="reply_id_quote">引用 %s</string>
+    <string name="reply_color">A</string>
+    <string name="reply_size">16</string>
+    <string name="reply_input">输入评论内容</string>
+
+    <string name="reply_pickcolor">选择颜色</string>
 
     <string name="search_sortresult">结果排序</string>
     <string name="search_sortresult_relative">相关度</string>
@@ -77,7 +103,7 @@
     <string name="search_sortorder_default">默认排序</string>
     <string name="search_sortorder_reverse">反向排序</string>
 
-    <string name="search_inputtoshort">关键字过短，请重新输入！</string>
+    <string name="search_tooshort">关键字过短，请重新输入！</string>
 
     <string name="setting_aboutus">关于我们</string>
     <string name="setting_autoloadimage">2G/3G网络下自动加载图片</string>
@@ -93,7 +119,26 @@
     <string name="time_evening">夜晚</string>
     <string name="time_night">深夜</string>
 
+    <string name="user_basics">基本信息</string>
+    <string name="user_extras">扩展信息</string>
+    <string name="user_options">相关操作</string>
     <string name="user_name">用户名</string>
+    <string name="user_id">ID</string>
     <string name="user_signature">签名</string>
+    <string name="user_gender">性别</string>
+    <string name="user_gender_male">男</string>
+    <string name="user_gender_female_refer">她</string>
+    <string name="user_location">地址</string>
+    <string name="user_phone">手机</string>
+    <string name="user_qq">QQ</string>
+    <string name="user_unknown">未公开</string>
+
+    <string name="user_refer_mine">我</string>
+    <string name="user_refer_male">他</string>
+    <string name="user_refer_female">女</string>
+    <string name="user_refer_unknown">TA</string>
+
+    <string name="user_contributes">%s的投稿</string>
+    <string name="user_chats">与%s交流</string>
 
 </resources>

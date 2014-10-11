@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import tv.acfun.read.R;
 import tv.acfun.read.api.API;
 import tv.acfun.read.bases.activities.ComicActivity;
+import tv.acfun.read.bases.activities.ReplyActivity;
+import tv.acfun.read.beans.Conversion;
 import tv.acfun.read.beans.FullConversion;
 import tv.acfun.read.holders.FullConversionHolder;
 import tv.acfun.read.listeners.OnTotalPageChangedListener;
@@ -74,7 +76,10 @@ public class CommentFragment extends FragmentFramework {
         mOptionsClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int position = (Integer) v.getTag();
+                Conversion conversion = mHelper.getItem((Integer) v.getTag()).getContent();
+
+                start(ReplyActivity.create(getActivity(), mContentId, conversion.getId(), conversion.getFloorindex(),
+                        conversion.getUser().getUsername()));
             }
         };
         mTagClickListener = new OnTagClickListener() {

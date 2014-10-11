@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import tv.acfun.read.R;
 import tv.acfun.read.api.API;
 import tv.acfun.read.beans.Search;
-import tv.acfun.read.holders.PopupListHoler;
+import tv.acfun.read.holders.SearchSelectHolder;
 import tv.acfun.read.holders.SearchHolder;
 import tv.acfun.read.parsers.SearchListParser;
 
@@ -201,13 +201,13 @@ public class SearchActivity extends ActivityFramework {
     public void queryLayout() {
         View footer_loadmore = View.inflate(getActivity(), R.layout.footer_loadmore, null);
 
-        search_back = findContentView(R.id.search_back);
-        search_input = (EditText) findContentView(R.id.search_input);
-        search_go = findContentView(R.id.search_go);
-        search_sortresult = (TextView) findContentView(R.id.search_sortresult);
-        search_target = (TextView) findContentView(R.id.search_target);
-        search_range = (TextView) findContentView(R.id.search_range);
-        search_sortorder = (TextView) findContentView(R.id.search_sortorder);
+        search_back = findViewById(R.id.search_back);
+        search_input = (EditText) findViewById(R.id.search_input);
+        search_go = findViewById(R.id.search_go);
+        search_sortresult = (TextView) findViewById(R.id.search_sortresult);
+        search_target = (TextView) findViewById(R.id.search_target);
+        search_range = (TextView) findViewById(R.id.search_range);
+        search_sortorder = (TextView) findViewById(R.id.search_sortorder);
 
         mSearchSortResultHelper = new PopupListHelper(this, search_sortresult);
         //        mSearchSortResultHelper.add(0, getString(R.string.search_sortresult_relative));
@@ -234,8 +234,8 @@ public class SearchActivity extends ActivityFramework {
         mSearchListHelper = new SearchListHelper(this, R.id.search_list);
         mSearchListHelper.addFooterView(footer_loadmore);
         mSearchListHelper.setLoadMore(new FooterLoadStatus(footer_loadmore));
-        mSearchListHelper.setRootView(findContentView(R.id.search_list));
-        mSearchListHelper.setInfoView((InfoView) findContentView(R.id.search_info));
+        mSearchListHelper.setRootView(findViewById(R.id.search_list));
+        mSearchListHelper.setInfoView((InfoView) findViewById(R.id.search_info));
         mSearchListHelper.bindAdapter();
         mSearchListHelper.onPostAction();
     }
@@ -249,7 +249,7 @@ public class SearchActivity extends ActivityFramework {
             mSearchListHelper.clear();
             startAction();
         } else {
-            showToast(getString(R.string.search_inputtoshort));
+            showToast(getString(R.string.search_tooshort));
         }
     }
 
@@ -267,19 +267,19 @@ public class SearchActivity extends ActivityFramework {
         }
     }
 
-    private class PopupListHelper extends PopupAbsListHelper<String, PopupListHoler> {
+    private class PopupListHelper extends PopupAbsListHelper<String, SearchSelectHolder> {
         public PopupListHelper(Context context, View anchor) {
             super(context, anchor);
         }
 
         @Override
-        public PopupListHoler createHolder(View convertView) {
-            return new PopupListHoler(convertView);
+        public SearchSelectHolder createHolder(View convertView) {
+            return new SearchSelectHolder(convertView);
         }
 
         @Override
         public View createView() {
-            return View.inflate(getActivity(), R.layout.item_popuplist, null);
+            return View.inflate(getActivity(), R.layout.item_searchselect, null);
         }
     }
 

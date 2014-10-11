@@ -1,5 +1,7 @@
 package tv.acfun.read.beans;
 
+import tv.acfun.read.bases.application.AcFunRead;
+
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/24
  */
@@ -14,7 +16,7 @@ public class User {
 
     public String getUserImg() {
         if (userImg == null) {
-            userImg = "avatar";
+            userImg = AcFunRead.CacheDir + "/" + AcFunRead.DIR_ASSETS + "/avatar";
         }
 
         return userImg;

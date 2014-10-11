@@ -16,7 +16,7 @@
             android:layout_height="48dp"
             android:background="@drawable/button_transparent"
             android:padding="8dp"
-            android:src="@drawable/back"/>
+            android:src="@drawable/image_back"/>
 
         <TextView
             android:id="@+id/comment_id"
@@ -29,23 +29,26 @@
             android:textSize="16dp"/>
 
         <ImageView
-            android:id="@+id/comment_refresh_button"
+            android:id="@+id/comment_refresh"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:background="@drawable/button_transparent"
             android:padding="8dp"
             android:src="@drawable/image_refresh"/>
 
         <ImageView
-            android:id="@+id/comment_locate_button"
+            android:id="@+id/comment_locate"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:padding="8dp"
-            android:src="@drawable/image_locate"/>
+            android:src="@drawable/image_locate"
+            android:visibility="gone"/>
 
         <ImageView
-            android:id="@+id/comment_reply_button"
+            android:id="@+id/comment_reply"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:background="@drawable/button_transparent"
             android:padding="8dp"
             android:src="@drawable/image_reply"/>
 

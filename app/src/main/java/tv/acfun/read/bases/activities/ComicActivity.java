@@ -256,17 +256,17 @@ public class ComicActivity extends ActivityFramework {
 
     @Override
     public void queryLayout() {
-        comic_pager = (ViewPager) findContentView(R.id.comic_pager);
+        comic_pager = (ViewPager) findViewById(R.id.comic_pager);
 
-        comic_actionbar = findContentView(R.id.comic_actionbar);
-        comic_back = findContentView(R.id.comic_back);
-        comic_page = (TextView) findContentView(R.id.comic_page);
-        comic_page_background = findContentView(R.id.comic_page_background);
-        comic_save = findContentView(R.id.comic_save);
+        comic_actionbar = findViewById(R.id.comic_actionbar);
+        comic_back = findViewById(R.id.comic_back);
+        comic_page = (TextView) findViewById(R.id.comic_page);
+        comic_page_background = findViewById(R.id.comic_page_background);
+        comic_save = findViewById(R.id.comic_save);
 
         color_Title = getResources().getColor(R.color.Title);
 
-        comic_save_input = (EditText) View.inflate(getActivity(), R.layout.activity_comic_save, null);
+        comic_save_input = (EditText) View.inflate(getActivity(), R.layout.dialog_comic_save, null);
 
         updatePage();
 

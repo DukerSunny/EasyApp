@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import tv.acfun.read.R;
 import tv.acfun.read.api.API;
+import tv.acfun.read.bases.application.AcFunRead;
 import tv.acfun.read.bases.fragments.ContentFragment;
 import tv.acfun.read.beans.ArticlePage;
 import tv.acfun.read.beans.Content;
@@ -33,7 +34,6 @@ public class ContentActivity extends ActivityFramework {
     private View content_comments_button;
     private View content_favourite_add_button;
     private View content_favourtie_remove_button;
-    private TextView content_id;
     private ViewPager content_pager;
     private PagerTabStrip content_pager_indicator;
     private View content_share_button;
@@ -55,7 +55,6 @@ public class ContentActivity extends ActivityFramework {
     @Override
     public void assignEvents() {
         content_back.setOnClickListener(mClickListener);
-        ;
         content_comments_button.setOnClickListener(mClickListener);
     }
 
@@ -74,8 +73,7 @@ public class ContentActivity extends ActivityFramework {
                         onBackPressed();
                         break;
                     case R.id.content_comments_button:
-                        start(CommentActivity.create(getActivity(), mContent), false);
-                        getActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.fade_out);
+                        start(CommentActivity.create(getActivity(), mContent));
                 }
             }
         };
@@ -116,17 +114,19 @@ public class ContentActivity extends ActivityFramework {
 
     @Override
     public void queryLayout() {
-        content_pager = (ViewPager) findContentView(R.id.content_pager);
-        content_pager_indicator = (PagerTabStrip) findContentView(R.id.content_pager_indicator);
+        TextView content_id;
+
+        content_pager = (ViewPager) findViewById(R.id.content_pager);
+        content_pager_indicator = (PagerTabStrip) findViewById(R.id.content_pager_indicator);
         content_pager_indicator.setTabIndicatorColorResource(R.color.Theme);
         content_pager_indicator.setTextColor(getResources().getColor(R.color.Title));
 
-        content_back = findContentView(R.id.content_back);
-        content_id = (TextView) findContentView(R.id.content_id);
-        content_comments_button = findContentView(R.id.content_comments_button);
-        content_favourite_add_button = findContentView(R.id.content_favourite_add_button);
-        content_favourtie_remove_button = findContentView(R.id.content_favourtie_remove_button);
-        content_share_button = findContentView(R.id.content_share_button);
+        content_back = findViewById(R.id.content_back);
+        content_id = (TextView) findViewById(R.id.content_id);
+        content_comments_button = findViewById(R.id.content_comments_button);
+        content_favourite_add_button = findViewById(R.id.content_favourite_add_button);
+        content_favourtie_remove_button = findViewById(R.id.content_favourtie_remove_button);
+        content_share_button = findViewById(R.id.content_share_button);
 
         content_id.setText("ac" + mContentId);
     }
@@ -163,19 +163,10 @@ public class ContentActivity extends ActivityFramework {
         }
     }
 
-    private class Task extends AsyncTask<String, Void, Boolean> {
+    private class Task extends AsyncTask<String, Void, ContentListParser> {
         @Override
-        protected Boolean doInBackground(String... params) {
-            ContentListParser parser = ContentListParser.parse(params[0]);
-
-            if (parser != null) {
-                mContent = parser.getContent();
-                mPageList = parser.getPageList();
-
-                return true;
-            } else {
-                return false;
-            }
+        protected ContentListParser doInBackground(String... params) {
+            return ContentListParser.parse(params[0]);
         }
 
         @Override
@@ -185,19 +176,26 @@ public class ContentActivity extends ActivityFramework {
         }
 
         @Override
-        protected void onPostExecute(Boolean result) {
+        protected void onPostExecute(ContentListParser result) {
             mTask = null;
-            if (result) {
-                if (mPageList.size() == 0) {
-                    setInfoVisibility(InfoView.INFO_ERROR);
-                } else {
-                    setInfoVisibility(InfoView.INFO_HIDE);
-                    if (mPageList.size() == 1) {
-                        content_pager_indicator.setVisibility(View.GONE);
+            if (result != null) {
+                mContent = result.getContent();
+                if (AcFunRead.isArticle(mContent.getChannelId())) {
+                    mPageList = result.getPageList();
+                    if (mPageList.size() == 0) {
+                        setInfoVisibility(InfoView.INFO_ERROR);
                     } else {
-                        content_pager_indicator.setVisibility(View.VISIBLE);
+                        setInfoVisibility(InfoView.INFO_HIDE);
+                        if (mPageList.size() == 1) {
+                            content_pager_indicator.setVisibility(View.GONE);
+                        } else {
+                            content_pager_indicator.setVisibility(View.VISIBLE);
+                        }
+                        content_pager.setAdapter(new Adapter(getSupportFragmentManager()));
                     }
-                    content_pager.setAdapter(new Adapter(getSupportFragmentManager()));
+                } else {
+                    setInfoVisibility(InfoView.INFO_ERROR);
+                    showToast("该投稿为视频，请使用视频客户端浏览！");
                 }
             } else {
                 setInfoVisibility(InfoView.INFO_ERROR);

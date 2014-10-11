@@ -12,8 +12,10 @@
         <attr name="buttonPadding" format="dimension"/>
         <attr name="buttonWidth" format="dimension"/>
         <attr name="checked" format="boolean"/>
+        <attr name="drawable" format="reference"/>
         <attr name="drawableWidth" format="dimension"/>
         <attr name="drawableHeight" format="dimension"/>
+        <attr name="drawablePadding" format="dimension"/>
         <attr name="emptyImage" format="reference"/>
         <attr name="emptyText" format="string"/>
         <attr name="entry" format="reference"/>
@@ -22,7 +24,6 @@
         <attr name="listTextPadding" format="dimension"/>
         <attr name="loadingImage" format="reference"/>
         <attr name="loadingText" format="string"/>
-        <attr name="progress" format="reference"/>
         <attr name="ratio" format="float"/>
         <attr name="retryHint" format="string"/>
         <attr name="retryHintColor" format="color"/>
@@ -47,11 +48,7 @@
         <attr name="thumb" format="reference"/>
         <attr name="thumbSize" format="dimension"/>
 
-        <attr name="checkSettingViewStyle" format="reference"/>
-        <attr name="childSettingViewStyle" format="reference"/>
         <attr name="childTabViewStyle" format="reference"/>
-        <attr name="drawableCheckBoxStyle" format="reference"/>
-        <attr name="drawableRadioButtonStyle" format="reference"/>
         <attr name="drawableTextViewStyle" format="reference"/>
         <attr name="infoViewStyle" format="reference"/>
         <attr name="listSettingViewStyle" format="reference"/>
@@ -61,38 +58,6 @@
         <attr name="tabViewStyle" format="reference"/>
         <attr name="textSettingViewStyle" format="reference"/>
         <attr name="toastViewStyle" format="reference"/>
-    </declare-styleable>
-
-    <declare-styleable name="CheckSettingView">
-        <attr name="buttonGravity"/>
-        <attr name="buttonHeight"/>
-        <attr name="buttonOff"/>
-        <attr name="buttonOn"/>
-        <attr name="buttonPadding"/>
-        <attr name="buttonWidth"/>
-        <attr name="checked"/>
-        <attr name="summaryColor"/>
-        <attr name="summaryOn"/>
-        <attr name="summaryOff"/>
-        <attr name="summarySize"/>
-        <attr name="text"/>
-        <attr name="textColor"/>
-        <attr name="textSize"/>
-        <attr name="thumb"/>
-        <attr name="thumbSize"/>
-    </declare-styleable>
-
-    <declare-styleable name="ChildSettingView">
-        <attr name="buttonGravity"/>
-        <attr name="buttonHeight"/>
-        <attr name="buttonOff"/>
-        <attr name="buttonOn"/>
-        <attr name="buttonPadding"/>
-        <attr name="buttonWidth"/>
-        <attr name="checked"/>
-        <attr name="text"/>
-        <attr name="textColor"/>
-        <attr name="textSize"/>
     </declare-styleable>
 
     <declare-styleable name="DrawableTextView">
@@ -158,7 +123,8 @@
     </declare-styleable>
 
     <declare-styleable name="ToastView">
-        <attr name="progress"/>
+        <attr name="drawable"/>
+        <attr name="drawablePadding"/>
         <attr name="showProgress"/>
         <attr name="text"/>
         <attr name="textColor"/>

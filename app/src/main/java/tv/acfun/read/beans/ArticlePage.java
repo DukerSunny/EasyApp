@@ -14,27 +14,37 @@ public class ArticlePage {
     private String mTitle;
 
     public ArticlePage(String title, String article) {
-        Matcher imgMatcher;
-        Matcher srcMatcher;
-        String img;
-        String src;
+        Matcher tagMatcher;
+        Matcher attrMatcher;
+        String tag;
+        String attr;
         int position;
 
         mTitle = title;
         mArticle = article;
         mImageList = new ArrayList<String>();
-        imgMatcher = StringUtil.getMatcher("<img[\\S\\s]+?/>", article);
+        tagMatcher = StringUtil.getMatcher("<img[\\S\\s]+?/>", mArticle);
         position = 0;
-        while (imgMatcher.find()) {
-            img = imgMatcher.group();
-            srcMatcher = StringUtil.getMatcher("src=\"([\\S\\s]+?)\"", img);
-            if (srcMatcher.find()) {
-                src = srcMatcher.group(1);
-                mArticle = mArticle.replace(img,
-                        "<img src=\"" + src + "\" onClick=\"content.onSingleClicked(" + position + ")\"/>");
-                mImageList.add(srcMatcher.group(1));
+        while (tagMatcher.find()) {
+            tag = tagMatcher.group();
+            attrMatcher = StringUtil.getMatcher("src=\"([\\S\\s]+?)\"", tag);
+            if (attrMatcher.find()) {
+                attr = attrMatcher.group(1);
+                mArticle =
+                        mArticle.replace(tag, "<img src=\"" + attr + "\" onClick=\"content.onImgClick(" + position + ")\"/>");
+                mImageList.add(attrMatcher.group(1));
             }
             position++;
+        }
+        tagMatcher = StringUtil.getMatcher("<a[\\S\\s]+?>([\\S\\s]+?)</a>", mArticle);
+        while (tagMatcher.find()) {
+            tag = tagMatcher.group();
+            attrMatcher = StringUtil.getMatcher("href=\"([\\S\\s]+?)\"", tag);
+            if (attrMatcher.find()) {
+                attr = attrMatcher.group(1);
+                mArticle = mArticle.replace(tag, "<a onClick=\"content.onAClick('" + attr + "')\">" + tagMatcher.group(1) +
+                                "</a>");
+            }
         }
     }
 

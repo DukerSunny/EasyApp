@@ -25,7 +25,11 @@ public class CommentQuoteHolder implements IAbsListHolder<Conversion> {
     @Override
     public void setItem(int position, Conversion conversion) {
         comment_quote_text.setText(conversion.getSpanned());
-        comment_quote_username.setText("#" + conversion.getFloorindex() + " " + conversion.getUser().getUsername());
+        if (conversion.getUser() != null) {
+            comment_quote_username.setText("#" + conversion.getFloorindex() + " " + conversion.getUser().getUsername());
+        } else {
+            comment_quote_username.setText("#0 未知用户");
+        }
     }
 
     public void setVisibility(int visibility) {

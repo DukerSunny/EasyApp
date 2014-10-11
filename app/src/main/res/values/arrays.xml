@@ -1,3 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <string-array name="emot_name">
+        <item>ac</item>
+        <item>ais</item>
+        <item>brd</item>
+        <item>td</item>
+        <item>tsj</item>
+    </string-array>
+
+    <integer-array name="emot_count">
+        <item>54</item>
+        <item>40</item>
+        <item>40</item>
+        <item>40</item>
+        <item>40</item>
+    </integer-array>
+
 </resources>

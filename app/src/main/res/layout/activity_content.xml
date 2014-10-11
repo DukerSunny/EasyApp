@@ -16,7 +16,7 @@
             android:layout_height="48dp"
             android:background="@drawable/button_transparent"
             android:padding="8dp"
-            android:src="@drawable/back"/>
+            android:src="@drawable/image_back"/>
 
         <TextView
             android:id="@+id/content_id"

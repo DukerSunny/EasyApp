@@ -2,16 +2,12 @@
 <resources>
 
     <style name="App" parent="@android:style/Theme.Holo.Light.DarkActionBar">
-        <item name="checkSettingViewStyle">@style/App.CheckSettingView</item>
-        <item name="childSettingViewStyle">@style/App.ChildSettingView</item>
         <item name="childTabViewStyle">@style/App.ChildTabView</item>
         <item name="drawableTextViewStyle">@style/App.DrawableTextView</item>
         <item name="infoViewStyle">@style/App.InfoView</item>
-        <item name="listSettingViewStyle">@style/App.ListSettingView</item>
         <item name="ratioImageViewStyle">@style/App.RatioImageView</item>
         <item name="slidableViewStyle">@style/App.SlidableView</item>
         <item name="slideShowIndicatorStyle">@style/App.SlideShowIndicator</item>
-        <item name="textSettingViewStyle">@style/App.TextSettingView</item>
         <item name="toastViewStyle">@style/App.ToastView</item>
     </style>
 
@@ -46,36 +42,6 @@
         <item name="android:textColor">@color/White</item>
     </style>
 
-    <style name="App.CheckSettingView">
-        <item name="android:padding">@dimen/widget_xlarge</item>
-        <item name="buttonGravity">right</item>
-        <item name="buttonWidth">64dp</item>
-        <item name="buttonHeight">32dp</item>
-        <item name="buttonOff">@drawable/check_off</item>
-        <item name="buttonOn">@drawable/check_on</item>
-        <item name="buttonPadding">@dimen/widget_xlarge</item>
-        <item name="checked">false</item>
-        <item name="summaryColor">@color/Content</item>
-        <item name="summarySize">@dimen/text_content_small</item>
-        <item name="textColor">@color/Content</item>
-        <item name="textSize">@dimen/text_content_large</item>
-        <item name="thumb">@drawable/check_thumb</item>
-        <item name="thumbSize">32dp</item>
-    </style>
-
-    <style name="App.ChildSettingView">
-        <item name="android:padding">@dimen/widget_xlarge</item>
-        <item name="buttonGravity">right</item>
-        <item name="buttonHeight">26dp</item>
-        <item name="buttonOff">@drawable/select_off</item>
-        <item name="buttonOn">@drawable/select_on</item>
-        <item name="buttonPadding">@dimen/widget_xlarge</item>
-        <item name="buttonWidth">26dp</item>
-        <item name="checked">false</item>
-        <item name="textColor">@color/Content</item>
-        <item name="textSize">@dimen/text_content_large</item>
-    </style>
-
     <style name="App.ChildTabView">
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
@@ -88,7 +54,7 @@
 
     <style name="App.InfoView">
         <item name="android:padding">8dp</item>
-        <item name="loadingImage">@drawable/anim_progress_info</item>
+        <item name="loadingImage">@drawable/anim_progress_radiant</item>
         <item name="loadingText">@string/info_loading</item>
         <item name="emptyImage">@drawable/info_empty</item>
         <item name="emptyText">@string/info_empty</item>
@@ -99,22 +65,7 @@
         <item name="showRetryHintWhenEmpty">true</item>
         <item name="text">@string/info_loading</item>
         <item name="textColor">@color/Content</item>
-        <item name="textSize">@dimen/text_content_middle</item>
-    </style>
-
-    <style name="App.ListSettingView">
-        <item name="android:padding">@dimen/widget_xlarge</item>
-        <item name="buttonGravity">right</item>
-        <item name="buttonPadding">8dp</item>
-        <item name="listTextColor">@color/Assist</item>
-        <item name="listTextSize">@dimen/text_content_large</item>
-        <item name="listTextPadding">8dp</item>
-        <item name="summaryColor">@color/Content</item>
-        <item name="summarySize">@dimen/text_content_small</item>
-        <item name="textColor">@color/Content</item>
-        <item name="textSize">@dimen/text_content_large</item>
-        <item name="thumb">@drawable/arrow</item>
-        <item name="thumbSize">26dp</item>
+        <item name="textSize">16dp</item>
     </style>
 
     <style name="App.RatioImageView">
@@ -130,21 +81,14 @@
         <item name="slideShowIndicatorHeight">16dp</item>
     </style>
 
-    <style name="App.TextSettingView">
-        <item name="android:padding">@dimen/widget_xlarge</item>
-        <item name="summaryColor">@color/Content</item>
-        <item name="summarySize">@dimen/text_content_small</item>
-        <item name="textColor">@color/Content</item>
-        <item name="textSize">@dimen/text_content_large</item>
-    </style>
-
     <style name="App.ToastView">
         <item name="android:background">@drawable/shape_toast</item>
-        <item name="android:padding">@dimen/widget_xlarge</item>
-        <item name="progress">@drawable/anim_progress_ring</item>
+        <item name="android:padding">8dp</item>
+        <item name="drawable">@drawable/anim_progress_radiant</item>
+        <item name="drawablePadding">8dp</item>
         <item name="showProgress">false</item>
         <item name="textColor">@color/White</item>
-        <item name="textSize">@dimen/text_content_middle</item>
+        <item name="textSize">16dp</item>
     </style>
 
 </resources>

@@ -7,7 +7,6 @@ import android.util.Log;
 
 import com.harreke.easyapp.configs.ImageExecutorConfig;
 import com.harreke.easyapp.tools.FileUtil;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -40,15 +39,10 @@ public class ApplicationFramework extends Application {
      */
     public static String CacheDir;
     public static float Density;
-    public static ApplicationFramework mInstance = null;
     private static final String TAG = "ApplicationFramework";
     private boolean mAssetsEnabled = false;
     private boolean mCachesEnabled = false;
     private boolean mMiscsEnabled = false;
-
-    public static ApplicationFramework getInstance() {
-        return mInstance;
-    }
 
     /**
      * 将指定附件拷贝至设备内存
@@ -145,8 +139,6 @@ public class ApplicationFramework extends Application {
     public void onCreate() {
         super.onCreate();
 
-        mInstance = this;
-
         Density = getResources().getDisplayMetrics().density;
         CacheDir = getCacheDir().getAbsolutePath();
 
@@ -157,16 +149,44 @@ public class ApplicationFramework extends Application {
         ImageExecutorConfig.config(this);
     }
 
+    public final boolean readBoolean(String key, boolean defaultVaule) {
+        return getPreference().getBoolean(key, defaultVaule);
+    }
+
     /**
      * 从文档中读取一个整型数据
      *
      * @param key
      *         索引名
+     * @param defalutValue
+     *         缺省索引值
      *
      * @return 索引值
      */
     public final int readInt(String key, int defalutValue) {
         return getPreference().getInt(key, defalutValue);
+    }
+
+    /**
+     * 从文档中读取一个字符串
+     *
+     * @param key
+     *         索引名
+     * @param defaultValue
+     *         缺省索引值
+     *
+     * @return 索引值
+     */
+    public final String readString(String key, String defaultValue) {
+        return getPreference().getString(key, defaultValue);
+    }
+
+    public final void writeBoolean(String key, boolean value) {
+        SharedPreferences.Editor editor = getPreference().edit();
+
+        editor.putBoolean(key, value);
+
+        editor.apply();
     }
 
     /**
@@ -181,6 +201,21 @@ public class ApplicationFramework extends Application {
         SharedPreferences.Editor editor = getPreference().edit();
 
         editor.putInt(key, value);
-        editor.commit();
+        editor.apply();
+    }
+
+    /**
+     * 将一个字符串写入文档
+     *
+     * @param key
+     *         索引名
+     * @param value
+     *         索引值
+     */
+    public final void writeString(String key, String value) {
+        SharedPreferences.Editor editor = getPreference().edit();
+
+        editor.putString(key, value);
+        editor.apply();
     }
 }

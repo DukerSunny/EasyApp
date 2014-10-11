@@ -42,6 +42,12 @@ public class SettingActivity extends ActivityFramework {
     }
 
     @Override
+    public void onBackPressed() {
+        exit(false);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+
+    @Override
     public void queryLayout() {
 
     }

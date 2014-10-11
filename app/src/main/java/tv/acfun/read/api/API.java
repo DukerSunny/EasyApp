@@ -7,15 +7,20 @@ import com.harreke.easyapp.requests.RequestBuilder;
  */
 public class API {
     public static String HOST = "http://api.acfun.tv/apiserver";
-
+    private static String ACCESS_TOKEN = "access_token";
     private static String CHANNELID = "channelId";
     private static String CHANNELIDS = "channelIds";
+    private static String CLIENT_ID = "client_id";
     private static String CONTENTID = "contentId";
     private static String ORDERBY = "orderBy";
     private static String ORDERID = "orderId";
     private static String PAGENO = "pageNo";
     private static String PAGESIZE = "pageSize";
+    private static String PASSWORD = "password";
     private static String QUERY = "query";
+    private static String RESPONSE_TYPE = "response_type";
+    private static String USERID = "userId";
+    private static String USERNAME = "username";
 
     /**
      * 获取指定文章投稿的内容
@@ -42,8 +47,8 @@ public class API {
      * @return {@link com.harreke.easyapp.requests.RequestBuilder}
      */
     public static RequestBuilder getChannel(int channelId, int pageSize, int pageNo) {
-        return new RequestBuilder(RequestBuilder.Method.GET, HOST + "/content/channel").addQuery(CHANNELID, channelId).addQuery(PAGESIZE, pageSize)
-                .addQuery(PAGENO, pageNo);
+        return new RequestBuilder(RequestBuilder.Method.GET, HOST + "/content/channel").addQuery(CHANNELID, channelId)
+                .addQuery(PAGESIZE, pageSize).addQuery(PAGENO, pageNo);
     }
 
     /**
@@ -57,7 +62,8 @@ public class API {
      * @return {@link com.harreke.easyapp.requests.RequestBuilder}
      */
     public static RequestBuilder getChannelRecommend(String channelIds, int pageSize) {
-        return new RequestBuilder(RequestBuilder.Method.GET, HOST + "/content/recommend").addQuery(CHANNELIDS, channelIds).addQuery(PAGESIZE, pageSize);
+        return new RequestBuilder(RequestBuilder.Method.GET, HOST + "/content/recommend").addQuery(CHANNELIDS, channelIds)
+                .addQuery(PAGESIZE, pageSize);
     }
 
     /**
@@ -73,8 +79,18 @@ public class API {
      * @return {@link com.harreke.easyapp.requests.RequestBuilder}
      */
     public static RequestBuilder getContentComment(int contentId, int pageSize, int pageNo) {
-        return new RequestBuilder(RequestBuilder.Method.GET, HOST + "/comment/content").addQuery(CONTENTID, contentId).addQuery(PAGESIZE, pageSize)
-                .addQuery(PAGENO, pageNo);
+        return new RequestBuilder(RequestBuilder.Method.GET, HOST + "/comment/content").addQuery(CONTENTID, contentId)
+                .addQuery(PAGESIZE, pageSize).addQuery(PAGENO, pageNo);
+    }
+
+    public static RequestBuilder getFullUser(int userId) {
+        return new RequestBuilder(RequestBuilder.Method.GET, HOST + "/profile").addQuery(USERID, userId);
+    }
+
+    public static RequestBuilder getToken(String username, String password) {
+        return new RequestBuilder(RequestBuilder.Method.POST, "http://www.acfun.tv/oauth2/authorize.aspx")
+                .addBody(USERNAME, username).addBody(PASSWORD, password).addBody(CLIENT_ID, "yU3geLTsD8vriBzy")
+                .addBody(RESPONSE_TYPE, "token");
     }
 
     /**
@@ -94,7 +110,8 @@ public class API {
      * @return {@link com.harreke.easyapp.requests.RequestBuilder}
      */
     public static RequestBuilder getSearch(String query, int channelId, int orderBy, int orderId, int pageSize, int pageNo) {
-        return new RequestBuilder(RequestBuilder.Method.GET, HOST + "/search").addQuery(QUERY, query).addQuery(CHANNELID, channelId).addQuery(ORDERBY, orderBy)
-                .addQuery(ORDERID, orderId).addQuery(PAGESIZE, pageSize).addQuery(PAGENO, pageNo);
+        return new RequestBuilder(RequestBuilder.Method.GET, HOST + "/search").addQuery(QUERY, query)
+                .addQuery(CHANNELID, channelId).addQuery(ORDERBY, orderBy).addQuery(ORDERID, orderId)
+                .addQuery(PAGESIZE, pageSize).addQuery(PAGENO, pageNo);
     }
 }

@@ -43,7 +43,6 @@ public class CommentListParser {
     }
 
     private void decode(Context context, CommentListPage page, int maxQuote, OnTagClickListener tagClickListener) {
-        AcFunRead acFunRead = (AcFunRead) AcFunRead.getInstance();
         Conversion content;
         Conversion quote;
         FullConversion fullConversion;

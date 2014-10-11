@@ -30,7 +30,8 @@
                 android:layout_height="8dp"
                 android:layout_gravity="end|top"
                 android:layout_margin="4dp"
-                android:background="@drawable/shape_notification"/>
+                android:background="@drawable/shape_notification"
+                android:visibility="gone"/>
 
         </FrameLayout>
 

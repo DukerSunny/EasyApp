@@ -58,6 +58,16 @@ public interface IFramework extends IInfoClickListener {
     public void executeRequest(RequestBuilder builder, IRequestCallback<String> callback);
 
     /**
+     * 查找内容层指定视图
+     *
+     * @param viewId
+     *         视图id
+     *
+     * @return 视图
+     */
+    public View findViewById(int viewId);
+
+    /**
      * 获得当前Activity
      *
      * @return 当前Activity
@@ -123,16 +133,6 @@ public interface IFramework extends IInfoClickListener {
     public void newEvents();
 
     /**
-     * 查找内容层指定视图
-     *
-     * @param viewId
-     *         视图id
-     *
-     * @return 视图
-     */
-    public View findContentView(int viewId);
-
-    /**
      * 查询布局
      *
      * 在布局中查询视图与控件
@@ -193,12 +193,30 @@ public interface IFramework extends IInfoClickListener {
     /**
      * 显示Toast
      *
+     * @param textId
+     *         Toast文本
+     */
+    public void showToast(int textId);
+
+    /**
+     * 显示Toast
+     *
      * @param text
      *         文本
      * @param progress
      *         是否显示进度条
      */
     public void showToast(String text, boolean progress);
+
+    /**
+     * 显示Toast
+     *
+     * @param textId
+     *         文本
+     * @param progress
+     *         是否显示进度条
+     */
+    public void showToast(int textId, boolean progress);
 
     /**
      * 启动Intent

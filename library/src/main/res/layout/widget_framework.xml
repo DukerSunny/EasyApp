@@ -17,7 +17,6 @@
         android:id="@+id/framework_toast"
         style="@style/ww"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_margin="64dp"
-        android:visibility="gone"/>
+        android:layout_margin="64dp"/>
 
 </FrameLayout>

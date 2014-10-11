@@ -55,7 +55,7 @@ public abstract class ListFramework<ITEM>
         Context context;
         View listView;
 
-        listView = framework.findContentView(listId);
+        listView = framework.findViewById(listId);
         setListView(listView);
         context = framework.getActivity();
         mRetryText = context.getString(R.string.info_retry);

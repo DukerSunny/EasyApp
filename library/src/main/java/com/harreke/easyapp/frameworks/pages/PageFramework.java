@@ -23,7 +23,7 @@ public abstract class PageFramework<ITEM, VIEW extends View> implements IPager<I
         if (framework == null) {
             throw new IllegalArgumentException("Framework must not be null!");
         } else {
-            pageView = framework.findContentView(pageId);
+            pageView = framework.findViewById(pageId);
             if (pageView == null || !(pageView instanceof ViewPager)) {
                 throw new IllegalArgumentException("Invalid listId!");
             }

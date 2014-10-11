@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/EasyApp.iml" filepath="$PROJECT_DIR$/EasyApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/libCircleImageView/libCircleImageView.iml" filepath="$PROJECT_DIR$/libCircleImageView/libCircleImageView.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libColorPicker/libColorPicker.iml" filepath="$PROJECT_DIR$/libColorPicker/libColorPicker.iml" />
       <module fileurl="file://$PROJECT_DIR$/libPhotoView/libPhotoView.iml" filepath="$PROJECT_DIR$/libPhotoView/libPhotoView.iml" />
       <module fileurl="file://$PROJECT_DIR$/libSlidingMenu/libSlidingMenu.iml" filepath="$PROJECT_DIR$/libSlidingMenu/libSlidingMenu.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />

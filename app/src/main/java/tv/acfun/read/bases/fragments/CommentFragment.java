@@ -121,6 +121,7 @@ public class CommentFragment extends FragmentFramework {
 
     @Override
     public void startAction() {
+        setInfoVisibility(InfoView.INFO_LOADING);
         executeRequest(API.getContentComment(mContentId, 50, mPageNo), mCallback);
     }
 
@@ -198,7 +199,6 @@ public class CommentFragment extends FragmentFramework {
 
         @Override
         protected void onPreExecute() {
-            setInfoVisibility(InfoView.INFO_LOADING);
         }
     }
 }

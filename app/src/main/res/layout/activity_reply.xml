@@ -41,61 +41,64 @@
     </LinearLayout>
 
     <LinearLayout
-        style="@style/mw.h"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
         android:background="@color/White"
         android:divider="@drawable/divider_vertical_dot"
         android:gravity="center"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
+        android:orientation="horizontal"
+        android:padding="8dp"
         android:showDividers="middle">
 
         <ImageView
             android:id="@+id/reply_style_bold"
-            android:layout_width="48dp"
-            android:layout_height="43dp"
+            style="@style/mmw"
             android:background="@drawable/button_transparent"
             android:src="@drawable/image_style_bold"/>
 
         <ImageView
             android:id="@+id/reply_style_italic"
-            android:layout_width="48dp"
-            android:layout_height="43dp"
+            style="@style/mmw"
             android:background="@drawable/button_transparent"
-            android:src="@drawable/image_style_italic"/>
+            android:src="@drawable/image_style_italic"
+            android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/reply_style_underline"
-            android:layout_width="48dp"
-            android:layout_height="43dp"
+            style="@style/mmw"
             android:background="@drawable/button_transparent"
             android:src="@drawable/image_style_underline"/>
 
         <ImageView
             android:id="@+id/reply_style_strikethrough"
-            android:layout_width="48dp"
-            android:layout_height="43dp"
+            style="@style/mmw"
             android:background="@drawable/button_transparent"
             android:src="@drawable/image_style_strikethrough"/>
 
+        <ImageView
+            android:id="@+id/reply_style_at"
+            style="@style/mmw"
+            android:background="@drawable/button_transparent"
+            android:src="@drawable/image_style_at"/>
+
         <LinearLayout
             android:id="@+id/reply_style_color"
-            style="@style/ww"
-            android:background="@drawable/button_transparent">
+            style="@style/mmw"
+            android:background="@drawable/button_transparent"
+            android:gravity="center_vertical">
 
             <FrameLayout
                 android:id="@+id/reply_style_color_indicator"
-                android:layout_width="24dp"
-                android:layout_height="19dp"
-                android:layout_marginBottom="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
                 android:layout_marginLeft="4dp"
                 android:layout_marginRight="4dp"
-                android:layout_marginTop="12dp"
+                android:layout_weight="1"
                 android:background="@color/Content"/>
 
             <TextView
                 android:id="@+id/reply_style_color_picker"
-                android:layout_width="24dp"
-                android:layout_height="43dp"
+                style="@style/mmw"
                 android:background="@drawable/button_transparent"
                 android:gravity="center"
                 android:src="@drawable/image_style_bold"
@@ -107,13 +110,13 @@
 
         <LinearLayout
             android:id="@+id/reply_style_size"
-            style="@style/ww"
-            android:background="@drawable/button_transparent">
+            style="@style/mmw"
+            android:background="@drawable/button_transparent"
+            android:gravity="center_vertical">
 
             <TextView
                 android:id="@+id/reply_style_size_indicator"
-                android:layout_width="24dp"
-                android:layout_height="43dp"
+                style="@style/mww"
                 android:gravity="center"
                 android:src="@drawable/image_style_bold"
                 android:text="@string/reply_size"
@@ -122,8 +125,7 @@
 
             <TextView
                 android:id="@+id/reply_style_size_picker"
-                android:layout_width="24dp"
-                android:layout_height="43dp"
+                style="@style/mmw"
                 android:background="@drawable/button_transparent"
                 android:gravity="center"
                 android:src="@drawable/image_style_bold"
@@ -133,12 +135,18 @@
 
         </LinearLayout>
 
-        <CheckBox
-            android:id="@+id/reply_style_emot"
-            android:layout_width="48dp"
-            android:layout_height="43dp"
-            android:background="@drawable/button_tab_theme"
-            android:button="@drawable/image_style_emot"/>
+        <ImageView
+            android:id="@+id/reply_style_emot_off"
+            style="@style/mmw"
+            android:background="@drawable/button_transparent"
+            android:src="@drawable/image_style_emot"/>
+
+        <ImageView
+            android:id="@+id/reply_style_emot_on"
+            style="@style/mmw"
+            android:background="@drawable/button_themetransparent"
+            android:src="@drawable/image_style_emot"
+            android:visibility="gone"/>
 
     </LinearLayout>
 

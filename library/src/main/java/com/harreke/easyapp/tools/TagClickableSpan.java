@@ -21,6 +21,14 @@ public class TagClickableSpan extends ClickableSpan {
         mTagClickListener = tagClickListener;
     }
 
+    public String getLink() {
+        return mLink;
+    }
+
+    public String getTag() {
+        return mTag;
+    }
+
     @Override
     public void onClick(View widget) {
         mTagClickListener.onTagClick(mTag, mLink);

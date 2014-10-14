@@ -69,7 +69,7 @@ public class InfoView extends LinearLayout {
 
         style = context.obtainStyledAttributes(attrs, R.styleable.InfoView, defStyle, 0);
         loadingImage = style.getDrawable(R.styleable.InfoView_loadingImage);
-        mLoadingText = style.getString(R.styleable.app_loadingText);
+        mLoadingText = style.getString(R.styleable.InfoView_loadingText);
         emptyImage = style.getDrawable(R.styleable.InfoView_emptyImage);
         mEmptyText = style.getString(R.styleable.InfoView_emptyText);
         retryHint = style.getString(R.styleable.InfoView_retryHint);
@@ -85,7 +85,7 @@ public class InfoView extends LinearLayout {
         setGravity(Gravity.CENTER);
 
         info_loading = new ImageView(context);
-        info_loading.setLayoutParams(new LayoutParams(textSize, textSize));
+        info_loading.setLayoutParams(new LayoutParams(textSize * 2, textSize * 2));
         info_loading.setVisibility(GONE);
         if (loadingImage != null) {
             info_loading.setImageDrawable(loadingImage);
@@ -96,14 +96,14 @@ public class InfoView extends LinearLayout {
         addView(info_loading);
 
         info_empty = new ImageView(context);
-        info_empty.setLayoutParams(new LayoutParams(textSize, textSize));
+        info_empty.setLayoutParams(new LayoutParams(textSize * 2, textSize * 2));
         if (emptyImage != null) {
             info_empty.setImageDrawable(emptyImage);
         }
         addView(info_empty);
 
         info_retry = new ImageView(context);
-        info_retry.setLayoutParams(new LayoutParams(textSize, textSize));
+        info_retry.setLayoutParams(new LayoutParams(textSize * 2, textSize * 2));
         if (retryImage != null) {
             info_retry.setImageDrawable(retryImage);
         }

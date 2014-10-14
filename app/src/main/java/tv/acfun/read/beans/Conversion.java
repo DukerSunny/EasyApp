@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import tv.acfun.read.R;
-import tv.acfun.read.tools.CommentUtil;
+import tv.acfun.read.tools.UBB;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/26
@@ -48,6 +48,6 @@ public class Conversion extends Comment {
 
     public void parse(Context context, OnTagClickListener tagClickListener) {
         mDate = new SimpleDateFormat(context.getString(R.string.comment_date)).format(new Date(getTime()));
-        mSpanned = CommentUtil.convertUBB(getContent(), tagClickListener);
+        mSpanned = UBB.fromUBB(getContent(), tagClickListener);
     }
 }

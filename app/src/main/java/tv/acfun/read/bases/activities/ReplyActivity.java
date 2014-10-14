@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -57,11 +56,13 @@ public class ReplyActivity extends ActivityFramework {
     private UBBEditText reply_input;
     private ViewPager reply_pager;
     private ImageView reply_send;
+    private View reply_style_at;
     private View reply_style_bold;
     private View reply_style_color;
     private View reply_style_color_indicator;
     private View reply_style_color_picker;
-    private CheckBox reply_style_emot;
+    private View reply_style_emot_off;
+    private View reply_style_emot_on;
     private View reply_style_italic;
     private View reply_style_size;
     private TextView reply_style_size_indicator;
@@ -93,7 +94,9 @@ public class ReplyActivity extends ActivityFramework {
         reply_style_color_picker.setOnClickListener(mClickListener);
         reply_style_size.setOnClickListener(mClickListener);
         reply_style_size_picker.setOnClickListener(mClickListener);
-        reply_style_emot.setOnClickListener(mClickListener);
+        reply_style_at.setOnClickListener(mClickListener);
+        reply_style_emot_on.setOnClickListener(mClickListener);
+        reply_style_emot_off.setOnClickListener(mClickListener);
 
         reply_input.setOnFocusChangeListener(mFocusChangeListener);
 
@@ -155,19 +158,24 @@ public class ReplyActivity extends ActivityFramework {
                         break;
                     case R.id.reply_style_size:
                         reply_input.setSize(mStyleSize);
+                        break;
                     case R.id.reply_style_size_picker:
                         mSizePickerHelper.show();
                         break;
-                    case R.id.reply_style_emot:
-                        if (reply_pager.getVisibility() == View.GONE) {
-                            reply_pager.setVisibility(View.VISIBLE);
-                            reply_style_emot.setChecked(true);
-                            hideSoftInputMethod();
-                        } else {
-                            reply_style_emot.setChecked(false);
-                            reply_pager.setVisibility(View.GONE);
-                        }
+                    case R.id.reply_style_at:
+                        reply_input.toggleAt();
                         break;
+                    case R.id.reply_style_emot_on:
+                        reply_pager.setVisibility(View.GONE);
+                        reply_style_emot_on.setVisibility(View.GONE);
+                        reply_style_emot_off.setVisibility(View.VISIBLE);
+                        showSoftInputMethod();
+                        break;
+                    case R.id.reply_style_emot_off:
+                        reply_pager.setVisibility(View.VISIBLE);
+                        reply_style_emot_on.setVisibility(View.VISIBLE);
+                        reply_style_emot_off.setVisibility(View.GONE);
+                        hideSoftInputMethod();
                 }
             }
         };
@@ -263,7 +271,9 @@ public class ReplyActivity extends ActivityFramework {
         reply_style_size = findViewById(R.id.reply_style_size);
         reply_style_size_indicator = (TextView) findViewById(R.id.reply_style_size_indicator);
         reply_style_size_picker = findViewById(R.id.reply_style_size_picker);
-        reply_style_emot = (CheckBox) findViewById(R.id.reply_style_emot);
+        reply_style_at = findViewById(R.id.reply_style_at);
+        reply_style_emot_on = findViewById(R.id.reply_style_emot_on);
+        reply_style_emot_off = findViewById(R.id.reply_style_emot_off);
 
         reply_input = (UBBEditText) findViewById(R.id.reply_input);
         reply_pager = (ViewPager) findViewById(R.id.reply_pager);

@@ -89,12 +89,16 @@ public class ComicActivity extends ActivityFramework {
 
         comic_save.setOnClickListener(mClickListener);
 
-        mSaveDialog =
-                new DialogHelper(getActivity(), R.string.comic_save, R.string.app_ok, R.string.app_cancel, -1, comic_save_input,
-                        mSaveDialogListener);
-        mOverwriteDialog =
-                new DialogHelper(getActivity(), R.string.comic_save_overwrite, R.string.app_ok, R.string.app_cancel, -1,
-                        mOverwriteDialogListener);
+        mSaveDialog = new DialogHelper(getActivity());
+        mSaveDialog.setView(R.layout.dialog_comic_save);
+        mSaveDialog.setPositiveButton(R.string.app_ok);
+        mSaveDialog.setPositiveButton(R.string.app_cancel);
+        mSaveDialog.setOnClickListener(mSaveDialogListener);
+
+        mOverwriteDialog = new DialogHelper(getActivity());
+        mOverwriteDialog.setPositiveButton(R.string.app_ok);
+        mOverwriteDialog.setNegativeButton(R.string.app_cancel);
+        mOverwriteDialog.setOnClickListener(mOverwriteDialogListener);
     }
 
     private void checkBitmap() {

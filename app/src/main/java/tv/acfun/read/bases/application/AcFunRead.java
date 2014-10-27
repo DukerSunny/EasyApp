@@ -45,6 +45,11 @@ public class AcFunRead extends ApplicationFramework {
         }
     }
 
+    public final void clearLogin() {
+        writeFullUser(null);
+        writeToken(null);
+    }
+
     private void initFile() {
         File file;
         String[] emotionNames = getResources().getStringArray(R.array.emot_name);
@@ -68,6 +73,12 @@ public class AcFunRead extends ApplicationFramework {
         }
     }
 
+    public final boolean isExpired() {
+        Token token = readToken();
+
+        return token == null || token.isExpired();
+    }
+
     public boolean isHistoriesEnabled() {
         return mHistoriesEnabled;
     }
@@ -79,7 +90,6 @@ public class AcFunRead extends ApplicationFramework {
         initFile();
 
         mInstance = this;
-
     }
 
     public final FullUser readFullUser() {

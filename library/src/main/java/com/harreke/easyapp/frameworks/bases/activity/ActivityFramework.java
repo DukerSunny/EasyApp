@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -14,6 +15,8 @@ import android.view.SubMenu;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.github.johnpersano.supertoasts.SuperActivityToast;
+import com.github.johnpersano.supertoasts.SuperToast;
 import com.harreke.easyapp.R;
 import com.harreke.easyapp.beans.ActionBarItem;
 import com.harreke.easyapp.frameworks.bases.IActionBar;
@@ -25,7 +28,6 @@ import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
 import com.harreke.easyapp.tools.NetUtil;
 import com.harreke.easyapp.widgets.InfoView;
-import com.harreke.easyapp.widgets.ToastView;
 
 import java.util.ArrayList;
 
@@ -39,7 +41,6 @@ public abstract class ActivityFramework extends FragmentActivity
     private static final String TAG = "ActivityFramework";
     private FrameLayout framework_content;
     private InfoView framework_info;
-    private ToastView framework_toast;
     private ActionBar mActionBar;
     private ArrayList<ActionBarItem> mActionBarItemList = new ArrayList<ActionBarItem>();
     private boolean mCreated = false;
@@ -53,6 +54,7 @@ public abstract class ActivityFramework extends FragmentActivity
         }
     };
     private RequestHelper mRequest = new RequestHelper();
+    private SuperActivityToast mToast;
 
     /**
      * 为ActionBar添加一个菜单选项
@@ -296,19 +298,6 @@ public abstract class ActivityFramework extends FragmentActivity
     }
 
     /**
-     * 查找视图
-     *
-     * @param viewId
-     *         视图id
-     *
-     * @return 视图
-     */
-    @Override
-    public final View findViewById(int viewId) {
-        return framework_content.findViewById(viewId);
-    }
-
-    /**
      * 获得当前Activity
      *
      * @return 当前Activity
@@ -370,21 +359,10 @@ public abstract class ActivityFramework extends FragmentActivity
 
     /**
      * 隐藏Toast
-     *
-     * @param animate
-     *         是否显示动画
-     */
-    @Override
-    public final void hideToast(boolean animate) {
-        framework_toast.hide(animate);
-    }
-
-    /**
-     * 隐藏Toast
      */
     @Override
     public final void hideToast() {
-        framework_toast.hide();
+        SuperActivityToast.clearSuperActivityToastsForActivity(this);
     }
 
     /**
@@ -438,12 +416,17 @@ public abstract class ActivityFramework extends FragmentActivity
         framework = (FrameLayout) LayoutInflater.from(this).inflate(R.layout.widget_framework, null);
         framework_content = (FrameLayout) framework.findViewById(R.id.framework_content);
         framework_info = (InfoView) framework.findViewById(R.id.framework_info);
-        framework_toast = (ToastView) framework.findViewById(R.id.framework_toast);
         framework_info.setOnClickListener(mInfoClickListener);
 
         super.setContentView(framework);
 
         mActionBar = getActionBar();
+        mToast = new SuperActivityToast(this);
+        mToast.setAnimations(SuperToast.Animations.POPUP);
+        mToast.setDuration(SuperToast.Duration.SHORT);
+        mToast.setBackground(SuperToast.Background.GRAY);
+        mToast.setTextSize(SuperToast.TextSize.MEDIUM);
+        mToast.setTextColor(Color.WHITE);
 
         setLayout();
         initData(getIntent());
@@ -496,7 +479,7 @@ public abstract class ActivityFramework extends FragmentActivity
     @Override
     protected void onDestroy() {
         unregisterReceiver(mExitReceiver);
-        hideToast(false);
+        hideToast();
         cancelRequest();
         mCreated = false;
         super.onDestroy();
@@ -758,7 +741,7 @@ public abstract class ActivityFramework extends FragmentActivity
      */
     @Override
     public final void showToast(String text) {
-        framework_toast.show(text, false);
+        showToast(text, false);
     }
 
     /**
@@ -769,7 +752,7 @@ public abstract class ActivityFramework extends FragmentActivity
      */
     @Override
     public final void showToast(int textId) {
-        framework_toast.show(textId, false);
+        showToast(getString(textId));
     }
 
     /**
@@ -781,8 +764,14 @@ public abstract class ActivityFramework extends FragmentActivity
      *         是否显示进度条
      */
     @Override
-    public final void showToast(String text, boolean progress) {
-        framework_toast.show(text, progress);
+    public void showToast(String text, boolean progress) {
+        mToast.setText(text);
+        if (progress) {
+            mToast.setIcon(R.drawable.anim_progress_radiant, SuperToast.IconPosition.LEFT);
+        } else {
+            mToast.setIcon(R.drawable.shape_transparent, SuperToast.IconPosition.LEFT);
+        }
+        mToast.show();
     }
 
     /**
@@ -795,7 +784,7 @@ public abstract class ActivityFramework extends FragmentActivity
      */
     @Override
     public final void showToast(int textId, boolean progress) {
-        framework_toast.show(textId, progress);
+        showToast(getString(textId), progress);
     }
 
     /**
@@ -820,7 +809,7 @@ public abstract class ActivityFramework extends FragmentActivity
     @Override
     public final void start(Intent intent, boolean animate) {
         if (intent != null) {
-            hideToast(false);
+            hideToast();
             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
             if (animate) {
@@ -840,7 +829,7 @@ public abstract class ActivityFramework extends FragmentActivity
     @Override
     public final void start(Intent intent, int requestCode) {
         if (intent != null) {
-            hideToast(false);
+            hideToast();
             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivityForResult(intent, requestCode);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);

@@ -1,6 +1,8 @@
 package com.harreke.easyapp.frameworks.list;
 
-import android.view.View;
+import android.widget.AbsListView;
+
+import com.melnykov.fab.FloatingActionButton;
 
 import java.util.Comparator;
 
@@ -51,6 +53,8 @@ public interface IList<ITEM> {
      */
     public int getItemCount();
 
+    public AbsListView getListView();
+
     /**
      * 判断列表是否为空
      *
@@ -77,13 +81,15 @@ public interface IList<ITEM> {
      */
     public void refresh();
 
+    public void scrollToTop();
+
     /**
      * 设置列表视图
      *
      * @param listView
-     *         列表视图
+     *         列表视图Id
      */
-    public void setListView(View listView);
+    public void setListView(AbsListView listView);
 
     /**
      * 设置加载更多功能接口
@@ -94,6 +100,8 @@ public interface IList<ITEM> {
      *         加载更多功能接口
      */
     public void setLoadMore(ILoadStatus loadMore);
+
+    public void setRefresh(FloatingActionButton button);
 
     /**
      * 排序列表条目

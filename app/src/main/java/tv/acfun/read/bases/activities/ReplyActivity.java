@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -23,6 +24,7 @@ import com.harreke.easyapp.helpers.PopupAbsListHelper;
 import com.harreke.easyapp.requests.IRequestCallback;
 
 import tv.acfun.read.R;
+import tv.acfun.read.api.API;
 import tv.acfun.read.bases.application.AcFunRead;
 import tv.acfun.read.holders.EmotHolder;
 import tv.acfun.read.holders.SizeSelectHolder;
@@ -50,13 +52,11 @@ public class ReplyActivity extends ActivityFramework {
     private AdapterView.OnItemClickListener mSizePickerItemListener;
     private int mStyleColor;
     private int mStyleSize;
-    private String mUsername;
     private ColorPicker picker;
     private View reply_back;
     private UBBEditText reply_input;
     private ViewPager reply_pager;
     private ImageView reply_send;
-    private View reply_style_at;
     private View reply_style_bold;
     private View reply_style_color;
     private View reply_style_color_indicator;
@@ -70,13 +70,12 @@ public class ReplyActivity extends ActivityFramework {
     private View reply_style_strikethrough;
     private View reply_style_underline;
 
-    public static Intent create(Context context, int contentId, int quoteId, int floorIndex, String username) {
+    public static Intent create(Context context, int contentId, int quoteId, int floorIndex) {
         Intent intent = new Intent(context, ReplyActivity.class);
 
         intent.putExtra("contentId", contentId);
         intent.putExtra("quoteId", quoteId);
         intent.putExtra("floorIndex", floorIndex);
-        intent.putExtra("username", username);
 
         return intent;
     }
@@ -94,21 +93,34 @@ public class ReplyActivity extends ActivityFramework {
         reply_style_color_picker.setOnClickListener(mClickListener);
         reply_style_size.setOnClickListener(mClickListener);
         reply_style_size_picker.setOnClickListener(mClickListener);
-        reply_style_at.setOnClickListener(mClickListener);
+        //        reply_style_at.setOnClickListener(mClickListener);
         reply_style_emot_on.setOnClickListener(mClickListener);
         reply_style_emot_off.setOnClickListener(mClickListener);
 
         reply_input.setOnFocusChangeListener(mFocusChangeListener);
 
-        mColorPickerHelper.setPositiveButton(R.string.app_ok, mColorPickerClickListener);
-        mColorPickerHelper.setNegativeButton(R.string.app_cancel, mColorPickerClickListener);
-        mColorPickerHelper.setNeutralButton(R.string.app_reset, mColorPickerClickListener);
+        mColorPickerHelper.setPositiveButton(R.string.app_ok);
+        mColorPickerHelper.setNegativeButton(R.string.app_cancel);
+        mColorPickerHelper.setNeutralButton(R.string.app_reset);
+        mColorPickerHelper.setOnClickListener(mColorPickerClickListener);
 
         mSizePickerHelper.setOnItemClickListener(mSizePickerItemListener);
     }
 
     private void doSend() {
+        AcFunRead acFunRead;
+        String content = reply_input.getUBBText();
 
+        if (content.length() < 5) {
+            showToast(R.string.comment_tooshort);
+        } else if (content.matches("\\[[\\S\\s]+?\\]|[^u4e00-u9fa5]")) {
+            showToast(R.string.comment_onlyemot);
+        } else {
+            acFunRead = AcFunRead.getInstance();
+            showToast(R.string.comment_sending, true);
+            executeRequest(API.getCommentAdd(mContentId, acFunRead.readFullUser().getUserId(), content, mQuoteId,
+                    acFunRead.readToken()), mSendCallback);
+        }
     }
 
     private void hideSoftInputMethod() {
@@ -120,7 +132,6 @@ public class ReplyActivity extends ActivityFramework {
         mContentId = intent.getIntExtra("contentId", 0);
         mQuoteId = intent.getIntExtra("quoteId", 0);
         mFloorIndex = intent.getIntExtra("floorIndex", 0);
-        mUsername = intent.getStringExtra("username");
 
         mEmotNames = getResources().getStringArray(R.array.emot_name);
         mEmotCounts = getResources().getIntArray(R.array.emot_count);
@@ -161,9 +172,6 @@ public class ReplyActivity extends ActivityFramework {
                         break;
                     case R.id.reply_style_size_picker:
                         mSizePickerHelper.show();
-                        break;
-                    case R.id.reply_style_at:
-                        reply_input.toggleAt();
                         break;
                     case R.id.reply_style_emot_on:
                         reply_pager.setVisibility(View.GONE);
@@ -222,6 +230,20 @@ public class ReplyActivity extends ActivityFramework {
                 }
             }
         };
+        mSendCallback = new IRequestCallback<String>() {
+            @Override
+            public void onFailure(String requestUrl) {
+                showToast(R.string.comment_failure);
+            }
+
+            @Override
+            public void onSuccess(String requestUrl, String s) {
+                Log.e(null, "result=" + s);
+                reply_input.setText("");
+                setResult(RESULT_OK);
+                onBackPressed();
+            }
+        };
     }
 
     @Override
@@ -241,14 +263,14 @@ public class ReplyActivity extends ActivityFramework {
 
     @Override
     protected void onPause() {
-        AcFunRead.getInstance().writeString("replyText", reply_input.getRawText());
+        AcFunRead.getInstance().writeString("replyText", reply_input.getUBBText());
         super.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        reply_input.setRawText(AcFunRead.getInstance().readString("replyText", ""));
+        reply_input.setUBBText(AcFunRead.getInstance().readString("replyText", ""));
     }
 
     @Override
@@ -271,7 +293,6 @@ public class ReplyActivity extends ActivityFramework {
         reply_style_size = findViewById(R.id.reply_style_size);
         reply_style_size_indicator = (TextView) findViewById(R.id.reply_style_size_indicator);
         reply_style_size_picker = findViewById(R.id.reply_style_size_picker);
-        reply_style_at = findViewById(R.id.reply_style_at);
         reply_style_emot_on = findViewById(R.id.reply_style_emot_on);
         reply_style_emot_off = findViewById(R.id.reply_style_emot_off);
 
@@ -282,7 +303,7 @@ public class ReplyActivity extends ActivityFramework {
         reply_pager_indicator.setTextColor(getResources().getColor(R.color.Title));
 
         if (mFloorIndex > 0) {
-            reply_id.setText(getString(R.string.reply_id_quote, "#" + mFloorIndex + " " + mUsername));
+            reply_id.setText(getString(R.string.reply_id_quote, "#" + mFloorIndex));
         } else {
             reply_id.setText(R.string.reply_id);
         }

@@ -1,8 +1,8 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion '20.0.0'
+    compileSdkVersion 21
+    buildToolsVersion '21.0.2'
 
     defaultConfig {
         applicationId "com.harreke.easyapp"
@@ -22,6 +22,10 @@ android {
 dependencies {
     compile 'com.nostra13.universalimageloader:universal-image-loader:+'
     compile 'com.loopj.android:android-async-http:+'
-    compile 'com.google.code.gson:gson:2.3'
-    compile 'com.android.support:support-v4:19.+'
+    compile 'com.google.code.gson:gson:+'
+    compile 'com.android.support:support-v4:+'
+    compile 'com.github.johnpersano:supertoasts:1.3.4:@aar'
+    compile 'com.melnykov:floatingactionbutton:+'
+    compile 'com.daimajia.swipelayout:library:1.1.7@aar'
+    compile 'com.github.dmytrodanylyk.circular-progress-button:library:+'
 }

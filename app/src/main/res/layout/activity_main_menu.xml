@@ -22,200 +22,137 @@
             style="@style/mw"
             android:layout_marginLeft="8dp"
             android:maxLines="3"
-            android:text="@string/menu_login"
+            android:text="@string/login_required"
             android:textColor="@color/Content"
             android:textSize="20dp"/>
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/menu_user_signature"
+        style="@style/mw"
+        android:layout_marginTop="8dp"
+        android:lines="2"
+        android:padding="8dp"
+        android:text="@string/user_signature"
+        android:textColor="@color/Assist"
+        android:textSize="16dp"/>
+
     <LinearLayout
-        android:id="@+id/menu_user_function"
-        style="@style/mw.v"
-        android:layout_marginTop="8dp">
+        android:id="@+id/menu_at"
+        style="@style/mw.h"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_transparent"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="8dp"
+            android:src="@drawable/image_at"/>
 
         <TextView
-            android:id="@+id/menu_user_signature"
-            style="@style/mw"
-            android:lines="2"
-            android:padding="8dp"
-            android:text="@string/user_signature"
-            android:textColor="@color/Assist"
-            android:textSize="16dp"/>
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/menu_at"
+            android:textColor="@color/Title"
+            android:textSize="20dp"/>
 
-        <LinearLayout
-            android:id="@+id/menu_at"
-            style="@style/mw.h"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/button_transparent"
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:padding="8dp"
-                android:src="@drawable/image_at"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_marginLeft="8dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="@string/menu_at"
-                android:textColor="@color/Title"
-                android:textSize="20dp"/>
-
-            <TextView
-                android:id="@+id/menu_at_text"
-                android:layout_width="32dp"
-                android:layout_height="24dp"
-                android:background="@color/Red"
-                android:gravity="center"
-                android:textColor="@color/White"
-                android:textSize="16dp"
-                android:visibility="gone"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/menu_mail"
-            style="@style/mw.h"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/button_transparent"
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:padding="8dp"
-                android:src="@drawable/image_mail"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_marginLeft="8dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="@string/menu_mail"
-                android:textColor="@color/Title"
-                android:textSize="20dp"/>
-
-            <TextView
-                android:id="@+id/menu_mail_text"
-                android:layout_width="32dp"
-                android:layout_height="24dp"
-                android:background="@color/Red"
-                android:gravity="center"
-                android:textColor="@color/White"
-                android:textSize="16dp"
-                android:visibility="gone"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/menu_favourite"
-            style="@style/mw.h"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/button_transparent"
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:padding="8dp"
-                android:src="@drawable/image_favourite"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginLeft="8dp"
-                android:gravity="center_vertical"
-                android:text="@string/menu_favourite"
-                android:textColor="@color/Title"
-                android:textSize="20dp"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/menu_history"
-            style="@style/mw.h"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/button_transparent"
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:padding="8dp"
-                android:src="@drawable/image_history"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginLeft="8dp"
-                android:gravity="center_vertical"
-                android:text="@string/menu_history"
-                android:textColor="@color/Title"
-                android:textSize="20dp"/>
-
-        </LinearLayout>
+        <TextView
+            android:id="@+id/menu_at_text"
+            android:layout_width="32dp"
+            android:layout_height="24dp"
+            android:background="@color/Red"
+            android:gravity="center"
+            android:textColor="@color/White"
+            android:textSize="16dp"
+            android:visibility="gone"/>
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/menu_user_access"
-        style="@style/mw.v"
+        android:id="@+id/menu_mail"
+        style="@style/mw.h"
         android:layout_marginTop="8dp"
+        android:background="@drawable/button_transparent"
+        android:gravity="center_vertical"
         android:visibility="gone">
 
-        <EditText
-            android:id="@+id/menu_user_login_name"
-            android:layout_width="match_parent"
+        <ImageView
+            android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="@color/White"
-            android:hint="@string/login_account"
-            android:lines="1"
             android:padding="8dp"
-            android:textColor="@color/color_text_title"
-            android:textColorHint="@color/Assist"
-            android:textSize="16dp"/>
-
-        <EditText
-            android:id="@+id/menu_user_login_password"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="8dp"
-            android:background="@color/White"
-            android:hint="@string/login_password"
-            android:inputType="textPassword"
-            android:lines="1"
-            android:padding="8dp"
-            android:textColor="@color/color_text_title"
-            android:textColorHint="@color/Assist"
-            android:textSize="16dp"/>
-
-        <CheckBox
-            android:id="@+id/menu_user_login_remember"
-            style="@style/mw"
-            android:layout_marginTop="8dp"
-            android:button="@null"
-            android:drawableLeft="@drawable/button_check"
-            android:drawablePadding="8dp"
-            android:gravity="center_vertical"
-            android:text="@string/login_remember"
-            android:textColor="@color/Content"
-            android:textSize="16dp"/>
+            android:src="@drawable/image_mail"/>
 
         <TextView
-            android:id="@+id/menu_user_login"
-            android:layout_width="96dp"
+            android:layout_width="0dp"
             android:layout_height="48dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/button_login"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/menu_mail"
+            android:textColor="@color/Title"
+            android:textSize="20dp"/>
+
+        <TextView
+            android:id="@+id/menu_mail_text"
+            android:layout_width="32dp"
+            android:layout_height="24dp"
+            android:background="@color/Red"
             android:gravity="center"
-            android:text="@string/app_login"
             android:textColor="@color/White"
+            android:textSize="16dp"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/menu_favourite"
+        style="@style/mw.h"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/button_transparent"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="8dp"
+            android:src="@drawable/image_favourite"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginLeft="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/menu_favourite"
+            android:textColor="@color/Title"
+            android:textSize="20dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/menu_history"
+        style="@style/mw.h"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/button_transparent"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="8dp"
+            android:src="@drawable/image_history"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginLeft="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/menu_history"
+            android:textColor="@color/Title"
             android:textSize="20dp"/>
 
     </LinearLayout>

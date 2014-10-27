@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     style="@style/mm"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ListView
         android:id="@+id/channel_list"
@@ -12,13 +13,13 @@
         android:listSelector="@drawable/button_transparent"
         android:padding="8dp"/>
 
-    <ImageView
-        android:id="@+id/channel_scrolltop_button"
+    <com.melnykov.fab.FloatingActionButton
+        android:id="@+id/channel_refresh"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_gravity="end|bottom"
-        android:padding="8dp"
-        android:src="@drawable/image_scrolltop"
-        android:visibility="gone"/>
+        android:layout_gravity="bottom|end"
+        android:src="@drawable/image_refresh"
+        app:fab_colorNormal="@color/TransparentWhite"
+        app:fab_colorPressed="@color/Theme_Transparent"/>
 
 </FrameLayout>

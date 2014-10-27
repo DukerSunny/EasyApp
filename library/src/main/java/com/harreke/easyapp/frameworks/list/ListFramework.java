@@ -1,13 +1,13 @@
 package com.harreke.easyapp.frameworks.list;
 
-import android.content.Context;
 import android.view.View;
+import android.widget.AbsListView;
 
-import com.harreke.easyapp.R;
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
 import com.harreke.easyapp.widgets.InfoView;
+import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -46,19 +46,22 @@ public abstract class ListFramework<ITEM>
     private InfoView mInfo = null;
     private ILoadStatus mLoadMore = null;
     private int mPageSize = 0;
-    private String mRetryText;
+    private FloatingActionButton mRefresh;
+    private View.OnClickListener mRefreshClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            clear();
+            refresh();
+            scrollToTop();
+            onAction();
+        }
+    };
     private View mRoot = null;
     private boolean mSortReverse = false;
     private int mTotalPage = 1;
 
     public ListFramework(IFramework framework, int listId) {
-        Context context;
-        View listView;
-
-        listView = framework.findViewById(listId);
-        setListView(listView);
-        context = framework.getActivity();
-        mRetryText = context.getString(R.string.info_retry);
+        setListView((AbsListView) framework.findViewById(listId));
         mFramework = framework;
         setRootView(framework.getContent());
         setInfoView(framework.getInfo());
@@ -214,8 +217,8 @@ public abstract class ListFramework<ITEM>
         return mPageSize;
     }
 
-    private void hideToast(boolean animate) {
-        mFramework.hideToast(animate);
+    private void hideToast() {
+        mFramework.hideToast();
     }
 
     /**
@@ -261,6 +264,7 @@ public abstract class ListFramework<ITEM>
     @Override
     public void onClick(View v) {
         clear();
+        refresh();
         onAction();
     }
 
@@ -281,6 +285,9 @@ public abstract class ListFramework<ITEM>
             if (mLoadMore != null) {
                 mLoadMore.setVisibility(View.GONE);
             }
+            if (mRefresh != null) {
+                mRefresh.setVisibility(View.GONE);
+            }
         } else {
             if (mRoot != null) {
                 mRoot.setVisibility(View.VISIBLE);
@@ -291,6 +298,9 @@ public abstract class ListFramework<ITEM>
             if (mLoadMore != null) {
                 mLoadMore.setVisibility(View.VISIBLE);
                 mLoadMore.setLoadStatus(LoadStatus.Retry);
+            }
+            if (mRefresh != null) {
+                mRefresh.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -322,6 +332,9 @@ public abstract class ListFramework<ITEM>
             if (mLoadMore != null) {
                 mLoadMore.setVisibility(View.GONE);
             }
+            if (mRefresh != null) {
+                mRefresh.setVisibility(View.GONE);
+            }
         } else {
             if (mRoot != null) {
                 mRoot.setVisibility(View.VISIBLE);
@@ -336,6 +349,9 @@ public abstract class ListFramework<ITEM>
                 } else {
                     mLoadMore.setLoadStatus(LoadStatus.Idle);
                 }
+            }
+            if (mRefresh != null) {
+                mRefresh.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -416,6 +432,15 @@ public abstract class ListFramework<ITEM>
         mLoadMore = loadMore;
         if (mLoadMore != null) {
             mLoadMore.setOnLoadListener(this);
+        }
+    }
+
+    @Override
+    public void setRefresh(FloatingActionButton refresh) {
+        mRefresh = refresh;
+        if (mRefresh != null) {
+            mRefresh.attachToListView(getListView());
+            mRefresh.setOnClickListener(mRefreshClickListener);
         }
     }
 

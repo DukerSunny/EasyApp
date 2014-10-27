@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    style="@style/mm.v"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/White"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/favourite_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/button_transparent"
+            android:padding="8dp"
+            android:src="@drawable/image_back"/>
+
+        <TextView
+            style="@style/mmw"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="@string/menu_favourite"
+            android:textColor="@color/Title"
+            android:textSize="16dp"/>
+
+    </LinearLayout>
+
+    <FrameLayout
+        style="@style/mm">
+
+        <ListView
+            android:id="@+id/favourite_list"
+            style="@style/mm"
+            android:divider="@color/Transparent"
+            android:dividerHeight="16dp"
+            android:drawSelectorOnTop="true"
+            android:listSelector="@drawable/button_transparent"
+            android:padding="8dp"/>
+
+        <com.melnykov.fab.FloatingActionButton
+            android:id="@+id/favourite_refresh"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="bottom|end"
+            android:src="@drawable/image_refresh"
+            app:fab_colorNormal="@color/TransparentWhite"
+            app:fab_colorPressed="@color/Theme_Transparent"/>
+
+    </FrameLayout>
+
+</LinearLayout>

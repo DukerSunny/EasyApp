@@ -13,7 +13,7 @@ import java.util.HashSet;
  * AbsListView的Adapter
  *
  * @param <ITEM>
- *         条目类型
+ *         项目类型
  */
 public abstract class AbsListAdapter<ITEM> extends BaseAdapter {
     private boolean mEnabled = true;
@@ -21,21 +21,25 @@ public abstract class AbsListAdapter<ITEM> extends BaseAdapter {
     private HashSet<Integer> mKeySet = new HashSet<Integer>();
 
     /**
-     * 添加一个条目
+     * 添加一个项目
      *
      * @param itemId
-     *         条目Id，大于等于0，用于检测是否有重复条目
-     *         若为-1，则不检测重复条目
+     *         项目Id，大于等于0，用于检测是否有重复项目
+     *         若为-1，则不检测重复项目
      * @param item
-     *         条目对象
+     *         项目对象
      *
      * @return 是否添加成功
      */
     public final boolean addItem(int itemId, ITEM item) {
         /**
-         通过条目Id判断是否重复添加
+         通过项目Id判断是否重复添加
          */
-        if (!mKeySet.contains(itemId)) {
+        if (itemId < 0) {
+            mItemList.add(item);
+
+            return true;
+        } else if (!mKeySet.contains(itemId)) {
             mKeySet.add(itemId);
             mItemList.add(item);
 
@@ -77,12 +81,34 @@ public abstract class AbsListAdapter<ITEM> extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    /**
+     * 移除一个项目
+     *
+     * @param itemId
+     *         项目Id，大于等于0，用于检测是否有重复项目
+     *         若为-1，则不检测重复项目
+     * @param item
+     *         项目对象
+     *
+     * @return 是否移除成功
+     */
+    public final boolean removeItem(int itemId, ITEM item) {
+        if (!mKeySet.contains(itemId)) {
+            return false;
+        } else {
+            mKeySet.remove(itemId);
+            mItemList.remove(item);
+
+            return true;
+        }
+    }
+
     public void setEnabled(boolean enabled) {
         mEnabled = enabled;
     }
 
     /**
-     * 排序条目
+     * 排序项目
      *
      * @param comparator
      *         比较器

@@ -10,8 +10,6 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,20 +19,18 @@ import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.helpers.ImageLoaderHelper;
 import com.harreke.easyapp.helpers.PopupAbsListHelper;
 import com.harreke.easyapp.requests.IRequestCallback;
+import com.harreke.easyapp.requests.RequestBuilder;
 import com.harreke.easyapp.widgets.ChildTabView;
 import com.harreke.easyapp.widgets.GroupTabView;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import tv.acfun.read.R;
-import tv.acfun.read.api.API;
 import tv.acfun.read.bases.application.AcFunRead;
 import tv.acfun.read.bases.fragments.ChannelFragment;
 import tv.acfun.read.bases.fragments.RecommendFragment;
 import tv.acfun.read.beans.FullUser;
-import tv.acfun.read.beans.Token;
+import tv.acfun.read.helpers.LoginHelper;
 import tv.acfun.read.holders.ChannelSelectHolder;
-import tv.acfun.read.parsers.FullUserParser;
-import tv.acfun.read.parsers.TokenParser;
 import tv.acfun.read.widgets.RepeatCheckableChildTabView;
 
 public class MainActivity extends ActivityFramework {
@@ -46,7 +42,7 @@ public class MainActivity extends ActivityFramework {
     private View content_user_avatar;
     private ImageView content_user_avatar_image;
     private View content_user_notification;
-    private Adapter mAdapter;
+    private Adapter mAdapter = null;
     private GroupTabView.OnCheckedChangeListener mCheckedChangeListener;
     private View.OnClickListener mClickListener;
     private SlidingMenu.OnCloseListener mCloseListener;
@@ -55,15 +51,14 @@ public class MainActivity extends ActivityFramework {
     private AlphaAnimation mFadeIn;
     private AlphaAnimation mFadeOut;
     private FullUser mFullUser = null;
-    private IRequestCallback<String> mFullUserCallback;
     private Helper mHelper;
     private AdapterView.OnItemClickListener mItemClickListener;
+    private LoginHelper mLoginHelper;
+    private LoginHelper.OnLoginListener mLoginListener;
     private SlidingMenu.OnOpenListener mOpenListener;
     private ViewPager.OnPageChangeListener mPageChangeListener;
     private int mPosition = 0;
     private RepeatCheckableChildTabView.OnRepeatCheckedListener mRepeatCheckedListener;
-    private Token mToken;
-    private IRequestCallback<String> mTokenCallback;
     private SlidingMenu main_slidingmenu;
     private View menu_at;
     private TextView menu_at_text;
@@ -73,14 +68,8 @@ public class MainActivity extends ActivityFramework {
     private TextView menu_mail_text;
     private View menu_pattern;
     private View menu_setting;
-    private View menu_user_access;
     private ImageView menu_user_avatar;
     private View menu_user_description;
-    private View menu_user_function;
-    private View menu_user_login;
-    private EditText menu_user_login_account;
-    private EditText menu_user_login_password;
-    private CheckBox menu_user_login_remember;
     private TextView menu_user_name;
     private TextView menu_user_signature;
 
@@ -102,14 +91,13 @@ public class MainActivity extends ActivityFramework {
         menu_favourite.setOnClickListener(mClickListener);
         menu_history.setOnClickListener(mClickListener);
         menu_pattern.setOnClickListener(mClickListener);
-        menu_user_login.setOnClickListener(mClickListener);
 
+        mLoginHelper.setOnLoginListener(mLoginListener);
         mHelper.setOnItemClickListener(mItemClickListener);
     }
 
     private void checkUser() {
         AcFunRead acFunRead = AcFunRead.getInstance();
-        String account;
 
         mFullUser = acFunRead.readFullUser();
 
@@ -117,20 +105,10 @@ public class MainActivity extends ActivityFramework {
             content_user_avatar_image.setImageResource(R.drawable.image_avatar);
             content_user_notification.setVisibility(View.GONE);
             menu_user_avatar.setImageResource(R.drawable.image_avatar);
-            menu_user_name.setText(R.string.menu_login);
-            menu_user_function.setVisibility(View.GONE);
+            menu_user_name.setText(R.string.login_required);
             menu_at_text.setVisibility(View.GONE);
             menu_mail_text.setVisibility(View.GONE);
-
-            menu_user_access.setVisibility(View.VISIBLE);
-            account = acFunRead.readString("account", "");
-            menu_user_login_account.setText(account);
-            menu_user_login_account.setSelection(account.length());
-            menu_user_login_password.setText("");
-            menu_user_login_remember.setChecked(acFunRead.readBoolean("rememberAccount", false));
         } else {
-            menu_user_access.setVisibility(View.GONE);
-
             if (mFullUser.getUserImg().equals("avatar")) {
                 content_user_avatar_image.setImageResource(R.drawable.image_avatar);
                 menu_user_avatar.setImageResource(R.drawable.image_avatar);
@@ -139,44 +117,8 @@ public class MainActivity extends ActivityFramework {
                 ImageLoaderHelper.loadImage(menu_user_avatar, mFullUser.getUserImg());
             }
             menu_user_name.setText(mFullUser.getUsername());
-            menu_user_function.setVisibility(View.VISIBLE);
             menu_user_signature.setText(mFullUser.getSignature());
         }
-    }
-
-    private void doLogin() {
-        AcFunRead acFunRead;
-        String account = menu_user_login_account.getText().toString();
-        String password = menu_user_login_password.getText().toString();
-
-        if (account.length() < 2) {
-            showToast(R.string.login_account_tooshort);
-
-            return;
-        } else if (account.length() > 50) {
-            showToast(R.string.login_account_toolong);
-
-            return;
-        }
-        if (password.length() < 2) {
-            showToast(R.string.login_password_tooshort);
-
-            return;
-        } else if (password.length() > 50) {
-            showToast(R.string.login_password_toolong);
-
-            return;
-        }
-        showToast(R.string.login_accessing, true);
-        acFunRead = AcFunRead.getInstance();
-        if (menu_user_login_remember.isChecked()) {
-            acFunRead.writeBoolean("rememberAccount", true);
-            acFunRead.writeString("account", account);
-        } else {
-            acFunRead.writeBoolean("rememberAccount", false);
-            acFunRead.writeString("account", "");
-        }
-        executeRequest(API.getToken(account, password), mTokenCallback);
     }
 
     private int getChannelIdByPosition(int position) {
@@ -244,6 +186,8 @@ public class MainActivity extends ActivityFramework {
         mClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AcFunRead acFunRead = AcFunRead.getInstance();
+
                 switch (v.getId()) {
                     case R.id.content_user_avatar:
                         if (main_slidingmenu.isMenuShowing()) {
@@ -257,12 +201,42 @@ public class MainActivity extends ActivityFramework {
                         break;
                     case R.id.menu_user_description:
                         if (mFullUser != null) {
-                            start(ProfileActivity.create(getActivity(), mFullUser), false);
-                            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                            if (acFunRead.isExpired()) {
+                                acFunRead.clearLogin();
+                                mLoginHelper.show(LoginHelper.Reason.Expired);
+                            } else {
+                                start(ProfileActivity.create(getActivity(), mFullUser), false);
+                                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                            }
+                        } else {
+                            mLoginHelper.show(LoginHelper.Reason.Unauthorized);
                         }
                         break;
-                    case R.id.menu_user_login:
-                        doLogin();
+                    case R.id.menu_mail:
+                        if (mFullUser != null) {
+                            if (acFunRead.isExpired()) {
+                                acFunRead.clearLogin();
+                                mLoginHelper.show(LoginHelper.Reason.Expired);
+                            } else {
+                                start(MailActivity.create(getActivity()), false);
+                                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                            }
+                        } else {
+                            mLoginHelper.show(LoginHelper.Reason.Unauthorized);
+                        }
+                        break;
+                    case R.id.menu_favourite:
+                        if (mFullUser != null) {
+                            if (acFunRead.isExpired()) {
+                                acFunRead.clearLogin();
+                                mLoginHelper.show(LoginHelper.Reason.Expired);
+                            } else {
+                                start(FavouriteActivity.create(getActivity()), false);
+                                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                            }
+                        } else {
+                            mLoginHelper.show(LoginHelper.Reason.Unauthorized);
+                        }
                         break;
                     case R.id.menu_setting:
                         start(SettingActivity.create(getActivity()), false);
@@ -313,48 +287,21 @@ public class MainActivity extends ActivityFramework {
                 }
             }
         };
-        mTokenCallback = new IRequestCallback<String>() {
+        mLoginListener = new LoginHelper.OnLoginListener() {
             @Override
-            public void onFailure(String requestUrl) {
-                showToast(R.string.login_timeout);
+            public void onCancelRequest() {
+                cancelRequest();
             }
 
             @Override
-            public void onSuccess(String requestUrl, String result) {
-                TokenParser parser = TokenParser.parser(result);
-
-                if (parser != null && parser.getData() != null) {
-                    if (parser.isSuccess()) {
-                        mToken = parser.getData();
-                        executeRequest(API.getFullUser(mToken.getUserId()), mFullUserCallback);
-                    }
-                } else {
-                    showToast(R.string.login_timeout);
-                }
-            }
-        };
-        mFullUserCallback = new IRequestCallback<String>() {
-            @Override
-            public void onFailure(String requestUrl) {
-                showToast(R.string.login_timeout);
+            public void onExecuteRequest(RequestBuilder builder, IRequestCallback<String> callback) {
+                executeRequest(builder, callback);
             }
 
             @Override
-            public void onSuccess(String requestUrl, String result) {
-                AcFunRead acFunRead;
-                FullUserParser parser = FullUserParser.parse(result);
-
-                if (parser != null) {
-                    hideToast();
-                    hideSoftInputMethod();
-                    acFunRead = AcFunRead.getInstance();
-                    acFunRead.writeFullUser(parser.getFullUser());
-                    acFunRead.writeToken(mToken);
-                    checkUser();
-                } else {
-                    showToast(R.string.login_timeout);
-                    mToken = null;
-                }
+            public void onSuccess() {
+                mLoginHelper.hide();
+                checkUser();
             }
         };
     }
@@ -396,6 +343,17 @@ public class MainActivity extends ActivityFramework {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (mAdapter == null) {
+            mAdapter = new Adapter(getSupportFragmentManager());
+            content_pager.setAdapter(mAdapter);
+        }
+        checkUser();
+    }
+
+    @Override
     public void queryLayout() {
         Resources resources = getResources();
 
@@ -414,12 +372,6 @@ public class MainActivity extends ActivityFramework {
         menu_user_name = (TextView) findViewById(R.id.menu_user_name);
         menu_user_avatar = (ImageView) findViewById(R.id.menu_user_avatar);
         menu_user_signature = (TextView) findViewById(R.id.menu_user_signature);
-        menu_user_function = findViewById(R.id.menu_user_function);
-        menu_user_access = findViewById(R.id.menu_user_access);
-        menu_user_login_account = (EditText) findViewById(R.id.menu_user_login_name);
-        menu_user_login_password = (EditText) findViewById(R.id.menu_user_login_password);
-        menu_user_login_remember = (CheckBox) findViewById(R.id.menu_user_login_remember);
-        menu_user_login = findViewById(R.id.menu_user_login);
         menu_at = findViewById(R.id.menu_at);
         menu_at_text = (TextView) findViewById(R.id.menu_at_text);
         menu_mail = findViewById(R.id.menu_mail);
@@ -428,6 +380,8 @@ public class MainActivity extends ActivityFramework {
         menu_history = findViewById(R.id.menu_history);
         menu_setting = findViewById(R.id.menu_setting);
         menu_pattern = findViewById(R.id.menu_pattern);
+
+        mLoginHelper = new LoginHelper(getActivity());
 
         mHelper = new Helper(getActivity(), findViewById(R.id.content_channel));
         mHelper.add(0, resources.getString(R.string.channel_misc));
@@ -457,9 +411,6 @@ public class MainActivity extends ActivityFramework {
 
     @Override
     public void startAction() {
-        mAdapter = new Adapter(getSupportFragmentManager());
-        content_pager.setAdapter(mAdapter);
-        checkUser();
     }
 
     private class Adapter extends FragmentPageAdapter {

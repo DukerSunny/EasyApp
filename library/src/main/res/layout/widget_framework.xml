@@ -13,10 +13,4 @@
         android:background="@color/TransparentWhite"
         android:visibility="gone"/>
 
-    <com.harreke.easyapp.widgets.ToastView
-        android:id="@+id/framework_toast"
-        style="@style/ww"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_margin="64dp"/>
-
 </FrameLayout>

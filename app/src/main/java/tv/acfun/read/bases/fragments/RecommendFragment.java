@@ -6,6 +6,7 @@ import android.view.View;
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.fragment.FragmentFramework;
 import com.harreke.easyapp.frameworks.list.abslistview.AbsListFramework;
+import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -36,7 +37,8 @@ public class RecommendFragment extends FragmentFramework {
 
     @Override
     public void queryLayout() {
-        mHelper = new Helper(this, R.id.selection_list);
+        mHelper = new Helper(this, R.id.recommend_list);
+        mHelper.setRefresh((FloatingActionButton) findViewById(R.id.recommend_refresh));
         mHelper.bindAdapter();
     }
 

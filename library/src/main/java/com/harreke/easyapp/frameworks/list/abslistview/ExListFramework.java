@@ -2,6 +2,7 @@ package com.harreke.easyapp.frameworks.list.abslistview;
 
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 
 import com.harreke.easyapp.adapters.abslistview.ExListAdapter;
@@ -32,7 +33,7 @@ public abstract class ExListFramework<GROUP, GROUPHOLDER extends IExListHolder.G
         implements IExList<GROUP, GROUPHOLDER, CHILD, CHILDHOLDER>, IExItemClickListener<GROUP, CHILD>,
         ExpandableListView.OnGroupClickListener, ExpandableListView.OnChildClickListener {
     private Adapter mAdapter;
-    private ExpandableListView mExpandableListView;
+    private ExpandableListView mListView;
 
     public ExListFramework(IFramework framework, int listId) {
         super(framework, listId);
@@ -60,14 +61,13 @@ public abstract class ExListFramework<GROUP, GROUPHOLDER extends IExListHolder.G
     @Override
     public void bindAdapter() {
         mAdapter = new Adapter();
-        mExpandableListView.setAdapter(mAdapter);
+        mListView.setAdapter(mAdapter);
     }
 
     @Override
     public void clear() {
         super.clear();
         mAdapter.clear();
-        refresh();
     }
 
     /**
@@ -77,7 +77,7 @@ public abstract class ExListFramework<GROUP, GROUPHOLDER extends IExListHolder.G
         int i;
 
         for (i = 0; i < getItemCount(); i++) {
-            mExpandableListView.collapseGroup(i);
+            mListView.collapseGroup(i);
         }
     }
 
@@ -89,7 +89,7 @@ public abstract class ExListFramework<GROUP, GROUPHOLDER extends IExListHolder.G
      */
     public void collapseGroup(int groupPosition) {
         if (groupPosition >= 0 && groupPosition < getItemCount()) {
-            mExpandableListView.collapseGroup(groupPosition);
+            mListView.collapseGroup(groupPosition);
         }
     }
 
@@ -100,7 +100,7 @@ public abstract class ExListFramework<GROUP, GROUPHOLDER extends IExListHolder.G
         int i;
 
         for (i = 0; i < getItemCount(); i++) {
-            mExpandableListView.expandGroup(i);
+            mListView.expandGroup(i);
         }
     }
 
@@ -121,10 +121,10 @@ public abstract class ExListFramework<GROUP, GROUPHOLDER extends IExListHolder.G
         if (groupPosition >= 0 && groupPosition < getItemCount()) {
             if (unique) {
                 for (i = 0; i < getItemCount(); i++) {
-                    mExpandableListView.collapseGroup(i);
+                    mListView.collapseGroup(i);
                 }
             }
-            mExpandableListView.expandGroup(groupPosition);
+            mListView.expandGroup(groupPosition);
         }
     }
 
@@ -212,7 +212,7 @@ public abstract class ExListFramework<GROUP, GROUPHOLDER extends IExListHolder.G
      * @return 是否已经展开
      */
     public final boolean isGroupExpanded(int groupPosition) {
-        return groupPosition >= 0 && groupPosition < getItemCount() && mExpandableListView.isGroupExpanded(groupPosition);
+        return groupPosition >= 0 && groupPosition < getItemCount() && mListView.isGroupExpanded(groupPosition);
     }
 
     @Override
@@ -239,10 +239,15 @@ public abstract class ExListFramework<GROUP, GROUPHOLDER extends IExListHolder.G
     }
 
     @Override
-    public void setListView(View listView) {
-        mExpandableListView = (ExpandableListView) listView;
-        mExpandableListView.setOnGroupClickListener(this);
-        mExpandableListView.setOnChildClickListener(this);
+    public void scrollToTop() {
+        mListView.smoothScrollToPositionFromTop(0, 0, 0);
+    }
+
+    @Override
+    public void setListView(AbsListView listView) {
+        mListView = (ExpandableListView) listView;
+        mListView.setOnGroupClickListener(this);
+        mListView.setOnChildClickListener(this);
     }
 
     /**
@@ -258,7 +263,7 @@ public abstract class ExListFramework<GROUP, GROUPHOLDER extends IExListHolder.G
     public final void setSelectedChild(int groupPosition, int childPosition, boolean shouldExpandGroup) {
         if (groupPosition >= 0 && groupPosition < getItemCount() && childPosition >= 0 &&
                 childPosition < getChildCount(groupPosition)) {
-            mExpandableListView.setSelectedChild(groupPosition, childPosition, shouldExpandGroup);
+            mListView.setSelectedChild(groupPosition, childPosition, shouldExpandGroup);
         }
     }
 
@@ -270,7 +275,7 @@ public abstract class ExListFramework<GROUP, GROUPHOLDER extends IExListHolder.G
      */
     public final void setSelectedGroup(int groupPosition) {
         if (groupPosition >= 0 && groupPosition < getItemCount()) {
-            mExpandableListView.setSelectedGroup(groupPosition);
+            mListView.setSelectedGroup(groupPosition);
         }
     }
 

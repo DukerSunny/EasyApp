@@ -9,10 +9,10 @@ import com.harreke.easyapp.tools.NetUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import tv.acfun.read.bases.application.AcFunRead;
 import tv.acfun.read.beans.CommentListPage;
 import tv.acfun.read.beans.Conversion;
 import tv.acfun.read.beans.FullConversion;
+import tv.acfun.read.tools.ubb.UBBEncoder;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/26
@@ -49,12 +49,14 @@ public class CommentListParser {
         ArrayList<Conversion> quoteList;
         HashMap<String, Conversion> map;
         ArrayList<Integer> list;
+        UBBEncoder encoder;
         int floorCount;
         int commentId;
         int quoteId;
         int repeatQuoteId;
         int i;
 
+        encoder = new UBBEncoder();
         mTotalPage = (page.getTotalCount() - 1) / page.getPageSize() + 1;
         mItemList = new ArrayList<FullConversion>();
         map = page.getMap();
@@ -63,7 +65,7 @@ public class CommentListParser {
             commentId = list.get(i);
             content = map.get("c" + commentId);
             if (content.getSpanned() == null) {
-                content.parse(context, tagClickListener);
+                content.parse(context, encoder, tagClickListener);
             }
             quoteList = new ArrayList<Conversion>();
             quoteId = content.getQuoteId();
@@ -75,7 +77,7 @@ public class CommentListParser {
 
                 quote = map.get("c" + quoteId);
                 if (quote.getSpanned() == null) {
-                    quote.parse(context, tagClickListener);
+                    quote.parse(context, encoder, tagClickListener);
                 }
                 quote.newQuoted();
                 if (repeatQuoteId == 0 && quote.getQuotedCount() > 1) {

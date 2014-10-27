@@ -78,8 +78,7 @@ public class CommentFragment extends FragmentFramework {
             public void onClick(View v) {
                 Conversion conversion = mHelper.getItem((Integer) v.getTag()).getContent();
 
-                start(ReplyActivity.create(getActivity(), mContentId, conversion.getId(), conversion.getFloorindex(),
-                        conversion.getUser().getUsername()));
+                start(ReplyActivity.create(getActivity(), mContentId, conversion.getId(), conversion.getFloorindex()), 0);
             }
         };
         mTagClickListener = new OnTagClickListener() {

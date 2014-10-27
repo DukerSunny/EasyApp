@@ -6,14 +6,13 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.Spinner;
 
 import com.harreke.easyapp.beans.ActionBarItem;
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.frameworks.list.abslistview.AbsListFramework;
 import com.harreke.easyapp.frameworks.list.abslistview.FooterLoadStatus;
-import com.harreke.easyapp.helpers.PopupAbsListHelper;
 import com.harreke.easyapp.widgets.InfoView;
 
 import java.util.ArrayList;
@@ -21,7 +20,6 @@ import java.util.ArrayList;
 import tv.acfun.read.R;
 import tv.acfun.read.api.API;
 import tv.acfun.read.beans.Search;
-import tv.acfun.read.holders.SearchSelectHolder;
 import tv.acfun.read.holders.SearchHolder;
 import tv.acfun.read.parsers.SearchListParser;
 
@@ -34,23 +32,16 @@ public class SearchActivity extends ActivityFramework {
     private int mOrderBy;
     private int mOrderId;
     private String mQuery;
-    private boolean mReverse;
     private SearchListHelper mSearchListHelper;
-    private PopupListHelper mSearchRangeHelper;
-    private AdapterView.OnItemClickListener mSearchRangeItemClickListener;
-    private PopupListHelper mSearchSortOrderHelper;
-    private AdapterView.OnItemClickListener mSearchSortOrderItemClickListener;
-    private PopupListHelper mSearchSortResultHelper;
-    private AdapterView.OnItemClickListener mSearchSortResultItemClickListener;
-    private PopupListHelper mSearchTargetHelper;
-    private AdapterView.OnItemClickListener mSearchTargetItemClickListener;
+    private AdapterView.OnItemSelectedListener mSearchRangeItemClickListener;
+    private AdapterView.OnItemSelectedListener mSearchSortResultItemClickListener;
+    private AdapterView.OnItemSelectedListener mSearchTargetItemClickListener;
     private View search_back;
     private View search_go;
     private EditText search_input;
-    private TextView search_range;
-    private TextView search_sortorder;
-    private TextView search_sortresult;
-    private TextView search_target;
+    private Spinner search_range;
+    private Spinner search_sortresult;
+    private Spinner search_target;
 
     public static Intent create(Context context) {
         return new Intent(context, SearchActivity.class);
@@ -60,15 +51,9 @@ public class SearchActivity extends ActivityFramework {
     public void assignEvents() {
         search_back.setOnClickListener(mClickListener);
         search_go.setOnClickListener(mClickListener);
-        search_sortresult.setOnClickListener(mClickListener);
-        search_target.setOnClickListener(mClickListener);
-        search_range.setOnClickListener(mClickListener);
-        search_sortorder.setOnClickListener(mClickListener);
-
-        mSearchSortResultHelper.setOnItemClickListener(mSearchSortResultItemClickListener);
-        mSearchTargetHelper.setOnItemClickListener(mSearchTargetItemClickListener);
-        mSearchRangeHelper.setOnItemClickListener(mSearchRangeItemClickListener);
-        mSearchSortOrderHelper.setOnItemClickListener(mSearchSortOrderItemClickListener);
+        search_sortresult.setOnItemSelectedListener(mSearchSortResultItemClickListener);
+        search_target.setOnItemSelectedListener(mSearchTargetItemClickListener);
+        search_range.setOnItemSelectedListener(mSearchRangeItemClickListener);
     }
 
     @Override
@@ -77,7 +62,6 @@ public class SearchActivity extends ActivityFramework {
         mChannelId = 110;
         mOrderBy = 0;
         mOrderId = 0;
-        mReverse = false;
     }
 
     @Override
@@ -91,26 +75,12 @@ public class SearchActivity extends ActivityFramework {
                         break;
                     case R.id.search_go:
                         searchGo();
-                        break;
-                    case R.id.search_sortresult:
-                        mSearchSortResultHelper.toggle();
-                        break;
-                    case R.id.search_target:
-                        mSearchTargetHelper.toggle();
-                        break;
-                    case R.id.search_range:
-                        mSearchRangeHelper.toggle();
-                        break;
-                    case R.id.search_sortorder:
-                        mSearchSortOrderHelper.toggle();
                 }
             }
         };
-        mSearchSortResultItemClickListener = new AdapterView.OnItemClickListener() {
+        mSearchSortResultItemClickListener = new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mSearchSortResultHelper.hide();
-                search_sortresult.setText(mSearchSortResultHelper.getItem(position));
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
                         mOrderId = 2;
@@ -122,12 +92,14 @@ public class SearchActivity extends ActivityFramework {
                         mOrderId = 4;
                 }
             }
-        };
-        mSearchTargetItemClickListener = new AdapterView.OnItemClickListener() {
+
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mSearchTargetHelper.hide();
-                search_target.setText(mSearchTargetHelper.getItem(position));
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        };
+        mSearchTargetItemClickListener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
                         mOrderBy = 1;
@@ -140,12 +112,14 @@ public class SearchActivity extends ActivityFramework {
 
                 }
             }
-        };
-        mSearchRangeItemClickListener = new AdapterView.OnItemClickListener() {
+
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mSearchRangeHelper.hide();
-                search_range.setText(mSearchRangeHelper.getItem(position));
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        };
+        mSearchRangeItemClickListener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
                         mChannelId = 110;
@@ -161,13 +135,9 @@ public class SearchActivity extends ActivityFramework {
                         break;
                 }
             }
-        };
-        mSearchSortOrderItemClickListener = new AdapterView.OnItemClickListener() {
+
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mSearchSortOrderHelper.hide();
-                search_sortorder.setText(mSearchSortOrderHelper.getItem(position));
-                mReverse = position != 0;
+            public void onNothingSelected(AdapterView<?> parent) {
             }
         };
     }
@@ -182,18 +152,6 @@ public class SearchActivity extends ActivityFramework {
 
     @Override
     protected void onDestroy() {
-        if (mSearchSortResultHelper != null) {
-            mSearchSortResultHelper.hide();
-        }
-        if (mSearchTargetHelper != null) {
-            mSearchTargetHelper.hide();
-        }
-        if (mSearchRangeHelper != null) {
-            mSearchRangeHelper.hide();
-        }
-        if (mSearchSortOrderHelper != null) {
-            mSearchSortOrderHelper.hide();
-        }
         super.onDestroy();
     }
 
@@ -204,32 +162,9 @@ public class SearchActivity extends ActivityFramework {
         search_back = findViewById(R.id.search_back);
         search_input = (EditText) findViewById(R.id.search_input);
         search_go = findViewById(R.id.search_go);
-        search_sortresult = (TextView) findViewById(R.id.search_sortresult);
-        search_target = (TextView) findViewById(R.id.search_target);
-        search_range = (TextView) findViewById(R.id.search_range);
-        search_sortorder = (TextView) findViewById(R.id.search_sortorder);
-
-        mSearchSortResultHelper = new PopupListHelper(this, search_sortresult);
-        //        mSearchSortResultHelper.add(0, getString(R.string.search_sortresult_relative));
-        mSearchSortResultHelper.add(1, getString(R.string.search_sortresult_releasedate));
-        mSearchSortResultHelper.add(2, getString(R.string.search_sortresult_views));
-        //        mSearchSortResultHelper.add(3, getString(R.string.search_sortresult_comments));
-        mSearchSortResultHelper.add(4, getString(R.string.search_sortresult_stows));
-
-        mSearchTargetHelper = new PopupListHelper(this, search_target);
-        mSearchTargetHelper.add(0, getString(R.string.search_target_title_tag));
-        mSearchTargetHelper.add(1, getString(R.string.search_target_content_description));
-        mSearchTargetHelper.add(2, getString(R.string.search_target_username));
-
-        mSearchRangeHelper = new PopupListHelper(this, search_range);
-        mSearchRangeHelper.add(0, getString(R.string.search_range_misc));
-        mSearchRangeHelper.add(1, getString(R.string.search_range_work_emotion));
-        mSearchRangeHelper.add(2, getString(R.string.search_range_dramaculture));
-        mSearchRangeHelper.add(3, getString(R.string.search_range_comic_novel));
-
-        mSearchSortOrderHelper = new PopupListHelper(this, search_sortorder);
-        mSearchSortOrderHelper.add(1, getString(R.string.search_sortorder_default));
-        mSearchSortOrderHelper.add(2, getString(R.string.search_sortorder_reverse));
+        search_sortresult = (Spinner) findViewById(R.id.search_sortresult);
+        search_target = (Spinner) findViewById(R.id.search_target);
+        search_range = (Spinner) findViewById(R.id.search_range);
 
         mSearchListHelper = new SearchListHelper(this, R.id.search_list);
         mSearchListHelper.addFooterView(footer_loadmore);
@@ -262,24 +197,7 @@ public class SearchActivity extends ActivityFramework {
     public void startAction() {
         if (mQuery != null) {
             mSearchListHelper
-                    .from(API.getSearch(mQuery, mChannelId, mOrderBy, mOrderId, 20, mSearchListHelper.getCurrentPage()),
-                            mReverse);
-        }
-    }
-
-    private class PopupListHelper extends PopupAbsListHelper<String, SearchSelectHolder> {
-        public PopupListHelper(Context context, View anchor) {
-            super(context, anchor);
-        }
-
-        @Override
-        public SearchSelectHolder createHolder(View convertView) {
-            return new SearchSelectHolder(convertView);
-        }
-
-        @Override
-        public View createView() {
-            return View.inflate(getActivity(), R.layout.item_searchselect, null);
+                    .from(API.getSearch(mQuery, mChannelId, mOrderBy, mOrderId, 20, mSearchListHelper.getCurrentPage()));
         }
     }
 

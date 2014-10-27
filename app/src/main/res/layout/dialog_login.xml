@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    style="@style/mw.v"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="8dp">
+
+    <EditText
+        android:id="@+id/login_account"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/White"
+        android:hint="@string/login_account"
+        android:lines="1"
+        android:padding="8dp"
+        android:textColor="@color/color_text_title"
+        android:textColorHint="@color/Assist"
+        android:textSize="16dp"/>
+
+    <EditText
+        android:id="@+id/login_password"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/White"
+        android:hint="@string/login_password"
+        android:inputType="textPassword"
+        android:lines="1"
+        android:padding="8dp"
+        android:textColor="@color/color_text_title"
+        android:textColorHint="@color/Assist"
+        android:textSize="16dp"/>
+
+    <CheckBox
+        android:id="@+id/login_remember"
+        style="@style/mw"
+        android:layout_marginTop="8dp"
+        android:button="@null"
+        android:drawableLeft="@drawable/button_check"
+        android:drawablePadding="8dp"
+        android:gravity="center_vertical"
+        android:text="@string/login_remember"
+        android:textColor="@color/Content"
+        android:textSize="16dp"/>
+
+    <LinearLayout
+        android:id="@+id/login_status"
+        style="@style/mw.h"
+        android:layout_margin="8dp"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/login_progress"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/anim_progress_radiant"/>
+
+        <TextView
+            android:id="@+id/login_message"
+            style="@style/ww"
+            android:layout_marginLeft="8dp"
+            android:text="@string/login_progress"
+            android:textColor="@color/Assist"
+            android:textSize="16dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

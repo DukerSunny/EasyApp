@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string-array name="search_sortresult">
+        <item>发布日期</item>
+        <item>点击数</item>
+        <item>收藏数</item>
+    </string-array>
+
+    <string-array name="search_target">
+        <item>标题和标签</item>
+        <item>内容和简介</item>
+        <item>用户名</item>
+    </string-array>
+
+    <string-array name="search_range">
+        <item>综合</item>
+        <item>工作•情感</item>
+        <item>动漫文化</item>
+        <item>漫画•轻小说</item>
+    </string-array>
+
     <string-array name="emot_name">
         <item>ac</item>
         <item>ais</item>

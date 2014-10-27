@@ -107,14 +107,6 @@ public interface IFramework extends IInfoClickListener {
 
     /**
      * 隐藏Toast
-     *
-     * @param animate
-     *         是否显示动画
-     */
-    public void hideToast(boolean animate);
-
-    /**
-     * 隐藏Toast
      */
     public void hideToast();
 

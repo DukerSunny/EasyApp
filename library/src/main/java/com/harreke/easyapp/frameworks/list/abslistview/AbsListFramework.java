@@ -103,6 +103,11 @@ public abstract class AbsListFramework<ITEM, HOLDER extends IAbsListHolder<ITEM>
         return mAdapter.getCount();
     }
 
+    @Override
+    public AbsListView getListView() {
+        return mListView;
+    }
+
     /**
      * 判断列表是否为空
      *
@@ -130,6 +135,11 @@ public abstract class AbsListFramework<ITEM, HOLDER extends IAbsListHolder<ITEM>
         mAdapter.refresh();
     }
 
+    @Override
+    public void scrollToTop() {
+        mListView.smoothScrollToPositionFromTop(0, 0, 0);
+    }
+
     public void setEnabled(boolean enabled) {
         mAdapter.setEnabled(enabled);
     }
@@ -141,8 +151,8 @@ public abstract class AbsListFramework<ITEM, HOLDER extends IAbsListHolder<ITEM>
      *         列表视图
      */
     @Override
-    public void setListView(View listView) {
-        mListView = (AbsListView) listView;
+    public void setListView(AbsListView listView) {
+        mListView = listView;
         mListView.setOnItemClickListener(this);
     }
 

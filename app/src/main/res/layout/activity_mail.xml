@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    style="@style/mm.v"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/Background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/White"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/mail_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/button_transparent"
+            android:padding="8dp"
+            android:src="@drawable/image_back"/>
+
+        <TextView
+            style="@style/mmw"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="@string/menu_mail"
+            android:textColor="@color/Title"
+            android:textSize="16dp"/>
+
+    </LinearLayout>
+
+    <FrameLayout
+        style="@style/mm">
+
+        <ListView
+            android:id="@+id/mail_list"
+            style="@style/mm"
+            android:divider="@color/Transparent"
+            android:dividerHeight="16dp"
+            android:listSelector="@drawable/button_transparent"
+            android:padding="8dp"/>
+
+        <com.harreke.easyapp.widgets.InfoView
+            android:id="@+id/mail_info"
+            style="@style/mm"
+            android:background="@color/TransparentWhite"
+            android:visibility="gone"
+            app:showRetryHintWhenEmpty="false"/>
+
+    </FrameLayout>
+
+</LinearLayout>

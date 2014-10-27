@@ -12,11 +12,6 @@
     <string name="app_ok">确定</string>
     <string name="app_reset">重置</string>
 
-    <string name="main_channel">频道</string>
-    <string name="main_recommend">推荐</string>
-
-    <string name="menu_login">请先登录</string>
-
     <string name="channel_misc">综合</string>
     <string name="channel_work_emotion">工作•情感</string>
     <string name="channel_dramaculture">动漫文化</string>
@@ -42,7 +37,12 @@
     <string name="comment_quote_text">引用内容</string>
     <string name="comment_quote_user_name"># 引用者</string>
 
+    <string name="comment_onlyemot">禁止发布纯表情评论！</string>
     <string name="comment_pager_title">第%s页</string>
+    <string name="comment_sending">正在发送评论 …</string>
+    <string name="comment_success">评论发送成功，请等待服务器刷新评论缓存！</string>
+    <string name="comment_failure">评论发送失败，请检查网络连接！</string>
+    <string name="comment_tooshort">评论过短，请重新输入！</string>
 
     <string name="content_comments">评论</string>
     <string name="content_date">MM月dd日（E）HH时mm分</string>
@@ -55,15 +55,26 @@
     <string name="content_redirect_aa">该链接指向合辑 ac%s，请使用视频客户端浏览</string>
 
     <string name="login_account">账号</string>
-    <string name="login_accessing">正在登录 …</string>
+    <string name="login_progress">正在登录 …</string>
     <string name="login_account_tooshort">账号过短！</string>
     <string name="login_account_toolong">账号过长！</string>
     <string name="login_denied">账号或密码不符，请重试！</string>
     <string name="login_password">密码</string>
     <string name="login_password_tooshort">密码过短！</string>
     <string name="login_password_toolong">密码过长！</string>
+    <string name="login_required">请先登录</string>
+    <string name="login_expired">身份验证过期，请重新登录</string>
+    <string name="login_unauthorized">未进行身份验证，请登录</string>
     <string name="login_remember">记住账号</string>
+    <string name="login_success">登录成功</string>
     <string name="login_timeout">登录超时，请重试！</string>
+
+    <string name="logout_sure">确认注销？</string>
+
+    <string name="mail_new">new</string>
+
+    <string name="main_channel">频道</string>
+    <string name="main_recommend">推荐</string>
 
     <string name="menu_at">有人召唤</string>
     <string name="menu_favourite">收藏稿件</string>
@@ -82,26 +93,6 @@
     <string name="reply_input">输入评论内容</string>
 
     <string name="reply_pickcolor">选择颜色</string>
-
-    <string name="search_sortresult">结果排序</string>
-    <string name="search_sortresult_relative">相关度</string>
-    <string name="search_sortresult_releasedate">发布日期</string>
-    <string name="search_sortresult_views">点击数</string>
-    <string name="search_sortresult_comments">评论数</string>
-    <string name="search_sortresult_stows">收藏数</string>
-    <string name="search_target">搜索项目</string>
-    <string name="search_target_title_tag">标题和标签</string>
-    <string name="search_target_content_description">内容和简介</string>
-    <string name="search_target_username">用户名</string>
-    <string name="search_range">搜索范围</string>
-    <string name="search_range_all">全部</string>
-    <string name="search_range_misc">综合</string>
-    <string name="search_range_work_emotion">工作•情感</string>
-    <string name="search_range_dramaculture">动漫文化</string>
-    <string name="search_range_comic_novel">漫画•轻小说</string>
-    <string name="search_sortorder">排序方式</string>
-    <string name="search_sortorder_default">默认排序</string>
-    <string name="search_sortorder_reverse">反向排序</string>
 
     <string name="search_tooshort">关键字过短，请重新输入！</string>
 

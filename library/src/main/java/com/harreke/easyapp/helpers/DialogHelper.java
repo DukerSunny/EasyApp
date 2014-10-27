@@ -3,7 +3,10 @@ package com.harreke.easyapp.helpers;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.View;
+
+import java.lang.reflect.Field;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/07/24
@@ -11,109 +14,82 @@ import android.view.View;
  * 对话框助手
  */
 public class DialogHelper {
+    private final static String TAG = "DialogHelper";
+    private DialogInterface.OnClickListener mClickListener = null;
+    private DialogInterface.OnClickListener mDialogListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            if (mClickListener != null) {
+                forceShow();
+                mClickListener.onClick(dialog, which);
+            }
+        }
+    };
     private AlertDialog mDialog = null;
-
-    /**
-     * 创建对话框助手
-     *
-     * @param context
-     *         创建的Context
-     * @param titleId
-     *         对话框标题Id，为0则不显示标题
-     * @param positiveId
-     *         确认按钮标题Id，为0则不显示确认按钮
-     * @param negativeId
-     *         取消按钮标题Id，为0则不显示取消按钮
-     * @param neutralId
-     *         额外按钮Id， 为0则不显示额外按钮
-     * @param clickListener
-     *         对话框点击监听器
-     */
-    public DialogHelper(Context context, int titleId, int positiveId, int negativeId, int neutralId,
-            DialogInterface.OnClickListener clickListener) {
-        this(context, titleId, positiveId, negativeId, neutralId, 0, null, null, clickListener);
-    }
 
     public DialogHelper(Context context) {
         mDialog = new AlertDialog.Builder(context).create();
     }
 
-    private DialogHelper(Context context, int titleId, int positiveId, int negativeId, int neutralId, int contentId,
-            String[] items, View view, DialogInterface.OnClickListener clickListener) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+    private void forceClose() {
+        Field field;
 
-        if (titleId > 0) {
-            builder.setTitle(titleId);
+        try {
+            field = mDialog.getClass().getSuperclass().getDeclaredField("mShowing");
+            field.setAccessible(true);
+            field.set(mDialog, true);
+        } catch (Exception e) {
+            Log.e(TAG, "Hack dialog failed");
         }
-        if (positiveId > 0) {
-            builder.setPositiveButton(positiveId, clickListener);
-        }
-        if (negativeId > 0) {
-            builder.setNegativeButton(negativeId, clickListener);
-        }
-        if (neutralId > 0) {
-            builder.setNeutralButton(neutralId, clickListener);
-        }
-        if (contentId > 0) {
-            builder.setMessage(contentId);
-        }
-        if (items != null) {
-            builder.setItems(items, clickListener);
-        }
-        if (view != null) {
-            builder.setView(view);
-        }
-
-        mDialog = builder.create();
     }
 
-    public DialogHelper(Context context, int titleId, int positiveId, int negativeId, int neutralId, int contentId,
-            DialogInterface.OnClickListener clickListener) {
-        this(context, titleId, positiveId, negativeId, neutralId, contentId, null, null, clickListener);
-    }
+    private void forceShow() {
+        Field field;
 
-    public DialogHelper(Context context, int titleId, int positiveId, int negativeId, int neutralId, String[] items,
-            DialogInterface.OnClickListener clickListener) {
-        this(context, titleId, positiveId, negativeId, neutralId, 0, items, null, clickListener);
-    }
-
-    public DialogHelper(Context context, int titleId, int positiveId, int negativeId, int neutralId, View view,
-            DialogInterface.OnClickListener clickListener) {
-        this(context, titleId, positiveId, negativeId, neutralId, 0, null, view, clickListener);
-    }
-
-    public final void hide() {
-        if (mDialog != null) {
-            mDialog.dismiss();
+        try {
+            field = mDialog.getClass().getSuperclass().getDeclaredField("mShowing");
+            field.setAccessible(true);
+            field.set(mDialog, false);
+        } catch (Exception e) {
+            Log.e(TAG, "Hack dialog failed");
         }
+    }
+
+    public void hide() {
+        forceClose();
+        mDialog.dismiss();
     }
 
     public final boolean isShowing() {
         return mDialog.isShowing();
     }
 
-    public void setNegativeButton(int textId, DialogInterface.OnClickListener clickListener) {
-        setNegativeButton(mDialog.getContext().getString(textId), clickListener);
+    public void setNegativeButton(int textId) {
+        setNegativeButton(mDialog.getContext().getString(textId));
     }
 
-    public void setNegativeButton(String text, DialogInterface.OnClickListener clickListener) {
-        mDialog.setButton(DialogInterface.BUTTON_NEGATIVE, text, clickListener);
+    public void setNegativeButton(String text) {
+        mDialog.setButton(DialogInterface.BUTTON_NEGATIVE, text, mDialogListener);
     }
 
-    public void setNeutralButton(int textId, DialogInterface.OnClickListener clickListener) {
-        setNeutralButton(mDialog.getContext().getString(textId), clickListener);
+    public void setNeutralButton(int textId) {
+        setNeutralButton(mDialog.getContext().getString(textId));
     }
 
-    public void setNeutralButton(String text, DialogInterface.OnClickListener clickListener) {
-        mDialog.setButton(DialogInterface.BUTTON_NEUTRAL, text, clickListener);
+    public void setNeutralButton(String text) {
+        mDialog.setButton(DialogInterface.BUTTON_NEUTRAL, text, mDialogListener);
     }
 
-    public void setPositiveButton(int textId, DialogInterface.OnClickListener clickListener) {
-        setPositiveButton(mDialog.getContext().getString(textId), clickListener);
+    public void setOnClickListener(DialogInterface.OnClickListener clickListener) {
+        mClickListener = clickListener;
     }
 
-    public void setPositiveButton(String text, DialogInterface.OnClickListener clickListener) {
-        mDialog.setButton(DialogInterface.BUTTON_POSITIVE, text, clickListener);
+    public void setPositiveButton(int textId) {
+        setPositiveButton(mDialog.getContext().getString(textId));
+    }
+
+    public void setPositiveButton(String text) {
+        mDialog.setButton(DialogInterface.BUTTON_POSITIVE, text, mDialogListener);
     }
 
     public void setTitle(String text) {
@@ -128,9 +104,11 @@ public class DialogHelper {
         mDialog.setView(view);
     }
 
-    public final void show() {
-        if (mDialog != null) {
-            mDialog.show();
-        }
+    public void setView(int layoutId) {
+        mDialog.setView(View.inflate(mDialog.getContext(), layoutId, null));
+    }
+
+    public void show() {
+        mDialog.show();
     }
 }

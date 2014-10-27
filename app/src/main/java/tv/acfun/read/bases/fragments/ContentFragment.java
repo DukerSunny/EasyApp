@@ -167,6 +167,7 @@ public class ContentFragment extends FragmentFramework {
         mRedirectClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                mRedirectHelper.hide();
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
                         start(ContentActivity.create(getActivity(), mRedirectId));
@@ -208,8 +209,9 @@ public class ContentFragment extends FragmentFramework {
     public void queryLayout() {
         content_web = (WebView) findViewById(R.id.content_web);
         mRedirectHelper = new DialogHelper(getActivity());
-        mRedirectHelper.setPositiveButton(R.string.app_ok, mRedirectClickListener);
-        mRedirectHelper.setNegativeButton(R.string.app_cancel, mRedirectClickListener);
+        mRedirectHelper.setPositiveButton(R.string.app_ok);
+        mRedirectHelper.setNegativeButton(R.string.app_cancel);
+        mRedirectHelper.setOnClickListener(mRedirectClickListener);
     }
 
     private void replaceImageUrl(int position) {

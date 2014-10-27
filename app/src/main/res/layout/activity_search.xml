@@ -46,41 +46,23 @@
         style="@style/mw.h"
         android:background="@color/White">
 
-        <TextView
+        <Spinner
             android:id="@+id/search_sortresult"
             style="@style/mww"
-            android:background="@drawable/button_spinner"
-            android:gravity="center"
-            android:padding="8dp"
-            android:text="@string/search_sortresult_releasedate"
-            android:textColor="@color/Content"/>
+            android:entries="@array/search_sortresult"
+            android:gravity="center"/>
 
-        <TextView
+        <Spinner
             android:id="@+id/search_target"
             style="@style/mww"
-            android:background="@drawable/button_spinner"
-            android:gravity="center"
-            android:padding="8dp"
-            android:text="@string/search_target_title_tag"
-            android:textColor="@color/Content"/>
+            android:entries="@array/search_target"
+            android:gravity="center"/>
 
-        <TextView
+        <Spinner
             android:id="@+id/search_range"
             style="@style/mww"
-            android:background="@drawable/button_spinner"
-            android:gravity="center"
-            android:padding="8dp"
-            android:text="@string/search_range_misc"
-            android:textColor="@color/Content"/>
-
-        <TextView
-            android:id="@+id/search_sortorder"
-            style="@style/mww"
-            android:background="@drawable/button_spinner"
-            android:gravity="center"
-            android:padding="8dp"
-            android:text="@string/search_sortorder_default"
-            android:textColor="@color/Content"/>
+            android:entries="@array/search_range"
+            android:gravity="center"/>
 
     </LinearLayout>
 

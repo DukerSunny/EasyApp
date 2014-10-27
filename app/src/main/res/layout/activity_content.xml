@@ -32,6 +32,7 @@
             android:id="@+id/content_favourite_add_button"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:background="@drawable/button_transparent"
             android:padding="8dp"
             android:src="@drawable/image_favourite_add"/>
 
@@ -39,6 +40,7 @@
             android:id="@+id/content_favourtie_remove_button"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:background="@drawable/button_transparent"
             android:padding="8dp"
             android:src="@drawable/image_favourite_remove"
             android:visibility="gone"/>
@@ -47,6 +49,7 @@
             android:id="@+id/content_share_button"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:background="@drawable/button_transparent"
             android:padding="8dp"
             android:src="@drawable/image_share"/>
 
@@ -54,6 +57,7 @@
             android:id="@+id/content_comments_button"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:background="@drawable/button_transparent"
             android:padding="8dp"
             android:src="@drawable/image_comments"/>
 

@@ -17,7 +17,6 @@ import com.harreke.easyapp.helpers.RequestHelper;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
 import com.harreke.easyapp.widgets.InfoView;
-import com.harreke.easyapp.widgets.ToastView;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/07/24
@@ -29,7 +28,6 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
 
     private FrameLayout framework_content;
     private InfoView framework_info;
-    private ToastView framework_toast;
     private boolean mCreated = false;
     private View.OnClickListener mInfoClickListener = new View.OnClickListener() {
         @Override
@@ -335,7 +333,7 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
     }
 
     /**
-     * 隐藏ActoinBar上的指定菜单选项
+     * 隐藏ActionBar上的指定菜单选项
      */
     @Override
     public void hideActionBarItem(int position) {
@@ -348,25 +346,18 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
 
     /**
      * 隐藏Toast
-     *
-     * @param animate
-     *         是否显示动画
-     */
-    @Override
-    public final void hideToast(boolean animate) {
-        framework_toast.hide(animate);
-    }
-
-    /**
-     * 隐藏Toast
      */
     @Override
     public final void hideToast() {
-        framework_toast.hide();
+        ActivityFramework activity = getActivityFramework();
+
+        if (activity != null) {
+            activity.hideToast();
+        }
     }
 
     /**
-     * 判断ActionB上的某个菜单选项是否正在显示
+     * 判断ActionBar上的某个菜单选项是否正在显示
      *
      * @param position
      *         菜单选项位置
@@ -409,7 +400,6 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
         if (framework != null) {
             framework_content = (FrameLayout) framework.findViewById(R.id.framework_content);
             framework_info = (InfoView) framework.findViewById(R.id.framework_info);
-            framework_toast = (ToastView) framework.findViewById(R.id.framework_toast);
             mRequest = new RequestHelper();
             framework_info.setOnClickListener(mInfoClickListener);
 
@@ -425,7 +415,6 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
 
     @Override
     public void onDestroyView() {
-        hideToast(false);
         cancelRequest();
         mCreated = false;
         super.onDestroyView();
@@ -691,7 +680,7 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
      */
     @Override
     public final void showToast(String text) {
-        framework_toast.show(text, false);
+        showToast(text, false);
     }
 
     /**
@@ -702,7 +691,7 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
      */
     @Override
     public final void showToast(int textId) {
-        framework_toast.show(getString(textId), false);
+        showToast(getString(textId));
     }
 
     /**
@@ -715,7 +704,11 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
      */
     @Override
     public final void showToast(String text, boolean progress) {
-        framework_toast.show(text, progress);
+        ActivityFramework activity = getActivityFramework();
+
+        if (activity != null) {
+            activity.showToast(text, progress);
+        }
     }
 
     /**
@@ -728,7 +721,7 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
      */
     @Override
     public final void showToast(int textId, boolean progress) {
-        framework_toast.show(getString(textId), progress);
+        showToast(getString(textId), progress);
     }
 
     /**
@@ -755,7 +748,6 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
         ActivityFramework activity = getActivityFramework();
 
         if (activity != null) {
-            hideToast(false);
             activity.start(intent, animate);
         }
     }
@@ -773,7 +765,7 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
         ActivityFramework activity = getActivityFramework();
 
         if (activity != null) {
-            hideToast(false);
+            hideToast();
             startActivityForResult(intent, requestCode);
             activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         }

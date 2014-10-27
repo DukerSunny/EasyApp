@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    style="@style/mw.h"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/chat_send"
+        style="@style/mww"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/image_chat_send"/>
+
+    <ImageView
+        android:id="@+id/chat_avatar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/image_avatar"/>
+
+    <TextView
+        android:id="@+id/chat_receive"
+        style="@style/mww"
+        android:layout_marginLeft="8dp"
+        android:background="@drawable/image_chat_receive"/>
+
+</LinearLayout>

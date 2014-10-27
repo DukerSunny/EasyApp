@@ -290,6 +290,17 @@
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/profile_user_logout"
+                style="@style/mw"
+                android:layout_margin="16dp"
+                android:background="@color/Crimson"
+                android:gravity="center"
+                android:padding="16dp"
+                android:text="@string/app_logout"
+                android:textColor="@color/White"
+                android:textSize="16dp"/>
+
         </LinearLayout>
 
     </ScrollView>

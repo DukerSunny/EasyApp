@@ -15,11 +15,16 @@ import android.widget.TextView;
 import com.harreke.easyapp.adapters.fragment.FragmentPageAdapter;
 import com.harreke.easyapp.beans.ActionBarItem;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
+import com.harreke.easyapp.requests.IRequestCallback;
+import com.harreke.easyapp.requests.RequestBuilder;
 import com.harreke.easyapp.tools.GsonUtil;
 
 import tv.acfun.read.R;
+import tv.acfun.read.bases.application.AcFunRead;
 import tv.acfun.read.bases.fragments.CommentFragment;
 import tv.acfun.read.beans.Content;
+import tv.acfun.read.beans.User;
+import tv.acfun.read.helpers.LoginHelper;
 import tv.acfun.read.listeners.OnTotalPageChangedListener;
 
 /**
@@ -33,14 +38,18 @@ public class CommentActivity extends ActivityFramework implements OnTotalPageCha
     private View comment_reply;
     private Adapter mAdapter;
     private View.OnClickListener mClickListener;
-    private Content mContent;
+    private int mContentId;
     private Handler mHandler;
+    private LoginHelper mLoginHelper;
+    private LoginHelper.OnLoginListener mLoginListener;
     private int mTotalPage;
+    private User mUser;
 
-    public static Intent create(Context context, Content comment) {
+    public static Intent create(Context context, Content content) {
         Intent intent = new Intent(context, CommentActivity.class);
 
-        intent.putExtra("comment", GsonUtil.toString(comment));
+        intent.putExtra("contentId", content.getContentId());
+        intent.putExtra("user", GsonUtil.toString(content.getUser()));
 
         return intent;
     }
@@ -50,6 +59,8 @@ public class CommentActivity extends ActivityFramework implements OnTotalPageCha
         comment_back.setOnClickListener(mClickListener);
         comment_refresh.setOnClickListener(mClickListener);
         comment_reply.setOnClickListener(mClickListener);
+
+        mLoginHelper.setOnLoginListener(mLoginListener);
     }
 
     private void checkTotalPage() {
@@ -62,8 +73,10 @@ public class CommentActivity extends ActivityFramework implements OnTotalPageCha
 
     @Override
     public void initData(Intent intent) {
-        mContent = GsonUtil.toBean(intent.getStringExtra("comment"), Content.class);
-        mTotalPage = (mContent.getComments() - 1) / 50 + 1;
+        mContentId = intent.getIntExtra("contentId", 0);
+        mUser = GsonUtil.toBean(intent.getStringExtra("user"), User.class);
+
+        mTotalPage = 1;
     }
 
     @Override
@@ -76,12 +89,14 @@ public class CommentActivity extends ActivityFramework implements OnTotalPageCha
                         onBackPressed();
                         break;
                     case R.id.comment_refresh:
-                        mAdapter.clear();
-                        mAdapter.refresh();
+                        refreshComments();
                         break;
                     case R.id.comment_reply:
-                        start(ReplyActivity
-                                .create(getActivity(), mContent.getContentId(), 0, 0, mContent.getUser().getUsername()));
+                        if (AcFunRead.getInstance().readFullUser() == null) {
+                            mLoginHelper.show();
+                        } else {
+                            start(ReplyActivity.create(getActivity(), mContentId, 0, 0), 0);
+                        }
                 }
             }
         };
@@ -94,6 +109,25 @@ public class CommentActivity extends ActivityFramework implements OnTotalPageCha
                 return false;
             }
         });
+        mLoginListener = new LoginHelper.OnLoginListener() {
+            @Override
+            public void onCancelRequest() {
+                cancelRequest();
+            }
+
+            @Override
+            public void onExecuteRequest(RequestBuilder builder, IRequestCallback<String> callback) {
+                executeRequest(builder, callback);
+            }
+
+            @Override
+            public void onSuccess() {
+                if (mLoginHelper.isShowing()) {
+                    start(ReplyActivity.create(getActivity(), mContentId, 0, 0), 0);
+                }
+                mLoginHelper.hide();
+            }
+        };
     }
 
     @Override
@@ -103,6 +137,23 @@ public class CommentActivity extends ActivityFramework implements OnTotalPageCha
     @Override
     public void onActionBarMenuCreate() {
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            Log.e(null, "result success");
+            showToast(R.string.comment_success);
+            refreshComments();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        mLoginHelper.hide();
+        super.onDestroy();
     }
 
     @Override
@@ -128,10 +179,18 @@ public class CommentActivity extends ActivityFramework implements OnTotalPageCha
         comment_pager_indicator.setTabIndicatorColorResource(R.color.Theme);
         comment_pager_indicator.setTextColor(getResources().getColor(R.color.Title));
 
-        comment_id.setText("ac" + mContent.getContentId());
+        comment_id.setText("ac" + mContentId);
+
+        mLoginHelper = new LoginHelper(getActivity());
+        mLoginHelper.setOnLoginListener(mLoginListener);
 
         mAdapter = new Adapter(getSupportFragmentManager());
         checkTotalPage();
+    }
+
+    private void refreshComments() {
+        mAdapter.clear();
+        mAdapter.refresh();
     }
 
     @Override
@@ -156,7 +215,7 @@ public class CommentActivity extends ActivityFramework implements OnTotalPageCha
 
         @Override
         public Fragment getItem(int position) {
-            return CommentFragment.create(mContent.getContentId(), position + 1);
+            return CommentFragment.create(mContentId, position + 1);
         }
 
         @Override

@@ -1,49 +1,63 @@
 package tv.acfun.read.widgets;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.Build;
+import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
+import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 import android.util.AttributeSet;
-import android.util.Log;
+import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.EditText;
 
-import com.harreke.easyapp.tools.TagClickableSpan;
-
 import tv.acfun.read.bases.application.AcFunRead;
-import tv.acfun.read.tools.UBB;
+import tv.acfun.read.tools.ubb.UBBDecoder;
+import tv.acfun.read.tools.ubb.UBBEncoder;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/10/11
  */
 public class UBBEditText extends EditText {
+    public final static int CONVERT_AT = 4;
+    public final static int CONVERT_BOLD = 1;
+    public final static int CONVERT_COLOR = 5;
+    public final static int CONVERT_EMOT = 7;
+    public final static int CONVERT_SIZE = 6;
+    public final static int CONVERT_STRIKETHROUGH = 3;
+    public final static int CONVERT_UNDERLINE = 2;
     private final static String TAG = "UBBEditText";
+    private UBBDecoder mDecoder;
+    private UBBEncoder mEncoder;
 
     public UBBEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        mEncoder = new UBBEncoder();
+        mDecoder = new UBBDecoder();
     }
 
-    private void convert(String rawText) {
-        setText(UBB.fromUBB(rawText, null));
+    private void clearSpans(SpannableStringBuilder builder, CharacterStyle[] spans) {
+        int i;
+
+        for (i = 0; i < spans.length; i++) {
+            builder.removeSpan(spans[i]);
+        }
     }
 
-    public String getRawText() {
-        Log.e(TAG, "getRawText" + UBB.toUBB(getText()));
-
-        return UBB.toUBB(getText());
+    private void convert(String ubbText) {
+        setText(mEncoder.encode(ubbText, null));
     }
 
-    private String getString(SpannableStringBuilder builder, int start, int end) {
-        char[] chars = new char[end - start];
-        builder.getChars(start, end, chars, 0);
-
-        return new String(chars);
+    public String getUBBText() {
+        return mDecoder.decode(getText());
     }
 
     public void insertEmot(String which, int position) {
@@ -64,111 +78,143 @@ public class UBBEditText extends EditText {
         setSelection(start + emotUBB.length());
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private void selectAllWithAction() {
+        Bundle bundle;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            bundle = new Bundle();
+            bundle.putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_START_INT, 0);
+            bundle.putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_END_INT, length());
+            performAccessibilityAction(AccessibilityNodeInfo.ACTION_SET_SELECTION, bundle);
+        }
+    }
+
     public void setColor(int color) {
         SpannableStringBuilder builder = new SpannableStringBuilder(getText());
+        ForegroundColorSpan[] sizeSpans;
+        ForegroundColorSpan sizeSpan;
         int start = getSelectionStart();
         int end = getSelectionEnd();
-        ForegroundColorSpan[] colorSpans;
-        ForegroundColorSpan colorSpan;
-        int i;
+        int spanStart;
+        int spanEnd;
+        int spanColor;
 
-        if (start != end) {
-            colorSpans = builder.getSpans(start, end, ForegroundColorSpan.class);
-            if (colorSpans.length > 0) {
-                for (i = 0; i < colorSpans.length; i++) {
-                    builder.removeSpan(colorSpans[i]);
-                }
+        if (builder.length() > 0) {
+            if (start == end) {
+                selectAllWithAction();
             } else {
-                colorSpan = new ForegroundColorSpan(color);
-                builder.setSpan(colorSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-            setText(builder);
-            setSelection(end);
-        }
-    }
-
-    public void setRawText(String rawText) {
-        Log.e(TAG, "setRawText " + rawText);
-        convert(rawText);
-        setSelection(getText().length());
-    }
-
-    public void setSize(int size) {
-        SpannableStringBuilder builder = new SpannableStringBuilder(getText());
-        int start = getSelectionStart();
-        int end = getSelectionEnd();
-        AbsoluteSizeSpan[] sizeSpans;
-        AbsoluteSizeSpan sizeSpan;
-        int i;
-
-        if (start != end) {
-            sizeSpans = builder.getSpans(start, end, AbsoluteSizeSpan.class);
-            if (sizeSpans.length > 0) {
-                for (i = 0; i < sizeSpans.length; i++) {
-                    builder.removeSpan(sizeSpans[i]);
-                }
-            } else {
-                sizeSpan = new AbsoluteSizeSpan(size, true);
-                builder.setSpan(sizeSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-            setText(builder);
-            setSelection(end);
-        }
-    }
-
-    public void toggleAt() {
-        SpannableStringBuilder builder = new SpannableStringBuilder(getText());
-        int start = getSelectionStart();
-        int end = getSelectionEnd();
-        String atText;
-        TagClickableSpan[] tagClickableSpans;
-        TagClickableSpan tagClickableSpan;
-        int i;
-
-        if (start != end) {
-            tagClickableSpans = builder.getSpans(start, end, TagClickableSpan.class);
-            if (tagClickableSpans.length > 0) {
-                for (i = 0; i < tagClickableSpans.length; i++) {
-                    tagClickableSpan = tagClickableSpans[i];
-                    if ("at".equals(tagClickableSpan.getTag())) {
-                        builder.removeSpan(tagClickableSpan);
+                sizeSpans = builder.getSpans(start, end, ForegroundColorSpan.class);
+                if (sizeSpans.length == 0) {
+                    builder.setSpan(new ForegroundColorSpan(color), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                } else {
+                    sizeSpan = sizeSpans[sizeSpans.length - 1];
+                    spanStart = builder.getSpanStart(sizeSpan);
+                    spanEnd = builder.getSpanEnd(sizeSpan);
+                    spanColor = sizeSpan.getForegroundColor();
+                    clearSpans(builder, sizeSpans);
+                    if (spanStart < start && spanEnd == end) {
+                        builder.setSpan(new ForegroundColorSpan(spanColor), spanStart, start, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    } else if (spanStart == start && spanEnd > end) {
+                        builder.setSpan(new ForegroundColorSpan(spanColor), end, spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    } else if (spanStart < start && spanEnd > end) {
+                        builder.setSpan(new ForegroundColorSpan(spanColor), spanStart, start, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        builder.setSpan(new ForegroundColorSpan(spanColor), end, spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    } else if (spanStart > start || spanEnd < end) {
+                        builder.setSpan(new ForegroundColorSpan(color), Math.min(start, spanStart), Math.max(end, spanEnd),
+                                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
                 }
                 setText(builder);
                 setSelection(end);
-            } else {
-                atText = "@" + getString(builder, start, end);
-                if (!atText.contains("[emot")) {
-                    builder.replace(start, end, atText);
-                    tagClickableSpan = new TagClickableSpan("at", atText, null);
-                    builder.setSpan(tagClickableSpan, start, start + atText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    setText(builder);
-                    setSelection(start + atText.length());
-                }
             }
         }
     }
 
-    public void toggleBold() {
+    public void setSize(int size) {
         SpannableStringBuilder builder = new SpannableStringBuilder(getText());
+        AbsoluteSizeSpan[] sizeSpans;
+        AbsoluteSizeSpan sizeSpan;
         int start = getSelectionStart();
         int end = getSelectionEnd();
+        int spanStart;
+        int spanEnd;
+        int spanSize;
+
+        if (builder.length() > 0) {
+            if (start == end) {
+                selectAllWithAction();
+            } else {
+                sizeSpans = builder.getSpans(start, end, AbsoluteSizeSpan.class);
+                if (sizeSpans.length == 0) {
+                    builder.setSpan(new AbsoluteSizeSpan(size, true), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                } else {
+                    sizeSpan = sizeSpans[sizeSpans.length - 1];
+                    spanStart = builder.getSpanStart(sizeSpan);
+                    spanEnd = builder.getSpanEnd(sizeSpan);
+                    spanSize = sizeSpan.getSize();
+                    clearSpans(builder, sizeSpans);
+                    if (spanStart < start && spanEnd == end) {
+                        builder.setSpan(new AbsoluteSizeSpan(spanSize, true), spanStart, start,
+                                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    } else if (spanStart == start && spanEnd > end) {
+                        builder.setSpan(new AbsoluteSizeSpan(spanSize, true), end, spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    } else if (spanStart < start && spanEnd > end) {
+                        builder.setSpan(new AbsoluteSizeSpan(spanSize, true), spanStart, start,
+                                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        builder.setSpan(new AbsoluteSizeSpan(spanSize, true), end, spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    } else if (spanStart > start || spanEnd < end) {
+                        builder.setSpan(new AbsoluteSizeSpan(size, true), Math.min(start, spanStart), Math.max(end, spanEnd),
+                                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                }
+                setText(builder);
+                setSelection(end);
+            }
+        }
+    }
+
+    public void setUBBText(String ubbText) {
+        convert(ubbText);
+        setSelection(getText().length());
+    }
+
+    public void toggleBold() {
+        SpannableStringBuilder builder = new SpannableStringBuilder(getText());
         StyleSpan[] styleSpans;
         StyleSpan styleSpan;
-        int i;
+        int start = getSelectionStart();
+        int end = getSelectionEnd();
+        int spanStart;
+        int spanEnd;
 
-        if (start != end) {
-            styleSpans = builder.getSpans(start, end, StyleSpan.class);
-            if (styleSpans.length > 0) {
-                for (i = 0; i < styleSpans.length; i++) {
-                    builder.removeSpan(styleSpans[i]);
-                }
+        if (builder.length() > 0) {
+            if (start == end) {
+                selectAllWithAction();
             } else {
-                styleSpan = new StyleSpan(Typeface.BOLD);
-                builder.setSpan(styleSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                styleSpans = builder.getSpans(start, end, StyleSpan.class);
+                if (styleSpans.length == 0) {
+                    builder.setSpan(new StyleSpan(Typeface.BOLD), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                } else {
+                    styleSpan = styleSpans[styleSpans.length - 1];
+                    spanStart = builder.getSpanStart(styleSpan);
+                    spanEnd = builder.getSpanEnd(styleSpan);
+                    clearSpans(builder, styleSpans);
+                    if (spanStart < start && spanEnd == end) {
+                        builder.setSpan(new StyleSpan(Typeface.BOLD), spanStart, start, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    } else if (spanStart == start && spanEnd > end) {
+                        builder.setSpan(new StyleSpan(Typeface.BOLD), end, spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    } else if (spanStart < start && spanEnd > end) {
+                        builder.setSpan(new StyleSpan(Typeface.BOLD), spanStart, start, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        builder.setSpan(new StyleSpan(Typeface.BOLD), end, spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    } else if (spanStart > start || spanEnd < end) {
+                        builder.setSpan(new StyleSpan(Typeface.BOLD), Math.min(start, spanStart), Math.max(end, spanEnd),
+                                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                }
+                setText(builder);
+                setSelection(end);
             }
-            setText(builder);
-            setSelection(end);
         }
     }
 
@@ -177,47 +223,79 @@ public class UBBEditText extends EditText {
 
     public void toggleStrikethrough() {
         SpannableStringBuilder builder = new SpannableStringBuilder(getText());
+        StrikethroughSpan[] styleSpans;
+        StrikethroughSpan styleSpan;
         int start = getSelectionStart();
         int end = getSelectionEnd();
-        StrikethroughSpan[] strikethroughSpans;
-        StrikethroughSpan strikethroughSpan;
-        int i;
+        int spanStart;
+        int spanEnd;
 
-        if (start != end) {
-            strikethroughSpans = builder.getSpans(start, end, StrikethroughSpan.class);
-            if (strikethroughSpans.length > 0) {
-                for (i = 0; i < strikethroughSpans.length; i++) {
-                    builder.removeSpan(strikethroughSpans[i]);
-                }
+        if (builder.length() > 0) {
+            if (start == end) {
+                selectAllWithAction();
             } else {
-                strikethroughSpan = new StrikethroughSpan();
-                builder.setSpan(strikethroughSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                styleSpans = builder.getSpans(start, end, StrikethroughSpan.class);
+                if (styleSpans.length == 0) {
+                    builder.setSpan(new StrikethroughSpan(), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                } else {
+                    styleSpan = styleSpans[styleSpans.length - 1];
+                    spanStart = builder.getSpanStart(styleSpan);
+                    spanEnd = builder.getSpanEnd(styleSpan);
+                    clearSpans(builder, styleSpans);
+                    if (spanStart < start && spanEnd == end) {
+                        builder.setSpan(new StrikethroughSpan(), spanStart, start, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    } else if (spanStart == start && spanEnd > end) {
+                        builder.setSpan(new StrikethroughSpan(), end, spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    } else if (spanStart < start && spanEnd > end) {
+                        builder.setSpan(new StrikethroughSpan(), spanStart, start, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        builder.setSpan(new StrikethroughSpan(), end, spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    } else if (spanStart > start || spanEnd < end) {
+                        builder.setSpan(new StrikethroughSpan(), Math.min(start, spanStart), Math.max(end, spanEnd),
+                                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                }
+                setText(builder);
+                setSelection(end);
             }
-            setText(builder);
-            setSelection(end);
         }
     }
 
     public void toggleUnderline() {
         SpannableStringBuilder builder = new SpannableStringBuilder(getText());
+        UnderlineSpan[] styleSpans;
+        UnderlineSpan styleSpan;
         int start = getSelectionStart();
         int end = getSelectionEnd();
-        UnderlineSpan[] underlineSpans;
-        UnderlineSpan underlineSpan;
-        int i;
+        int spanStart;
+        int spanEnd;
 
-        if (start != end) {
-            underlineSpans = builder.getSpans(start, end, UnderlineSpan.class);
-            if (underlineSpans.length > 0) {
-                for (i = 0; i < underlineSpans.length; i++) {
-                    builder.removeSpan(underlineSpans[i]);
-                }
+        if (builder.length() > 0) {
+            if (start == end) {
+                selectAllWithAction();
             } else {
-                underlineSpan = new UnderlineSpan();
-                builder.setSpan(underlineSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                styleSpans = builder.getSpans(start, end, UnderlineSpan.class);
+                if (styleSpans.length == 0) {
+                    builder.setSpan(new UnderlineSpan(), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                } else {
+                    styleSpan = styleSpans[styleSpans.length - 1];
+                    spanStart = builder.getSpanStart(styleSpan);
+                    spanEnd = builder.getSpanEnd(styleSpan);
+                    clearSpans(builder, styleSpans);
+                    if (spanStart < start && spanEnd == end) {
+                        builder.setSpan(new UnderlineSpan(), spanStart, start, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    } else if (spanStart == start && spanEnd > end) {
+                        builder.setSpan(new UnderlineSpan(), end, spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    } else if (spanStart < start && spanEnd > end) {
+                        builder.setSpan(new UnderlineSpan(), spanStart, start, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        builder.setSpan(new UnderlineSpan(), end, spanEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    } else if (spanStart > start || spanEnd < end) {
+                        builder.setSpan(new UnderlineSpan(), Math.min(start, spanStart), Math.max(end, spanEnd),
+                                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                }
+                setText(builder);
+                setSelection(end);
             }
-            setText(builder);
-            setSelection(end);
         }
     }
 }

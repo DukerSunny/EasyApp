@@ -1,5 +1,7 @@
 package com.harreke.easyapp.tools;
 
+import android.text.SpannableStringBuilder;
+
 import java.security.MessageDigest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,6 +29,20 @@ public class StringUtil {
 
     public static Matcher getMatcher(String pattern, CharSequence input) {
         return Pattern.compile(pattern).matcher(input);
+    }
+
+    public static String getString(SpannableStringBuilder builder, int start, int end) {
+        char[] chars = new char[end - start];
+        builder.getChars(start, end, chars, 0);
+
+        return new String(chars);
+    }
+
+    public static String getString(StringBuilder builder, int start, int end) {
+        char[] chars = new char[end - start];
+        builder.getChars(start, end, chars, 0);
+
+        return new String(chars);
     }
 
     public static int toInt(String input) {

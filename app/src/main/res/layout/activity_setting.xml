@@ -2,41 +2,76 @@
 <LinearLayout
     style="@style/mm.v"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:padding="8dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/Background">
 
-    <TextView
-        style="@style/ww"
-        android:padding="8dp"
-        android:text="@string/setting_misc"
-        android:textColor="@color/Content"
-        android:textSize="16dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/White"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="horizontal">
 
-    <com.harreke.easyapp.widgets.AutoFitDrawableTextView
-        style="@style/mw"
-        android:background="@drawable/button_white"
-        android:drawablePadding="8dp"
-        android:drawableRight="@drawable/button_check"
-        android:gravity="center_vertical"
-        android:padding="8dp"
-        android:text="@string/setting_autoloadimage"
-        android:textColor="@color/Title"
-        android:textSize="16dp"/>
+        <ImageView
+            android:id="@+id/setting_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/button_transparent"
+            android:padding="8dp"
+            android:src="@drawable/image_back"/>
 
-    <TextView
-        style="@style/ww"
-        android:layout_marginTop="8dp"
-        android:padding="8dp"
-        android:text="@string/setting_other"
-        android:textColor="@color/Content"
-        android:textSize="16dp"/>
+        <TextView
+            style="@style/mmw"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="@string/menu_setting"
+            android:textColor="@color/Title"
+            android:textSize="16dp"/>
 
-    <TextView
-        style="@style/mw"
-        android:background="@drawable/button_white"
-        android:gravity="center_vertical"
-        android:padding="8dp"
-        android:text="@string/setting_aboutus"
-        android:textColor="@color/Title"
-        android:textSize="16dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/mm.v"
+        android:padding="8dp">
+
+        <TextView
+            style="@style/ww"
+            android:padding="8dp"
+            android:text="@string/setting_misc"
+            android:textColor="@color/Content"
+            android:textSize="16dp"/>
+
+        <com.harreke.easyapp.widgets.DrawableTextView
+            style="@style/mw"
+            android:background="@drawable/button_white"
+            android:drawablePadding="8dp"
+            android:drawableRight="@drawable/button_check"
+            android:gravity="center_vertical"
+            android:padding="16dp"
+            android:text="@string/setting_autoloadimage"
+            android:textColor="@color/Title"
+            android:textSize="20dp"
+            app:drawableHeight="20dp"
+            app:drawableWidth="20dp"/>
+
+        <TextView
+            style="@style/ww"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            android:text="@string/setting_other"
+            android:textColor="@color/Content"
+            android:textSize="16dp"/>
+
+        <TextView
+            style="@style/mw"
+            android:background="@drawable/button_white"
+            android:gravity="center_vertical"
+            android:padding="16dp"
+            android:text="@string/setting_aboutus"
+            android:textColor="@color/Title"
+            android:textSize="20dp"/>
+
+    </LinearLayout>
 
 </LinearLayout>

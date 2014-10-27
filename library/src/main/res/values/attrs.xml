@@ -57,7 +57,6 @@
         <attr name="slideShowIndicatorStyle" format="reference"/>
         <attr name="tabViewStyle" format="reference"/>
         <attr name="textSettingViewStyle" format="reference"/>
-        <attr name="toastViewStyle" format="reference"/>
     </declare-styleable>
 
     <declare-styleable name="DrawableTextView">
@@ -117,15 +116,6 @@
         <attr name="summary"/>
         <attr name="summaryColor"/>
         <attr name="summarySize"/>
-        <attr name="text"/>
-        <attr name="textColor"/>
-        <attr name="textSize"/>
-    </declare-styleable>
-
-    <declare-styleable name="ToastView">
-        <attr name="drawable"/>
-        <attr name="drawablePadding"/>
-        <attr name="showProgress"/>
         <attr name="text"/>
         <attr name="textColor"/>
         <attr name="textSize"/>

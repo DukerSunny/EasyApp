@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    style="@style/mw.h"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/mail_avatar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/image_avatar"/>
+
+    <LinearLayout
+        style="@style/mw.v"
+        android:layout_marginLeft="8dp">
+
+        <LinearLayout
+            style="@style/mw.h"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/mail_user"
+                style="@style/mww"
+                android:lines="1"
+                android:textColor="@color/User"
+                android:textSize="20dp"/>
+
+            <TextView
+                android:id="@+id/mail_new"
+                style="@style/ww"
+                android:background="@color/Red"
+                android:padding="2dp"
+                android:text="@string/mail_new"
+                android:textColor="@color/White"
+                android:textSize="12dp"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/mail_last"
+            style="@style/mw"
+            android:layout_marginTop="8dp"
+            android:lines="2"
+            android:textColor="@color/Content"
+            android:textSize="12dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

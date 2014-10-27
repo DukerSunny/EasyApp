@@ -8,7 +8,6 @@
         <item name="ratioImageViewStyle">@style/App.RatioImageView</item>
         <item name="slidableViewStyle">@style/App.SlidableView</item>
         <item name="slideShowIndicatorStyle">@style/App.SlideShowIndicator</item>
-        <item name="toastViewStyle">@style/App.ToastView</item>
     </style>
 
     <style name="App.NoActionBar">
@@ -79,16 +78,6 @@
     <style name="App.SlideShowIndicator">
         <item name="slideShowIndicatorWidth">16dp</item>
         <item name="slideShowIndicatorHeight">16dp</item>
-    </style>
-
-    <style name="App.ToastView">
-        <item name="android:background">@drawable/shape_toast</item>
-        <item name="android:padding">8dp</item>
-        <item name="drawable">@drawable/anim_progress_radiant</item>
-        <item name="drawablePadding">8dp</item>
-        <item name="showProgress">false</item>
-        <item name="textColor">@color/White</item>
-        <item name="textSize">16dp</item>
     </style>
 
 </resources>

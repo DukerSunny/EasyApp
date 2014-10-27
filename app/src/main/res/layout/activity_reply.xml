@@ -79,7 +79,8 @@
             android:id="@+id/reply_style_at"
             style="@style/mmw"
             android:background="@drawable/button_transparent"
-            android:src="@drawable/image_style_at"/>
+            android:src="@drawable/image_style_at"
+            android:visibility="gone"/>
 
         <LinearLayout
             android:id="@+id/reply_style_color"

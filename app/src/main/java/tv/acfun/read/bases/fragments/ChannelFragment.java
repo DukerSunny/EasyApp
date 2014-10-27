@@ -2,13 +2,12 @@ package tv.acfun.read.bases.fragments;
 
 import android.os.Bundle;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.fragment.FragmentFramework;
 import com.harreke.easyapp.frameworks.list.abslistview.AbsListFramework;
 import com.harreke.easyapp.frameworks.list.abslistview.FooterLoadStatus;
+import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -24,11 +23,8 @@ import tv.acfun.read.parsers.ChannelListParser;
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/23
  */
 public class ChannelFragment extends FragmentFramework {
-    private View channel_scrolltop_button;
     private int mChannelId;
     private Helper mHelper;
-    private boolean mNeedShowScrollTop;
-    private ViewAlphaAnimation mScrollTopAnimation;
 
     public static ChannelFragment create(int channelId) {
         ChannelFragment fragment = new ChannelFragment();
@@ -47,12 +43,6 @@ public class ChannelFragment extends FragmentFramework {
     @Override
     public void initData(Bundle bundle) {
         mChannelId = bundle.getInt("channelId");
-
-        mNeedShowScrollTop = false;
-    }
-
-    private boolean isScrollTopShowing() {
-        return channel_scrolltop_button.getVisibility() == View.VISIBLE;
     }
 
     @Override
@@ -60,20 +50,11 @@ public class ChannelFragment extends FragmentFramework {
     }
 
     @Override
-    public void onDestroyView() {
-        mScrollTopAnimation.destroy();
-        super.onDestroyView();
-    }
-
-    @Override
     public void queryLayout() {
         View footer_loadmore = View.inflate(getActivity(), R.layout.footer_loadmore, null);
 
-        channel_scrolltop_button = findViewById(R.id.channel_scrolltop_button);
-
-        mScrollTopAnimation = new ViewAlphaAnimation(channel_scrolltop_button);
-
         mHelper = new Helper(this, R.id.channel_list);
+        mHelper.setRefresh((FloatingActionButton) findViewById(R.id.channel_refresh));
         mHelper.addFooterView(footer_loadmore);
         mHelper.setLoadMore(new FooterLoadStatus(footer_loadmore));
         mHelper.bindAdapter();
@@ -134,67 +115,6 @@ public class ChannelFragment extends FragmentFramework {
         @Override
         public int parseItemId(Content content) {
             return content.getContentId();
-        }
-    }
-
-    private class ViewAlphaAnimation implements Animation.AnimationListener {
-        private boolean mAnimating;
-        private AlphaAnimation mFadeIn;
-        private AlphaAnimation mFadeOut;
-        private View mView;
-
-        public ViewAlphaAnimation(View view) {
-            mView = view;
-            mAnimating = false;
-            mFadeIn = new AlphaAnimation(0, 1);
-            mFadeIn.setDuration(400);
-            mFadeIn.setAnimationListener(this);
-            mFadeOut = new AlphaAnimation(1, 0);
-            mFadeOut.setDuration(400);
-            mFadeOut.setAnimationListener(this);
-        }
-
-        public void destroy() {
-            stop();
-            mView = null;
-        }
-
-        public void fadeIn() {
-            mView.clearAnimation();
-            mView.startAnimation(mFadeIn);
-        }
-
-        public void fadeOut() {
-            mView.clearAnimation();
-            mView.startAnimation(mFadeOut);
-        }
-
-        public boolean isAnimating() {
-            return mAnimating;
-        }
-
-        @Override
-        public void onAnimationEnd(Animation animation) {
-            mAnimating = false;
-            if (mView.getAnimation() == mFadeOut) {
-                mView.setVisibility(View.GONE);
-            }
-        }
-
-        @Override
-        public void onAnimationRepeat(Animation animation) {
-        }
-
-        @Override
-        public void onAnimationStart(Animation animation) {
-            mAnimating = true;
-            if (mView.getAnimation() == mFadeIn) {
-                mView.setVisibility(View.VISIBLE);
-            }
-        }
-
-        public void stop() {
-            mView.clearAnimation();
         }
     }
 }

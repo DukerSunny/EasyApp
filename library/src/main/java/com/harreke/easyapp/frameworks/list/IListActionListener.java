@@ -1,6 +1,6 @@
 package com.harreke.easyapp.frameworks.list;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/07/31
@@ -24,7 +24,7 @@ public interface IListActionListener<ITEM> {
      *
      * @return 解析出的列表
      */
-    public ArrayList<ITEM> onParse(String json);
+    public List<ITEM> onParse(String json);
 
     /**
      * 当列表加载完成时触发

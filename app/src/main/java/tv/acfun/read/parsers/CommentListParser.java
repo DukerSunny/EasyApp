@@ -1,7 +1,5 @@
 package tv.acfun.read.parsers;
 
-import android.content.Context;
-
 import com.harreke.easyapp.listeners.OnTagClickListener;
 import com.harreke.easyapp.tools.GsonUtil;
 import com.harreke.easyapp.tools.NetUtil;
@@ -9,7 +7,7 @@ import com.harreke.easyapp.tools.NetUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import tv.acfun.read.beans.CommentListPage;
+import tv.acfun.read.beans.CommentListData;
 import tv.acfun.read.beans.Conversion;
 import tv.acfun.read.beans.FullConversion;
 import tv.acfun.read.tools.ubb.UBBEncoder;
@@ -18,86 +16,75 @@ import tv.acfun.read.tools.ubb.UBBEncoder;
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/26
  */
 public class CommentListParser {
-    private HashMap<String, CommentListPage> data;
+    private CommentListData data;
     private ArrayList<FullConversion> mItemList;
     private int mTotalPage;
     private String msg;
     private int status;
 
-    public static CommentListParser parse(Context context, String json, int maxQuote, OnTagClickListener tagClickListener) {
+    public static CommentListParser parse(String json, int cid, OnTagClickListener tagClickListener) {
         CommentListParser parser = GsonUtil.toBean(json, CommentListParser.class);
-        CommentListPage page;
 
         if (parser != null) {
-            if (NetUtil.isStatusOk(parser.status) && parser.data != null) {
-                page = parser.data.get("page");
-                if (page != null) {
-                    parser.decode(context, page, maxQuote, tagClickListener);
+            if (NetUtil.isStatusOk(parser.status) && parser.data != null && parser.data.getCommentList() != null &&
+                    parser.data.getCommentContentArr() != null) {
+                parser.decode(parser.data, cid, tagClickListener);
 
-                    return parser;
-                }
+                return parser;
             }
         }
 
         return null;
     }
 
-    private void decode(Context context, CommentListPage page, int maxQuote, OnTagClickListener tagClickListener) {
-        Conversion content;
+    private void decode(CommentListData page, int cid, OnTagClickListener tagClickListener) {
+        Conversion conversion;
         Conversion quote;
         FullConversion fullConversion;
         ArrayList<Conversion> quoteList;
-        HashMap<String, Conversion> map;
-        ArrayList<Integer> list;
+        HashMap<String, Conversion> commentContentArr;
+        int[] commentList;
         UBBEncoder encoder;
         int floorCount;
         int commentId;
         int quoteId;
-        int repeatQuoteId;
         int i;
 
         encoder = new UBBEncoder();
-        mTotalPage = (page.getTotalCount() - 1) / page.getPageSize() + 1;
+        mTotalPage = page.getTotalPage();
         mItemList = new ArrayList<FullConversion>();
-        map = page.getMap();
-        list = page.getList();
-        for (i = 0; i < list.size(); i++) {
-            commentId = list.get(i);
-            content = map.get("c" + commentId);
-            if (content.getSpanned() == null) {
-                content.parse(context, encoder, tagClickListener);
+        commentContentArr = page.getCommentContentArr();
+        commentList = page.getCommentList();
+        if (cid > 0) {
+            commentList = new int[]{cid};
+        }
+        for (i = 0; i < commentList.length; i++) {
+            commentId = commentList[i];
+            conversion = commentContentArr.get("c" + commentId);
+            if (conversion.getSpanned() == null) {
+                conversion.parse(encoder, tagClickListener);
             }
             quoteList = new ArrayList<Conversion>();
-            quoteId = content.getQuoteId();
-            quote = content;
+            quoteId = conversion.getQuoteId();
+            quote = conversion;
             floorCount = 0;
-            repeatQuoteId = 0;
             while (quoteId > 0) {
                 quote.newQuote();
-
-                quote = map.get("c" + quoteId);
+                quote = commentContentArr.get("c" + quoteId);
                 if (quote.getSpanned() == null) {
-                    quote.parse(context, encoder, tagClickListener);
+                    quote.parse(encoder, tagClickListener);
                 }
                 quote.newQuoted();
-                if (repeatQuoteId == 0 && quote.getQuotedCount() > 1) {
-                    repeatQuoteId = quote.getId();
+                if (cid > 0 || quote.getQuotedCount() < 2 && quoteList.size() < 3) {
+                    quoteList.add(0, quote);
                 }
-
-                quoteList.add(quote);
                 quoteId = quote.getQuoteId();
                 floorCount++;
             }
-
             fullConversion = new FullConversion();
-            fullConversion.setContent(content);
+            fullConversion.setConversion(conversion);
             fullConversion.setFloorCount(floorCount);
-            fullConversion.setRepeatQuoteId(repeatQuoteId);
-            if (maxQuote < 0 || quoteList.size() <= maxQuote) {
-                fullConversion.setQuoteList(quoteList);
-            } else {
-                fullConversion.setQuoteList(quoteList.subList(0, maxQuote));
-            }
+            fullConversion.setQuoteList(quoteList);
             mItemList.add(fullConversion);
         }
     }

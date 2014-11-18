@@ -1,30 +1,18 @@
 package tv.acfun.read.beans;
 
-import android.content.Context;
 import android.text.Spanned;
 
-import com.google.gson.annotations.Expose;
 import com.harreke.easyapp.listeners.OnTagClickListener;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import tv.acfun.read.R;
 import tv.acfun.read.tools.ubb.UBBEncoder;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/26
  */
 public class Conversion extends Comment {
-    private String mDate;
     private int mQuoteCount = 0;
     private int mQuotedCount = 0;
-    @Expose(serialize = false, deserialize = false)
-    private Spanned mSpanned = null;
-
-    public String getDate() {
-        return mDate;
-    }
+    private transient Spanned mSpanned = null;
 
     public int getQuoteCount() {
         return mQuoteCount;
@@ -46,8 +34,7 @@ public class Conversion extends Comment {
         mQuotedCount++;
     }
 
-    public void parse(Context context, UBBEncoder encoder, OnTagClickListener tagClickListener) {
-        mDate = new SimpleDateFormat(context.getString(R.string.comment_date)).format(new Date(getTime()));
+    public void parse(UBBEncoder encoder, OnTagClickListener tagClickListener) {
         mSpanned = encoder.encode(getContent(), tagClickListener);
     }
 }

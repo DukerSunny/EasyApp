@@ -2,4 +2,4 @@
 <com.harreke.easyapp.widgets.AutoFitImageView
     style="@style/mw"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:src="@drawable/progress_loading"/>
+    android:src="@drawable/anim_progress_radiant"/>

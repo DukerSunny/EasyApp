@@ -67,6 +67,9 @@ public class UBBDecoder {
                     if ("at".equals(tagClickableSpan.getTag())) {
                         startUBB += "[at]";
                         endUBB += "[/at]";
+                    } else if ("ac".equals(tagClickableSpan.getTag())) {
+                        startUBB += "[ac]";
+                        endUBB += "[/ac]";
                     }
                 }
                 ubbMap.put(start, startUBB);

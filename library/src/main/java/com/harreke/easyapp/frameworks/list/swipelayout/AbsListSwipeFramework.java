@@ -1,5 +1,6 @@
 package com.harreke.easyapp.frameworks.list.swipelayout;
 
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -31,6 +32,7 @@ public abstract class AbsListSwipeFramework<ITEM, HOLDER extends IAbsListHolder<
     private Adapter mAdapter;
     private int mHeaderCount = 0;
     private AbsListView mListView;
+    private SwipeLayout.ShowMode mShowMode = SwipeLayout.ShowMode.PullOut;
     private int mSwipeLayoutId;
 
     public AbsListSwipeFramework(IFramework framework, int listId, int swipeLayoutId) {
@@ -73,7 +75,7 @@ public abstract class AbsListSwipeFramework<ITEM, HOLDER extends IAbsListHolder<
     @Override
     public void bindAdapter() {
         mAdapter = new Adapter();
-        //        mAdapter.setMode(SwipeItemMangerImpl.Mode.Single);
+        //                mAdapter.setMode(SwipeItemMangerImpl.Mode.Single);
         mListView.setAdapter(mAdapter);
     }
 
@@ -141,6 +143,18 @@ public abstract class AbsListSwipeFramework<ITEM, HOLDER extends IAbsListHolder<
     }
 
     @Override
+    public boolean removeItem(int position) {
+        ITEM item = getItem(position);
+
+        return item != null && mAdapter.removeItem(parseItemId(item), item);
+    }
+
+    @Override
+    public boolean removeItem(ITEM item) {
+        return item != null && mAdapter.removeItem(parseItemId(item), item);
+    }
+
+    @Override
     public void scrollToTop() {
         mListView.smoothScrollToPositionFromTop(0, 0, 0);
     }
@@ -173,6 +187,10 @@ public abstract class AbsListSwipeFramework<ITEM, HOLDER extends IAbsListHolder<
         }
     }
 
+    public final void setShowMode(SwipeLayout.ShowMode showMode) {
+        mShowMode = showMode;
+    }
+
     /**
      * 排序列表条目
      *
@@ -195,9 +213,10 @@ public abstract class AbsListSwipeFramework<ITEM, HOLDER extends IAbsListHolder<
 
         @Override
         public View generateView(int position, ViewGroup parent) {
-            View convertView = createView();
-            HOLDER holder = createHolder(convertView, AbsListSwipeFramework.this);
+            SwipeLayout convertView = (SwipeLayout) createView();
+            HOLDER holder = createHolder(convertView);
 
+            convertView.setShowMode(mShowMode);
             convertView.setTag(holder);
 
             return convertView;

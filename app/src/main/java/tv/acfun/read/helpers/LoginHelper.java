@@ -15,6 +15,7 @@ import com.harreke.easyapp.requests.RequestBuilder;
 import tv.acfun.read.R;
 import tv.acfun.read.api.API;
 import tv.acfun.read.bases.application.AcFunRead;
+import tv.acfun.read.beans.FullUser;
 import tv.acfun.read.beans.Token;
 import tv.acfun.read.parsers.FullUserParser;
 import tv.acfun.read.parsers.TokenParser;
@@ -37,8 +38,9 @@ public class LoginHelper extends DialogHelper implements DialogInterface.OnClick
             AcFunRead.getInstance().writeBoolean("rememberAccount", isChecked);
         }
     };
-    private OnLoginListener mLoginListener;
-    private Token mToken;
+    private FullUser mFullUser = null;
+    private LoginCallback mLoginCallback;
+    private Token mToken = null;
     private IRequestCallback<String> mFullUserCallback = new IRequestCallback<String>() {
         @Override
         public void onFailure(String requestUrl) {
@@ -57,7 +59,7 @@ public class LoginHelper extends DialogHelper implements DialogInterface.OnClick
                 acFunRead = AcFunRead.getInstance();
                 acFunRead.writeFullUser(parser.getFullUser());
                 acFunRead.writeToken(mToken);
-                mLoginListener.onSuccess();
+                mLoginCallback.onSuccess();
             } else {
                 showError(R.string.login_timeout);
                 mToken = null;
@@ -77,7 +79,7 @@ public class LoginHelper extends DialogHelper implements DialogInterface.OnClick
             if (parser != null && parser.getData() != null) {
                 if (parser.isSuccess()) {
                     mToken = parser.getData();
-                    mLoginListener.onExecuteRequest(API.getFullUser(mToken.getUserId()), mFullUserCallback);
+                    mLoginCallback.onExecuteRequest(API.getFullUser(mToken.getUserId()), mFullUserCallback);
                 }
             } else {
                 showError(R.string.login_denied);
@@ -85,10 +87,15 @@ public class LoginHelper extends DialogHelper implements DialogInterface.OnClick
         }
     };
 
-    public LoginHelper(Context context) {
+    public LoginHelper(Context context, LoginCallback loginCallback) {
         super(context);
-        View view = View.inflate(context, R.layout.dialog_login, null);
+        View view;
 
+        if (loginCallback == null) {
+            throw new IllegalArgumentException("LoginCallback must not be null!");
+        }
+        mLoginCallback = loginCallback;
+        view = View.inflate(context, R.layout.dialog_login, null);
         login_account = (EditText) view.findViewById(R.id.login_account);
         login_password = (EditText) view.findViewById(R.id.login_password);
         login_remember = (CheckBox) view.findViewById(R.id.login_remember);
@@ -125,11 +132,11 @@ public class LoginHelper extends DialogHelper implements DialogInterface.OnClick
             return;
         }
         if (password.length() < 2) {
-            showError(R.string.login_account_tooshort);
+            showError(R.string.login_password_tooshort);
 
             return;
         } else if (password.length() > 50) {
-            showError(R.string.login_account_toolong);
+            showError(R.string.login_password_toolong);
 
             return;
         }
@@ -137,10 +144,28 @@ public class LoginHelper extends DialogHelper implements DialogInterface.OnClick
         if (login_remember.isChecked()) {
             acFunRead.writeString("account", account);
         } else {
-            acFunRead.writeString("account", "");
+            acFunRead.writeString("account", null);
         }
         showProgress();
-        mLoginListener.onExecuteRequest(API.getToken(account, password), mTokenCallback);
+        mLoginCallback.onExecuteRequest(API.getToken(account, password), mTokenCallback);
+    }
+
+    /**
+     * 获取缓存的用户信息
+     *
+     * @return 用户信息
+     */
+    public final FullUser getFullUser() {
+        return mFullUser;
+    }
+
+    /**
+     * 获取缓存的身份令牌
+     *
+     * @return 身份令牌
+     */
+    public final Token getToken() {
+        return mToken;
     }
 
     @Override
@@ -149,12 +174,25 @@ public class LoginHelper extends DialogHelper implements DialogInterface.OnClick
         login_status.setVisibility(View.GONE);
     }
 
+    /**
+     * 检查用户身份
+     *
+     * @return 是否通过身份验证
+     */
+    public boolean isLogin() {
+        AcFunRead acFunRead = AcFunRead.getInstance();
+
+        mFullUser = acFunRead.readFullUser();
+        mToken = acFunRead.readToken();
+        return !(mFullUser == null || mToken == null) && !mToken.isExpired();
+    }
+
     @Override
     public void onClick(DialogInterface dialog, int which) {
         if (which == DialogInterface.BUTTON_POSITIVE) {
             access();
         } else {
-            mLoginListener.onCancelRequest();
+            mLoginCallback.onCancelRequest();
             hide();
         }
     }
@@ -167,10 +205,6 @@ public class LoginHelper extends DialogHelper implements DialogInterface.OnClick
         login_account.setSelection(account.length());
         login_password.setText("");
         login_remember.setChecked(acFunRead.readBoolean("rememberAccount", false));
-    }
-
-    public void setOnLoginListener(OnLoginListener loginListener) {
-        mLoginListener = loginListener;
     }
 
     public void show(Reason reason) {
@@ -200,12 +234,41 @@ public class LoginHelper extends DialogHelper implements DialogInterface.OnClick
         login_error.setText(R.string.login_progress);
     }
 
+    /**
+     * 验证用户身份
+     *
+     * 如果未登录，或者身份验证已过期，则会清空身份记录，并弹出登录对话框
+     *
+     * @return 是否通过身份验证
+     */
+    public boolean validateLogin() {
+        AcFunRead acFunRead = AcFunRead.getInstance();
+
+        mFullUser = acFunRead.readFullUser();
+        mToken = acFunRead.readToken();
+        if (mFullUser == null || mToken == null) {
+            acFunRead.writeFullUser(null);
+            acFunRead.writeToken(null);
+            show(Reason.Unauthorized);
+
+            return false;
+        } else if (mToken.isExpired()) {
+            acFunRead.writeFullUser(null);
+            acFunRead.writeToken(null);
+            show(Reason.Expired);
+
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public enum Reason {
         Unauthorized,
         Expired
     }
 
-    public interface OnLoginListener {
+    public interface LoginCallback {
         public void onCancelRequest();
 
         public void onExecuteRequest(RequestBuilder builder, IRequestCallback<String> callback);

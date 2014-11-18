@@ -30,7 +30,7 @@ public interface IFramework extends IInfoClickListener {
      *
      * 将创建好的事件赋予对应的视图或控件
      */
-    public void assignEvents();
+    public void attachCallbacks();
 
     /**
      * 取消正在执行的Http请求
@@ -38,12 +38,18 @@ public interface IFramework extends IInfoClickListener {
     public void cancelRequest();
 
     /**
-     * 输出调试信息
+     * 查询布局
      *
-     * @param message
-     *         调试信息
+     * 在布局中查询视图与控件
      */
-    public void debug(String message);
+    public void enquiryViews();
+
+    /**
+     * 初始化事件
+     *
+     * 创建回调与监听器
+     */
+    public void establishCallbacks();
 
     /**
      * 执行一个Http请求
@@ -116,20 +122,6 @@ public interface IFramework extends IInfoClickListener {
      * @return boolean
      */
     public boolean isRequestExecuting();
-
-    /**
-     * 初始化事件
-     *
-     * 创建回调与监听器
-     */
-    public void newEvents();
-
-    /**
-     * 查询布局
-     *
-     * 在布局中查询视图与控件
-     */
-    public void queryLayout();
 
     /**
      * 设置内容层布局

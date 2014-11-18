@@ -1,5 +1,7 @@
 <resources>
 
+    <string name="actionbar_title">ActionBar</string>
+
     <string name="dialog_ok">确定</string>
     <string name="dialog_cancel">取消</string>
 

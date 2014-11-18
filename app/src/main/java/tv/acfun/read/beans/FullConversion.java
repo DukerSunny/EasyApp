@@ -6,13 +6,12 @@ import java.util.List;
  * 由 Harreke（harreke@live.cn） 创建于 2014/10/05
  */
 public class FullConversion {
-    private Conversion mContent;
+    private Conversion mConversion;
     private int mFloorCount;
     private List<Conversion> mQuoteList;
-    private int mRepeatQuoteId;
 
-    public Conversion getContent() {
-        return mContent;
+    public Conversion getConversion() {
+        return mConversion;
     }
 
     public int getFloorCount() {
@@ -23,12 +22,8 @@ public class FullConversion {
         return mQuoteList;
     }
 
-    public int getRepeatQuoteId() {
-        return mRepeatQuoteId;
-    }
-
-    public void setContent(Conversion content) {
-        mContent = content;
+    public void setConversion(Conversion conversion) {
+        mConversion = conversion;
     }
 
     public void setFloorCount(int floorCount) {
@@ -37,9 +32,5 @@ public class FullConversion {
 
     public void setQuoteList(List<Conversion> quoteList) {
         mQuoteList = quoteList;
-    }
-
-    public void setRepeatQuoteId(int repeatQuoteId) {
-        mRepeatQuoteId = repeatQuoteId;
     }
 }

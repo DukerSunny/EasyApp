@@ -8,7 +8,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/App.NoActionBar">
+        android:theme="@style/AcFunRead">
 
         <activity
             android:name=".bases.activities.ChatActivity"
@@ -18,6 +18,11 @@
 
         <activity
             android:name=".bases.activities.ContentActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".bases.activities.ContributionActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"/>
 
@@ -34,6 +39,11 @@
 
         <activity
             android:name=".bases.activities.FavouriteActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".bases.activities.HistoryActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"/>
 
@@ -58,6 +68,11 @@
 
         <activity
             android:name=".bases.activities.ProfileActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".bases.activities.QuoteActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"/>
 

@@ -2,7 +2,6 @@
 <FrameLayout
     style="@style/mm"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="8dp">
 
     <ListView
@@ -13,13 +12,13 @@
         android:drawSelectorOnTop="true"
         android:listSelector="@drawable/button_transparent"/>
 
-    <com.melnykov.fab.FloatingActionButton
+    <ImageView
         android:id="@+id/recommend_refresh"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:layout_gravity="bottom|end"
-        android:src="@drawable/image_refresh"
-        app:fab_colorNormal="@color/TransparentWhite"
-        app:fab_colorPressed="@color/Theme_Transparent"/>
+        android:layout_margin="16dp"
+        android:background="@drawable/button_floatingbutton"
+        android:src="@drawable/image_refresh"/>
 
 </FrameLayout>

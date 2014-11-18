@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
-import com.harreke.easyapp.beans.ActionBarItem;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.helpers.DialogHelper;
 import com.harreke.easyapp.helpers.ImageLoaderHelper;
@@ -83,7 +82,26 @@ public class ComicActivity extends ActivityFramework {
     }
 
     @Override
-    public void assignEvents() {
+    public void acquireArguments(Intent intent) {
+        mMode = (Mode) intent.getSerializableExtra("mode");
+
+        if (mMode == Mode.List) {
+            mContentId = intent.getIntExtra("contentId", 0);
+            mPagePosition = intent.getIntExtra("pagePosition", 0);
+            mImageList = GsonUtil.toBean(intent.getStringExtra("imageList"), new TypeToken<ArrayList<String>>() {
+            }.getType());
+            mPosition = intent.getIntExtra("position", 0);
+        } else {
+            mContentId = 0;
+            mPagePosition = 0;
+            mImageList = new ArrayList<String>(1);
+            mImageList.add(intent.getStringExtra("imageUrl"));
+            mPosition = 0;
+        }
+    }
+
+    @Override
+    public void attachCallbacks() {
         comic_back.setOnClickListener(mClickListener);
         comic_pager.setOnPageChangeListener(mPageChangeListener);
 
@@ -109,41 +127,27 @@ public class ComicActivity extends ActivityFramework {
         }
     }
 
-    private String generateFilename() {
-        if (mMode == Mode.List) {
-            return "ac" + mContentId + "_" + (mPagePosition + 1) + "_" + (mSavePosition + 1);
-        } else {
-            return String.valueOf(mImageList.get(0).hashCode());
-        }
-    }
+    @Override
+    public void enquiryViews() {
+        comic_pager = (ViewPager) findViewById(R.id.comic_pager);
 
-    private File getFileByImageName(String input) {
-        return new File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/" + input +
-                        ".jpg");
+        comic_actionbar = findViewById(R.id.comic_actionbar);
+        comic_back = findViewById(R.id.comic_back);
+        comic_page = (TextView) findViewById(R.id.comic_page);
+        comic_page_background = findViewById(R.id.comic_page_background);
+        comic_save = findViewById(R.id.comic_save);
+
+        color_Title = getResources().getColor(R.color.Title);
+
+        comic_save_input = (EditText) View.inflate(getActivity(), R.layout.dialog_comic_save, null);
+
+        updatePage();
+
+        mAdapter = new Adapter();
     }
 
     @Override
-    public void initData(Intent intent) {
-        mMode = (Mode) intent.getSerializableExtra("mode");
-
-        if (mMode == Mode.List) {
-            mContentId = intent.getIntExtra("contentId", 0);
-            mPagePosition = intent.getIntExtra("pagePosition", 0);
-            mImageList = GsonUtil.toBean(intent.getStringExtra("imageList"), new TypeToken<ArrayList<String>>() {
-            }.getType());
-            mPosition = intent.getIntExtra("position", 0);
-        } else {
-            mContentId = 0;
-            mPagePosition = 0;
-            mImageList = new ArrayList<String>(1);
-            mImageList.add(intent.getStringExtra("imageUrl"));
-            mPosition = 0;
-        }
-    }
-
-    @Override
-    public void newEvents() {
+    public void establishCallbacks() {
         mClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -242,13 +246,22 @@ public class ComicActivity extends ActivityFramework {
         };
     }
 
-    @Override
-    public void onActionBarItemClick(int position, ActionBarItem item) {
+    private String generateFilename() {
+        if (mMode == Mode.List) {
+            return "ac" + mContentId + "_" + (mPagePosition + 1) + "_" + (mSavePosition + 1);
+        } else {
+            return String.valueOf(mImageList.get(0).hashCode());
+        }
+    }
+
+    private File getFileByImageName(String input) {
+        return new File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/" + input +
+                        ".jpg");
     }
 
     @Override
-    public void onActionBarMenuCreate() {
-
+    public void onActionBarItemClick(int id, View item) {
     }
 
     @Override
@@ -256,25 +269,6 @@ public class ComicActivity extends ActivityFramework {
         mSaveDialog.hide();
         mOverwriteDialog.hide();
         super.onDestroy();
-    }
-
-    @Override
-    public void queryLayout() {
-        comic_pager = (ViewPager) findViewById(R.id.comic_pager);
-
-        comic_actionbar = findViewById(R.id.comic_actionbar);
-        comic_back = findViewById(R.id.comic_back);
-        comic_page = (TextView) findViewById(R.id.comic_page);
-        comic_page_background = findViewById(R.id.comic_page_background);
-        comic_save = findViewById(R.id.comic_save);
-
-        color_Title = getResources().getColor(R.color.Title);
-
-        comic_save_input = (EditText) View.inflate(getActivity(), R.layout.dialog_comic_save, null);
-
-        updatePage();
-
-        mAdapter = new Adapter();
     }
 
     private void saveBitmap() {

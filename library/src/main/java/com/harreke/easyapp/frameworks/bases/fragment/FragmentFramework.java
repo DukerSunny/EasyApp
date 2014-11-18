@@ -3,7 +3,6 @@ package com.harreke.easyapp.frameworks.bases.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,6 @@ import com.harreke.easyapp.widgets.InfoView;
  */
 public abstract class FragmentFramework extends Fragment implements IFramework, IFragment, IActionBar {
     private static final String TAG = "FragmentFramework";
-
     private FrameLayout framework_content;
     private InfoView framework_info;
     private boolean mCreated = false;
@@ -42,155 +40,30 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
     public FragmentFramework() {
     }
 
-    /**
-     * 为ActionBar添加一个菜单选项
-     *
-     * @param title
-     *         选项标题
-     * @param imageId
-     *         选项的图标Id
-     */
     @Override
-    public void addActionBarItem(String title, int imageId) {
+    public void addActionBarImageItem(int id, int imageId) {
         ActivityFramework activity = getActivityFramework();
 
         if (activity != null) {
-            activity.addActionBarItem(title, imageId);
+            activity.addActionBarImageItem(id, imageId);
         }
     }
 
-    /**
-     * 为ActionBar添加一个菜单选项
-     *
-     * @param title
-     *         选项标题
-     * @param imageId
-     *         选项的图标Id
-     * @param flag
-     *         选项的Flag
-     */
     @Override
-    public void addActionBarItem(String title, int imageId, int flag) {
+    public void addActionBarViewItem(int id, int layoutId, boolean clickable) {
         ActivityFramework activity = getActivityFramework();
 
         if (activity != null) {
-            activity.addActionBarItem(title, imageId, flag);
+            activity.addActionBarViewItem(id, layoutId, clickable);
         }
     }
 
-    /**
-     * 为ActionBar添加一个菜单选项
-     *
-     * @param title
-     *         选项标题
-     * @param view
-     *         选项的视图
-     */
     @Override
-    public void addActionBarItem(String title, View view) {
+    public void addActionBarViewItem(int id, View item, boolean clickable) {
         ActivityFramework activity = getActivityFramework();
 
         if (activity != null) {
-            activity.addActionBarItem(title, view);
-        }
-    }
-
-    /**
-     * 为ActionBar添加一个菜单选项
-     *
-     * @param title
-     *         选项标题
-     * @param view
-     *         选项的视图
-     * @param flag
-     *         选项的Flag
-     */
-    @Override
-    public void addActionBarItem(String title, View view, int flag) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.addActionBarItem(title, view, flag);
-        }
-    }
-
-    /**
-     * 为ActionBar添加一个菜单选项
-     *
-     * @param title
-     *         选项标题 选项的图标Id 选项的视图
-     * @param view
-     *         选项的视图
-     * @param items
-     *         选项的内容数组
-     */
-    @Override
-    public void addActionBarItem(String title, View view, String[] items) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.addActionBarItem(title, view, items);
-        }
-    }
-
-    /**
-     * 为ActionBar添加一个菜单选项
-     *
-     * @param title
-     *         选项标题
-     * @param view
-     *         选项的视图
-     * @param items
-     *         选项的内容数组
-     * @param flag
-     *         选项的Flag
-     */
-    @Override
-    public void addActionBarItem(String title, View view, String[] items, int flag) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.addActionBarItem(title, view, items, flag);
-        }
-    }
-
-    /**
-     * 为ActionBar添加一个菜单选项
-     *
-     * @param title
-     *         选项标题
-     * @param imageId
-     *         选项的图标Id
-     * @param items
-     *         选项的内容数组
-     */
-    @Override
-    public void addActionBarItem(String title, int imageId, String[] items) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.addActionBarItem(title, imageId, items);
-        }
-    }
-
-    /**
-     * 为ActionBar添加一个菜单选项
-     *
-     * @param title
-     *         选项标题
-     * @param imageId
-     *         选项的图标Id
-     * @param items
-     *         选项的内容数组
-     * @param flag
-     *         选项的Flag
-     */
-    @Override
-    public void addActionBarItem(String title, int imageId, String[] items, int flag) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.addActionBarItem(title, imageId, items, flag);
+            activity.addActionBarViewItem(id, item, clickable);
         }
     }
 
@@ -213,41 +86,6 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
     @Override
     public final void cancelRequest() {
         mRequest.cancel();
-    }
-
-    /**
-     * 输出调试信息
-     *
-     * @param message
-     *         调试信息
-     */
-    @Override
-    public void debug(String message) {
-        Log.e(TAG, message);
-    }
-
-    /**
-     * 禁用ActionBar的Home键上的图标
-     */
-    @Override
-    public void disableActionBarHomeIcon() {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.disableActionBarHomeIcon();
-        }
-    }
-
-    /**
-     * 显示ActionBar的Home键左边的返回箭头
-     */
-    @Override
-    public void enableActionBarHomeBack() {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.enableActionBarHomeBack();
-        }
     }
 
     /**
@@ -280,15 +118,15 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
     }
 
     private ActivityFramework getActivityFramework() {
-        ActivityFramework activityFramework;
+        ActivityFramework activity;
 
         try {
-            activityFramework = (ActivityFramework) getActivity();
+            activity = (ActivityFramework) getActivity();
         } catch (ClassCastException e) {
-            activityFramework = null;
+            activity = null;
         }
 
-        return activityFramework;
+        return activity;
     }
 
     /**
@@ -332,15 +170,12 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
         return framework_info;
     }
 
-    /**
-     * 隐藏ActionBar上的指定菜单选项
-     */
     @Override
-    public void hideActionBarItem(int position) {
+    public void hideActionbarItem(int id) {
         ActivityFramework activity = getActivityFramework();
 
         if (activity != null) {
-            activity.hideActionBarItem(position);
+            activity.hideActionbarItem(id);
         }
     }
 
@@ -357,33 +192,6 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
     }
 
     /**
-     * 判断ActionBar上的某个菜单选项是否正在显示
-     *
-     * @param position
-     *         菜单选项位置
-     *
-     * @return 菜单选项是否正在显示
-     */
-    @Override
-    public boolean isActionBarItemShowing(int position) {
-        ActivityFramework activity = getActivityFramework();
-
-        return activity != null && activity.isActionBarItemShowing(position);
-    }
-
-    /**
-     * 判断ActionBar是否正在显示
-     *
-     * @return ActionBar是否正在显示
-     */
-    @Override
-    public boolean isActionBarShowing() {
-        ActivityFramework activity = getActivityFramework();
-
-        return activity != null && activity.isActionBarShowing();
-    }
-
-    /**
      * 是否正在执行一个Http请求
      *
      * @return boolean
@@ -395,22 +203,22 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
 
     @Override
     public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        FrameLayout framework = (FrameLayout) inflater.inflate(R.layout.widget_framework, null);
+        View root = inflater.inflate(R.layout.fragment_framework, null);
 
-        if (framework != null) {
-            framework_content = (FrameLayout) framework.findViewById(R.id.framework_content);
-            framework_info = (InfoView) framework.findViewById(R.id.framework_info);
+        if (root != null) {
+            framework_content = (FrameLayout) root.findViewById(R.id.framework_content);
+            framework_info = (InfoView) root.findViewById(R.id.framework_info);
             mRequest = new RequestHelper();
             framework_info.setOnClickListener(mInfoClickListener);
 
             setLayout();
-            initData(getArguments());
-            queryLayout();
-            newEvents();
-            assignEvents();
+            acquireArguments(getArguments());
+            establishCallbacks();
+            enquiryViews();
+            attachCallbacks();
         }
 
-        return framework;
+        return root;
     }
 
     @Override
@@ -440,165 +248,21 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
         }
     }
 
-    /**
-     * 刷新ActionBar上的菜单选项
-     */
     @Override
-    public void refreshActionBarItems() {
+    public void setActionBarTitle(String text) {
         ActivityFramework activity = getActivityFramework();
 
         if (activity != null) {
-            activity.refreshActionBarItems();
+            activity.setActionBarTitle(text);
         }
     }
 
-    /**
-     * 设置ActionBar的Home键是否可点击
-     *
-     * @param clickable
-     *         是否可点击
-     */
     @Override
-    public final void setActionBarHomeClickable(boolean clickable) {
+    public void setActionBarTitle(int textId) {
         ActivityFramework activity = getActivityFramework();
 
         if (activity != null) {
-            activity.setActionBarHomeClickable(clickable);
-        }
-    }
-
-    /**
-     * 设置ActionBar的Home键上的图标
-     *
-     * @param iconId
-     *         图标Id
-     */
-    @Override
-    public void setActionBarHomeIcon(int iconId) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.setActionBarHomeIcon(iconId);
-        }
-    }
-
-    /**
-     * 设置ActionBar的Home键上的标题
-     *
-     * @param titleId
-     *         标题Id
-     */
-    @Override
-    public void setActionBarHomeTitle(int titleId) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.setActionBarHomeTitle(titleId);
-        }
-    }
-
-    /**
-     * 设置ActionBar的Home键上的标题
-     *
-     * @param title
-     *         标题
-     */
-    @Override
-    public void setActionBarHomeTitle(String title) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.setActionBarHomeTitle(title);
-        }
-    }
-
-    /**
-     * 设置ActionBar的Home键上的标题是否可见
-     *
-     * @param visible
-     *         是否可见
-     */
-    @Override
-    public void setActionBarHomeTitleVisible(boolean visible) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.setActionBarHomeTitleVisible(visible);
-        }
-    }
-
-    /**
-     * 设置ActionBar的Home键是否可见
-     *
-     * @param visible
-     *         是否可见
-     */
-    @Override
-    public void setActionBarHomeVisible(boolean visible) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.setActionBarHomeVisible(visible);
-        }
-    }
-
-    /**
-     * 设置ActionBar上的所有菜单选项是否可见
-     *
-     * @param visible
-     *         是否可见
-     */
-    @Override
-    public void setActionBarItemsVisible(boolean visible) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.setActionBarItemsVisible(visible);
-        }
-    }
-
-    /**
-     * 设置ActionBar的视图
-     *
-     * @param view
-     *         ActionBar的视图
-     */
-    @Override
-    public void setActionBarView(View view) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.setActionBarView(view);
-        }
-    }
-
-    /**
-     * 设置ActionBar的视图
-     *
-     * @param viewId
-     *         ActionBar的视图Id
-     */
-    @Override
-    public void setActionBarView(int viewId) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.setActionBarView(viewId);
-        }
-    }
-
-    /**
-     * 设置ActionBar是否可见
-     *
-     * @param visible
-     *         是否可见
-     */
-    @Override
-    public void setActionBarVisible(boolean visible) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.setActionBarVisible(visible);
+            activity.setActionBarTitle(textId);
         }
     }
 
@@ -656,21 +320,32 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
         framework_info.setInfoVisibility(infoVisibility);
     }
 
-    /**
-     * 显示ActionBar上的指定菜单选项
-     *
-     * @param position
-     *         菜单选项位置
-     */
     @Override
-    public void showActionBarItem(int position) {
+    public void showActionBarHome(boolean show) {
         ActivityFramework activity = getActivityFramework();
 
         if (activity != null) {
-            activity.showActionBarItem(position);
+            activity.showActionBarHome(show);
         }
     }
 
+    @Override
+    public void showActionBarItem(int id) {
+        ActivityFramework activity = getActivityFramework();
+
+        if (activity != null) {
+            activity.showActionBarItem(id);
+        }
+    }
+
+    @Override
+    public void showActionBarTitle(boolean show) {
+        ActivityFramework activity = getActivityFramework();
+
+        if (activity != null) {
+            activity.showActionBarTitle(show);
+        }
+    }
 
     /**
      * 显示Toast

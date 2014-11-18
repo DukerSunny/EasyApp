@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    style="@style/mm.v"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.harreke.easyapp.widgets.ActionBarView
+        android:id="@+id/framework_actionbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/actionBarHeight"
+        android:focusable="true"
+        android:focusableInTouchMode="true"/>
+
+    <FrameLayout
+        style="@style/mm">
+
+        <FrameLayout
+            android:id="@+id/framework_content"
+            style="@style/mm"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            android:src="@drawable/shape_shadow"/>
+
+        <com.harreke.easyapp.widgets.InfoView
+            android:id="@+id/framework_info"
+            style="@style/mm"
+            android:background="@color/TransparentWhite"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+
+</LinearLayout>

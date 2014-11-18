@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     style="@style/mm"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/Background">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <com.harreke.easyapp.widgets.ChildViewPager
         android:id="@+id/comic_pager"
@@ -20,7 +19,6 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@drawable/button_transparent"
-            android:padding="8dp"
             android:src="@drawable/image_back"/>
 
         <ImageView
@@ -29,7 +27,6 @@
             android:layout_height="48dp"
             android:layout_gravity="end"
             android:background="@drawable/button_transparent"
-            android:padding="8dp"
             android:src="@drawable/image_save"/>
 
     </FrameLayout>

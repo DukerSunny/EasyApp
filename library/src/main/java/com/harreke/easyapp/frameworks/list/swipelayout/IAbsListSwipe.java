@@ -19,7 +19,7 @@ public interface IAbsListSwipe<ITEM, HOLDER extends IAbsListHolder<ITEM>> {
      *
      * @return 项目视图容器
      */
-    public HOLDER createHolder(View convertView, SwipeLayout.SwipeListener swipeListener);
+    public HOLDER createHolder(View convertView);
 
     /**
      * 生成项目视图

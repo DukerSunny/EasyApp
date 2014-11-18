@@ -1,25 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--<style name="AcFunRead" parent="App"/>-->
+    <style name="AcFunRead" parent="@style/App">
+        <item name="actionBarViewStyle">@style/AcFunRead.ActionBarView</item>
+    </style>
 
-    <!--<style name="AcFunRead.Activity">-->
-        <!--<item name="android:windowActionBarOverlay">true</item>-->
-        <!--<item name="android:windowActionModeOverlay">true</item>-->
-        <!--<item name="android:actionBarStyle">@style/AcFunRead.ActionBar</item>-->
-        <!--<item name="android:actionMenuTextAppearance">@style/AcFunRead.Text</item>-->
-        <!--<item name="android:homeAsUpIndicator">@drawable/back_small</item>-->
-    <!--</style>-->
-
-    <!--<style name="AcFunRead.Text">-->
-        <!--<item name="android:textSize">16dp</item>-->
-        <!--<item name="android:textStyle">normal</item>-->
-        <!--<item name="android:textColor">@color/White</item>-->
-    <!--</style>-->
-
-    <!--<style name="AcFunRead.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">-->
-        <!--<item name="android:background">@color/TransparentGray</item>-->
-        <!--<item name="android:titleTextStyle">@style/AcFunRead.Text</item>-->
-    <!--</style>-->
+    <style name="AcFunRead.ActionBarView" parent="@style/App.ActionBarView">
+        <item name="background">@color/White</item>
+        <item name="homeIcon">@drawable/image_back</item>
+        <item name="textColor">@color/Title</item>
+    </style>
 
 </resources>

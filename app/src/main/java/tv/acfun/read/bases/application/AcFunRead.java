@@ -2,13 +2,17 @@ package tv.acfun.read.bases.application;
 
 import android.graphics.drawable.Drawable;
 
+import com.google.gson.reflect.TypeToken;
 import com.harreke.easyapp.frameworks.bases.application.ApplicationFramework;
 import com.harreke.easyapp.tools.FileUtil;
 import com.harreke.easyapp.tools.GsonUtil;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import tv.acfun.read.R;
+import tv.acfun.read.beans.Content;
 import tv.acfun.read.beans.FullUser;
 import tv.acfun.read.beans.Token;
 
@@ -16,9 +20,7 @@ import tv.acfun.read.beans.Token;
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/24
  */
 public class AcFunRead extends ApplicationFramework {
-    public static final String DIR_HISTORIES = "histories";
     public static AcFunRead mInstance = null;
-    private boolean mHistoriesEnabled;
 
     public static AcFunRead getInstance() {
         return mInstance;
@@ -45,6 +47,34 @@ public class AcFunRead extends ApplicationFramework {
         }
     }
 
+    public void addHistory(Content content) {
+        List<Content> list;
+        Content history;
+        int i;
+
+        if (content != null) {
+            list = readHistory();
+            if (list != null) {
+                if (list.size() > 30) {
+                    list = list.subList(0, 30);
+                }
+            } else {
+                list = new ArrayList<Content>();
+            }
+            for (i = 0; i < list.size(); i++) {
+                history = list.get(i);
+                if (history.getContentId() == content.getContentId()) {
+                    break;
+                }
+            }
+            if (i < list.size()) {
+                list.remove(i);
+            }
+            list.add(0, content);
+            writeHistory(list);
+        }
+    }
+
     public final void clearLogin() {
         writeFullUser(null);
         writeToken(null);
@@ -58,7 +88,6 @@ public class AcFunRead extends ApplicationFramework {
         int i;
         int j;
 
-        mHistoriesEnabled = createDir(DIR_HISTORIES);
         if (isAssetsEnabled()) {
             copyAsset("web_loading", "");
             for (i = 0; i < emotionNames.length; i++) {
@@ -79,10 +108,6 @@ public class AcFunRead extends ApplicationFramework {
         return token == null || token.isExpired();
     }
 
-    public boolean isHistoriesEnabled() {
-        return mHistoriesEnabled;
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -96,12 +121,35 @@ public class AcFunRead extends ApplicationFramework {
         return GsonUtil.toBean(readString("fullUser", null), FullUser.class);
     }
 
+    public List<Content> readHistory() {
+        if (isCachesEnabled()) {
+            return GsonUtil.toBean(FileUtil.readTxt(new File(CacheDir + "/" + DIR_CACHES + "/history.cache")),
+                    new TypeToken<ArrayList<Content>>() {
+                    }.getType());
+        } else {
+            return null;
+        }
+    }
+
     public final Token readToken() {
         return GsonUtil.toBean(readString("token", null), Token.class);
     }
 
     public final void writeFullUser(FullUser fullUser) {
         writeString("fullUser", GsonUtil.toString(fullUser));
+    }
+
+    public void writeHistory(List<Content> list) {
+        String json;
+
+        if (isCachesEnabled()) {
+            if (list != null) {
+                json = GsonUtil.toString(list);
+            } else {
+                json = "";
+            }
+            FileUtil.writeTxt(new File(CacheDir + "/" + DIR_CACHES + "/history.cache"), json);
+        }
     }
 
     public final void writeToken(Token token) {

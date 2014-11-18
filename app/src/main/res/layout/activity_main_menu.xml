@@ -48,7 +48,6 @@
         <ImageView
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:padding="8dp"
             android:src="@drawable/image_at"/>
 
         <TextView
@@ -119,7 +118,6 @@
         <ImageView
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:padding="8dp"
             android:src="@drawable/image_favourite"/>
 
         <TextView
@@ -143,7 +141,6 @@
         <ImageView
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:padding="8dp"
             android:src="@drawable/image_history"/>
 
         <TextView

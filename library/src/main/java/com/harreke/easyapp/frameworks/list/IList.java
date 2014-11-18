@@ -1,8 +1,7 @@
 package com.harreke.easyapp.frameworks.list;
 
+import android.view.View;
 import android.widget.AbsListView;
-
-import com.melnykov.fab.FloatingActionButton;
 
 import java.util.Comparator;
 
@@ -81,6 +80,10 @@ public interface IList<ITEM> {
      */
     public void refresh();
 
+    public boolean removeItem(ITEM item);
+
+    public boolean removeItem(int position);
+
     public void scrollToTop();
 
     /**
@@ -101,7 +104,15 @@ public interface IList<ITEM> {
      */
     public void setLoadMore(ILoadStatus loadMore);
 
-    public void setRefresh(FloatingActionButton button);
+    /**
+     * 设置刷新按钮
+     *
+     * 框架将自动为该按钮设置点击监听器
+     *
+     * @param button
+     *         刷新按钮
+     */
+    public void setRefresh(View button);
 
     /**
      * 排序列表条目

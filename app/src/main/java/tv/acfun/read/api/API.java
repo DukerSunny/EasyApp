@@ -8,25 +8,27 @@ import tv.acfun.read.beans.Token;
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/24
  */
 public class API {
-    public static String HOST = "http://api.acfun.tv/apiserver";
-    private static String ACCESS_TOKEN = "access_token";
-    private static String CHANNELID = "channelId";
-    private static String CHANNELIDS = "channelIds";
-    private static String CLIENT_ID = "client_id";
-    private static String CONTENT = "content";
-    private static String CONTENTID = "contentId";
-    private static String FROMDEVICE = "fromDevice";
-    private static String ORDERBY = "orderBy";
-    private static String ORDERID = "orderId";
-    private static String PAGENO = "pageNo";
-    private static String PAGESIZE = "pageSize";
-    private static String PASSWORD = "password";
-    private static String QUERY = "query";
-    private static String QUOTEID = "quoteId";
+    public final static String HOST = "http://api.acfun.tv/apiserver";
+    private final static String ACCESS_TOKEN = "access_token";
+    private final static String CHANNELID = "channelId";
+    private final static String CHANNELIDS = "channelIds";
+    private final static String CLIENT_ID = "client_id";
+    private final static String CONTENT = "content";
+    private final static String CONTENTID = "contentId";
+    private final static String FROMDEVICE = "fromDevice";
+    private final static String OPERATOR = "operator";
+    private final static String ORDERBY = "orderBy";
+    private final static String ORDERID = "orderId";
+    private final static String PAGENO = "pageNo";
+    private final static String PAGESIZE = "pageSize";
+    private final static String PASSWORD = "password";
+    private final static String QUERY = "query";
+    private final static String QUOTEID = "quoteId";
     private final static String RECEIVERID = "receiverId";
-    private static String RESPONSE_TYPE = "response_type";
-    private static String USERID = "userId";
-    private static String USERNAME = "username";
+    private final static String RESPONSE_TYPE = "response_type";
+    private final static String TYPE = "type";
+    private final static String USERID = "userId";
+    private final static String USERNAME = "username";
 
     /**
      * 获取指定文章投稿的内容
@@ -104,8 +106,13 @@ public class API {
      * @return {@link com.harreke.easyapp.requests.RequestBuilder}
      */
     public static RequestBuilder getContentComment(int contentId, int pageSize, int pageNo) {
-        return new RequestBuilder(RequestBuilder.Method.GET, HOST + "/comment/content").addQuery(CONTENTID, contentId)
+        return new RequestBuilder(RequestBuilder.Method.GET, "http://www.acfun.tv/comment/content/web/list").addQuery(CONTENTID, contentId)
                 .addQuery(PAGESIZE, pageSize).addQuery(PAGENO, pageNo);
+    }
+
+    public static RequestBuilder getContribution(int userId, int pageSize, int pageNo) {
+        return new RequestBuilder(RequestBuilder.Method.GET, HOST + "/user/contribution").addQuery(USERID, userId)
+                .addQuery(PAGENO, pageNo).addQuery(PAGESIZE, pageSize).addQuery(TYPE, "0");
     }
 
     public static RequestBuilder getFavourite(Token token, String channelIds, int pageSize, int pageNo) {
@@ -114,8 +121,30 @@ public class API {
                 .addQuery(ACCESS_TOKEN, token.getAccess_token());
     }
 
+    public static RequestBuilder getFavouriteAdd(Token token, int contentId) {
+        return new RequestBuilder(RequestBuilder.Method.POST, HOST + "/user/fav/content/add").addBody(USERID, token.getUserId())
+                .addBody(CONTENTID, contentId).addBody(ACCESS_TOKEN, token.getAccess_token());
+    }
+
+    public static RequestBuilder getFavouriteCheck(Token token, int contentId) {
+        return new RequestBuilder(RequestBuilder.Method.GET, HOST + "/user/fav/content/exist")
+                .addQuery(USERID, token.getUserId()).addQuery(CONTENTID, contentId)
+                .addQuery(ACCESS_TOKEN, token.getAccess_token());
+    }
+
+    public static RequestBuilder getFavouriteRemove(Token token, int contentId) {
+        return new RequestBuilder(RequestBuilder.Method.POST, HOST + "/user/fav/content/remove")
+                .addBody(USERID, token.getUserId()).addBody(CONTENTID, contentId).addBody(ACCESS_TOKEN, token.getAccess_token())
+                .addBody(OPERATOR, 0);
+    }
+
     public static RequestBuilder getFullUser(int userId) {
         return new RequestBuilder(RequestBuilder.Method.GET, HOST + "/profile").addQuery(USERID, userId);
+    }
+
+    public static RequestBuilder getFullUserByName(String username) {
+        return new RequestBuilder(RequestBuilder.Method.GET, "http://hengyang.acfun.tv/usercard.aspx")
+                .addQuery(USERNAME, username);
     }
 
     public static RequestBuilder getMail(Token token, int pageSize, int pageNo) {

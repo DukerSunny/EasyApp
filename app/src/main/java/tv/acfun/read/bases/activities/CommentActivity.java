@@ -8,59 +8,49 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 import com.harreke.easyapp.adapters.fragment.FragmentPageAdapter;
-import com.harreke.easyapp.beans.ActionBarItem;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
-import com.harreke.easyapp.tools.GsonUtil;
 
 import tv.acfun.read.R;
 import tv.acfun.read.bases.application.AcFunRead;
 import tv.acfun.read.bases.fragments.CommentFragment;
-import tv.acfun.read.beans.Content;
-import tv.acfun.read.beans.User;
 import tv.acfun.read.helpers.LoginHelper;
-import tv.acfun.read.listeners.OnTotalPageChangedListener;
+import tv.acfun.read.listeners.OnCommentListener;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/26
  */
-public class CommentActivity extends ActivityFramework implements OnTotalPageChangedListener {
-    private View comment_back;
+public class CommentActivity extends ActivityFramework implements OnCommentListener {
     private ViewPager comment_pager;
     private PagerTabStrip comment_pager_indicator;
-    private View comment_refresh;
-    private View comment_reply;
     private Adapter mAdapter;
-    private View.OnClickListener mClickListener;
     private int mContentId;
     private Handler mHandler;
+    private LoginHelper.LoginCallback mLoginCallback;
     private LoginHelper mLoginHelper;
-    private LoginHelper.OnLoginListener mLoginListener;
     private int mTotalPage;
-    private User mUser;
 
-    public static Intent create(Context context, Content content) {
+    public static Intent create(Context context, int contentId) {
         Intent intent = new Intent(context, CommentActivity.class);
 
-        intent.putExtra("contentId", content.getContentId());
-        intent.putExtra("user", GsonUtil.toString(content.getUser()));
+        intent.putExtra("contentId", contentId);
 
         return intent;
     }
 
     @Override
-    public void assignEvents() {
-        comment_back.setOnClickListener(mClickListener);
-        comment_refresh.setOnClickListener(mClickListener);
-        comment_reply.setOnClickListener(mClickListener);
+    public void acquireArguments(Intent intent) {
+        mContentId = intent.getIntExtra("contentId", 0);
 
-        mLoginHelper.setOnLoginListener(mLoginListener);
+        mTotalPage = 1;
+    }
+
+    @Override
+    public void attachCallbacks() {
     }
 
     private void checkTotalPage() {
@@ -72,34 +62,24 @@ public class CommentActivity extends ActivityFramework implements OnTotalPageCha
     }
 
     @Override
-    public void initData(Intent intent) {
-        mContentId = intent.getIntExtra("contentId", 0);
-        mUser = GsonUtil.toBean(intent.getStringExtra("user"), User.class);
+    public void enquiryViews() {
+        setActionBarTitle("ac" + mContentId);
+        addActionBarImageItem(0, R.drawable.image_refresh);
 
-        mTotalPage = 1;
+        comment_pager = (ViewPager) findViewById(R.id.comment_pager);
+        comment_pager_indicator = (PagerTabStrip) findViewById(R.id.comment_pager_indicator);
+
+        comment_pager_indicator.setTabIndicatorColorResource(R.color.Theme);
+        comment_pager_indicator.setTextColor(getResources().getColor(R.color.Title));
+
+        mLoginHelper = new LoginHelper(getActivity(), mLoginCallback);
+
+        mAdapter = new Adapter(getSupportFragmentManager());
+        checkTotalPage();
     }
 
     @Override
-    public void newEvents() {
-        mClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.comment_back:
-                        onBackPressed();
-                        break;
-                    case R.id.comment_refresh:
-                        refreshComments();
-                        break;
-                    case R.id.comment_reply:
-                        if (AcFunRead.getInstance().readFullUser() == null) {
-                            mLoginHelper.show();
-                        } else {
-                            start(ReplyActivity.create(getActivity(), mContentId, 0, 0), 0);
-                        }
-                }
-            }
-        };
+    public void establishCallbacks() {
         mHandler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
@@ -109,7 +89,7 @@ public class CommentActivity extends ActivityFramework implements OnTotalPageCha
                 return false;
             }
         });
-        mLoginListener = new LoginHelper.OnLoginListener() {
+        mLoginCallback = new LoginHelper.LoginCallback() {
             @Override
             public void onCancelRequest() {
                 cancelRequest();
@@ -131,12 +111,8 @@ public class CommentActivity extends ActivityFramework implements OnTotalPageCha
     }
 
     @Override
-    public void onActionBarItemClick(int position, ActionBarItem item) {
-    }
-
-    @Override
-    public void onActionBarMenuCreate() {
-
+    public void onActionBarItemClick(int id, View item) {
+        refreshComment();
     }
 
     @Override
@@ -144,9 +120,8 @@ public class CommentActivity extends ActivityFramework implements OnTotalPageCha
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-            Log.e(null, "result success");
             showToast(R.string.comment_success);
-            refreshComments();
+            refreshComment();
         }
     }
 
@@ -158,37 +133,13 @@ public class CommentActivity extends ActivityFramework implements OnTotalPageCha
 
     @Override
     public void onTotalPageChanged(int totalPage) {
-        Log.e(null, "totalPage changed from " + mTotalPage + " to " + totalPage);
         if (mTotalPage < totalPage) {
             mTotalPage = totalPage;
             mHandler.sendEmptyMessage(0);
         }
     }
 
-    @Override
-    public void queryLayout() {
-        TextView comment_id = (TextView) findViewById(R.id.comment_id);
-
-        comment_back = findViewById(R.id.comment_back);
-        comment_refresh = findViewById(R.id.comment_refresh);
-        comment_reply = findViewById(R.id.comment_reply);
-
-        comment_pager = (ViewPager) findViewById(R.id.comment_pager);
-        comment_pager_indicator = (PagerTabStrip) findViewById(R.id.comment_pager_indicator);
-
-        comment_pager_indicator.setTabIndicatorColorResource(R.color.Theme);
-        comment_pager_indicator.setTextColor(getResources().getColor(R.color.Title));
-
-        comment_id.setText("ac" + mContentId);
-
-        mLoginHelper = new LoginHelper(getActivity());
-        mLoginHelper.setOnLoginListener(mLoginListener);
-
-        mAdapter = new Adapter(getSupportFragmentManager());
-        checkTotalPage();
-    }
-
-    private void refreshComments() {
+    public void refreshComment() {
         mAdapter.clear();
         mAdapter.refresh();
     }
@@ -196,6 +147,15 @@ public class CommentActivity extends ActivityFramework implements OnTotalPageCha
     @Override
     public void setLayout() {
         setContentView(R.layout.activity_comment);
+    }
+
+    @Override
+    public void showLogin() {
+        if (AcFunRead.getInstance().readFullUser() == null) {
+            mLoginHelper.show();
+        } else {
+            start(ReplyActivity.create(getActivity(), mContentId, 0, 0), 0);
+        }
     }
 
     @Override

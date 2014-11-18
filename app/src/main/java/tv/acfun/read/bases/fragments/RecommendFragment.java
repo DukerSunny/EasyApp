@@ -6,7 +6,6 @@ import android.view.View;
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.fragment.FragmentFramework;
 import com.harreke.easyapp.frameworks.list.abslistview.AbsListFramework;
-import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -24,21 +23,21 @@ public class RecommendFragment extends FragmentFramework {
     private Helper mHelper;
 
     @Override
-    public void assignEvents() {
+    public void attachCallbacks() {
     }
 
     @Override
-    public void initData(Bundle bundle) {
+    public void acquireArguments(Bundle bundle) {
     }
 
     @Override
-    public void newEvents() {
+    public void establishCallbacks() {
     }
 
     @Override
-    public void queryLayout() {
+    public void enquiryViews() {
         mHelper = new Helper(this, R.id.recommend_list);
-        mHelper.setRefresh((FloatingActionButton) findViewById(R.id.recommend_refresh));
+        mHelper.setRefresh(findViewById(R.id.recommend_refresh));
         mHelper.bindAdapter();
     }
 

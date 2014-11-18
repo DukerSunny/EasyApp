@@ -12,12 +12,23 @@
         android:textColor="@color/Content"
         android:textSize="14dp"/>
 
-    <TextView
-        android:id="@+id/comment_quote_username"
-        style="@style/ww"
-        android:layout_marginTop="4dp"
-        android:text="@string/comment_quote_user_name"
-        android:textColor="@color/Assist"
-        android:textSize="12dp"/>
+    <LinearLayout
+        style="@style/mw.h"
+        android:layout_marginTop="4dp">
+
+        <TextView
+            android:id="@+id/comment_quote_username"
+            style="@style/mww"
+            android:text="@string/comment_quote_user_name"
+            android:textColor="@color/Assist"
+            android:textSize="12dp"/>
+
+        <TextView
+            android:id="@+id/comment_quote_reference"
+            style="@style/ww"
+            android:textColor="@color/Assist"
+            android:textSize="12dp"/>
+
+    </LinearLayout>
 
 </LinearLayout>

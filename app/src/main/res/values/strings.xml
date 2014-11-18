@@ -28,7 +28,7 @@
     <string name="comic_save_overwrite">已有同名文件存在，确认覆盖？</string>
     <string name="comic_save_success">图片保存保存至%s</string>
 
-    <string name="comment_date">发表于 yyyy-MM-dd HH:mm:SS</string>
+    <string name="comment_date">发表于%s</string>
     <string name="comment_text">评论内容</string>
     <string name="comment_username"># 评论者</string>
 
@@ -42,7 +42,7 @@
     <string name="comment_sending">正在发送评论 …</string>
     <string name="comment_success">评论发送成功，请等待服务器刷新评论缓存！</string>
     <string name="comment_failure">评论发送失败，请检查网络连接！</string>
-    <string name="comment_tooshort">评论过短，请重新输入！</string>
+    <string name="comment_tooshort">评论字数少于5个，请重新输入！</string>
 
     <string name="content_comments">评论</string>
     <string name="content_date">MM月dd日（E）HH时mm分</string>
@@ -53,6 +53,12 @@
 
     <string name="content_redirect_ac">该链接指向投稿 ac%s，确认跳转？</string>
     <string name="content_redirect_aa">该链接指向合辑 ac%s，请使用视频客户端浏览</string>
+
+    <string name="favourite_add_success">成功添加收藏！</string>
+    <string name="favourite_add_failure">添加收藏失败！</string>
+    <string name="favourite_remove_success">成功移除收藏！</string>
+    <string name="favourite_remove_failure">移除收藏失败！</string>
+    <string name="favourite_operating">正在操作中 …</string>
 
     <string name="login_account">账号</string>
     <string name="login_progress">正在登录 …</string>
@@ -84,6 +90,8 @@
     <string name="menu_pattern_night">夜间</string>
     <string name="menu_setting">设置</string>
 
+    <string name="quote_title">浏览引用</string>
+
     <string name="recommend_date">yyyy年MM月dd日</string>
 
     <string name="reply_id">回复</string>
@@ -100,6 +108,9 @@
     <string name="setting_autoloadimage">2G/3G网络下自动加载图片</string>
     <string name="setting_misc">综合</string>
     <string name="setting_other">其他</string>
+
+    <string name="share_title">分享</string>
+    <string name="share_content">我从%1$s分享了视频“%2$s”（UP主：%3$s，链接：%4$s）</string>
 
     <string name="time">E </string>
     <string name="time_early">清晨</string>

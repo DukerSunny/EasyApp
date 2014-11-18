@@ -9,58 +9,23 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/White"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
         android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/search_back"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@drawable/button_transparent"
-            android:padding="8dp"
-            android:src="@drawable/image_back"/>
-
-        <EditText
-            android:id="@+id/search_input"
-            style="@style/mmw"
-            android:gravity="center_vertical"
-            android:hint="@string/channel_search"
-            android:lines="1"
-            android:padding="8dp"
-            android:textColor="@color/Title"
-            android:textColorHint="@color/Assist"
-            android:textSize="16dp"/>
-
-        <ImageView
-            android:id="@+id/search_go"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@drawable/button_transparent"
-            android:padding="8dp"
-            android:src="@drawable/image_search"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        style="@style/mw.h"
-        android:background="@color/White">
 
         <Spinner
             android:id="@+id/search_sortresult"
-            style="@style/mww"
+            style="@style/mmw"
             android:entries="@array/search_sortresult"
             android:gravity="center"/>
 
         <Spinner
             android:id="@+id/search_target"
-            style="@style/mww"
+            style="@style/mmw"
             android:entries="@array/search_target"
             android:gravity="center"/>
 
         <Spinner
             android:id="@+id/search_range"
-            style="@style/mww"
+            style="@style/mmw"
             android:entries="@array/search_range"
             android:gravity="center"/>
 

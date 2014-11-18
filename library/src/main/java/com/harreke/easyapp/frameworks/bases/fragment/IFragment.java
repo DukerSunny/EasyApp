@@ -11,5 +11,5 @@ public interface IFragment {
     /**
      * 初始化Bundle传参数据
      */
-    public void initData(Bundle bundle);
+    public void acquireArguments(Bundle bundle);
 }

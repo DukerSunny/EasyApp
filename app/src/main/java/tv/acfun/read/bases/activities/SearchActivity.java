@@ -8,7 +8,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import com.harreke.easyapp.beans.ActionBarItem;
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.frameworks.list.abslistview.AbsListFramework;
@@ -28,7 +27,6 @@ import tv.acfun.read.parsers.SearchListParser;
  */
 public class SearchActivity extends ActivityFramework {
     private int mChannelId;
-    private View.OnClickListener mClickListener;
     private int mOrderBy;
     private int mOrderId;
     private String mQuery;
@@ -36,8 +34,6 @@ public class SearchActivity extends ActivityFramework {
     private AdapterView.OnItemSelectedListener mSearchRangeItemClickListener;
     private AdapterView.OnItemSelectedListener mSearchSortResultItemClickListener;
     private AdapterView.OnItemSelectedListener mSearchTargetItemClickListener;
-    private View search_back;
-    private View search_go;
     private EditText search_input;
     private Spinner search_range;
     private Spinner search_sortresult;
@@ -48,16 +44,7 @@ public class SearchActivity extends ActivityFramework {
     }
 
     @Override
-    public void assignEvents() {
-        search_back.setOnClickListener(mClickListener);
-        search_go.setOnClickListener(mClickListener);
-        search_sortresult.setOnItemSelectedListener(mSearchSortResultItemClickListener);
-        search_target.setOnItemSelectedListener(mSearchTargetItemClickListener);
-        search_range.setOnItemSelectedListener(mSearchRangeItemClickListener);
-    }
-
-    @Override
-    public void initData(Intent intent) {
+    public void acquireArguments(Intent intent) {
         mQuery = null;
         mChannelId = 110;
         mOrderBy = 0;
@@ -65,19 +52,48 @@ public class SearchActivity extends ActivityFramework {
     }
 
     @Override
-    public void newEvents() {
-        mClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.search_back:
-                        onBackPressed();
-                        break;
-                    case R.id.search_go:
-                        searchGo();
-                }
-            }
-        };
+    public void attachCallbacks() {
+        search_sortresult.setOnItemSelectedListener(mSearchSortResultItemClickListener);
+        search_target.setOnItemSelectedListener(mSearchTargetItemClickListener);
+        search_range.setOnItemSelectedListener(mSearchRangeItemClickListener);
+    }
+
+    private void doSearch() {
+        String text = search_input.getText().toString().trim();
+
+        ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(search_input.getWindowToken(), 0);
+        if (text.length() > 1) {
+            mQuery = text;
+            mSearchListHelper.clear();
+            startAction();
+        } else {
+            showToast(getString(R.string.search_tooshort));
+        }
+    }
+
+    @Override
+    public void enquiryViews() {
+        View footer_loadmore = View.inflate(getActivity(), R.layout.footer_loadmore, null);
+
+        addActionBarViewItem(0, R.layout.activity_search_header, false);
+        addActionBarImageItem(1, R.drawable.image_search);
+
+        search_input = (EditText) findViewById(R.id.search_input);
+        search_sortresult = (Spinner) findViewById(R.id.search_sortresult);
+        search_target = (Spinner) findViewById(R.id.search_target);
+        search_range = (Spinner) findViewById(R.id.search_range);
+
+        mSearchListHelper = new SearchListHelper(this, R.id.search_list);
+        mSearchListHelper.addFooterView(footer_loadmore);
+        mSearchListHelper.setLoadMore(new FooterLoadStatus(footer_loadmore));
+        mSearchListHelper.setRootView(findViewById(R.id.search_list));
+        mSearchListHelper.setInfoView((InfoView) findViewById(R.id.search_info));
+        mSearchListHelper.bindAdapter();
+        mSearchListHelper.onPostAction();
+    }
+
+    @Override
+    public void establishCallbacks() {
         mSearchSortResultItemClickListener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -143,49 +159,8 @@ public class SearchActivity extends ActivityFramework {
     }
 
     @Override
-    public void onActionBarItemClick(int position, ActionBarItem item) {
-    }
-
-    @Override
-    public void onActionBarMenuCreate() {
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public void queryLayout() {
-        View footer_loadmore = View.inflate(getActivity(), R.layout.footer_loadmore, null);
-
-        search_back = findViewById(R.id.search_back);
-        search_input = (EditText) findViewById(R.id.search_input);
-        search_go = findViewById(R.id.search_go);
-        search_sortresult = (Spinner) findViewById(R.id.search_sortresult);
-        search_target = (Spinner) findViewById(R.id.search_target);
-        search_range = (Spinner) findViewById(R.id.search_range);
-
-        mSearchListHelper = new SearchListHelper(this, R.id.search_list);
-        mSearchListHelper.addFooterView(footer_loadmore);
-        mSearchListHelper.setLoadMore(new FooterLoadStatus(footer_loadmore));
-        mSearchListHelper.setRootView(findViewById(R.id.search_list));
-        mSearchListHelper.setInfoView((InfoView) findViewById(R.id.search_info));
-        mSearchListHelper.bindAdapter();
-        mSearchListHelper.onPostAction();
-    }
-
-    private void searchGo() {
-        String text = search_input.getText().toString().trim();
-
-        ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(search_input.getWindowToken(), 0);
-        if (text.length() > 1) {
-            mQuery = text;
-            mSearchListHelper.clear();
-            startAction();
-        } else {
-            showToast(getString(R.string.search_tooshort));
-        }
+    public void onActionBarItemClick(int id, View item) {
+        doSearch();
     }
 
     @Override

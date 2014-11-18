@@ -1,44 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="App" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+    <style name="App" parent="@android:style/Theme.Holo.Light.NoActionBar">
+        <item name="actionBarViewStyle">@style/App.ActionBarView</item>
         <item name="childTabViewStyle">@style/App.ChildTabView</item>
         <item name="drawableTextViewStyle">@style/App.DrawableTextView</item>
         <item name="infoViewStyle">@style/App.InfoView</item>
         <item name="ratioImageViewStyle">@style/App.RatioImageView</item>
-        <item name="slidableViewStyle">@style/App.SlidableView</item>
-        <item name="slideShowIndicatorStyle">@style/App.SlideShowIndicator</item>
     </style>
 
-    <style name="App.NoActionBar">
-        <item name="android:windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
-    </style>
-
-    <style name="App.Fullscreen" parent="App.NoActionBar">
+    <style name="App.Fullscreen" parent="App">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-    <style name="App.Splash" parent="@style/App.NoActionBar">
+    <style name="App.Splash" parent="@style/App">
         <item name="android:windowBackground">@color/Theme</item>
     </style>
 
-    <style name="App.Activity">
-        <item name="android:actionBarStyle">@style/App.ActionBar</item>
-        <item name="android:actionMenuTextAppearance">@style/App.Text</item>
-        <item name="android:homeAsUpIndicator">@drawable/back_small</item>
-    </style>
-
-    <style name="App.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@color/Theme</item>
-        <item name="android:titleTextStyle">@style/App.Text</item>
-    </style>
-
-    <style name="App.Text">
-        <item name="android:textSize">16dp</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/White</item>
+    <style name="App.ActionBarView">
+        <item name="background">@color/Theme</item>
+        <item name="homeIcon">@drawable/back_small</item>
+        <item name="itemBackground">@drawable/button_transparent</item>
+        <item name="textSize">16dp</item>
+        <item name="textColor">@color/White</item>
     </style>
 
     <style name="App.ChildTabView">
@@ -69,15 +54,6 @@
 
     <style name="App.RatioImageView">
         <item name="ratio">-1</item>
-    </style>
-
-    <style name="App.SlidableView">
-        <item name="offsetLevel">0</item>
-    </style>
-
-    <style name="App.SlideShowIndicator">
-        <item name="slideShowIndicatorWidth">16dp</item>
-        <item name="slideShowIndicatorHeight">16dp</item>
     </style>
 
 </resources>

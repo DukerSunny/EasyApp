@@ -8,13 +8,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.harreke.easyapp.adapters.fragment.FragmentPageAdapter;
-import com.harreke.easyapp.beans.ActionBarItem;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.helpers.ImageLoaderHelper;
 import com.harreke.easyapp.helpers.PopupAbsListHelper;
@@ -49,12 +49,14 @@ public class MainActivity extends ActivityFramework {
     private SlidingMenu.OnClosedListener mClosedListener;
     private long mExitTime = 0;
     private AlphaAnimation mFadeIn;
+    private Animation.AnimationListener mFadeInListener;
     private AlphaAnimation mFadeOut;
+    private Animation.AnimationListener mFadeOutListener;
     private FullUser mFullUser = null;
     private Helper mHelper;
     private AdapterView.OnItemClickListener mItemClickListener;
     private LoginHelper mLoginHelper;
-    private LoginHelper.OnLoginListener mLoginListener;
+    private LoginHelper.LoginCallback mLoginListener;
     private SlidingMenu.OnOpenListener mOpenListener;
     private ViewPager.OnPageChangeListener mPageChangeListener;
     private int mPosition = 0;
@@ -74,7 +76,16 @@ public class MainActivity extends ActivityFramework {
     private TextView menu_user_signature;
 
     @Override
-    public void assignEvents() {
+    public void acquireArguments(Intent intent) {
+        AcFunRead acFunRead = AcFunRead.getInstance();
+
+        mPosition = acFunRead.readInt("lastChannelPosition", 0);
+
+        app_dropdown = getString(R.string.app_dropdown);
+    }
+
+    @Override
+    public void attachCallbacks() {
         main_slidingmenu.setOnOpenListener(mOpenListener);
         main_slidingmenu.setOnCloseListener(mCloseListener);
         main_slidingmenu.setOnClosedListener(mClosedListener);
@@ -92,7 +103,6 @@ public class MainActivity extends ActivityFramework {
         menu_history.setOnClickListener(mClickListener);
         menu_pattern.setOnClickListener(mClickListener);
 
-        mLoginHelper.setOnLoginListener(mLoginListener);
         mHelper.setOnItemClickListener(mItemClickListener);
     }
 
@@ -121,50 +131,57 @@ public class MainActivity extends ActivityFramework {
         }
     }
 
-    private int getChannelIdByPosition(int position) {
-        int channelId;
+    @Override
+    public void enquiryViews() {
+        Resources resources = getResources();
 
-        switch (position) {
-            case 0:
-                channelId = 110;
-                break;
-            case 1:
-                channelId = 73;
-                break;
-            case 2:
-                channelId = 74;
-                break;
-            case 3:
-                channelId = 75;
-                break;
-            default:
-                channelId = 110;
-        }
+        addActionBarViewItem(0, R.layout.activity_main_content_header, false);
+        showActionBarHome(false);
 
-        return channelId;
-    }
+        main_slidingmenu = (SlidingMenu) findViewById(R.id.main_slidingmenu);
 
-    private void hideAvatar() {
-        content_user_avatar.clearAnimation();
-        content_user_avatar.startAnimation(mFadeOut);
-    }
+        content_user_avatar = findViewById(R.id.content_user_avatar);
+        content_user_avatar_image = (ImageView) findViewById(R.id.content_user_avatar_image);
+        content_user_notification = findViewById(R.id.content_user_notification);
+        content_search = findViewById(R.id.content_search);
 
-    private void hideSoftInputMethod() {
-        ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
-                .hideSoftInputFromWindow(main_slidingmenu.getWindowToken(), 0);
+        content_group = (GroupTabView) findViewById(R.id.content_group);
+        content_channel = (RepeatCheckableChildTabView) findViewById(R.id.content_channel);
+        content_pager = (ViewPager) findViewById(R.id.content_pager);
+
+        menu_user_description = findViewById(R.id.menu_user_description);
+        menu_user_name = (TextView) findViewById(R.id.menu_user_name);
+        menu_user_avatar = (ImageView) findViewById(R.id.menu_user_avatar);
+        menu_user_signature = (TextView) findViewById(R.id.menu_user_signature);
+        menu_at = findViewById(R.id.menu_at);
+        menu_at_text = (TextView) findViewById(R.id.menu_at_text);
+        menu_mail = findViewById(R.id.menu_mail);
+        menu_mail_text = (TextView) findViewById(R.id.menu_mail_text);
+        menu_favourite = findViewById(R.id.menu_favourite);
+        menu_history = findViewById(R.id.menu_history);
+        menu_setting = findViewById(R.id.menu_setting);
+        menu_pattern = findViewById(R.id.menu_pattern);
+
+        mLoginHelper = new LoginHelper(this, mLoginListener);
+
+        mHelper = new Helper(getActivity(), findViewById(R.id.content_channel));
+        mHelper.add(0, resources.getString(R.string.channel_misc));
+        mHelper.add(1, resources.getString(R.string.channel_work_emotion));
+        mHelper.add(2, resources.getString(R.string.channel_dramaculture));
+        mHelper.add(3, resources.getString(R.string.channel_comic_novel));
+
+        content_channel.setText(mHelper.getItem(mPosition) + " " + app_dropdown);
+
+        mFadeIn = new AlphaAnimation(0f, 1f);
+        mFadeIn.setDuration(400);
+        mFadeIn.setAnimationListener(mFadeInListener);
+        mFadeOut = new AlphaAnimation(1f, 0f);
+        mFadeOut.setDuration(400);
+        mFadeOut.setAnimationListener(mFadeOutListener);
     }
 
     @Override
-    public void initData(Intent intent) {
-        AcFunRead acFunRead = AcFunRead.getInstance();
-
-        mPosition = acFunRead.readInt("lastChannelPosition", 0);
-
-        app_dropdown = getString(R.string.app_dropdown);
-    }
-
-    @Override
-    public void newEvents() {
+    public void establishCallbacks() {
         mOpenListener = new SlidingMenu.OnOpenListener() {
             @Override
             public void onOpen() {
@@ -287,7 +304,7 @@ public class MainActivity extends ActivityFramework {
                 }
             }
         };
-        mLoginListener = new LoginHelper.OnLoginListener() {
+        mLoginListener = new LoginHelper.LoginCallback() {
             @Override
             public void onCancelRequest() {
                 cancelRequest();
@@ -304,14 +321,76 @@ public class MainActivity extends ActivityFramework {
                 checkUser();
             }
         };
+        mFadeInListener = new Animation.AnimationListener() {
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+                content_user_avatar_image.setVisibility(View.VISIBLE);
+            }
+        };
+        mFadeOutListener = new Animation.AnimationListener() {
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                content_user_avatar_image.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+        };
+    }
+
+    private int getChannelIdByPosition(int position) {
+        int channelId;
+
+        switch (position) {
+            case 0:
+                channelId = 110;
+                break;
+            case 1:
+                channelId = 73;
+                break;
+            case 2:
+                channelId = 74;
+                break;
+            case 3:
+                channelId = 75;
+                break;
+            default:
+                channelId = 110;
+        }
+
+        return channelId;
+    }
+
+    private void hideAvatar() {
+        content_user_avatar_image.clearAnimation();
+        content_user_avatar_image.startAnimation(mFadeOut);
+    }
+
+    private void hideSoftInputMethod() {
+        ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
+                .hideSoftInputFromWindow(main_slidingmenu.getWindowToken(), 0);
     }
 
     @Override
-    public void onActionBarItemClick(int position, ActionBarItem item) {
-    }
+    public void onActionBarItemClick(int id, View item) {
 
-    @Override
-    public void onActionBarMenuCreate() {
     }
 
     @Override
@@ -354,59 +433,13 @@ public class MainActivity extends ActivityFramework {
     }
 
     @Override
-    public void queryLayout() {
-        Resources resources = getResources();
-
-        main_slidingmenu = (SlidingMenu) findViewById(R.id.main_slidingmenu);
-
-        content_user_avatar = findViewById(R.id.content_user_avatar);
-        content_user_avatar_image = (ImageView) findViewById(R.id.content_user_avatar_image);
-        content_user_notification = findViewById(R.id.content_user_notification);
-        content_search = findViewById(R.id.content_search);
-
-        content_group = (GroupTabView) findViewById(R.id.content_group);
-        content_channel = (RepeatCheckableChildTabView) findViewById(R.id.content_channel);
-        content_pager = (ViewPager) findViewById(R.id.content_pager);
-
-        menu_user_description = findViewById(R.id.menu_user_description);
-        menu_user_name = (TextView) findViewById(R.id.menu_user_name);
-        menu_user_avatar = (ImageView) findViewById(R.id.menu_user_avatar);
-        menu_user_signature = (TextView) findViewById(R.id.menu_user_signature);
-        menu_at = findViewById(R.id.menu_at);
-        menu_at_text = (TextView) findViewById(R.id.menu_at_text);
-        menu_mail = findViewById(R.id.menu_mail);
-        menu_mail_text = (TextView) findViewById(R.id.menu_mail_text);
-        menu_favourite = findViewById(R.id.menu_favourite);
-        menu_history = findViewById(R.id.menu_history);
-        menu_setting = findViewById(R.id.menu_setting);
-        menu_pattern = findViewById(R.id.menu_pattern);
-
-        mLoginHelper = new LoginHelper(getActivity());
-
-        mHelper = new Helper(getActivity(), findViewById(R.id.content_channel));
-        mHelper.add(0, resources.getString(R.string.channel_misc));
-        mHelper.add(1, resources.getString(R.string.channel_work_emotion));
-        mHelper.add(2, resources.getString(R.string.channel_dramaculture));
-        mHelper.add(3, resources.getString(R.string.channel_comic_novel));
-
-        content_channel.setText(mHelper.getItem(mPosition) + " " + app_dropdown);
-
-        mFadeIn = new AlphaAnimation(0f, 1f);
-        mFadeIn.setDuration(400);
-        mFadeIn.setFillAfter(true);
-        mFadeOut = new AlphaAnimation(1f, 0f);
-        mFadeOut.setDuration(400);
-        mFadeOut.setFillAfter(true);
-    }
-
-    @Override
     public void setLayout() {
         setContentView(R.layout.activity_main);
     }
 
     private void showAvatar() {
-        content_user_avatar.clearAnimation();
-        content_user_avatar.startAnimation(mFadeIn);
+        content_user_avatar_image.clearAnimation();
+        content_user_avatar_image.startAnimation(mFadeIn);
     }
 
     @Override

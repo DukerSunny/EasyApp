@@ -4,8 +4,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:padding="8dp">
 
-    <WebView
+    <com.harreke.easyapp.widgets.HackyWebView
         android:id="@+id/content_web"
         style="@style/mm"/>
+
+    <ImageView
+        android:id="@+id/content_comments"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:background="@drawable/button_floatingbutton"
+        android:src="@drawable/image_comments"/>
 
 </FrameLayout>

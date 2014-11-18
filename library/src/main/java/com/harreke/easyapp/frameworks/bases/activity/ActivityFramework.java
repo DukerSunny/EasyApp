@@ -1,35 +1,27 @@
 package com.harreke.easyapp.frameworks.bases.activity;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.widget.FrameLayout;
 
 import com.github.johnpersano.supertoasts.SuperActivityToast;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.harreke.easyapp.R;
-import com.harreke.easyapp.beans.ActionBarItem;
 import com.harreke.easyapp.frameworks.bases.IActionBar;
-import com.harreke.easyapp.frameworks.bases.IActionBarClickListener;
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.helpers.RequestHelper;
 import com.harreke.easyapp.receivers.ExitReceiver;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
 import com.harreke.easyapp.tools.NetUtil;
+import com.harreke.easyapp.widgets.ActionBarView;
 import com.harreke.easyapp.widgets.InfoView;
-
-import java.util.ArrayList;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/07/24
@@ -37,12 +29,11 @@ import java.util.ArrayList;
  * Activity框架
  */
 public abstract class ActivityFramework extends FragmentActivity
-        implements IFramework, IActivity, IActionBar, IActionBarClickListener {
+        implements IFramework, IActivity, IActionBar, ActionBarView.OnActionBarClickListener {
     private static final String TAG = "ActivityFramework";
     private FrameLayout framework_content;
     private InfoView framework_info;
-    private ActionBar mActionBar;
-    private ArrayList<ActionBarItem> mActionBarItemList = new ArrayList<ActionBarItem>();
+    private ActionBarView mActionBarView;
     private boolean mCreated = false;
     private ExitReceiver mExitReceiver = new ExitReceiver();
     private View.OnClickListener mInfoClickListener = new View.OnClickListener() {
@@ -56,148 +47,19 @@ public abstract class ActivityFramework extends FragmentActivity
     private RequestHelper mRequest = new RequestHelper();
     private SuperActivityToast mToast;
 
-    /**
-     * 为ActionBar添加一个菜单选项
-     *
-     * @param title
-     *         选项标题
-     * @param imageId
-     *         选项图片Id
-     */
     @Override
-    public void addActionBarItem(String title, int imageId) {
-        addActionBarItem(title, imageId, null, null, 0);
+    public void addActionBarImageItem(int id, int imageId) {
+        mActionBarView.addActionBarImageItem(id, imageId);
     }
 
-    /**
-     * 为ActionBar添加一个菜单选项
-     *
-     * @param title
-     *         选项标题
-     * @param imageId
-     *         选项图片Id
-     * @param flag
-     *         选项的Flag
-     */
     @Override
-    public void addActionBarItem(String title, int imageId, int flag) {
-        addActionBarItem(title, imageId, null, null, flag);
+    public void addActionBarViewItem(int id, int layoutId, boolean clickable) {
+        mActionBarView.addActionBarViewItem(id, layoutId, clickable);
     }
 
-    /**
-     * 为ActionBar添加一个菜单选项
-     *
-     * @param title
-     *         选项标题
-     * @param view
-     *         选项的视图
-     */
     @Override
-    public void addActionBarItem(String title, View view) {
-        addActionBarItem(title, 0, view, null, 0);
-    }
-
-    /**
-     * 为ActionBar添加一个菜单选项
-     *
-     * @param title
-     *         选项标题
-     * @param view
-     *         选项的视图
-     * @param flag
-     *         选项的Flag
-     */
-    @Override
-    public void addActionBarItem(String title, View view, int flag) {
-        addActionBarItem(title, 0, view, null, flag);
-    }
-
-    /**
-     * 为ActionBar添加一个菜单选项
-     *
-     * @param title
-     *         选项标题
-     * @param view
-     *         选项的视图
-     * @param items
-     *         选项的内容数组
-     */
-    @Override
-    public void addActionBarItem(String title, View view, String[] items) {
-        addActionBarItem(title, 0, view, items, 0);
-    }
-
-    /**
-     * 为ActionBar添加一个菜单选项
-     *
-     * @param title
-     *         选项标题
-     * @param view
-     *         选项的视图
-     * @param items
-     *         选项的内容数组
-     * @param flag
-     *         选项的Flag
-     */
-    @Override
-    public void addActionBarItem(String title, View view, String[] items, int flag) {
-        addActionBarItem(title, 0, view, items, flag);
-    }
-
-    /**
-     * 为ActionBar添加一个菜单选项
-     *
-     * @param title
-     *         选项标题
-     * @param imageId
-     *         选项的图标Id
-     * @param items
-     *         选项的内容数组
-     */
-    @Override
-    public void addActionBarItem(String title, int imageId, String[] items) {
-        addActionBarItem(title, imageId, null, items, 0);
-    }
-
-    /**
-     * 为ActionBar添加一个菜单选项
-     *
-     * @param title
-     *         选项标题
-     * @param imageId
-     *         选项的图标Id
-     * @param items
-     *         选项的内容数组
-     * @param flag
-     *         选项的Flag
-     */
-    @Override
-    public void addActionBarItem(String title, int imageId, String[] items, int flag) {
-        addActionBarItem(title, imageId, null, items, flag);
-    }
-
-    private void addActionBarItem(String title, int imageId, View view, String[] items, int flag) {
-        ActionBarItem actionBarItem;
-        ActionBarItem subItem;
-        int index;
-        int i;
-
-        if (mActionBar != null) {
-            index = mActionBarItemList.size();
-            actionBarItem = new ActionBarItem(title, index);
-            actionBarItem.setImageId(imageId);
-            actionBarItem.setView(view);
-            actionBarItem.setFlag(flag);
-            if (items != null) {
-                index++;
-                for (i = 0; i < items.length; i++) {
-                    subItem = new ActionBarItem(title, index);
-                    mActionBarItemList.add(subItem);
-                }
-                actionBarItem.setSubItemCount(items.length);
-            }
-            mActionBarItemList.add(actionBarItem);
-        }
+    public void addActionBarViewItem(int id, View item, boolean clickable) {
+        mActionBarView.addActionBarViewItem(id, item, clickable);
     }
 
     /**
@@ -228,37 +90,6 @@ public abstract class ActivityFramework extends FragmentActivity
      */
     @Override
     public void configActivity() {
-    }
-
-    /**
-     * 输出调试信息
-     *
-     * @param message
-     *         调试信息
-     */
-    @Override
-    public void debug(String message) {
-        Log.e(TAG, message);
-    }
-
-    /**
-     * 禁用ActionBar的Home键上的图标
-     */
-    @Override
-    public void disableActionBarHomeIcon() {
-        if (mActionBar != null) {
-            mActionBar.setIcon(R.drawable.shape_transparent);
-        }
-    }
-
-    /**
-     * 启用ActionBar的Home键左边的返回箭头
-     */
-    @Override
-    public void enableActionBarHomeBack() {
-        if (mActionBar != null) {
-            mActionBar.setDisplayHomeAsUpEnabled(true);
-        }
     }
 
     /**
@@ -347,14 +178,9 @@ public abstract class ActivityFramework extends FragmentActivity
         return framework_info;
     }
 
-    /**
-     * 隐藏ActoinBar上的指定菜单选项
-     */
     @Override
-    public final void hideActionBarItem(int position) {
-        if (mActionBar != null && position >= 0 && position < mActionBarItemList.size()) {
-            mActionBarItemList.get(position).setVisible(false);
-        }
+    public void hideActionbarItem(int id) {
+        mActionBarView.hideActionbarItem(id);
     }
 
     /**
@@ -363,23 +189,6 @@ public abstract class ActivityFramework extends FragmentActivity
     @Override
     public final void hideToast() {
         SuperActivityToast.clearSuperActivityToastsForActivity(this);
-    }
-
-    /**
-     * 判断ActionBar上的某个菜单选项是否正在显示
-     *
-     * @param position
-     *         菜单选项位置
-     */
-    @Override
-    public final boolean isActionBarItemShowing(int position) {
-        return mActionBar != null && position >= 0 && position < mActionBarItemList.size() &&
-                mActionBarItemList.get(position).isVisible();
-    }
-
-    @Override
-    public final boolean isActionBarShowing() {
-        return mActionBar != null && mActionBar.isShowing();
     }
 
     /**
@@ -406,21 +215,23 @@ public abstract class ActivityFramework extends FragmentActivity
     @Override
     public final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FrameLayout framework;
+        View root;
 
         registerReceiver(mExitReceiver, new IntentFilter(getPackageName() + ".EXIT"));
         NetUtil.checkConnection(this);
 
         configActivity();
 
-        framework = (FrameLayout) LayoutInflater.from(this).inflate(R.layout.widget_framework, null);
-        framework_content = (FrameLayout) framework.findViewById(R.id.framework_content);
-        framework_info = (InfoView) framework.findViewById(R.id.framework_info);
+        root = LayoutInflater.from(this).inflate(R.layout.activity_framework, null);
+        framework_content = (FrameLayout) root.findViewById(R.id.framework_content);
+        framework_info = (InfoView) root.findViewById(R.id.framework_info);
         framework_info.setOnClickListener(mInfoClickListener);
 
-        super.setContentView(framework);
+        super.setContentView(root);
 
-        mActionBar = getActionBar();
+        mActionBarView = (ActionBarView) findViewById(R.id.framework_actionbar);
+        mActionBarView.setOnActionBarClickListener(this);
+
         mToast = new SuperActivityToast(this);
         mToast.setAnimations(SuperToast.Animations.POPUP);
         mToast.setDuration(SuperToast.Duration.SHORT);
@@ -429,51 +240,10 @@ public abstract class ActivityFramework extends FragmentActivity
         mToast.setTextColor(Color.WHITE);
 
         setLayout();
-        initData(getIntent());
-        onActionBarMenuCreate();
-        queryLayout();
-        newEvents();
-        assignEvents();
-    }
-
-    @Override
-    public final boolean onCreateOptionsMenu(Menu menu) {
-        MenuItem menuItem;
-        SubMenu subMenu;
-        ActionBarItem actionBarItem;
-        ActionBarItem subItem;
-        int i;
-        int index = 0;
-
-        if (mActionBar != null) {
-            while (index < mActionBarItemList.size()) {
-                actionBarItem = mActionBarItemList.get(index);
-                if (actionBarItem.getSubItemCount() == 0) {
-                    menuItem = menu.add(0, index, index, actionBarItem.getTitle());
-                    index++;
-                } else {
-                    subMenu = menu.addSubMenu(0, index, index, actionBarItem.getTitle());
-                    for (i = 0; i < actionBarItem.getSubItemCount(); i++) {
-                        subItem = mActionBarItemList.get(index + i);
-                        subMenu.add(0, index + i, i, subItem.getTitle());
-                    }
-                    menuItem = subMenu.getItem();
-                    index += actionBarItem.getSubItemCount() + 1;
-                }
-                if (actionBarItem.getImageId() > 0) {
-                    menuItem.setIcon(actionBarItem.getImageId());
-                } else if (actionBarItem.getView() != null) {
-                    menuItem.setActionView(actionBarItem.getView());
-                }
-                if (actionBarItem.getFlag() > -1) {
-                    menuItem.setShowAsAction(actionBarItem.getFlag());
-                }
-            }
-
-            return true;
-        } else {
-            return false;
-        }
+        acquireArguments(getIntent());
+        establishCallbacks();
+        enquiryViews();
+        attachCallbacks();
     }
 
     @Override
@@ -496,17 +266,6 @@ public abstract class ActivityFramework extends FragmentActivity
     }
 
     @Override
-    public final boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onActionBarHomeClick();
-        } else {
-            onActionBarItemClick(item.getItemId(), mActionBarItemList.get(item.getItemId()));
-        }
-
-        return true;
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
 
@@ -516,154 +275,14 @@ public abstract class ActivityFramework extends FragmentActivity
         }
     }
 
-    /**
-     * 刷新ActionBar上的菜单选项
-     */
     @Override
-    public final void refreshActionBarItems() {
-        if (mActionBar != null) {
-            invalidateOptionsMenu();
-        }
+    public void setActionBarTitle(int textId) {
+        mActionBarView.setActionBarTitle(textId);
     }
 
-    /**
-     * 设置ActionBar的Home键是否可点击
-     *
-     * @param clickable
-     *         是否可点击
-     */
     @Override
-    public void setActionBarHomeClickable(boolean clickable) {
-        if (mActionBar != null) {
-            mActionBar.setHomeButtonEnabled(clickable);
-        }
-    }
-
-    /**
-     * 设置ActionBar的Home键上的图标
-     *
-     * @param imageId
-     *         图标Id
-     */
-    @Override
-    public final void setActionBarHomeIcon(int imageId) {
-        if (mActionBar != null) {
-            mActionBar.setIcon(imageId);
-        }
-    }
-
-    /**
-     * 设置ActionBar的Home键上的标题
-     *
-     * @param titleId
-     *         标题
-     */
-    @Override
-    public final void setActionBarHomeTitle(int titleId) {
-        if (mActionBar != null) {
-            mActionBar.setTitle(titleId);
-        }
-    }
-
-    /**
-     * 设置ActionBar的Home键上的标题
-     *
-     * @param title
-     *         标题
-     */
-    @Override
-    public final void setActionBarHomeTitle(String title) {
-        if (mActionBar != null) {
-            mActionBar.setTitle(title);
-        }
-    }
-
-    /**
-     * 设置ActionBar的Home键上的标题是否可见
-     *
-     * @param visible
-     *         是否可见
-     */
-    @Override
-    public void setActionBarHomeTitleVisible(boolean visible) {
-        if (mActionBar != null) {
-            mActionBar.setDisplayShowTitleEnabled(visible);
-        }
-    }
-
-    /**
-     * 设置ActionBar的Home键是否可见
-     *
-     * @param visible
-     *         是否可见
-     */
-    @Override
-    public void setActionBarHomeVisible(boolean visible) {
-        if (mActionBar != null) {
-            mActionBar.setDisplayShowHomeEnabled(visible);
-        }
-    }
-
-    /**
-     * 设置ActionBar上的所有菜单选项是否可见
-     *
-     * @param visible
-     *         是否可见
-     */
-    @Override
-    public void setActionBarItemsVisible(boolean visible) {
-        int i;
-
-        if (mActionBar != null) {
-            for (i = 0; i < mActionBarItemList.size(); i++) {
-                mActionBarItemList.get(i).setVisible(visible);
-            }
-        }
-    }
-
-    /**
-     * 设置ActionBar的视图
-     *
-     * @param view
-     *         ActionBar的视图
-     */
-    @Override
-    public final void setActionBarView(View view) {
-        if (mActionBar != null) {
-            mActionBar.setDisplayShowCustomEnabled(true);
-            mActionBar.setCustomView(view);
-        }
-    }
-
-    /**
-     * 设置ActionBar的视图
-     *
-     * @param viewId
-     *         ActionBar的视图Id
-     */
-    @Override
-    public final void setActionBarView(int viewId) {
-        if (mActionBar != null) {
-            mActionBar.setDisplayShowCustomEnabled(true);
-            mActionBar.setCustomView(viewId);
-        }
-    }
-
-    /**
-     * 设置ActionBar是否可见
-     *
-     * @param visible
-     *         是否可见
-     */
-    @Override
-    public void setActionBarVisible(boolean visible) {
-        if (mActionBar != null) {
-            if (visible) {
-                mActionBar.show();
-            } else {
-                mActionBar.hide();
-            }
-        }
+    public void setActionBarTitle(String text) {
+        mActionBarView.setActionBarTitle(text);
     }
 
     /**
@@ -720,17 +339,19 @@ public abstract class ActivityFramework extends FragmentActivity
         framework_info.setInfoVisibility(infoVisibility);
     }
 
-    /**
-     * 显示ActionBar上的指定菜单选项
-     *
-     * @param position
-     *         菜单选项位置
-     */
     @Override
-    public final void showActionBarItem(int position) {
-        if (mActionBar != null && position >= 0 && position < mActionBarItemList.size()) {
-            mActionBarItemList.get(position).setVisible(true);
-        }
+    public void showActionBarHome(boolean show) {
+        mActionBarView.showActionBarHome(show);
+    }
+
+    @Override
+    public void showActionBarItem(int id) {
+        mActionBarView.showActionBarItem(id);
+    }
+
+    @Override
+    public void showActionBarTitle(boolean show) {
+        mActionBarView.showActionBarTitle(show);
     }
 
     /**
@@ -765,6 +386,7 @@ public abstract class ActivityFramework extends FragmentActivity
      */
     @Override
     public void showToast(String text, boolean progress) {
+        mToast.dismiss();
         mToast.setText(text);
         if (progress) {
             mToast.setIcon(R.drawable.anim_progress_radiant, SuperToast.IconPosition.LEFT);

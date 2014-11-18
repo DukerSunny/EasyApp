@@ -7,10 +7,9 @@ import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
 import com.harreke.easyapp.widgets.InfoView;
-import com.melnykov.fab.FloatingActionButton;
 
-import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/07/31
@@ -46,7 +45,27 @@ public abstract class ListFramework<ITEM>
     private InfoView mInfo = null;
     private ILoadStatus mLoadMore = null;
     private int mPageSize = 0;
-    private FloatingActionButton mRefresh;
+    private View mRefresh;
+    private AbsListView.OnScrollListener mScrollListener = new AbsListView.OnScrollListener() {
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        }
+
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+            if (mRefresh != null) {
+                if (scrollState == SCROLL_STATE_IDLE) {
+                    if (mRefresh.getAlpha() == 0.25f) {
+                        mRefresh.setAlpha(0.75f);
+                    }
+                } else {
+                    if (mRefresh.getAlpha() == 0.75f) {
+                        mRefresh.setAlpha(0.25f);
+                    }
+                }
+            }
+        }
+    };
     private View.OnClickListener mRefreshClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -61,7 +80,10 @@ public abstract class ListFramework<ITEM>
     private int mTotalPage = 1;
 
     public ListFramework(IFramework framework, int listId) {
-        setListView((AbsListView) framework.findViewById(listId));
+        AbsListView listView = (AbsListView) framework.findViewById(listId);
+
+        listView.setOnScrollListener(mScrollListener);
+        setListView(listView);
         mFramework = framework;
         setRootView(framework.getContent());
         setInfoView(framework.getInfo());
@@ -98,7 +120,7 @@ public abstract class ListFramework<ITEM>
      * @param list
      *         条目列表
      */
-    public final void from(ArrayList<ITEM> list) {
+    public final void from(List<ITEM> list) {
         from(list, false);
     }
 
@@ -111,7 +133,7 @@ public abstract class ListFramework<ITEM>
      *         是否倒转列表顺序
      */
     @SuppressWarnings("unchecked")
-    public final void from(ArrayList<ITEM> list, boolean reverse) {
+    public final void from(List<ITEM> list, boolean reverse) {
         ITEM[] items = null;
 
         if (list != null) {
@@ -361,6 +383,9 @@ public abstract class ListFramework<ITEM>
      */
     @Override
     public void onPreAction() {
+        if (mRefresh != null) {
+            mRefresh.setVisibility(View.GONE);
+        }
         if (isEmpty()) {
             if (mRoot != null) {
                 mRoot.setVisibility(View.GONE);
@@ -373,7 +398,7 @@ public abstract class ListFramework<ITEM>
 
     @Override
     public void onSuccess(String requestUrl, String result) {
-        ArrayList<ITEM> list = onParse(result);
+        List<ITEM> list = onParse(result);
 
         if (list != null) {
             if (mSortReverse) {
@@ -436,10 +461,10 @@ public abstract class ListFramework<ITEM>
     }
 
     @Override
-    public void setRefresh(FloatingActionButton refresh) {
+    public void setRefresh(View refresh) {
         mRefresh = refresh;
         if (mRefresh != null) {
-            mRefresh.attachToListView(getListView());
+            mRefresh.setAlpha(0.75f);
             mRefresh.setOnClickListener(mRefreshClickListener);
         }
     }

@@ -4,58 +4,49 @@ package tv.acfun.read.beans;
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/26
  */
 public class Comment {
+    private int cid;
     private String content;
-    private int floorindex;
-    private int id;
+    private int count;
+    private int deep;
+    private String postDate;
     private int quoteId;
-    private long time;
-    private User user;
+    private String userID;
+    private String userImg;
+    private String userName;
+
+    public int getCid() {
+        return cid;
+    }
 
     public String getContent() {
         return content;
     }
 
-    public int getFloorindex() {
-        return floorindex;
+    public int getCount() {
+        return count;
     }
 
-    public int getId() {
-        return id;
+    public int getDeep() {
+        return deep;
+    }
+
+    public String getPostDate() {
+        return postDate;
     }
 
     public int getQuoteId() {
         return quoteId;
     }
 
-    public long getTime() {
-        return time;
+    public String getUserID() {
+        return userID;
     }
 
-    public User getUser() {
-        return user;
+    public String getUserImg() {
+        return userImg;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public void setFloorindex(int floorindex) {
-        this.floorindex = floorindex;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setQuoteId(int quoteId) {
-        this.quoteId = quoteId;
-    }
-
-    public void setTime(long time) {
-        this.time = time;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+    public String getUserName() {
+        return userName;
     }
 }

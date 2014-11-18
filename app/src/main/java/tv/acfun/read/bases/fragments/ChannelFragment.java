@@ -7,7 +7,6 @@ import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.fragment.FragmentFramework;
 import com.harreke.easyapp.frameworks.list.abslistview.AbsListFramework;
 import com.harreke.easyapp.frameworks.list.abslistview.FooterLoadStatus;
-import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -37,27 +36,27 @@ public class ChannelFragment extends FragmentFramework {
     }
 
     @Override
-    public void assignEvents() {
-    }
-
-    @Override
-    public void initData(Bundle bundle) {
+    public void acquireArguments(Bundle bundle) {
         mChannelId = bundle.getInt("channelId");
     }
 
     @Override
-    public void newEvents() {
+    public void attachCallbacks() {
     }
 
     @Override
-    public void queryLayout() {
+    public void enquiryViews() {
         View footer_loadmore = View.inflate(getActivity(), R.layout.footer_loadmore, null);
 
         mHelper = new Helper(this, R.id.channel_list);
-        mHelper.setRefresh((FloatingActionButton) findViewById(R.id.channel_refresh));
+        mHelper.setRefresh(findViewById(R.id.channel_refresh));
         mHelper.addFooterView(footer_loadmore);
         mHelper.setLoadMore(new FooterLoadStatus(footer_loadmore));
         mHelper.bindAdapter();
+    }
+
+    @Override
+    public void establishCallbacks() {
     }
 
     @Override

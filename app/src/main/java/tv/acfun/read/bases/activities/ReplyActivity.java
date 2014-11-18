@@ -13,15 +13,16 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chiralcode.colorpicker.ColorPicker;
-import com.harreke.easyapp.beans.ActionBarItem;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.helpers.DialogHelper;
 import com.harreke.easyapp.helpers.PopupAbsListHelper;
 import com.harreke.easyapp.requests.IRequestCallback;
+import com.harreke.easyapp.tools.StringUtil;
+
+import java.util.regex.Matcher;
 
 import tv.acfun.read.R;
 import tv.acfun.read.api.API;
@@ -53,10 +54,8 @@ public class ReplyActivity extends ActivityFramework {
     private int mStyleColor;
     private int mStyleSize;
     private ColorPicker picker;
-    private View reply_back;
     private UBBEditText reply_input;
     private ViewPager reply_pager;
-    private ImageView reply_send;
     private View reply_style_bold;
     private View reply_style_color;
     private View reply_style_color_indicator;
@@ -81,10 +80,17 @@ public class ReplyActivity extends ActivityFramework {
     }
 
     @Override
-    public void assignEvents() {
-        reply_back.setOnClickListener(mClickListener);
-        reply_send.setOnClickListener(mClickListener);
+    public void acquireArguments(Intent intent) {
+        mContentId = intent.getIntExtra("contentId", 0);
+        mQuoteId = intent.getIntExtra("quoteId", 0);
+        mFloorIndex = intent.getIntExtra("floorIndex", 0);
 
+        mEmotNames = getResources().getStringArray(R.array.emot_name);
+        mEmotCounts = getResources().getIntArray(R.array.emot_count);
+    }
+
+    @Override
+    public void attachCallbacks() {
         reply_style_bold.setOnClickListener(mClickListener);
         reply_style_italic.setOnClickListener(mClickListener);
         reply_style_underline.setOnClickListener(mClickListener);
@@ -93,7 +99,6 @@ public class ReplyActivity extends ActivityFramework {
         reply_style_color_picker.setOnClickListener(mClickListener);
         reply_style_size.setOnClickListener(mClickListener);
         reply_style_size_picker.setOnClickListener(mClickListener);
-        //        reply_style_at.setOnClickListener(mClickListener);
         reply_style_emot_on.setOnClickListener(mClickListener);
         reply_style_emot_off.setOnClickListener(mClickListener);
 
@@ -109,46 +114,96 @@ public class ReplyActivity extends ActivityFramework {
 
     private void doSend() {
         AcFunRead acFunRead;
-        String content = reply_input.getUBBText();
+        String originalContent = reply_input.getUBBText();
+        Matcher matcher;
+        String temp;
+        String result;
 
-        if (content.length() < 5) {
+        hideEmot();
+        hideSoftInputMethod();
+
+        if (originalContent.length() < 5) {
             showToast(R.string.comment_tooshort);
-        } else if (content.matches("\\[[\\S\\s]+?\\]|[^u4e00-u9fa5]")) {
-            showToast(R.string.comment_onlyemot);
         } else {
-            acFunRead = AcFunRead.getInstance();
-            showToast(R.string.comment_sending, true);
-            executeRequest(API.getCommentAdd(mContentId, acFunRead.readFullUser().getUserId(), content, mQuoteId,
-                    acFunRead.readToken()), mSendCallback);
+            result = "";
+            temp = originalContent.replaceAll("\\[[/a-z](.?|[\\S\\s]+?)\\]", "");
+            matcher = StringUtil.getMatcher("([\\u4e00-\\u9fa5]+)|([0-9a-zA-Z]+)", temp);
+            while (matcher.find()) {
+                result += matcher.group(0);
+            }
+            if (result.length() == 0) {
+                showToast(R.string.comment_onlyemot);
+            } else if (result.length() < 5) {
+                showToast(R.string.comment_tooshort);
+            } else {
+                acFunRead = AcFunRead.getInstance();
+                showToast(R.string.comment_sending, true);
+                executeRequest(API.getCommentAdd(mContentId, acFunRead.readFullUser().getUserId(), originalContent, mQuoteId,
+                        acFunRead.readToken()), mSendCallback);
+            }
         }
     }
 
-    private void hideSoftInputMethod() {
-        ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(reply_input.getWindowToken(), 0);
+    @Override
+    public void enquiryViews() {
+        PagerTabStrip reply_pager_indicator;
+        View dialog_colorpicker;
+
+        if (mFloorIndex > 0) {
+            setActionBarTitle(getString(R.string.reply_id_quote, "#" + mFloorIndex));
+        } else {
+            setActionBarTitle(R.string.reply_id);
+        }
+        addActionBarImageItem(0, R.drawable.image_send);
+
+        reply_style_bold = findViewById(R.id.reply_style_bold);
+        reply_style_italic = findViewById(R.id.reply_style_italic);
+        reply_style_underline = findViewById(R.id.reply_style_underline);
+        reply_style_strikethrough = findViewById(R.id.reply_style_strikethrough);
+        reply_style_color = findViewById(R.id.reply_style_color);
+        reply_style_color_indicator = findViewById(R.id.reply_style_color_indicator);
+        reply_style_color_picker = findViewById(R.id.reply_style_color_picker);
+        reply_style_size = findViewById(R.id.reply_style_size);
+        reply_style_size_indicator = (TextView) findViewById(R.id.reply_style_size_indicator);
+        reply_style_size_picker = findViewById(R.id.reply_style_size_picker);
+        reply_style_emot_on = findViewById(R.id.reply_style_emot_on);
+        reply_style_emot_off = findViewById(R.id.reply_style_emot_off);
+
+        reply_input = (UBBEditText) findViewById(R.id.reply_input);
+        reply_pager = (ViewPager) findViewById(R.id.reply_pager);
+        reply_pager_indicator = (PagerTabStrip) findViewById(R.id.reply_pager_indicator);
+        reply_pager_indicator.setTabIndicatorColorResource(R.color.Theme);
+        reply_pager_indicator.setTextColor(getResources().getColor(R.color.Title));
+
+        mAdapter = new Adapter();
+
+        mDefaultColor = getResources().getColor(R.color.Content);
+        mStyleColor = mDefaultColor;
+        dialog_colorpicker = View.inflate(getActivity(), R.layout.dialog_colorpicker, null);
+        picker = (ColorPicker) dialog_colorpicker.findViewById(R.id.picker);
+        picker.setColor(mDefaultColor);
+        mColorPickerHelper = new DialogHelper(getActivity());
+        mColorPickerHelper.setTitle(R.string.reply_pickcolor);
+        mColorPickerHelper.setView(dialog_colorpicker);
+
+        mDefaultSize = 16;
+        mStyleSize = mDefaultSize;
+        mSizePickerHelper = new SizePickerHelper(getActivity(), reply_style_size_picker);
+        mSizePickerHelper.add(0, 10);
+        mSizePickerHelper.add(1, 12);
+        mSizePickerHelper.add(2, 16);
+        mSizePickerHelper.add(3, 18);
+        mSizePickerHelper.add(4, 24);
+        mSizePickerHelper.add(5, 32);
+        mSizePickerHelper.add(6, 48);
     }
 
     @Override
-    public void initData(Intent intent) {
-        mContentId = intent.getIntExtra("contentId", 0);
-        mQuoteId = intent.getIntExtra("quoteId", 0);
-        mFloorIndex = intent.getIntExtra("floorIndex", 0);
-
-        mEmotNames = getResources().getStringArray(R.array.emot_name);
-        mEmotCounts = getResources().getIntArray(R.array.emot_count);
-    }
-
-    @Override
-    public void newEvents() {
+    public void establishCallbacks() {
         mClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
-                    case R.id.reply_back:
-                        onBackPressed();
-                        break;
-                    case R.id.reply_send:
-                        doSend();
-                        break;
                     case R.id.reply_style_bold:
                         reply_input.toggleBold();
                         break;
@@ -174,15 +229,11 @@ public class ReplyActivity extends ActivityFramework {
                         mSizePickerHelper.show();
                         break;
                     case R.id.reply_style_emot_on:
-                        reply_pager.setVisibility(View.GONE);
-                        reply_style_emot_on.setVisibility(View.GONE);
-                        reply_style_emot_off.setVisibility(View.VISIBLE);
+                        hideEmot();
                         showSoftInputMethod();
                         break;
                     case R.id.reply_style_emot_off:
-                        reply_pager.setVisibility(View.VISIBLE);
-                        reply_style_emot_on.setVisibility(View.VISIBLE);
-                        reply_style_emot_off.setVisibility(View.GONE);
+                        showEmot();
                         hideSoftInputMethod();
                 }
             }
@@ -246,12 +297,19 @@ public class ReplyActivity extends ActivityFramework {
         };
     }
 
-    @Override
-    public void onActionBarItemClick(int position, ActionBarItem item) {
+    private void hideEmot() {
+        reply_pager.setVisibility(View.GONE);
+        reply_style_emot_on.setVisibility(View.GONE);
+        reply_style_emot_off.setVisibility(View.VISIBLE);
+    }
+
+    private void hideSoftInputMethod() {
+        ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(reply_input.getWindowToken(), 0);
     }
 
     @Override
-    public void onActionBarMenuCreate() {
+    public void onActionBarItemClick(int id, View item) {
+        doSend();
     }
 
     @Override
@@ -274,65 +332,14 @@ public class ReplyActivity extends ActivityFramework {
     }
 
     @Override
-    public void queryLayout() {
-        PagerTabStrip reply_pager_indicator;
-        View dialog_colorpicker;
-        TextView reply_id;
-
-        reply_back = findViewById(R.id.reply_back);
-        reply_id = (TextView) findViewById(R.id.reply_id);
-        reply_send = (ImageView) findViewById(R.id.reply_send);
-
-        reply_style_bold = findViewById(R.id.reply_style_bold);
-        reply_style_italic = findViewById(R.id.reply_style_italic);
-        reply_style_underline = findViewById(R.id.reply_style_underline);
-        reply_style_strikethrough = findViewById(R.id.reply_style_strikethrough);
-        reply_style_color = findViewById(R.id.reply_style_color);
-        reply_style_color_indicator = findViewById(R.id.reply_style_color_indicator);
-        reply_style_color_picker = findViewById(R.id.reply_style_color_picker);
-        reply_style_size = findViewById(R.id.reply_style_size);
-        reply_style_size_indicator = (TextView) findViewById(R.id.reply_style_size_indicator);
-        reply_style_size_picker = findViewById(R.id.reply_style_size_picker);
-        reply_style_emot_on = findViewById(R.id.reply_style_emot_on);
-        reply_style_emot_off = findViewById(R.id.reply_style_emot_off);
-
-        reply_input = (UBBEditText) findViewById(R.id.reply_input);
-        reply_pager = (ViewPager) findViewById(R.id.reply_pager);
-        reply_pager_indicator = (PagerTabStrip) findViewById(R.id.reply_pager_indicator);
-        reply_pager_indicator.setTabIndicatorColorResource(R.color.Theme);
-        reply_pager_indicator.setTextColor(getResources().getColor(R.color.Title));
-
-        if (mFloorIndex > 0) {
-            reply_id.setText(getString(R.string.reply_id_quote, "#" + mFloorIndex));
-        } else {
-            reply_id.setText(R.string.reply_id);
-        }
-        mAdapter = new Adapter();
-
-        mDefaultColor = getResources().getColor(R.color.Content);
-        mStyleColor = mDefaultColor;
-        dialog_colorpicker = View.inflate(getActivity(), R.layout.dialog_colorpicker, null);
-        picker = (ColorPicker) dialog_colorpicker.findViewById(R.id.picker);
-        picker.setColor(mDefaultColor);
-        mColorPickerHelper = new DialogHelper(getActivity());
-        mColorPickerHelper.setTitle(R.string.reply_pickcolor);
-        mColorPickerHelper.setView(dialog_colorpicker);
-
-        mDefaultSize = 16;
-        mStyleSize = mDefaultSize;
-        mSizePickerHelper = new SizePickerHelper(getActivity(), reply_style_size_picker);
-        mSizePickerHelper.add(0, 10);
-        mSizePickerHelper.add(1, 12);
-        mSizePickerHelper.add(2, 16);
-        mSizePickerHelper.add(3, 18);
-        mSizePickerHelper.add(4, 24);
-        mSizePickerHelper.add(5, 32);
-        mSizePickerHelper.add(6, 48);
-    }
-
-    @Override
     public void setLayout() {
         setContentView(R.layout.activity_reply);
+    }
+
+    private void showEmot() {
+        reply_pager.setVisibility(View.VISIBLE);
+        reply_style_emot_on.setVisibility(View.VISIBLE);
+        reply_style_emot_off.setVisibility(View.GONE);
     }
 
     private void showSoftInputMethod() {

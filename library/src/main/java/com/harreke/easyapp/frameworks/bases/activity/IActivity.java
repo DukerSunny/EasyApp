@@ -18,10 +18,5 @@ public interface IActivity {
     /**
      * 初始化Activity传参数据
      */
-    public void initData(Intent intent);
-
-    /**
-     * 当Activity的ActionBar菜单被创建时触发
-     */
-    public void onActionBarMenuCreate();
+    public void acquireArguments(Intent intent);
 }

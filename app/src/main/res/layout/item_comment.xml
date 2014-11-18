@@ -16,16 +16,6 @@
             android:textColor="@color/Content"
             android:textSize="12dp"/>
 
-        <TextView
-            android:id="@+id/comment_quote_repeat"
-            style="@style/mw"
-            android:background="@drawable/button_lightyellow"
-            android:gravity="center_horizontal"
-            android:padding="8dp"
-            android:text="@string/comment_quote_repeat"
-            android:textColor="@color/Content"
-            android:textSize="12dp"/>
-
         <include
             android:id="@+id/comment_quote1"
             layout="@layout/item_comment_quote"/>
@@ -40,66 +30,7 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        style="@style/mw.h"
-        android:background="@color/White"
-        android:padding="8dp">
-
-        <ImageView
-            android:id="@+id/comment_userImg"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/image_avatar"/>
-
-        <LinearLayout
-            style="@style/mw.v"
-            android:layout_marginLeft="8dp">
-
-            <LinearLayout
-                style="@style/mw.h">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="36dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/comment_username"
-                        style="@style/ww"
-                        android:text="@string/comment_username"
-                        android:textColor="@color/User"
-                        android:textSize="12dp"/>
-
-                    <TextView
-                        android:id="@+id/comment_date"
-                        style="@style/ww"
-                        android:layout_marginTop="4dp"
-                        android:text="@string/comment_date"
-                        android:textColor="@color/Assist"
-                        android:textSize="12dp"/>
-
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/comment_options"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="@drawable/button_transparent"
-                    android:src="@drawable/image_comment_expand"/>
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/comment_text"
-                style="@style/mw"
-                android:layout_marginTop="8dp"
-                android:text="@string/comment_text"
-                android:textColor="@color/Content"
-                android:textSize="14dp"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
+    <include
+        layout="@layout/item_comment_floor"/>
 
 </LinearLayout>

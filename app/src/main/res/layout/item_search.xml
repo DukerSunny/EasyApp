@@ -6,7 +6,7 @@
     android:padding="8dp">
 
     <FrameLayout
-        style="@style/mw.h"
+        style="@style/mw"
         android:gravity="center_vertical">
 
         <TextView

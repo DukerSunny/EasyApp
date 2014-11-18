@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    style="@style/mw"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/White"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/contribution_channel"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@color/Search_Misc"
+        android:gravity="center"
+        android:text="@string/channel_misc"
+        android:textColor="@color/White"
+        android:textSize="12dp"/>
+
+    <TextView
+        android:id="@+id/contribution_title"
+        style="@style/mw"
+        android:layout_marginLeft="8dp"
+        android:ellipsize="end"
+        android:lines="2"
+        android:text="@string/content_title"
+        android:textColor="@color/Title"
+        android:textSize="20dp"/>
+
+</LinearLayout>

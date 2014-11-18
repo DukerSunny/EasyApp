@@ -3,4 +3,4 @@
     style="@style/mm"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_margin="8dp"
-    android:src="@drawable/progress_loading"/>
+    android:src="@drawable/anim_progress_radiant"/>

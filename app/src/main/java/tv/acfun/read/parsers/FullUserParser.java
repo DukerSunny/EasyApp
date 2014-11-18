@@ -21,10 +21,12 @@ public class FullUserParser {
         if (parser != null) {
             if (NetUtil.isStatusOk(parser.status) && parser.data != null) {
                 parser.mFullUser = parser.data.get("fullUser");
+
+                return parser;
             }
         }
 
-        return parser;
+        return null;
     }
 
     public FullUser getFullUser() {

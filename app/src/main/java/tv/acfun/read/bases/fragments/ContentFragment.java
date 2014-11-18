@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -20,6 +21,7 @@ import com.harreke.easyapp.helpers.ImageLoaderHelper;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.tools.GsonUtil;
 import com.harreke.easyapp.tools.StringUtil;
+import com.harreke.easyapp.widgets.HackyWebView;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -31,7 +33,9 @@ import java.util.regex.Matcher;
 
 import tv.acfun.read.R;
 import tv.acfun.read.bases.activities.ComicActivity;
+import tv.acfun.read.bases.activities.CommentActivity;
 import tv.acfun.read.bases.activities.ContentActivity;
+import tv.acfun.read.bases.activities.ProfileActivity;
 import tv.acfun.read.bases.application.AcFunRead;
 import tv.acfun.read.beans.ArticlePage;
 import tv.acfun.read.beans.Content;
@@ -41,10 +45,14 @@ import tv.acfun.read.beans.Content;
  */
 public class ContentFragment extends FragmentFramework {
     private final static int CONTENT_A = 1;
+    private final static int CONTENT_HEADER = 2;
     private final static int CONTENT_IMG = 0;
     private final static String TAG = "ContentFragment";
-    private WebView content_web;
+
+    private View content_comments;
+    private HackyWebView content_web;
     private String mArticle;
+    private View.OnClickListener mClickListener;
     private WebViewClient mClient;
     private Content mContent;
     private Handler mHandler;
@@ -53,6 +61,7 @@ public class ContentFragment extends FragmentFramework {
     private DialogInterface.OnClickListener mRedirectClickListener;
     private DialogHelper mRedirectHelper;
     private int mRedirectId;
+    private HackyWebView.OnScrollListener mScrollListener;
 
     public static ContentFragment create(Content content, int pagePosition, ArticlePage articlePage) {
         ContentFragment fragment = new ContentFragment();
@@ -67,61 +76,7 @@ public class ContentFragment extends FragmentFramework {
     }
 
     @Override
-    public void assignEvents() {
-        WebSettings settings = content_web.getSettings();
-
-        settings.setAppCacheEnabled(false);
-        settings.setSupportZoom(true);
-        settings.setBuiltInZoomControls(true);
-        settings.setDisplayZoomControls(false);
-        settings.setJavaScriptEnabled(true);
-
-        content_web.addJavascriptInterface(new JsInterface(), "content");
-        content_web.setWebViewClient(mClient);
-    }
-
-    private String generateHtml(String article) {
-        return "<header>" +
-                "<style>" +
-                "html," +
-                "body{width:100%;height:100%}" +
-                "body{margin:0;background-color:#ebebeb;}" +
-                "body > .header{border-bottom:1px solid #ccc;width:100%;}" +
-                "body > .header .title{font-size:24px;color:#303030;margin:0;}" +
-                "body > .header .username{color:#b22222;font-size:16px;margin:4px;}" +
-                "body > .header .info{color:#848484;font-size:12px;margin:4px;}" +
-                "body > .content{width:100%;color:#303030;padding:0;overflow:hidden;line-height:1.6;font-size:16px;}" +
-                "body > .content p," +
-                "body > .content span," +
-                "body > .content div{white-space:normal !important;word-break:break-all !important}" +
-                "body > .content img[src*=\"editor/dialogs/emotion/images\"]{max-width:80px !important}" +
-                "body > .content img," +
-                "body > .content embed," +
-                "body > .content iframe," +
-                "body > .content object," +
-                "body > .content div{max-width:100% !important;height:auto}" +
-                "body > .content .img-emot-ac{max-width:80px}" +
-                "</style>" +
-                "</header>" +
-                "<body>" +
-                "<div class=\"header\">" +
-                "<p class=\"title\">" + mContent.getTitle() +
-                "</p>" +
-                "<p class=\"username\">" + mContent.getUser().getUsername() +
-                "</p>" +
-                "<p class=\"info\">" +
-                new SimpleDateFormat(getString(R.string.content_date)).format(new Date(mContent.getReleaseDate())) + " " +
-                getString(R.string.content_info, mContent.getComments(), mContent.getViews()) +
-                "</p>" +
-                "</div>" +
-                "<div class=\"content\">" +
-                article +
-                "</div>" +
-                "</body>";
-    }
-
-    @Override
-    public void initData(Bundle bundle) {
+    public void acquireArguments(Bundle bundle) {
         ArticlePage articlePage = GsonUtil.toBean(bundle.getString("articlePage"), ArticlePage.class);
 
         mContent = GsonUtil.toBean(bundle.getString("content"), Content.class);
@@ -131,7 +86,38 @@ public class ContentFragment extends FragmentFramework {
     }
 
     @Override
-    public void newEvents() {
+    public void attachCallbacks() {
+        WebSettings settings = content_web.getSettings();
+
+        settings.setAppCacheEnabled(false);
+        settings.setSupportZoom(true);
+        settings.setBuiltInZoomControls(true);
+        settings.setDisplayZoomControls(false);
+        settings.setJavaScriptEnabled(true);
+        settings.setJavaScriptCanOpenWindowsAutomatically(false);
+
+        content_web.addJavascriptInterface(new JsInterface(), "content");
+        content_web.setWebViewClient(mClient);
+        content_web.setOnScrollListener(mScrollListener);
+
+        content_comments.setOnClickListener(mClickListener);
+    }
+
+    @Override
+    public void enquiryViews() {
+        content_web = (HackyWebView) findViewById(R.id.content_web);
+        content_comments = findViewById(R.id.content_comments);
+
+        content_comments.setAlpha(0.75f);
+
+        mRedirectHelper = new DialogHelper(getActivity());
+        mRedirectHelper.setPositiveButton(R.string.app_ok);
+        mRedirectHelper.setNegativeButton(R.string.app_cancel);
+        mRedirectHelper.setOnClickListener(mRedirectClickListener);
+    }
+
+    @Override
+    public void establishCallbacks() {
         mHandler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
@@ -142,6 +128,10 @@ public class ContentFragment extends FragmentFramework {
                         break;
                     case CONTENT_A:
                         parseHref((String) msg.obj);
+                        break;
+                    case CONTENT_HEADER:
+                        start(ProfileActivity.create(getActivity(), mContent.getUser().getUserId()));
+                        getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                 }
 
                 return false;
@@ -174,6 +164,70 @@ public class ContentFragment extends FragmentFramework {
                 }
             }
         };
+        mScrollListener = new HackyWebView.OnScrollListener() {
+            @Override
+            public void onScrollChange(int dx, int dy) {
+            }
+
+            @Override
+            public void onScrollStateChange(int scrollState) {
+                if (scrollState == HackyWebView.SCROLL_STATE_IDEL) {
+                    if (content_comments.getAlpha() == 0.25f) {
+                        content_comments.setAlpha(0.75f);
+                    }
+                } else {
+                    if (content_comments.getAlpha() == 0.75f) {
+                        content_comments.setAlpha(0.25f);
+                    }
+                }
+            }
+        };
+        mClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                start(CommentActivity.create(getActivity(), mContent.getContentId()));
+            }
+        };
+    }
+
+    private String generateHtml(String article) {
+        return "<header>" +
+                "<style>" +
+                "html," +
+                "body{width:100%;height:100%}" +
+                "body{margin:0;background-color:#ebebeb;}" +
+                "body > .header{border-bottom:1px solid #ccc;width:100%;}" +
+                "body > .header .title{font-size:24px;color:#303030;margin:0;}" +
+                "body > .header .username{color:#b22222;font-size:16px;margin:4px;}" +
+                "body > .header .info{color:#848484;font-size:12px;margin:4px;}" +
+                "body > .content{width:100%;color:#303030;padding:0;overflow:hidden;line-height:1.6;font-size:16px;}" +
+                "body > .content p," +
+                "body > .content span," +
+                "body > .content div{white-space:normal !important;word-break:break-all !important}" +
+                "body > .content img[src*=\"editor/dialogs/emotion/images\"]{max-width:80px !important}" +
+                "body > .content img," +
+                "body > .content embed," +
+                "body > .content iframe," +
+                "body > .content object," +
+                "body > .content div{max-width:100% !important;height:auto}" +
+                "body > .content .img-emot-ac{max-width:80px}" +
+                "</style>" +
+                "</header>" +
+                "<body>" +
+                "<div class=\"header\" onClick=\"content.onHeaderClick()\">" +
+                "<p class=\"title\">" + mContent.getTitle() +
+                "</p>" +
+                "<p class=\"username\">" + mContent.getUser().getUsername() +
+                "</p>" +
+                "<p class=\"info\">" +
+                new SimpleDateFormat(getString(R.string.content_date)).format(new Date(mContent.getReleaseDate())) + " " +
+                getString(R.string.content_info, mContent.getComments(), mContent.getViews()) +
+                "</p>" +
+                "</div>" +
+                "<div class=\"content\">" +
+                article +
+                "</div>" +
+                "</body>";
     }
 
     @Override
@@ -203,15 +257,6 @@ public class ContentFragment extends FragmentFramework {
             intent = new Intent(Intent.ACTION_VIEW, Uri.parse(href));
             start(intent, false);
         }
-    }
-
-    @Override
-    public void queryLayout() {
-        content_web = (WebView) findViewById(R.id.content_web);
-        mRedirectHelper = new DialogHelper(getActivity());
-        mRedirectHelper.setPositiveButton(R.string.app_ok);
-        mRedirectHelper.setNegativeButton(R.string.app_cancel);
-        mRedirectHelper.setOnClickListener(mRedirectClickListener);
     }
 
     private void replaceImageUrl(int position) {
@@ -260,6 +305,11 @@ public class ContentFragment extends FragmentFramework {
         @JavascriptInterface
         public void onAClick(String href) {
             mHandler.obtainMessage(CONTENT_A, href).sendToTarget();
+        }
+
+        @JavascriptInterface
+        public void onHeaderClick() {
+            mHandler.obtainMessage(CONTENT_HEADER).sendToTarget();
         }
 
         @JavascriptInterface

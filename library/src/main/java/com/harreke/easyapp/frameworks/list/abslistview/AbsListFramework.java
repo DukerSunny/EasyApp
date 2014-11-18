@@ -136,6 +136,18 @@ public abstract class AbsListFramework<ITEM, HOLDER extends IAbsListHolder<ITEM>
     }
 
     @Override
+    public boolean removeItem(int position) {
+        ITEM item = getItem(position);
+
+        return item != null && mAdapter.removeItem(parseItemId(item), item);
+    }
+
+    @Override
+    public boolean removeItem(ITEM item) {
+        return item != null && mAdapter.removeItem(parseItemId(item), item);
+    }
+
+    @Override
     public void scrollToTop() {
         mListView.smoothScrollToPositionFromTop(0, 0, 0);
     }

@@ -20,10 +20,10 @@ import tv.acfun.read.beans.FullConversion;
  */
 public class FullConversionHolder implements IAbsListHolder<FullConversion> {
     private TextView comment_date;
+    private String comment_date_text;
     private View comment_options;
     private TextView comment_quote_expand;
     private String comment_quote_expand_text;
-    private View comment_quote_repeat;
     private TextView comment_text;
     private ImageView comment_userImg;
     private TextView comment_username;
@@ -37,7 +37,6 @@ public class FullConversionHolder implements IAbsListHolder<FullConversion> {
         mCommentQuotes[1] = new CommentQuoteHolder(convertView.findViewById(R.id.comment_quote2));
         mCommentQuotes[2] = new CommentQuoteHolder(convertView.findViewById(R.id.comment_quote3));
         comment_quote_expand = (TextView) convertView.findViewById(R.id.comment_quote_expand);
-        comment_quote_repeat = convertView.findViewById(R.id.comment_quote_repeat);
         comment_quote_expand_text = resources.getString(R.string.comment_quote_expand);
 
         comment_userImg = (ImageView) convertView.findViewById(R.id.comment_userImg);
@@ -46,15 +45,15 @@ public class FullConversionHolder implements IAbsListHolder<FullConversion> {
         comment_options = convertView.findViewById(R.id.comment_options);
         comment_text = (TextView) convertView.findViewById(R.id.comment_text);
 
+        comment_date_text = resources.getString(R.string.comment_date);
+
         comment_text.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     @Override
     public void setItem(int position, FullConversion fullConversion) {
         List<Conversion> quoteList = fullConversion.getQuoteList();
-        Conversion content = fullConversion.getContent();
-        Conversion quote;
-        boolean repeat;
+        Conversion conversion = fullConversion.getConversion();
         int floorCount = fullConversion.getFloorCount();
         int size;
         int i;
@@ -68,28 +67,17 @@ public class FullConversionHolder implements IAbsListHolder<FullConversion> {
             comment_quote_expand.setVisibility(View.GONE);
         }
         size = quoteList.size();
-        repeat = false;
-        for (i = 0; i < 3; i++) {
-            if (i < size && !repeat) {
-                quote = quoteList.get(size - i - 1);
-                if (fullConversion.getRepeatQuoteId() == quote.getId()) {
-                    comment_quote_repeat.setVisibility(View.VISIBLE);
-                    mCommentQuotes[i].setVisibility(View.GONE);
-                    repeat = true;
-                } else {
-                    comment_quote_repeat.setVisibility(View.GONE);
-                    mCommentQuotes[i].setVisibility(View.VISIBLE);
-                    mCommentQuotes[i].setItem(i, quote);
-                }
-            } else {
-                comment_quote_repeat.setVisibility(View.GONE);
-                mCommentQuotes[i].setVisibility(View.GONE);
-            }
+        for (i = 0; i < size; i++) {
+            mCommentQuotes[i].setVisibility(View.VISIBLE);
+            mCommentQuotes[i].setItem(i, quoteList.get(i));
         }
-        ImageLoaderHelper.loadImage(comment_userImg, content.getUser().getUserImg());
-        comment_username.setText("#" + content.getFloorindex() + " " + content.getUser().getUsername());
-        comment_date.setText(content.getDate());
-        comment_text.setText(content.getSpanned());
+        for (i = size; i < 3; i++) {
+            mCommentQuotes[i].setVisibility(View.GONE);
+        }
+        ImageLoaderHelper.loadImage(comment_userImg, conversion.getUserImg());
+        comment_username.setText("#" + conversion.getCount() + " " + conversion.getUserName());
+        comment_date.setText(String.format(comment_date_text, conversion.getPostDate()));
+        comment_text.setText(conversion.getSpanned());
     }
 
     public void setOnOptionsClickListener(View.OnClickListener clickListener) {

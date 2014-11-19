@@ -16,11 +16,12 @@ public class HistoryHolder implements IAbsListHolder<Content> {
     private View history_remove;
     private TextView history_title;
 
-    public HistoryHolder(View convertView, View.OnClickListener clickListener) {
+    public HistoryHolder(View convertView, View.OnClickListener onClickListener) {
         history_title = (TextView) convertView.findViewById(R.id.history_title);
         history_channel = (TextView) convertView.findViewById(R.id.history_channel);
         history_remove = convertView.findViewById(R.id.history_remove);
-        history_remove.setOnClickListener(clickListener);
+
+        history_remove.setOnClickListener(onClickListener);
     }
 
     @Override

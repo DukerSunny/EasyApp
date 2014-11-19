@@ -93,6 +93,9 @@ public class ContentActivity extends ActivityFramework {
         addActionBarImageItem(1, R.drawable.image_favourite_remove);
         addActionBarImageItem(2, R.drawable.image_share);
 
+        hideActionbarItem(0);
+        hideActionbarItem(1);
+
         content_pager = (ViewPager) findViewById(R.id.content_pager);
         content_pager_indicator = (PagerTabStrip) findViewById(R.id.content_pager_indicator);
         content_pager_indicator.setTabIndicatorColorResource(R.color.Theme);

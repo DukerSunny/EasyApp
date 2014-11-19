@@ -1,59 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    style="@style/mw.v"
+    style="@style/mw.h"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/White"
-    android:padding="8dp">
+    android:divider="@drawable/divider_vertical_dot"
+    android:showDividers="middle">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/comment_userImg"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:src="@drawable/image_avatar"/>
+    <com.daimajia.swipe.SwipeLayout
+        android:id="@+id/comment_floor_swipe"
+        style="@style/mww"
+        xmlns:android="http://schemas.android.com/apk/res/android">
 
         <LinearLayout
-            style="@style/mmw.v"
-            android:layout_marginLeft="8dp">
+            style="@style/mw.h">
 
             <TextView
-                android:id="@+id/comment_username"
-                style="@style/mw"
-                android:text="@string/comment_username"
-                android:textColor="@color/User"
-                android:textSize="12dp"/>
+                android:id="@+id/comment_floor_swipe_user"
+                style="@style/mww"
+                android:background="@drawable/button_swipe_floor"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="@string/comment_user"
+                android:textColor="@color/White"
+                android:textSize="16dp"/>
 
             <TextView
-                android:id="@+id/comment_date"
-                style="@style/mw"
-                android:layout_marginTop="4dp"
-                android:text="@string/comment_date"
-                android:textColor="@color/Assist"
-                android:textSize="12dp"/>
+                android:id="@+id/comment_floor_swipe_copy"
+                style="@style/mww"
+                android:background="@drawable/button_swipe_floor"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="@string/comment_copy"
+                android:textColor="@color/White"
+                android:textSize="16dp"/>
+
+            <TextView
+                android:id="@+id/comment_floor_swipe_reply"
+                style="@style/mww"
+                android:background="@drawable/button_swipe_floor"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="@string/comment_reply"
+                android:textColor="@color/White"
+                android:textSize="16dp"/>
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/comment_options"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:background="@drawable/button_transparent"
-            android:src="@drawable/image_comment_options"/>
+        <LinearLayout
+            style="@style/mw.v"
+            android:background="@color/White"
+            android:padding="8dp">
 
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/comment_text"
-        style="@style/mw"
-        android:layout_marginLeft="48dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/comment_text"
-        android:textColor="@color/Content"
-        android:textSize="16dp"/>
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/comment_userImg"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/image_avatar"/>
+
+                <LinearLayout
+                    style="@style/mmw.v"
+                    android:layout_marginLeft="8dp">
+
+                    <TextView
+                        android:id="@+id/comment_username"
+                        style="@style/mw"
+                        android:text="@string/comment_username"
+                        android:textColor="@color/User"
+                        android:textSize="12dp"/>
+
+                    <TextView
+                        android:id="@+id/comment_date"
+                        style="@style/mw"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/comment_date"
+                        android:textColor="@color/Assist"
+                        android:textSize="12dp"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/comment_text"
+                style="@style/mw"
+                android:layout_marginLeft="48dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/comment_text"
+                android:textColor="@color/Content"
+                android:textSize="16dp"/>
+
+        </LinearLayout>
+
+    </com.daimajia.swipe.SwipeLayout>
+
+    <ImageView
+        android:id="@+id/comment_floor_open"
+        android:layout_width="24dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/button_floor"
+        android:src="@drawable/image_up"/>
+
+    <ImageView
+        android:id="@+id/comment_floor_close"
+        android:layout_width="24dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/button_floor"
+        android:src="@drawable/image_down"
+        android:visibility="gone"/>
 
 </LinearLayout>

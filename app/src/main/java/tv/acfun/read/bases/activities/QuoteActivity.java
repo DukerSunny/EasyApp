@@ -16,6 +16,7 @@ import java.util.List;
 
 import tv.acfun.read.R;
 import tv.acfun.read.api.API;
+import tv.acfun.read.bases.application.AcFunRead;
 import tv.acfun.read.beans.Conversion;
 import tv.acfun.read.beans.FullConversion;
 import tv.acfun.read.holders.CommentFloorHolder;
@@ -30,6 +31,7 @@ public class QuoteActivity extends ActivityFramework {
     private CommentFloorHolder mCommentFloorHolder;
     private int mCommentId;
     private int mContentId;
+    private int mMaxQuoteCount;
     private View.OnClickListener mOnQuoteClickListener;
     private int mPageNo;
     private QuoteListHelper mQuoteListHelper;
@@ -51,6 +53,8 @@ public class QuoteActivity extends ActivityFramework {
         mContentId = intent.getIntExtra("contentId", 0);
         mPageNo = intent.getIntExtra("pageNo", 0);
         mCommentId = intent.getIntExtra("commentId", 0);
+
+        mMaxQuoteCount = AcFunRead.getInstance().readSetting().getMaxQuoteCount();
     }
 
     @Override
@@ -120,7 +124,7 @@ public class QuoteActivity extends ActivityFramework {
 
         @Override
         public CommentQuoteHolder createHolder(View convertView) {
-            return new CommentQuoteHolder(convertView, mOnQuoteClickListener);
+            return new CommentQuoteHolder(convertView);
         }
 
         @Override
@@ -150,7 +154,7 @@ public class QuoteActivity extends ActivityFramework {
     private class QuoteParseTask extends AsyncTask<String, Void, List<FullConversion>> {
         @Override
         protected List<FullConversion> doInBackground(String... params) {
-            CommentListParser parser = CommentListParser.parse(params[0], mCommentId, mTagClickListener);
+            CommentListParser parser = CommentListParser.parse(params[0], mMaxQuoteCount, mCommentId, mTagClickListener);
 
             if (parser != null) {
                 return parser.getItemList();

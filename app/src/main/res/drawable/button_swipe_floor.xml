@@ -2,11 +2,11 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:drawable="@drawable/image_lightyellow"
+        android:drawable="@color/Theme"
         android:state_pressed="false"/>
 
     <item
-        android:drawable="@color/Theme_Transparent"
+        android:drawable="@color/DarkCyan"
         android:state_pressed="true"/>
 
 </selector>

@@ -1,12 +1,11 @@
 package tv.acfun.read.holders;
 
+import android.content.Context;
 import android.content.res.Resources;
-import android.text.method.LinkMovementMethod;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.harreke.easyapp.helpers.ImageLoaderHelper;
 import com.harreke.easyapp.holders.abslistview.IAbsListHolder;
 
 import java.util.List;
@@ -19,35 +18,79 @@ import tv.acfun.read.beans.FullConversion;
  * 由 Harreke（harreke@live.cn） 创建于 2014/10/05
  */
 public class FullConversionHolder implements IAbsListHolder<FullConversion> {
-    private TextView comment_date;
-    private String comment_date_text;
-    private View comment_options;
     private TextView comment_quote_expand;
     private String comment_quote_expand_text;
-    private TextView comment_text;
-    private ImageView comment_userImg;
-    private TextView comment_username;
+    private CommentFloorHolder mCommentFloor;
     private CommentQuoteHolder[] mCommentQuotes;
+    private int mMaxQuoteCount;
+    private View.OnClickListener mOnCloseClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            int position = (Integer) v.getTag();
 
-    public FullConversionHolder(View convertView, View.OnClickListener onQuoteClickListener) {
-        Resources resources = convertView.getResources();
+            if (position == -1) {
+                mCommentFloor.closeSwipe();
+            } else {
+                mCommentQuotes[position].closeSwipe();
+            }
+        }
+    };
+    private View.OnClickListener mOnOpenClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            int position = (Integer) v.getTag();
+            int i;
 
-        mCommentQuotes = new CommentQuoteHolder[3];
-        mCommentQuotes[0] = new CommentQuoteHolder(convertView.findViewById(R.id.comment_quote1), onQuoteClickListener);
-        mCommentQuotes[1] = new CommentQuoteHolder(convertView.findViewById(R.id.comment_quote2), onQuoteClickListener);
-        mCommentQuotes[2] = new CommentQuoteHolder(convertView.findViewById(R.id.comment_quote3), onQuoteClickListener);
+            if (position == -1) {
+                mCommentFloor.openSwipe();
+                for (i = 0; i < mCommentQuotes.length; i++) {
+                    mCommentQuotes[i].closeSwipe();
+                }
+            } else {
+                for (i = 0; i < mCommentQuotes.length; i++) {
+                    if (position != i) {
+                        mCommentQuotes[i].closeSwipe();
+                    }
+                }
+                mCommentQuotes[position].openSwipe();
+            }
+        }
+    };
+
+    public FullConversionHolder(View convertView, int maxQuoteCount, View.OnClickListener onUserClickListener,
+            View.OnClickListener onCopyClickListener, View.OnClickListener onReplyClickListener,
+            View.OnClickListener onQuoteExpandClickListener) {
+        Context context = convertView.getContext();
+        Resources resources = context.getResources();
+        LinearLayout comment_quotes;
+        View quoteView;
+        int i;
+
+        mMaxQuoteCount = maxQuoteCount;
+        mCommentQuotes = new CommentQuoteHolder[mMaxQuoteCount];
+        comment_quotes = (LinearLayout) convertView.findViewById(R.id.comment_quotes);
+        for (i = 0; i < maxQuoteCount; i++) {
+            quoteView = View.inflate(context, R.layout.item_comment_quote, null);
+            comment_quotes.addView(quoteView);
+            mCommentQuotes[i] = new CommentQuoteHolder(quoteView);
+            mCommentQuotes[i].setOnOpenClickListener(mOnOpenClickListener);
+            mCommentQuotes[i].setOnCloseClickListener(mOnCloseClickListener);
+            mCommentQuotes[i].setOnUserClickListener(onUserClickListener);
+            mCommentQuotes[i].setOnCopyClickListener(onCopyClickListener);
+            mCommentQuotes[i].setOnReplyClickListener(onReplyClickListener);
+        }
+
+        mCommentFloor = new CommentFloorHolder(convertView);
+        mCommentFloor.setOnOpenClickListener(mOnOpenClickListener);
+        mCommentFloor.setOnCloseClickListener(mOnCloseClickListener);
+        mCommentFloor.setOnUserClickListener(onUserClickListener);
+        mCommentFloor.setOnCopyClickListener(onCopyClickListener);
+        mCommentFloor.setOnReplyClickListener(onReplyClickListener);
+
         comment_quote_expand = (TextView) convertView.findViewById(R.id.comment_quote_expand);
         comment_quote_expand_text = resources.getString(R.string.comment_quote_expand);
 
-        comment_userImg = (ImageView) convertView.findViewById(R.id.comment_userImg);
-        comment_username = (TextView) convertView.findViewById(R.id.comment_username);
-        comment_date = (TextView) convertView.findViewById(R.id.comment_date);
-        comment_options = convertView.findViewById(R.id.comment_options);
-        comment_text = (TextView) convertView.findViewById(R.id.comment_text);
-
-        comment_date_text = resources.getString(R.string.comment_date);
-
-        comment_text.setMovementMethod(LinkMovementMethod.getInstance());
+        comment_quote_expand.setOnClickListener(onQuoteExpandClickListener);
     }
 
     @Override
@@ -58,8 +101,7 @@ public class FullConversionHolder implements IAbsListHolder<FullConversion> {
         int size;
         int i;
 
-        comment_options.setTag(position);
-        if (floorCount > 3) {
+        if (floorCount > mMaxQuoteCount) {
             comment_quote_expand.setVisibility(View.VISIBLE);
             comment_quote_expand.setTag(position);
             comment_quote_expand.setText(String.format(comment_quote_expand_text, floorCount));
@@ -68,24 +110,13 @@ public class FullConversionHolder implements IAbsListHolder<FullConversion> {
         }
         size = quoteList.size();
         for (i = 0; i < size; i++) {
-            mCommentQuotes[i].setVisibility(View.VISIBLE);
-            mCommentQuotes[i].setParentPosition(position);
+            mCommentQuotes[i].show();
+            mCommentQuotes[i].setFloorPosition(position);
             mCommentQuotes[i].setItem(i, quoteList.get(i));
         }
-        for (i = size; i < 3; i++) {
-            mCommentQuotes[i].setVisibility(View.GONE);
+        for (i = size; i < mMaxQuoteCount; i++) {
+            mCommentQuotes[i].hide();
         }
-        ImageLoaderHelper.loadImage(comment_userImg, conversion.getUserImg());
-        comment_username.setText("#" + conversion.getCount() + " " + conversion.getUserName());
-        comment_date.setText(String.format(comment_date_text, conversion.getPostDate()));
-        comment_text.setText(conversion.getSpanned());
-    }
-
-    public void setOnOptionsClickListener(View.OnClickListener clickListener) {
-        comment_options.setOnClickListener(clickListener);
-    }
-
-    public void setOnQuoteExpandClickListener(View.OnClickListener clickListener) {
-        comment_quote_expand.setOnClickListener(clickListener);
+        mCommentFloor.setItem(position, conversion);
     }
 }

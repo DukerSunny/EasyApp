@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/07/24
@@ -15,8 +16,8 @@ import java.util.HashSet;
  * ExListView的Adapter
  */
 public abstract class ExListAdapter<GROUP, CHILD> extends BaseExpandableListAdapter {
-    private HashSet<Integer> keySet = new HashSet<Integer>();
-    private ArrayList<ExItem<GROUP, CHILD>> valueList = new ArrayList<ExItem<GROUP, CHILD>>();
+    private List<ExItem<GROUP, CHILD>> mItemList = new ArrayList<ExItem<GROUP, CHILD>>();
+    private HashSet<Integer> mKeySet = new HashSet<Integer>();
 
     /**
      * 添加条目
@@ -27,9 +28,9 @@ public abstract class ExListAdapter<GROUP, CHILD> extends BaseExpandableListAdap
      *         条目对象
      */
     public final boolean addItem(Integer key, ExItem<GROUP, CHILD> value) {
-        if (!keySet.contains(key)) {
-            keySet.add(key);
-            valueList.add(value);
+        if (!mKeySet.contains(key)) {
+            mKeySet.add(key);
+            mItemList.add(value);
 
             return true;
         } else {
@@ -41,16 +42,16 @@ public abstract class ExListAdapter<GROUP, CHILD> extends BaseExpandableListAdap
      * 清空Adapter
      */
     public final void clear() {
-        keySet.clear();
-        valueList.clear();
+        mKeySet.clear();
+        mItemList.clear();
     }
 
     @Override
     public CHILD getChild(int groupPosition, int childPosition) {
         ExItem<GROUP, CHILD> value;
 
-        if (groupPosition >= 0 && groupPosition < valueList.size()) {
-            value = valueList.get(groupPosition);
+        if (groupPosition >= 0 && groupPosition < mItemList.size()) {
+            value = mItemList.get(groupPosition);
             if (value != null && childPosition >= 0 && childPosition < value.getChildList().size()) {
                 return value.getChild(childPosition);
             }
@@ -73,8 +74,8 @@ public abstract class ExListAdapter<GROUP, CHILD> extends BaseExpandableListAdap
      * @return 包含的子条目列表
      */
     public ArrayList<CHILD> getChildList(int groupPosition) {
-        if (groupPosition >= 0 && groupPosition < valueList.size()) {
-            return valueList.get(groupPosition).getChildList();
+        if (groupPosition >= 0 && groupPosition < mItemList.size()) {
+            return mItemList.get(groupPosition).getChildList();
         } else {
             return null;
         }
@@ -82,8 +83,8 @@ public abstract class ExListAdapter<GROUP, CHILD> extends BaseExpandableListAdap
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        if (groupPosition >= 0 && groupPosition < valueList.size()) {
-            return valueList.get(groupPosition).getChildList().size();
+        if (groupPosition >= 0 && groupPosition < mItemList.size()) {
+            return mItemList.get(groupPosition).getChildList().size();
         } else {
             return 0;
         }
@@ -91,8 +92,8 @@ public abstract class ExListAdapter<GROUP, CHILD> extends BaseExpandableListAdap
 
     @Override
     public GROUP getGroup(int groupPosition) {
-        if (groupPosition >= 0 && groupPosition < valueList.size()) {
-            return valueList.get(groupPosition).getGroup();
+        if (groupPosition >= 0 && groupPosition < mItemList.size()) {
+            return mItemList.get(groupPosition).getGroup();
         } else {
             return null;
         }
@@ -100,7 +101,7 @@ public abstract class ExListAdapter<GROUP, CHILD> extends BaseExpandableListAdap
 
     @Override
     public int getGroupCount() {
-        return valueList.size();
+        return mItemList.size();
     }
 
     @Override
@@ -109,11 +110,15 @@ public abstract class ExListAdapter<GROUP, CHILD> extends BaseExpandableListAdap
     }
 
     public final ExItem<GROUP, CHILD> getItem(int groupPosition) {
-        if (groupPosition >= 0 && groupPosition < valueList.size()) {
-            return valueList.get(groupPosition);
+        if (groupPosition >= 0 && groupPosition < mItemList.size()) {
+            return mItemList.get(groupPosition);
         } else {
             return null;
         }
+    }
+
+    public List<ExItem<GROUP, CHILD>> getItemList() {
+        return mItemList;
     }
 
     @Override
@@ -147,6 +152,6 @@ public abstract class ExListAdapter<GROUP, CHILD> extends BaseExpandableListAdap
      *         比较器
      */
     public final void sort(Comparator<ExItem<GROUP, CHILD>> comparator) {
-        Collections.sort(valueList, comparator);
+        Collections.sort(mItemList, comparator);
     }
 }

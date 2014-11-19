@@ -30,7 +30,7 @@
 
         <TextView
             android:id="@+id/favourite_channel"
-            android:layout_width="48dp"
+            android:layout_width="64dp"
             android:layout_height="48dp"
             android:background="@color/Search_Misc"
             android:gravity="center"

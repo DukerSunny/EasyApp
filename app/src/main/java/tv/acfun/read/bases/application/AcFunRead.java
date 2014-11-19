@@ -14,6 +14,7 @@ import java.util.List;
 import tv.acfun.read.R;
 import tv.acfun.read.beans.Content;
 import tv.acfun.read.beans.FullUser;
+import tv.acfun.read.beans.Setting;
 import tv.acfun.read.beans.Token;
 
 /**
@@ -121,14 +122,31 @@ public class AcFunRead extends ApplicationFramework {
         return GsonUtil.toBean(readString("fullUser", null), FullUser.class);
     }
 
-    public List<Content> readHistory() {
+    public final List<Content> readHistory() {
+        List<Content> historyList;
+
         if (isCachesEnabled()) {
-            return GsonUtil.toBean(FileUtil.readTxt(new File(CacheDir + "/" + DIR_CACHES + "/history.cache")),
+            historyList = GsonUtil.toBean(FileUtil.readTxt(new File(CacheDir + "/" + DIR_CACHES + "/history.cache")),
                     new TypeToken<ArrayList<Content>>() {
                     }.getType());
+            if (historyList == null) {
+                historyList = new ArrayList<Content>();
+            }
         } else {
-            return null;
+            return historyList = null;
         }
+
+        return historyList;
+    }
+
+    public final Setting readSetting() {
+        Setting setting = GsonUtil.toBean(readString("setting", null), Setting.class);
+
+        if (setting == null) {
+            setting = new Setting();
+        }
+
+        return setting;
     }
 
     public final Token readToken() {
@@ -150,6 +168,10 @@ public class AcFunRead extends ApplicationFramework {
             }
             FileUtil.writeTxt(new File(CacheDir + "/" + DIR_CACHES + "/history.cache"), json);
         }
+    }
+
+    public final void writeSetting(Setting setting) {
+        writeString("setting", GsonUtil.toString(setting));
     }
 
     public final void writeToken(Token token) {

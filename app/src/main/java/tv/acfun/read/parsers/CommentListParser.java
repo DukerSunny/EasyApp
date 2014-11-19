@@ -22,13 +22,13 @@ public class CommentListParser {
     private String msg;
     private int status;
 
-    public static CommentListParser parse(String json, int cid, OnTagClickListener tagClickListener) {
+    public static CommentListParser parse(String json, int maxQuoteCount, int cid, OnTagClickListener tagClickListener) {
         CommentListParser parser = GsonUtil.toBean(json, CommentListParser.class);
 
         if (parser != null) {
             if (NetUtil.isStatusOk(parser.status) && parser.data != null && parser.data.getCommentList() != null &&
                     parser.data.getCommentContentArr() != null) {
-                parser.decode(parser.data, cid, tagClickListener);
+                parser.decode(parser.data, maxQuoteCount, cid, tagClickListener);
 
                 return parser;
             }
@@ -37,7 +37,7 @@ public class CommentListParser {
         return null;
     }
 
-    private void decode(CommentListData page, int cid, OnTagClickListener tagClickListener) {
+    private void decode(CommentListData page, int maxQuoteCount, int cid, OnTagClickListener tagClickListener) {
         Conversion conversion;
         Conversion quote;
         FullConversion fullConversion;
@@ -75,7 +75,7 @@ public class CommentListParser {
                     quote.parse(encoder, tagClickListener);
                 }
                 quote.newQuoted();
-                if (cid > 0 || quote.getQuotedCount() < 2 && quoteList.size() < 3) {
+                if (cid > 0 || quote.getQuotedCount() < 2 && quoteList.size() < maxQuoteCount) {
                     quoteList.add(0, quote);
                 }
                 quoteId = quote.getQuoteId();

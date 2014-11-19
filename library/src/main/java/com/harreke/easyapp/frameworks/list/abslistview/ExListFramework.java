@@ -13,6 +13,7 @@ import com.harreke.easyapp.holders.abslistview.IExListHolder;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/07/31
@@ -33,6 +34,12 @@ public abstract class ExListFramework<GROUP, GROUPHOLDER extends IExListHolder.G
         implements IExList<GROUP, GROUPHOLDER, CHILD, CHILDHOLDER>, IExItemClickListener<GROUP, CHILD>,
         ExpandableListView.OnGroupClickListener, ExpandableListView.OnChildClickListener {
     private Adapter mAdapter;
+
+    @Override
+    public List<ExItem<GROUP, CHILD>> getItemList() {
+        return mAdapter.getItemList();
+    }
+
     private ExpandableListView mListView;
 
     public ExListFramework(IFramework framework, int listId) {

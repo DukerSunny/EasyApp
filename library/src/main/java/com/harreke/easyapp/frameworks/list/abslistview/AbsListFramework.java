@@ -12,6 +12,7 @@ import com.harreke.easyapp.frameworks.list.ListFramework;
 import com.harreke.easyapp.holders.abslistview.IAbsListHolder;
 
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/07/31
@@ -101,6 +102,11 @@ public abstract class AbsListFramework<ITEM, HOLDER extends IAbsListHolder<ITEM>
     @Override
     public int getItemCount() {
         return mAdapter.getCount();
+    }
+
+    @Override
+    public List<ITEM> getItemList() {
+        return mAdapter.getItemList();
     }
 
     @Override

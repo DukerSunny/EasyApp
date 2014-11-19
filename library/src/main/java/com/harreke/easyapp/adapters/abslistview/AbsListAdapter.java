@@ -72,6 +72,10 @@ public abstract class AbsListAdapter<ITEM> extends BaseAdapter {
         return position;
     }
 
+    public ArrayList<ITEM> getItemList() {
+        return mItemList;
+    }
+
     @Override
     public boolean isEnabled(int position) {
         return mEnabled;

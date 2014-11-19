@@ -4,6 +4,7 @@ import android.view.View;
 import android.widget.AbsListView;
 
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/07/24
@@ -51,6 +52,8 @@ public interface IList<ITEM> {
      * @return int
      */
     public int getItemCount();
+
+    public List<ITEM> getItemList();
 
     public AbsListView getListView();
 

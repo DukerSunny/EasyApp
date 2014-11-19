@@ -3,32 +3,21 @@
     style="@style/mw.v"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <TextView
+        android:id="@+id/comment_quote_expand"
+        style="@style/mw"
+        android:background="@drawable/button_quote"
+        android:gravity="center_horizontal"
+        android:padding="8dp"
+        android:text="@string/comment_quote_expand"
+        android:textColor="@color/Content"
+        android:textSize="12dp"/>
+
     <LinearLayout
-        style="@style/mw.v">
-
-        <TextView
-            android:id="@+id/comment_quote_expand"
-            style="@style/mw"
-            android:background="@drawable/button_lightyellow"
-            android:gravity="center_horizontal"
-            android:padding="8dp"
-            android:text="@string/comment_quote_expand"
-            android:textColor="@color/Content"
-            android:textSize="12dp"/>
-
-        <include
-            android:id="@+id/comment_quote1"
-            layout="@layout/item_comment_quote"/>
-
-        <include
-            android:id="@+id/comment_quote2"
-            layout="@layout/item_comment_quote"/>
-
-        <include
-            android:id="@+id/comment_quote3"
-            layout="@layout/item_comment_quote"/>
-
-    </LinearLayout>
+        android:id="@+id/comment_quotes"
+        style="@style/mw.v"
+        android:divider="@drawable/divider_horizontal_dot"
+        android:showDividers="middle"/>
 
     <include
         layout="@layout/item_comment_floor"/>

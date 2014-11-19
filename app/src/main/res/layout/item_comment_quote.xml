@@ -1,34 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    style="@style/mw.v"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@drawable/button_lightyellow"
-    android:padding="8dp">
+    style="@style/mw.h"
+    android:divider="@drawable/divider_vertical_dot"
+    android:showDividers="middle"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TextView
-        android:id="@+id/comment_quote_text"
-        style="@style/ww"
-        android:text="@string/comment_quote_text"
-        android:textColor="@color/Content"
-        android:textSize="14dp"/>
+    <com.daimajia.swipe.SwipeLayout
+        android:id="@+id/comment_quote_swipe"
+        style="@style/mww">
 
-    <LinearLayout
-        style="@style/mw.h"
-        android:layout_marginTop="4dp">
+        <LinearLayout
+            style="@style/mw.h"
+            xmlns:android="http://schemas.android.com/apk/res/android">
 
-        <TextView
-            android:id="@+id/comment_quote_username"
-            style="@style/mww"
-            android:text="@string/comment_quote_user_name"
-            android:textColor="@color/Assist"
-            android:textSize="12dp"/>
+            <TextView
+                android:id="@+id/comment_quote_swipe_user"
+                style="@style/mww"
+                android:background="@drawable/button_swipe_quote"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="@string/comment_user"
+                android:textColor="@color/White"
+                android:textSize="16dp"/>
 
-        <TextView
-            android:id="@+id/comment_quote_reference"
-            style="@style/ww"
-            android:textColor="@color/Assist"
-            android:textSize="12dp"/>
+            <TextView
+                android:id="@+id/comment_quote_swipe_copy"
+                style="@style/mww"
+                android:background="@drawable/button_swipe_quote"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="@string/comment_copy"
+                android:textColor="@color/White"
+                android:textSize="16dp"/>
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/comment_quote_swipe_reply"
+                style="@style/mww"
+                android:background="@drawable/button_swipe_quote"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="@string/comment_reply"
+                android:textColor="@color/White"
+                android:textSize="16dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/mw.v"
+            android:background="@color/Ivory"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/comment_quote_text"
+                style="@style/ww"
+                android:text="@string/comment_quote_text"
+                android:textColor="@color/Content"
+                android:textSize="16dp"/>
+
+            <LinearLayout
+                style="@style/mw"
+                android:layout_marginTop="4dp">
+
+                <TextView
+                    android:id="@+id/comment_quote_username"
+                    style="@style/mww"
+                    android:text="@string/comment_quote_user_name"
+                    android:textColor="@color/Assist"
+                    android:textSize="12dp"/>
+
+                <TextView
+                    android:id="@+id/comment_quote_reference"
+                    style="@style/ww"
+                    android:textColor="@color/Assist"
+                    android:textSize="12dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </com.daimajia.swipe.SwipeLayout>
+
+    <ImageView
+        android:id="@+id/comment_quote_open"
+        android:layout_width="24dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/button_quote"
+        android:src="@drawable/image_up"/>
+
+    <ImageView
+        android:id="@+id/comment_quote_close"
+        android:layout_width="24dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/button_quote"
+        android:src="@drawable/image_down"
+        android:visibility="gone"/>
 
 </LinearLayout>

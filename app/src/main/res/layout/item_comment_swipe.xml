@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    style="@style/mw.h"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:id="@+id/comment_swipe_user"
+        style="@style/mww"
+        android:background="@color/Theme"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="@string/comment_user"
+        android:textColor="@color/White"
+        android:textSize="16dp"/>
+
+    <TextView
+        android:id="@+id/comment_swipe_copy"
+        style="@style/mww"
+        android:background="@color/Theme"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="@string/comment_copy"
+        android:textColor="@color/White"
+        android:textSize="16dp"/>
+
+    <TextView
+        android:id="@+id/comment_swipe_reply"
+        style="@style/mww"
+        android:background="@color/Theme"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="@string/comment_reply"
+        android:textColor="@color/White"
+        android:textSize="16dp"/>
+
+</LinearLayout>

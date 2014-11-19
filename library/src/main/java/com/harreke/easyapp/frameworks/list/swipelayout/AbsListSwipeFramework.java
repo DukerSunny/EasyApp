@@ -7,6 +7,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.daimajia.swipe.SwipeLayout;
+import com.daimajia.swipe.implments.SwipeItemMangerImpl;
 import com.harreke.easyapp.adapters.swipelayout.AbsListSwipeAdapter;
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.list.ListFramework;
@@ -14,6 +15,7 @@ import com.harreke.easyapp.frameworks.list.abslistview.IAbsListItemClickListener
 import com.harreke.easyapp.holders.abslistview.IAbsListHolder;
 
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/10/27
@@ -87,6 +89,12 @@ public abstract class AbsListSwipeFramework<ITEM, HOLDER extends IAbsListHolder<
         mAdapter.clear();
     }
 
+    public final void close(int position) {
+        if (position >= 0 && position < mAdapter.getCount()) {
+            mAdapter.closeItem(position);
+        }
+    }
+
     /**
      * 获得条目
      *
@@ -107,6 +115,11 @@ public abstract class AbsListSwipeFramework<ITEM, HOLDER extends IAbsListHolder<
     @Override
     public int getItemCount() {
         return mAdapter.getCount();
+    }
+
+    @Override
+    public List<ITEM> getItemList() {
+        return mAdapter.getItemList();
     }
 
     @Override
@@ -172,6 +185,10 @@ public abstract class AbsListSwipeFramework<ITEM, HOLDER extends IAbsListHolder<
     public void setListView(AbsListView listView) {
         mListView = listView;
         mListView.setOnItemClickListener(this);
+    }
+
+    public void setMode(SwipeItemMangerImpl.Mode mode) {
+        mAdapter.setMode(mode);
     }
 
     /**

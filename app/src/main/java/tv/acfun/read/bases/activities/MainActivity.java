@@ -255,6 +255,10 @@ public class MainActivity extends ActivityFramework {
                             mLoginHelper.show(LoginHelper.Reason.Unauthorized);
                         }
                         break;
+                    case R.id.menu_history:
+                        start(HistoryActivity.create(getActivity()));
+                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                        break;
                     case R.id.menu_setting:
                         start(SettingActivity.create(getActivity()), false);
                         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);

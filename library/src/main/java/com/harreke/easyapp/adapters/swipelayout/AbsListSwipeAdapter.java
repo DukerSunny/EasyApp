@@ -6,13 +6,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/10/27
  */
 public abstract class AbsListSwipeAdapter<ITEM> extends BaseSwipeAdapter {
     private boolean mEnabled = true;
-    private ArrayList<ITEM> mItemList = new ArrayList<ITEM>();
+    private List<ITEM> mItemList = new ArrayList<ITEM>();
     private HashSet<Integer> mKeySet = new HashSet<Integer>();
 
     /**
@@ -65,6 +66,10 @@ public abstract class AbsListSwipeAdapter<ITEM> extends BaseSwipeAdapter {
     @Override
     public long getItemId(int position) {
         return position;
+    }
+
+    public List<ITEM> getItemList() {
+        return mItemList;
     }
 
     @Override

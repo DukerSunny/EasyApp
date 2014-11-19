@@ -26,7 +26,6 @@ import tv.acfun.read.parsers.ChannelListParser;
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/23
  */
 public class FavouriteActivity extends ActivityFramework {
-    private View.OnClickListener mClickListener;
     private Helper mFavouriteListHelper;
     private LoginHelper.LoginCallback mLoginCallback;
     private LoginHelper mLoginHelper;
@@ -78,7 +77,7 @@ public class FavouriteActivity extends ActivityFramework {
             @Override
             public void onSuccess() {
                 mLoginHelper.hide();
-                startAction();
+                readList();
             }
         };
         mRemoveClickListener = new View.OnClickListener() {
@@ -101,6 +100,8 @@ public class FavouriteActivity extends ActivityFramework {
             @Override
             public void onFailure(String requestUrl) {
                 mRemovingPosition = -1;
+                mOpenSwipeLayout.close();
+                mOpenSwipeLayout = null;
                 showToast(R.string.favourite_remove_failure);
             }
 
@@ -108,6 +109,8 @@ public class FavouriteActivity extends ActivityFramework {
             public void onSuccess(String requestUrl, String s) {
                 if (s.contains("ok")) {
                     showToast(R.string.favourite_remove_success);
+                    mOpenSwipeLayout.close();
+                    mOpenSwipeLayout = null;
                     mFavouriteListHelper.removeItem(mRemovingPosition);
                     mFavouriteListHelper.refresh();
                 } else {
@@ -136,16 +139,27 @@ public class FavouriteActivity extends ActivityFramework {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        mFavouriteListHelper.clear();
+        readList();
+    }
+
+    private void readList() {
+        if (mLoginHelper.validateLogin()) {
+            mFavouriteListHelper
+                    .from(API.getFavourite(mLoginHelper.getToken(), "110,73,74,75", 20, mFavouriteListHelper.getCurrentPage()));
+        }
+    }
+
+    @Override
     public void setLayout() {
         setContentView(R.layout.activity_favourite);
     }
 
     @Override
     public void startAction() {
-        if (mLoginHelper.validateLogin()) {
-            mFavouriteListHelper
-                    .from(API.getFavourite(mLoginHelper.getToken(), "110,73,74,75", 20, mFavouriteListHelper.getCurrentPage()));
-        }
     }
 
     private class Helper extends AbsListSwipeFramework<Content, FavouriteHolder> {
@@ -165,7 +179,7 @@ public class FavouriteActivity extends ActivityFramework {
 
         @Override
         public void onAction() {
-            startAction();
+            readList();
         }
 
         @Override

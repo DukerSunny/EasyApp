@@ -10,7 +10,7 @@ public class Comment {
     private int deep;
     private String postDate;
     private int quoteId;
-    private String userID;
+    private int userID;
     private String userImg;
     private String userName;
 
@@ -38,7 +38,7 @@ public class Comment {
         return quoteId;
     }
 
-    public String getUserID() {
+    public int getUserID() {
         return userID;
     }
 

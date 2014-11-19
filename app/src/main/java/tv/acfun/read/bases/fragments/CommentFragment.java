@@ -34,11 +34,12 @@ import tv.acfun.read.parsers.CommentListParser;
 public class CommentFragment extends FragmentFramework {
     private View comment_reply;
     private IRequestCallback<String> mCallback;
-    private View.OnClickListener mClickListener;
     private CommentListHelper mCommentListHelper;
     private OnCommentListener mCommentListener;
     private CommentParseTask mCommentParseTask = null;
     private int mContentId;
+    private View.OnClickListener mOnClickListener;
+    private View.OnClickListener mOnQuoteClickListener;
     private View.OnClickListener mOptionsClickListener;
     private int mPageNo;
     private View.OnClickListener mQuoteExpandClickListener;
@@ -63,7 +64,7 @@ public class CommentFragment extends FragmentFramework {
 
     @Override
     public void attachCallbacks() {
-        comment_reply.setOnClickListener(mClickListener);
+        comment_reply.setOnClickListener(mOnClickListener);
     }
 
     @Override
@@ -78,7 +79,7 @@ public class CommentFragment extends FragmentFramework {
 
     @Override
     public void establishCallbacks() {
-        mClickListener = new View.OnClickListener() {
+        mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (AcFunRead.getInstance().readFullUser() == null) {
@@ -132,6 +133,12 @@ public class CommentFragment extends FragmentFramework {
                 }
             }
         };
+        mOnQuoteClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        };
     }
 
     @Override
@@ -167,7 +174,7 @@ public class CommentFragment extends FragmentFramework {
 
         @Override
         public FullConversionHolder createHolder(View convertView) {
-            FullConversionHolder holder = new FullConversionHolder(convertView);
+            FullConversionHolder holder = new FullConversionHolder(convertView, mOnQuoteClickListener);
 
             holder.setOnOptionsClickListener(mOptionsClickListener);
             holder.setOnQuoteExpandClickListener(mQuoteExpandClickListener);

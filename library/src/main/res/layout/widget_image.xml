@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<com.harreke.easyapp.widgets.AutoFitImageView
-    style="@style/mw"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:src="@drawable/anim_progress_radiant"/>

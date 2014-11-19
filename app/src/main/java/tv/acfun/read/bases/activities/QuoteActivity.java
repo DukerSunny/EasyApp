@@ -30,6 +30,7 @@ public class QuoteActivity extends ActivityFramework {
     private CommentFloorHolder mCommentFloorHolder;
     private int mCommentId;
     private int mContentId;
+    private View.OnClickListener mOnQuoteClickListener;
     private int mPageNo;
     private QuoteListHelper mQuoteListHelper;
     private QuoteParseTask mQuoteParseTask = null;
@@ -64,8 +65,6 @@ public class QuoteActivity extends ActivityFramework {
 
         mQuoteListHelper = new QuoteListHelper(this, R.id.quote_list);
         mQuoteListHelper.addFooterView(commentFloor);
-        mQuoteListHelper.setRootView(findViewById(R.id.quote_list));
-        mQuoteListHelper.setInfoView((InfoView) findViewById(R.id.quote_info));
         mQuoteListHelper.bindAdapter();
     }
 
@@ -121,7 +120,7 @@ public class QuoteActivity extends ActivityFramework {
 
         @Override
         public CommentQuoteHolder createHolder(View convertView) {
-            return new CommentQuoteHolder(convertView);
+            return new CommentQuoteHolder(convertView, mOnQuoteClickListener);
         }
 
         @Override

@@ -8,43 +8,20 @@
         style="@style/mm"/>
 
     <FrameLayout
-        android:id="@+id/comic_actionbar"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/White"
-        android:orientation="horizontal">
+        android:layout_width="96dp"
+        android:layout_height="32dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_margin="16dp"
+        android:background="@color/TransparentBlack">
 
-        <ImageView
-            android:id="@+id/comic_back"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@drawable/button_transparent"
-            android:src="@drawable/image_back"/>
-
-        <ImageView
-            android:id="@+id/comic_save"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="end"
-            android:background="@drawable/button_transparent"
-            android:src="@drawable/image_save"/>
+        <TextView
+            android:id="@+id/comic_page"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:gravity="center"
+            android:textColor="@color/White"
+            android:textSize="20dp"/>
 
     </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/comic_page_background"
-        android:layout_width="96dp"
-        android:layout_height="48dp"
-        android:layout_gravity="center_horizontal"
-        android:background="@color/TransparentBlack"
-        android:visibility="gone"/>
-
-    <TextView
-        android:id="@+id/comic_page"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:gravity="center"
-        android:textColor="@color/Title"
-        android:textSize="20dp"/>
 
 </FrameLayout>

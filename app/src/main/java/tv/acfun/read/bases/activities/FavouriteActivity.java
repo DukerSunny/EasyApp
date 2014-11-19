@@ -11,7 +11,6 @@ import com.harreke.easyapp.frameworks.list.abslistview.FooterLoadStatus;
 import com.harreke.easyapp.frameworks.list.swipelayout.AbsListSwipeFramework;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
-import com.harreke.easyapp.widgets.InfoView;
 
 import java.util.ArrayList;
 
@@ -31,6 +30,7 @@ public class FavouriteActivity extends ActivityFramework {
     private Helper mFavouriteListHelper;
     private LoginHelper.LoginCallback mLoginCallback;
     private LoginHelper mLoginHelper;
+    private SwipeLayout mOpenSwipeLayout = null;
     private IRequestCallback<String> mRemoveCallback;
     private View.OnClickListener mRemoveClickListener;
     private int mRemovingPosition = -1;
@@ -55,8 +55,6 @@ public class FavouriteActivity extends ActivityFramework {
 
         mFavouriteListHelper = new Helper(this, R.id.favourite_list, R.id.favourite_swipe);
         mFavouriteListHelper.setRefresh(findViewById(R.id.favourite_refresh));
-        mFavouriteListHelper.setRootView(findViewById(R.id.favourite_list));
-        mFavouriteListHelper.setInfoView((InfoView) findViewById(R.id.favourite_info));
         mFavouriteListHelper.addFooterView(footer_loadmore);
         mFavouriteListHelper.setLoadMore(new FooterLoadStatus(footer_loadmore));
         mFavouriteListHelper.bindAdapter();
@@ -180,15 +178,21 @@ public class FavouriteActivity extends ActivityFramework {
 
         @Override
         public void onItemClick(int position, Content content) {
-            if (content != null) {
-                start(ContentActivity.create(getActivity(), content.getContentId()));
+            if (mOpenSwipeLayout != null) {
+                mOpenSwipeLayout.close();
+                mOpenSwipeLayout = null;
             } else {
-                start(SearchActivity.create(getActivity()));
+                if (content != null) {
+                    start(ContentActivity.create(getActivity(), content.getContentId()));
+                } else {
+                    start(SearchActivity.create(getActivity()));
+                }
             }
         }
 
         @Override
         public void onOpen(SwipeLayout swipeLayout) {
+            mOpenSwipeLayout = swipeLayout;
         }
 
         @Override

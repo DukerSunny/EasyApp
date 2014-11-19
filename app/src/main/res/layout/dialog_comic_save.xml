@@ -3,9 +3,7 @@
     android:id="@+id/comic_save_dialog_input"
     style="@style/mw"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:hint="@string/comic_save_input"
     android:lines="1"
     android:padding="8dp"
     android:textColor="@color/Title"
-    android:textColorHint="@color/Assist"
     android:textSize="20dp"/>

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -36,7 +35,6 @@ import tv.acfun.read.widgets.UBBEditText;
  */
 public class ReplyActivity extends ActivityFramework {
     private Adapter mAdapter;
-    private View.OnClickListener mClickListener;
     private DialogInterface.OnClickListener mColorPickerClickListener;
     private DialogHelper mColorPickerHelper;
     private int mContentId;
@@ -47,6 +45,7 @@ public class ReplyActivity extends ActivityFramework {
     private String[] mEmotNames;
     private int mFloorIndex;
     private View.OnFocusChangeListener mFocusChangeListener;
+    private View.OnClickListener mOnClickListener;
     private int mQuoteId;
     private IRequestCallback<String> mSendCallback;
     private SizePickerHelper mSizePickerHelper;
@@ -56,6 +55,7 @@ public class ReplyActivity extends ActivityFramework {
     private ColorPicker picker;
     private UBBEditText reply_input;
     private ViewPager reply_pager;
+    private View reply_selectall;
     private View reply_style_bold;
     private View reply_style_color;
     private View reply_style_color_indicator;
@@ -68,6 +68,7 @@ public class ReplyActivity extends ActivityFramework {
     private View reply_style_size_picker;
     private View reply_style_strikethrough;
     private View reply_style_underline;
+    private View reply_unselect;
 
     public static Intent create(Context context, int contentId, int quoteId, int floorIndex) {
         Intent intent = new Intent(context, ReplyActivity.class);
@@ -91,16 +92,18 @@ public class ReplyActivity extends ActivityFramework {
 
     @Override
     public void attachCallbacks() {
-        reply_style_bold.setOnClickListener(mClickListener);
-        reply_style_italic.setOnClickListener(mClickListener);
-        reply_style_underline.setOnClickListener(mClickListener);
-        reply_style_strikethrough.setOnClickListener(mClickListener);
-        reply_style_color.setOnClickListener(mClickListener);
-        reply_style_color_picker.setOnClickListener(mClickListener);
-        reply_style_size.setOnClickListener(mClickListener);
-        reply_style_size_picker.setOnClickListener(mClickListener);
-        reply_style_emot_on.setOnClickListener(mClickListener);
-        reply_style_emot_off.setOnClickListener(mClickListener);
+        reply_style_bold.setOnClickListener(mOnClickListener);
+        reply_style_italic.setOnClickListener(mOnClickListener);
+        reply_style_underline.setOnClickListener(mOnClickListener);
+        reply_style_strikethrough.setOnClickListener(mOnClickListener);
+        reply_style_color.setOnClickListener(mOnClickListener);
+        reply_style_color_picker.setOnClickListener(mOnClickListener);
+        reply_style_size.setOnClickListener(mOnClickListener);
+        reply_style_size_picker.setOnClickListener(mOnClickListener);
+        reply_style_emot_on.setOnClickListener(mOnClickListener);
+        reply_style_emot_off.setOnClickListener(mOnClickListener);
+        reply_selectall.setOnClickListener(mOnClickListener);
+        reply_unselect.setOnClickListener(mOnClickListener);
 
         reply_input.setOnFocusChangeListener(mFocusChangeListener);
 
@@ -110,6 +113,14 @@ public class ReplyActivity extends ActivityFramework {
         mColorPickerHelper.setOnClickListener(mColorPickerClickListener);
 
         mSizePickerHelper.setOnItemClickListener(mSizePickerItemListener);
+    }
+
+    private void doSelectAll() {
+        if (reply_input.getText().length() > 0) {
+            reply_input.selectAllWithAction();
+            reply_selectall.setVisibility(View.GONE);
+            reply_unselect.setVisibility(View.VISIBLE);
+        }
     }
 
     private void doSend() {
@@ -144,6 +155,12 @@ public class ReplyActivity extends ActivityFramework {
         }
     }
 
+    private void doUnselect() {
+        reply_input.unselect();
+        reply_selectall.setVisibility(View.VISIBLE);
+        reply_unselect.setVisibility(View.GONE);
+    }
+
     @Override
     public void enquiryViews() {
         PagerTabStrip reply_pager_indicator;
@@ -174,6 +191,8 @@ public class ReplyActivity extends ActivityFramework {
         reply_pager_indicator = (PagerTabStrip) findViewById(R.id.reply_pager_indicator);
         reply_pager_indicator.setTabIndicatorColorResource(R.color.Theme);
         reply_pager_indicator.setTextColor(getResources().getColor(R.color.Title));
+        reply_selectall = findViewById(R.id.reply_selectall);
+        reply_unselect = findViewById(R.id.reply_unselect);
 
         mAdapter = new Adapter();
 
@@ -200,7 +219,7 @@ public class ReplyActivity extends ActivityFramework {
 
     @Override
     public void establishCallbacks() {
-        mClickListener = new View.OnClickListener() {
+        mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
@@ -235,6 +254,12 @@ public class ReplyActivity extends ActivityFramework {
                     case R.id.reply_style_emot_off:
                         showEmot();
                         hideSoftInputMethod();
+                        break;
+                    case R.id.reply_selectall:
+                        doSelectAll();
+                        break;
+                    case R.id.reply_unselect:
+                        doUnselect();
                 }
             }
         };
@@ -289,7 +314,6 @@ public class ReplyActivity extends ActivityFramework {
 
             @Override
             public void onSuccess(String requestUrl, String s) {
-                Log.e(null, "result=" + s);
                 reply_input.setText("");
                 setResult(RESULT_OK);
                 onBackPressed();

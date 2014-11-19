@@ -79,7 +79,7 @@ public class UBBEditText extends EditText {
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void selectAllWithAction() {
+    public void selectAllWithAction() {
         Bundle bundle;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -126,7 +126,7 @@ public class UBBEditText extends EditText {
                     }
                 }
                 setText(builder);
-                setSelection(end);
+                setSelection(start, end);
             }
         }
     }
@@ -169,7 +169,7 @@ public class UBBEditText extends EditText {
                     }
                 }
                 setText(builder);
-                setSelection(end);
+                setSelection(start, end);
             }
         }
     }
@@ -213,7 +213,7 @@ public class UBBEditText extends EditText {
                     }
                 }
                 setText(builder);
-                setSelection(end);
+                setSelection(start, end);
             }
         }
     }
@@ -255,7 +255,7 @@ public class UBBEditText extends EditText {
                     }
                 }
                 setText(builder);
-                setSelection(end);
+                setSelection(start, end);
             }
         }
     }
@@ -294,8 +294,12 @@ public class UBBEditText extends EditText {
                     }
                 }
                 setText(builder);
-                setSelection(end);
+                setSelection(start, end);
             }
         }
+    }
+
+    public void unselect() {
+        setSelection(getSelectionEnd());
     }
 }

@@ -53,8 +53,6 @@ public class ContributionActivity extends ActivityFramework {
 
         mContributionListHelper = new Helper(this, R.id.contribution_list);
         mContributionListHelper.setRefresh(findViewById(R.id.contribution_refresh));
-        mContributionListHelper.setRootView(findViewById(R.id.contribution_list));
-        mContributionListHelper.setInfoView((InfoView) findViewById(R.id.contribution_info));
         mContributionListHelper.addFooterView(footer_loadmore);
         mContributionListHelper.setLoadMore(new FooterLoadStatus(footer_loadmore));
         mContributionListHelper.bindAdapter();

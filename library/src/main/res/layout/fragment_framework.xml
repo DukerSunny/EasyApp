@@ -5,7 +5,8 @@
 
     <FrameLayout
         android:id="@+id/framework_content"
-        style="@style/mm"/>
+        style="@style/mm"
+        android:background="@color/Background"/>
 
     <com.harreke.easyapp.widgets.InfoView
         android:id="@+id/framework_info"

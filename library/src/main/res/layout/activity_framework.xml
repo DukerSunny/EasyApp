@@ -15,9 +15,11 @@
 
         <FrameLayout
             android:id="@+id/framework_content"
-            style="@style/mm"/>
+            style="@style/mm"
+            android:background="@color/Background"/>
 
         <ImageView
+            android:id="@+id/framework_actionbar_shadow"
             android:layout_width="match_parent"
             android:layout_height="6dp"
             android:src="@drawable/shape_shadow"/>

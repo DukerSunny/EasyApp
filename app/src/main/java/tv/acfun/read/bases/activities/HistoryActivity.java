@@ -46,8 +46,6 @@ public class HistoryActivity extends ActivityFramework {
         addActionBarImageItem(0, R.drawable.image_clear);
 
         mHistoryListHelper = new Helper(this, R.id.history_list, R.id.history_swipe);
-        mHistoryListHelper.setRootView(findViewById(R.id.history_list));
-        mHistoryListHelper.setInfoView((InfoView) findViewById(R.id.history_info));
         mHistoryListHelper.addFooterView(footer_loadmore);
         mHistoryListHelper.setLoadMore(new FooterLoadStatus(footer_loadmore));
         mHistoryListHelper.bindAdapter();

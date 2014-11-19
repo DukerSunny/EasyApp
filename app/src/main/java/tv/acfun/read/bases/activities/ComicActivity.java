@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Environment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -35,17 +34,11 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 public class ComicActivity extends ActivityFramework {
     private final static String TAG = "ComicActivity";
 
-    private int color_Title;
-    private View comic_actionbar;
-    private View comic_back;
     private TextView comic_page;
-    private View comic_page_background;
     private ViewPager comic_pager;
-    private View comic_save;
     private EditText comic_save_input;
     private Adapter mAdapter;
     private IRequestCallback<Bitmap> mCallback;
-    private View.OnClickListener mClickListener;
     private int mContentId;
     private ArrayList<String> mImageList;
     private Mode mMode;
@@ -102,18 +95,17 @@ public class ComicActivity extends ActivityFramework {
 
     @Override
     public void attachCallbacks() {
-        comic_back.setOnClickListener(mClickListener);
         comic_pager.setOnPageChangeListener(mPageChangeListener);
 
-        comic_save.setOnClickListener(mClickListener);
-
         mSaveDialog = new DialogHelper(getActivity());
+        mSaveDialog.setTitle(R.string.comic_save_input);
         mSaveDialog.setView(R.layout.dialog_comic_save);
         mSaveDialog.setPositiveButton(R.string.app_ok);
         mSaveDialog.setPositiveButton(R.string.app_cancel);
         mSaveDialog.setOnClickListener(mSaveDialogListener);
 
         mOverwriteDialog = new DialogHelper(getActivity());
+        mOverwriteDialog.setTitle(R.string.comic_save_overwrite);
         mOverwriteDialog.setPositiveButton(R.string.app_ok);
         mOverwriteDialog.setNegativeButton(R.string.app_cancel);
         mOverwriteDialog.setOnClickListener(mOverwriteDialogListener);
@@ -128,16 +120,16 @@ public class ComicActivity extends ActivityFramework {
     }
 
     @Override
+    public void configActivity() {
+        setActionBarMode(ActionBarMode.Overlay);
+    }
+
+    @Override
     public void enquiryViews() {
+        addActionBarImageItem(0, R.drawable.image_save);
+
         comic_pager = (ViewPager) findViewById(R.id.comic_pager);
-
-        comic_actionbar = findViewById(R.id.comic_actionbar);
-        comic_back = findViewById(R.id.comic_back);
         comic_page = (TextView) findViewById(R.id.comic_page);
-        comic_page_background = findViewById(R.id.comic_page_background);
-        comic_save = findViewById(R.id.comic_save);
-
-        color_Title = getResources().getColor(R.color.Title);
 
         comic_save_input = (EditText) View.inflate(getActivity(), R.layout.dialog_comic_save, null);
 
@@ -148,25 +140,6 @@ public class ComicActivity extends ActivityFramework {
 
     @Override
     public void establishCallbacks() {
-        mClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.comic_back:
-                        onBackPressed();
-                        break;
-                    case R.id.comic_save:
-                        if (mSavePosition != -1 || mSaveFile != null) {
-                            showToast(getString(R.string.comic_save_downloading));
-                        } else {
-                            mSavePosition = comic_pager.getCurrentItem();
-                            comic_save_input.setText(generateFilename());
-                            comic_save_input.setSelection(comic_save_input.getText().length());
-                            mSaveDialog.show();
-                        }
-                }
-            }
-        };
         mPageChangeListener = new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrollStateChanged(int state) {
@@ -262,6 +235,14 @@ public class ComicActivity extends ActivityFramework {
 
     @Override
     public void onActionBarItemClick(int id, View item) {
+        if (mSavePosition != -1 || mSaveFile != null) {
+            showToast(getString(R.string.comic_save_downloading));
+        } else {
+            mSavePosition = comic_pager.getCurrentItem();
+            comic_save_input.setText(generateFilename());
+            comic_save_input.setSelection(comic_save_input.getText().length());
+            mSaveDialog.show();
+        }
     }
 
     @Override
@@ -301,14 +282,10 @@ public class ComicActivity extends ActivityFramework {
     }
 
     private void toggleActionBar() {
-        if (comic_actionbar.getVisibility() == View.VISIBLE) {
-            comic_actionbar.setVisibility(View.GONE);
-            comic_page_background.setVisibility(View.VISIBLE);
-            comic_page.setTextColor(Color.WHITE);
+        if (isActionBarShowing()) {
+            hideActionBar();
         } else {
-            comic_actionbar.setVisibility(View.VISIBLE);
-            comic_page_background.setVisibility(View.GONE);
-            comic_page.setTextColor(color_Title);
+            showActionBar();
         }
     }
 

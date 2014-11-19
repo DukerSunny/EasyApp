@@ -29,13 +29,13 @@ public class FullConversionHolder implements IAbsListHolder<FullConversion> {
     private TextView comment_username;
     private CommentQuoteHolder[] mCommentQuotes;
 
-    public FullConversionHolder(View convertView) {
+    public FullConversionHolder(View convertView, View.OnClickListener onQuoteClickListener) {
         Resources resources = convertView.getResources();
 
         mCommentQuotes = new CommentQuoteHolder[3];
-        mCommentQuotes[0] = new CommentQuoteHolder(convertView.findViewById(R.id.comment_quote1));
-        mCommentQuotes[1] = new CommentQuoteHolder(convertView.findViewById(R.id.comment_quote2));
-        mCommentQuotes[2] = new CommentQuoteHolder(convertView.findViewById(R.id.comment_quote3));
+        mCommentQuotes[0] = new CommentQuoteHolder(convertView.findViewById(R.id.comment_quote1), onQuoteClickListener);
+        mCommentQuotes[1] = new CommentQuoteHolder(convertView.findViewById(R.id.comment_quote2), onQuoteClickListener);
+        mCommentQuotes[2] = new CommentQuoteHolder(convertView.findViewById(R.id.comment_quote3), onQuoteClickListener);
         comment_quote_expand = (TextView) convertView.findViewById(R.id.comment_quote_expand);
         comment_quote_expand_text = resources.getString(R.string.comment_quote_expand);
 
@@ -69,6 +69,7 @@ public class FullConversionHolder implements IAbsListHolder<FullConversion> {
         size = quoteList.size();
         for (i = 0; i < size; i++) {
             mCommentQuotes[i].setVisibility(View.VISIBLE);
+            mCommentQuotes[i].setParentPosition(position);
             mCommentQuotes[i].setItem(i, quoteList.get(i));
         }
         for (i = size; i < 3; i++) {

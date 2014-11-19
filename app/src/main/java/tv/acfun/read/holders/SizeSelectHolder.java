@@ -1,6 +1,5 @@
 package tv.acfun.read.holders;
 
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
@@ -21,6 +20,5 @@ public class SizeSelectHolder implements IAbsListHolder<Integer> {
     @Override
     public void setItem(int position, Integer item) {
         sizeselect.setText(String.valueOf(item));
-        sizeselect.setTextSize(TypedValue.COMPLEX_UNIT_DIP, item);
     }
 }

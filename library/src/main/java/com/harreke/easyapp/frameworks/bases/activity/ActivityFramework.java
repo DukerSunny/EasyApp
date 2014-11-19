@@ -31,9 +31,11 @@ import com.harreke.easyapp.widgets.InfoView;
 public abstract class ActivityFramework extends FragmentActivity
         implements IFramework, IActivity, IActionBar, ActionBarView.OnActionBarClickListener {
     private static final String TAG = "ActivityFramework";
+    private ActionBarView framework_actionbar;
+    private View framework_actionbar_shadow;
     private FrameLayout framework_content;
     private InfoView framework_info;
-    private ActionBarView mActionBarView;
+    private ActionBarMode mActionBarMode = ActionBarMode.Normal;
     private boolean mCreated = false;
     private ExitReceiver mExitReceiver = new ExitReceiver();
     private View.OnClickListener mInfoClickListener = new View.OnClickListener() {
@@ -49,17 +51,17 @@ public abstract class ActivityFramework extends FragmentActivity
 
     @Override
     public void addActionBarImageItem(int id, int imageId) {
-        mActionBarView.addActionBarImageItem(id, imageId);
+        framework_actionbar.addActionBarImageItem(id, imageId);
     }
 
     @Override
     public void addActionBarViewItem(int id, int layoutId, boolean clickable) {
-        mActionBarView.addActionBarViewItem(id, layoutId, clickable);
+        framework_actionbar.addActionBarViewItem(id, layoutId, clickable);
     }
 
     @Override
     public void addActionBarViewItem(int id, View item, boolean clickable) {
-        mActionBarView.addActionBarViewItem(id, item, clickable);
+        framework_actionbar.addActionBarViewItem(id, item, clickable);
     }
 
     /**
@@ -178,9 +180,14 @@ public abstract class ActivityFramework extends FragmentActivity
         return framework_info;
     }
 
+    public void hideActionBar() {
+        framework_actionbar.setVisibility(View.GONE);
+        framework_actionbar_shadow.setVisibility(View.GONE);
+    }
+
     @Override
     public void hideActionbarItem(int id) {
-        mActionBarView.hideActionbarItem(id);
+        framework_actionbar.hideActionbarItem(id);
     }
 
     /**
@@ -189,6 +196,10 @@ public abstract class ActivityFramework extends FragmentActivity
     @Override
     public final void hideToast() {
         SuperActivityToast.clearSuperActivityToastsForActivity(this);
+    }
+
+    public boolean isActionBarShowing() {
+        return framework_actionbar.getVisibility() == View.VISIBLE;
     }
 
     /**
@@ -222,15 +233,19 @@ public abstract class ActivityFramework extends FragmentActivity
 
         configActivity();
 
-        root = LayoutInflater.from(this).inflate(R.layout.activity_framework, null);
+        if (mActionBarMode == ActionBarMode.Normal) {
+            root = LayoutInflater.from(this).inflate(R.layout.activity_framework, null);
+        } else {
+            root = LayoutInflater.from(this).inflate(R.layout.activity_framework_overlay, null);
+        }
+        framework_actionbar = (ActionBarView) root.findViewById(R.id.framework_actionbar);
+        framework_actionbar.setOnActionBarClickListener(this);
+        framework_actionbar_shadow = root.findViewById(R.id.framework_actionbar_shadow);
         framework_content = (FrameLayout) root.findViewById(R.id.framework_content);
         framework_info = (InfoView) root.findViewById(R.id.framework_info);
         framework_info.setOnClickListener(mInfoClickListener);
 
         super.setContentView(root);
-
-        mActionBarView = (ActionBarView) findViewById(R.id.framework_actionbar);
-        mActionBarView.setOnActionBarClickListener(this);
 
         mToast = new SuperActivityToast(this);
         mToast.setAnimations(SuperToast.Animations.POPUP);
@@ -275,14 +290,18 @@ public abstract class ActivityFramework extends FragmentActivity
         }
     }
 
+    public void setActionBarMode(ActionBarMode mode) {
+        mActionBarMode = mode;
+    }
+
     @Override
     public void setActionBarTitle(int textId) {
-        mActionBarView.setActionBarTitle(textId);
+        framework_actionbar.setActionBarTitle(textId);
     }
 
     @Override
     public void setActionBarTitle(String text) {
-        mActionBarView.setActionBarTitle(text);
+        framework_actionbar.setActionBarTitle(text);
     }
 
     /**
@@ -339,19 +358,24 @@ public abstract class ActivityFramework extends FragmentActivity
         framework_info.setInfoVisibility(infoVisibility);
     }
 
+    public void showActionBar() {
+        framework_actionbar.setVisibility(View.VISIBLE);
+        framework_actionbar_shadow.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void showActionBarHome(boolean show) {
-        mActionBarView.showActionBarHome(show);
+        framework_actionbar.showActionBarHome(show);
     }
 
     @Override
     public void showActionBarItem(int id) {
-        mActionBarView.showActionBarItem(id);
+        framework_actionbar.showActionBarItem(id);
     }
 
     @Override
     public void showActionBarTitle(boolean show) {
-        mActionBarView.showActionBarTitle(show);
+        framework_actionbar.showActionBarTitle(show);
     }
 
     /**
@@ -456,5 +480,9 @@ public abstract class ActivityFramework extends FragmentActivity
             startActivityForResult(intent, requestCode);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         }
+    }
+
+    public enum ActionBarMode {
+        Normal, Overlay
     }
 }

@@ -1,6 +1,5 @@
 package com.harreke.easyapp.frameworks.list.swipelayout;
 
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -216,6 +215,7 @@ public abstract class AbsListSwipeFramework<ITEM, HOLDER extends IAbsListHolder<
             SwipeLayout convertView = (SwipeLayout) createView();
             HOLDER holder = createHolder(convertView);
 
+            convertView.addSwipeListener(AbsListSwipeFramework.this);
             convertView.setShowMode(mShowMode);
             convertView.setTag(holder);
 

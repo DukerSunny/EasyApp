@@ -14,6 +14,7 @@ import com.harreke.easyapp.listeners.OnTagClickListener;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
 import com.harreke.easyapp.widgets.InfoView;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.List;
 
@@ -239,6 +240,18 @@ public class QuoteActivity extends ActivityFramework {
         } else {
             start(ReplyActivity.create(getActivity(), mContentId, 0, 0), 0);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
     }
 
     private void openSwipe(int position) {

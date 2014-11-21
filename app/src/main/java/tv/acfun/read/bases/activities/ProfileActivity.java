@@ -13,6 +13,7 @@ import com.harreke.easyapp.helpers.ImageLoaderHelper;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.tools.GsonUtil;
 import com.harreke.easyapp.widgets.InfoView;
+import com.umeng.analytics.MobclickAgent;
 
 import tv.acfun.read.R;
 import tv.acfun.read.api.API;
@@ -268,6 +269,18 @@ public class ProfileActivity extends ActivityFramework {
     public void onBackPressed() {
         exit(false);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
     }
 
     @Override

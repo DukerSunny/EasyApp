@@ -20,6 +20,7 @@ import com.harreke.easyapp.helpers.DialogHelper;
 import com.harreke.easyapp.helpers.PopupAbsListHelper;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.tools.StringUtil;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.regex.Matcher;
 
@@ -350,11 +351,14 @@ public class ReplyActivity extends ActivityFramework {
     protected void onPause() {
         AcFunRead.getInstance().writeString("replyText", reply_input.getUBBText());
         super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        MobclickAgent.onResume(this);
+
         reply_input.setUBBText(AcFunRead.getInstance().readString("replyText", ""));
     }
 

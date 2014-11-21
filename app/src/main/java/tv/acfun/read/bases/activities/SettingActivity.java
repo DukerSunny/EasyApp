@@ -15,6 +15,7 @@ import android.widget.Spinner;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.helpers.DialogHelper;
 import com.harreke.easyapp.widgets.ChildTabView;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -172,6 +173,18 @@ public class SettingActivity extends ActivityFramework {
     public void onBackPressed() {
         exit(false);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
     }
 
     private void readFonts() {

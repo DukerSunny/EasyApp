@@ -11,6 +11,7 @@ import com.harreke.easyapp.frameworks.list.abslistview.FooterLoadStatus;
 import com.harreke.easyapp.frameworks.list.swipelayout.AbsListSwipeFramework;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 
@@ -100,8 +101,10 @@ public class FavouriteActivity extends ActivityFramework {
             @Override
             public void onFailure(String requestUrl) {
                 mRemovingPosition = -1;
-                mOpenSwipeLayout.close();
-                mOpenSwipeLayout = null;
+                if (mOpenSwipeLayout != null) {
+                    mOpenSwipeLayout.close();
+                    mOpenSwipeLayout = null;
+                }
                 showToast(R.string.favourite_remove_failure);
             }
 
@@ -109,8 +112,10 @@ public class FavouriteActivity extends ActivityFramework {
             public void onSuccess(String requestUrl, String s) {
                 if (s.contains("ok")) {
                     showToast(R.string.favourite_remove_success);
-                    mOpenSwipeLayout.close();
-                    mOpenSwipeLayout = null;
+                    if (mOpenSwipeLayout != null) {
+                        mOpenSwipeLayout.close();
+                        mOpenSwipeLayout = null;
+                    }
                     mFavouriteListHelper.removeItem(mRemovingPosition);
                     mFavouriteListHelper.refresh();
                 } else {
@@ -139,8 +144,15 @@ public class FavouriteActivity extends ActivityFramework {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
+        MobclickAgent.onResume(this);
 
         mFavouriteListHelper.clear();
         readList();

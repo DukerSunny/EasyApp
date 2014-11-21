@@ -3,6 +3,7 @@ package tv.acfun.read.bases.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -23,6 +24,8 @@ import com.harreke.easyapp.requests.RequestBuilder;
 import com.harreke.easyapp.widgets.ChildTabView;
 import com.harreke.easyapp.widgets.GroupTabView;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.update.UmengUpdateAgent;
 
 import tv.acfun.read.R;
 import tv.acfun.read.bases.application.AcFunRead;
@@ -406,7 +409,6 @@ public class MainActivity extends ActivityFramework {
 
     @Override
     public void onActionBarItemClick(int id, View item) {
-
     }
 
     @Override
@@ -427,6 +429,13 @@ public class MainActivity extends ActivityFramework {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        UmengUpdateAgent.update(this);
+    }
+
+    @Override
     protected void onDestroy() {
         AcFunRead.getInstance().unregisterConnectionReceiver();
 
@@ -436,8 +445,15 @@ public class MainActivity extends ActivityFramework {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
+        MobclickAgent.onResume(this);
 
         if (mAdapter == null) {
             mAdapter = new Adapter(getSupportFragmentManager());

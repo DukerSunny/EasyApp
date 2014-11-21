@@ -15,6 +15,7 @@ import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
 import com.harreke.easyapp.widgets.InfoView;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.List;
 
@@ -205,6 +206,18 @@ public class ContentActivity extends ActivityFramework {
             mContentParseTask.cancel(true);
         }
         super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
     }
 
     @Override

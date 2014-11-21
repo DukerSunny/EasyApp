@@ -14,6 +14,7 @@ import com.harreke.easyapp.adapters.fragment.FragmentPageAdapter;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
+import com.umeng.analytics.MobclickAgent;
 
 import tv.acfun.read.R;
 import tv.acfun.read.bases.application.AcFunRead;
@@ -129,6 +130,18 @@ public class CommentActivity extends ActivityFramework implements OnCommentListe
     protected void onDestroy() {
         mLoginHelper.hide();
         super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
     }
 
     @Override

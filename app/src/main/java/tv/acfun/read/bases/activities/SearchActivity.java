@@ -13,6 +13,7 @@ import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.frameworks.list.abslistview.AbsListFramework;
 import com.harreke.easyapp.frameworks.list.abslistview.FooterLoadStatus;
 import com.harreke.easyapp.widgets.InfoView;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 
@@ -161,6 +162,18 @@ public class SearchActivity extends ActivityFramework {
     @Override
     public void onActionBarItemClick(int id, View item) {
         doSearch();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
     }
 
     @Override

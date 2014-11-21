@@ -9,6 +9,7 @@ import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.frameworks.list.abslistview.FooterLoadStatus;
 import com.harreke.easyapp.frameworks.list.swipelayout.AbsListSwipeFramework;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,8 +61,10 @@ public class HistoryActivity extends ActivityFramework {
             public void onClick(View v) {
                 int position = (Integer) v.getTag();
 
-                mOpenSwipeLayout.close();
-                mOpenSwipeLayout = null;
+                if (mOpenSwipeLayout != null) {
+                    mOpenSwipeLayout.close();
+                    mOpenSwipeLayout = null;
+                }
                 mHistoryListHelper.removeItem(position);
                 AcFunRead.getInstance().writeHistory(mHistoryListHelper.getItemList());
                 mHistoryListHelper.clear();
@@ -84,8 +87,15 @@ public class HistoryActivity extends ActivityFramework {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
+        MobclickAgent.onResume(this);
 
         mHistoryListHelper.clear();
         readList();

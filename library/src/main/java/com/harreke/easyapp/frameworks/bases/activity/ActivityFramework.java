@@ -224,7 +224,7 @@ public abstract class ActivityFramework extends FragmentActivity
     }
 
     @Override
-    public final void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View root;
 

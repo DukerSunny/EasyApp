@@ -10,9 +10,11 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
+import com.harreke.easyapp.configs.ImageExecutorConfig;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.helpers.DialogHelper;
 import com.harreke.easyapp.helpers.ImageLoaderHelper;
@@ -23,8 +25,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import tv.acfun.read.R;
+import tv.acfun.read.bases.application.AcFunRead;
+import tv.acfun.read.helpers.ConnectionHelper;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -40,20 +45,20 @@ public class ComicActivity extends ActivityFramework {
     private Adapter mAdapter;
     private IRequestCallback<Bitmap> mCallback;
     private int mContentId;
-    private ArrayList<String> mImageList;
+    private List<String> mImageList;
     private Mode mMode;
+    private DialogInterface.OnClickListener mOnOverwriteDialogClickListener;
+    private ViewPager.OnPageChangeListener mOnPageChangeListener;
+    private DialogInterface.OnClickListener mOnSaveDialogClickListener;
+    private PhotoViewAttacher.OnPhotoTapListener mOnTapListener;
     private DialogHelper mOverwriteDialog;
-    private DialogInterface.OnClickListener mOverwriteDialogListener;
-    private ViewPager.OnPageChangeListener mPageChangeListener;
     private int mPagePosition;
     private int mPosition;
     private DialogHelper mSaveDialog;
-    private DialogInterface.OnClickListener mSaveDialogListener;
     private File mSaveFile = null;
     private int mSavePosition = -1;
-    private PhotoViewAttacher.OnPhotoTapListener mTapListener;
 
-    public static Intent create(Context context, int contentId, int pagePosition, ArrayList<String> imageList, int position) {
+    public static Intent create(Context context, int contentId, int pagePosition, List<String> imageList, int position) {
         Intent intent = new Intent(context, ComicActivity.class);
 
         intent.putExtra("mode", Mode.List);
@@ -95,20 +100,20 @@ public class ComicActivity extends ActivityFramework {
 
     @Override
     public void attachCallbacks() {
-        comic_pager.setOnPageChangeListener(mPageChangeListener);
+        comic_pager.setOnPageChangeListener(mOnPageChangeListener);
 
         mSaveDialog = new DialogHelper(getActivity());
         mSaveDialog.setTitle(R.string.comic_save_input);
         mSaveDialog.setView(R.layout.dialog_comic_save);
         mSaveDialog.setPositiveButton(R.string.app_ok);
         mSaveDialog.setPositiveButton(R.string.app_cancel);
-        mSaveDialog.setOnClickListener(mSaveDialogListener);
+        mSaveDialog.setOnClickListener(mOnSaveDialogClickListener);
 
         mOverwriteDialog = new DialogHelper(getActivity());
         mOverwriteDialog.setTitle(R.string.comic_save_overwrite);
         mOverwriteDialog.setPositiveButton(R.string.app_ok);
         mOverwriteDialog.setNegativeButton(R.string.app_cancel);
-        mOverwriteDialog.setOnClickListener(mOverwriteDialogListener);
+        mOverwriteDialog.setOnClickListener(mOnOverwriteDialogClickListener);
     }
 
     private void checkBitmap() {
@@ -126,6 +131,7 @@ public class ComicActivity extends ActivityFramework {
 
     @Override
     public void enquiryViews() {
+        setActionBarTitle(R.string.app_imageview);
         addActionBarImageItem(0, R.drawable.image_save);
 
         comic_pager = (ViewPager) findViewById(R.id.comic_pager);
@@ -140,7 +146,7 @@ public class ComicActivity extends ActivityFramework {
 
     @Override
     public void establishCallbacks() {
-        mPageChangeListener = new ViewPager.OnPageChangeListener() {
+        mOnPageChangeListener = new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrollStateChanged(int state) {
             }
@@ -155,13 +161,19 @@ public class ComicActivity extends ActivityFramework {
                 updatePage();
             }
         };
-        mTapListener = new PhotoViewAttacher.OnPhotoTapListener() {
+        mOnTapListener = new PhotoViewAttacher.OnPhotoTapListener() {
             @Override
             public void onPhotoTap(View view, float x, float y) {
-                toggleActionBar();
+                int position = (Integer) view.getTag();
+
+                if (imageCached(position)) {
+                    toggleActionBar();
+                } else {
+                    ImageLoaderHelper.loadImage((ImageView) view, mImageList.get(position));
+                }
             }
         };
-        mSaveDialogListener = new DialogInterface.OnClickListener() {
+        mOnSaveDialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String input;
@@ -184,7 +196,7 @@ public class ComicActivity extends ActivityFramework {
                 }
             }
         };
-        mOverwriteDialogListener = new DialogInterface.OnClickListener() {
+        mOnOverwriteDialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mOverwriteDialog.hide();
@@ -231,6 +243,10 @@ public class ComicActivity extends ActivityFramework {
         return new File(
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/" + input +
                         ".jpg");
+    }
+
+    private boolean imageCached(int position) {
+        return ImageExecutorConfig.isImageCacheAvailable(mImageList.get(position));
     }
 
     @Override
@@ -313,10 +329,16 @@ public class ComicActivity extends ActivityFramework {
         public Object instantiateItem(ViewGroup container, int position) {
             PhotoView photoView = (PhotoView) View.inflate(getActivity(), R.layout.activity_comic_page, null);
 
+            photoView.setTag(position);
             photoView.setMediumScale(2f);
             photoView.setMaximumScale(6f);
-            photoView.setOnPhotoTapListener(mTapListener);
-            ImageLoaderHelper.loadImage(photoView, mImageList.get(position));
+            photoView.setOnPhotoTapListener(mOnTapListener);
+            if (ConnectionHelper.shouldLoadImage() || imageCached(position)) {
+                ImageLoaderHelper.loadImage(photoView, mImageList.get(position));
+            } else {
+                ImageLoaderHelper
+                        .loadImage(photoView, "file://" + AcFunRead.CacheDir + "/" + AcFunRead.DIR_ASSETS + "/web_download");
+            }
             container.addView(photoView);
 
             return photoView;

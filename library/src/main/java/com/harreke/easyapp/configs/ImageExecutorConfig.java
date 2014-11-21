@@ -28,7 +28,7 @@ public class ImageExecutorConfig {
 
     public static void config(Context context) {
         ImageLoaderConfiguration configuration = new ImageLoaderConfiguration.Builder(context).diskCache(
-                new UnlimitedDiscCache(new File(ApplicationFramework.CacheDir + "/" + ApplicationFramework.DIR_CACHES)))
+                new UnlimitedDiscCache(new File(ApplicationFramework.CacheDir + "/" + ApplicationFramework.DIR_TEMPS)))
                 .defaultDisplayImageOptions(
                         new DisplayImageOptions.Builder().showImageForEmptyUri(retryImageId).showImageOnFail(retryImageId)
                                 .showImageOnLoading(loadingImageId).cacheOnDisk(true).build()).build();
@@ -45,9 +45,21 @@ public class ImageExecutorConfig {
 
     public static String getImageCachePathByUrl(String imageUrl) {
         if (imageUrl != null) {
-            return ApplicationFramework.CacheDir + "/" + ApplicationFramework.DIR_CACHES + "/" + imageUrl.hashCode();
+            return ApplicationFramework.CacheDir + "/" + ApplicationFramework.DIR_TEMPS + "/" + imageUrl.hashCode();
         } else {
             return null;
+        }
+    }
+
+    public static boolean isImageCacheAvailable(String imageUrl) {
+        File file;
+
+        if (imageUrl != null) {
+            file = new File(ApplicationFramework.CacheDir + "/" + ApplicationFramework.DIR_TEMPS + "/" + imageUrl.hashCode());
+
+            return file.exists() && file.isFile();
+        } else {
+            return false;
         }
     }
 }

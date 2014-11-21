@@ -36,6 +36,7 @@ public class UBBEditText extends EditText {
     private final static String TAG = "UBBEditText";
     private UBBDecoder mDecoder;
     private UBBEncoder mEncoder;
+    private OnSelectionChangeListener mOnSelectionChangeListener = null;
 
     public UBBEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -78,6 +79,15 @@ public class UBBEditText extends EditText {
         setSelection(start + emotUBB.length());
     }
 
+    @Override
+    protected void onSelectionChanged(int selStart, int selEnd) {
+        super.onSelectionChanged(selStart, selEnd);
+
+        if (mOnSelectionChangeListener != null) {
+            mOnSelectionChangeListener.onSelectionChanged(selStart, selEnd);
+        }
+    }
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public void selectAllWithAction() {
         Bundle bundle;
@@ -86,6 +96,18 @@ public class UBBEditText extends EditText {
             bundle = new Bundle();
             bundle.putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_START_INT, 0);
             bundle.putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_END_INT, length());
+            performAccessibilityAction(AccessibilityNodeInfo.ACTION_SET_SELECTION, bundle);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public void selectWithAction(int start, int end) {
+        Bundle bundle;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            bundle = new Bundle();
+            bundle.putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_START_INT, start);
+            bundle.putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_END_INT, end);
             performAccessibilityAction(AccessibilityNodeInfo.ACTION_SET_SELECTION, bundle);
         }
     }
@@ -126,9 +148,13 @@ public class UBBEditText extends EditText {
                     }
                 }
                 setText(builder);
-                setSelection(start, end);
+                selectWithAction(start, end);
             }
         }
+    }
+
+    public void setOnSelectionChangeListener(OnSelectionChangeListener onSelectionChangeListener) {
+        mOnSelectionChangeListener = onSelectionChangeListener;
     }
 
     public void setSize(int size) {
@@ -213,7 +239,7 @@ public class UBBEditText extends EditText {
                     }
                 }
                 setText(builder);
-                setSelection(start, end);
+                selectWithAction(start, end);
             }
         }
     }
@@ -255,7 +281,7 @@ public class UBBEditText extends EditText {
                     }
                 }
                 setText(builder);
-                setSelection(start, end);
+                selectWithAction(start, end);
             }
         }
     }
@@ -294,12 +320,16 @@ public class UBBEditText extends EditText {
                     }
                 }
                 setText(builder);
-                setSelection(start, end);
+                selectWithAction(start, end);
             }
         }
     }
 
     public void unselect() {
         setSelection(getSelectionEnd());
+    }
+
+    public interface OnSelectionChangeListener {
+        public void onSelectionChanged(int start, int end);
     }
 }

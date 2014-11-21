@@ -29,7 +29,9 @@ import tv.acfun.read.bases.application.AcFunRead;
 import tv.acfun.read.bases.fragments.ChannelFragment;
 import tv.acfun.read.bases.fragments.RecommendFragment;
 import tv.acfun.read.beans.FullUser;
+import tv.acfun.read.helpers.ConnectionHelper;
 import tv.acfun.read.helpers.LoginHelper;
+import tv.acfun.read.helpers.OfflineImageLoaderHelper;
 import tv.acfun.read.holders.ChannelSelectHolder;
 import tv.acfun.read.widgets.RepeatCheckableChildTabView;
 
@@ -119,16 +121,15 @@ public class MainActivity extends ActivityFramework {
             menu_at_text.setVisibility(View.GONE);
             menu_mail_text.setVisibility(View.GONE);
         } else {
-            if (mFullUser.getUserImg().equals("avatar")) {
-                content_user_avatar_image.setImageResource(R.drawable.image_avatar);
-                menu_user_avatar.setImageResource(R.drawable.image_avatar);
-            } else {
-                ImageLoaderHelper.loadImage(content_user_avatar_image, mFullUser.getUserImg());
-                ImageLoaderHelper.loadImage(menu_user_avatar, mFullUser.getUserImg());
-            }
+            loadAvatar();
             menu_user_name.setText(mFullUser.getUsername());
             menu_user_signature.setText(mFullUser.getSignature());
         }
+    }
+
+    @Override
+    public void configActivity() {
+        AcFunRead.getInstance().registerConnectionReceiver();
     }
 
     @Override
@@ -305,6 +306,7 @@ public class MainActivity extends ActivityFramework {
                     mPosition = position;
                     mAdapter.remove(1);
                     mAdapter.refresh();
+                    writeLastPosition();
                 }
             }
         };
@@ -392,6 +394,16 @@ public class MainActivity extends ActivityFramework {
                 .hideSoftInputFromWindow(main_slidingmenu.getWindowToken(), 0);
     }
 
+    private void loadAvatar() {
+        if (mFullUser.getUserImg().equals("avatar") || !ConnectionHelper.shouldLoadImage()) {
+            OfflineImageLoaderHelper.loadImage(content_user_avatar_image, OfflineImageLoaderHelper.OfflineImage.Avatar);
+            OfflineImageLoaderHelper.loadImage(menu_user_avatar, OfflineImageLoaderHelper.OfflineImage.Avatar);
+        } else {
+            ImageLoaderHelper.loadImage(content_user_avatar_image, mFullUser.getUserImg());
+            ImageLoaderHelper.loadImage(menu_user_avatar, mFullUser.getUserImg());
+        }
+    }
+
     @Override
     public void onActionBarItemClick(int id, View item) {
 
@@ -416,9 +428,7 @@ public class MainActivity extends ActivityFramework {
 
     @Override
     protected void onDestroy() {
-        AcFunRead acFunRead = AcFunRead.getInstance();
-
-        acFunRead.writeInt("lastChannelPosition", mPosition);
+        AcFunRead.getInstance().unregisterConnectionReceiver();
 
         mHelper.hide();
 
@@ -448,6 +458,10 @@ public class MainActivity extends ActivityFramework {
 
     @Override
     public void startAction() {
+    }
+
+    private void writeLastPosition() {
+        AcFunRead.getInstance().writeInt("lastChannelPosition", mPosition);
     }
 
     private class Adapter extends FragmentPageAdapter {

@@ -162,6 +162,11 @@ public abstract class AbsListFramework<ITEM, HOLDER extends IAbsListHolder<ITEM>
         mAdapter.setEnabled(enabled);
     }
 
+    @Override
+    public void setItem(int position, HOLDER holder, ITEM item) {
+        holder.setItem(position, item);
+    }
+
     /**
      * 设置列表视图
      *
@@ -211,7 +216,7 @@ public abstract class AbsListFramework<ITEM, HOLDER extends IAbsListHolder<ITEM>
                 holder = createHolder(convertView);
                 convertView.setTag(holder);
             }
-            holder.setItem(position, item);
+            setItem(position, holder, item);
 
             return convertView;
         }

@@ -2,6 +2,7 @@ package tv.acfun.read.holders;
 
 import android.content.res.Resources;
 import android.text.method.LinkMovementMethod;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,6 +13,8 @@ import com.harreke.easyapp.holders.abslistview.IAbsListHolder;
 
 import tv.acfun.read.R;
 import tv.acfun.read.beans.Conversion;
+import tv.acfun.read.helpers.ConnectionHelper;
+import tv.acfun.read.helpers.OfflineImageLoaderHelper;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/10/05
@@ -74,7 +77,11 @@ public class CommentFloorHolder implements IAbsListHolder<Conversion> {
         comment_floor_swipe_copy.setTag(R.id.comment_quote_position, -1);
         comment_floor_swipe_reply.setTag(R.id.comment_floor_position, position);
         comment_floor_swipe_reply.setTag(R.id.comment_quote_position, -1);
-        ImageLoaderHelper.loadImage(comment_userImg, conversion.getUserImg());
+        if (ConnectionHelper.shouldLoadImage()) {
+            ImageLoaderHelper.loadImage(comment_userImg, conversion.getUserImg());
+        } else {
+            OfflineImageLoaderHelper.loadImage(comment_userImg, OfflineImageLoaderHelper.OfflineImage.Avatar);
+        }
         comment_username.setText("#" + conversion.getCount() + " " + conversion.getUserName());
         comment_date.setText(String.format(comment_date_text, conversion.getPostDate()));
         comment_text.setText(conversion.getSpanned());
@@ -98,5 +105,9 @@ public class CommentFloorHolder implements IAbsListHolder<Conversion> {
 
     public final void setOnUserClickListener(View.OnClickListener onUserClickListener) {
         comment_floor_swipe_user.setOnClickListener(onUserClickListener);
+    }
+
+    public final void setTextSize(int textSize) {
+        comment_text.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
     }
 }

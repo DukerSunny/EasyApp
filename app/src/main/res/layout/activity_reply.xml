@@ -124,7 +124,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="6dp"
-            android:src="@drawable/shape_shadow"/>
+            android:src="@drawable/shape_shadow_horizontal"/>
 
         <ImageView
             android:id="@+id/reply_selectall"
@@ -132,7 +132,7 @@
             android:layout_height="56dp"
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
-            android:background="@drawable/button_floatingbutton"
+            android:background="@drawable/button_floating"
             android:src="@drawable/image_selectall"/>
 
         <ImageView
@@ -141,7 +141,7 @@
             android:layout_height="56dp"
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
-            android:background="@drawable/button_floatingbutton"
+            android:background="@drawable/button_floating"
             android:src="@drawable/image_unselect"
             android:visibility="gone"/>
 

@@ -28,6 +28,7 @@ import tv.acfun.read.bases.activities.ReplyActivity;
 import tv.acfun.read.bases.application.AcFunRead;
 import tv.acfun.read.beans.Conversion;
 import tv.acfun.read.beans.FullConversion;
+import tv.acfun.read.beans.Setting;
 import tv.acfun.read.holders.FullConversionHolder;
 import tv.acfun.read.listeners.OnCommentListener;
 import tv.acfun.read.parsers.CommentListParser;
@@ -47,9 +48,10 @@ public class CommentFragment extends FragmentFramework {
     private View.OnClickListener mOnCopyClickListener;
     private View.OnClickListener mOnQuoteExpandClickListener;
     private View.OnClickListener mOnReplyClickListener;
+    private OnTagClickListener mOnTagClickListener;
     private View.OnClickListener mOnUserClickListener;
     private int mPageNo;
-    private OnTagClickListener mTagClickListener;
+    private int mTextSize;
 
     public static CommentFragment create(int contentId, int pageNo) {
         CommentFragment fragment = new CommentFragment();
@@ -64,10 +66,13 @@ public class CommentFragment extends FragmentFramework {
 
     @Override
     public void acquireArguments(Bundle bundle) {
+        Setting setting = AcFunRead.getInstance().readSetting();
+
         mContentId = bundle.getInt("contentId");
         mPageNo = bundle.getInt("pageNo");
 
-        mMaxQuoteCount = AcFunRead.getInstance().readSetting().getMaxQuoteCount();
+        mMaxQuoteCount = setting.getMaxQuoteCount();
+        mTextSize = setting.getDefaultTextSize();
     }
 
     @Override
@@ -89,12 +94,8 @@ public class CommentFragment extends FragmentFramework {
         mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (AcFunRead.getInstance().readFullUser() == null) {
-                    if (mCommentListener != null) {
-                        mCommentListener.showLogin();
-                    }
-                } else {
-                    start(ReplyActivity.create(getActivity(), mContentId, 0, 0), 0);
+                if (mCommentListener != null) {
+                    mCommentListener.showLogin();
                 }
             }
         };
@@ -119,7 +120,7 @@ public class CommentFragment extends FragmentFramework {
                         fullConversion.getConversion().getCid()));
             }
         };
-        mTagClickListener = new OnTagClickListener() {
+        mOnTagClickListener = new OnTagClickListener() {
             @Override
             public void onTagClick(String tag, String link) {
                 if ("img".equals(tag)) {
@@ -206,7 +207,7 @@ public class CommentFragment extends FragmentFramework {
 
         @Override
         public FullConversionHolder createHolder(View convertView) {
-            return new FullConversionHolder(convertView, mMaxQuoteCount, mOnUserClickListener, mOnCopyClickListener,
+            return new FullConversionHolder(convertView, mTextSize, mMaxQuoteCount, mOnUserClickListener, mOnCopyClickListener,
                     mOnReplyClickListener, mOnQuoteExpandClickListener);
         }
 
@@ -238,7 +239,7 @@ public class CommentFragment extends FragmentFramework {
     private class CommentParseTask extends AsyncTask<String, Void, ArrayList<FullConversion>> {
         @Override
         protected ArrayList<FullConversion> doInBackground(String... params) {
-            CommentListParser parser = CommentListParser.parse(params[0], mMaxQuoteCount, 0, mTagClickListener);
+            CommentListParser parser = CommentListParser.parse(params[0], mMaxQuoteCount, 0, mOnTagClickListener);
 
             if (parser != null) {
                 if (mCommentListener != null) {

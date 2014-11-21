@@ -27,8 +27,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 
 import tv.acfun.read.R;
@@ -39,6 +39,7 @@ import tv.acfun.read.bases.activities.ProfileActivity;
 import tv.acfun.read.bases.application.AcFunRead;
 import tv.acfun.read.beans.ArticlePage;
 import tv.acfun.read.beans.Content;
+import tv.acfun.read.helpers.ConnectionHelper;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/25
@@ -52,16 +53,17 @@ public class ContentFragment extends FragmentFramework {
     private View content_comments;
     private HackyWebView content_web;
     private String mArticle;
-    private View.OnClickListener mClickListener;
     private WebViewClient mClient;
     private Content mContent;
+    private boolean mFirstRefresh = true;
     private Handler mHandler;
-    private ArrayList<String> mImageList;
+    private List<String> mImageList;
+    private View.OnClickListener mOnClickListener;
+    private DialogInterface.OnClickListener mOnRedirectClickListener;
+    private HackyWebView.OnScrollListener mOnScrollListener;
     private int mPagePosition;
-    private DialogInterface.OnClickListener mRedirectClickListener;
     private DialogHelper mRedirectHelper;
     private int mRedirectId;
-    private HackyWebView.OnScrollListener mScrollListener;
 
     public static ContentFragment create(Content content, int pagePosition, ArticlePage articlePage) {
         ContentFragment fragment = new ContentFragment();
@@ -98,9 +100,9 @@ public class ContentFragment extends FragmentFramework {
 
         content_web.addJavascriptInterface(new JsInterface(), "content");
         content_web.setWebViewClient(mClient);
-        content_web.setOnScrollListener(mScrollListener);
+        content_web.setOnScrollListener(mOnScrollListener);
 
-        content_comments.setOnClickListener(mClickListener);
+        content_comments.setOnClickListener(mOnClickListener);
     }
 
     @Override
@@ -113,7 +115,7 @@ public class ContentFragment extends FragmentFramework {
         mRedirectHelper = new DialogHelper(getActivity());
         mRedirectHelper.setPositiveButton(R.string.app_ok);
         mRedirectHelper.setNegativeButton(R.string.app_cancel);
-        mRedirectHelper.setOnClickListener(mRedirectClickListener);
+        mRedirectHelper.setOnClickListener(mOnRedirectClickListener);
     }
 
     @Override
@@ -121,10 +123,18 @@ public class ContentFragment extends FragmentFramework {
         mHandler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
+                int position;
+
                 switch (msg.what) {
                     case CONTENT_IMG:
-                        start(ComicActivity
-                                .create(getActivity(), mContent.getContentId(), mPagePosition, mImageList, (Integer) msg.obj));
+                        position = (Integer) msg.obj;
+                        if (ConnectionHelper.shouldLoadImage() || imageCached(position)) {
+                            start(ComicActivity
+                                    .create(getActivity(), mContent.getContentId(), mPagePosition, mImageList, position));
+                        } else {
+                            jsReplaceLoading(position);
+                            ImageLoaderHelper.loadBitmap(mImageList.get(position), new ReplaceCallback(position));
+                        }
                         break;
                     case CONTENT_A:
                         parseHref((String) msg.obj);
@@ -142,19 +152,25 @@ public class ContentFragment extends FragmentFramework {
             public void onPageFinished(WebView view, String url) {
                 int i;
 
-                for (i = 0; i < mImageList.size(); i++) {
-                    ImageLoaderHelper.loadBitmap(mImageList.get(i), new ReplaceCallback(i));
+                if (ConnectionHelper.shouldLoadImage()) {
+                    for (i = 0; i < mImageList.size(); i++) {
+                        ImageLoaderHelper.loadBitmap(mImageList.get(i), new ReplaceCallback(i));
+                    }
+                } else {
+                    for (i = 0; i < mImageList.size(); i++) {
+                        if (imageCached(i)) {
+                            ImageLoaderHelper.loadBitmap(mImageList.get(i), new ReplaceCallback(i));
+                        }
+                    }
                 }
             }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Log.e(TAG, "url loading=" + url);
-
                 return false;
             }
         };
-        mRedirectClickListener = new DialogInterface.OnClickListener() {
+        mOnRedirectClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mRedirectHelper.hide();
@@ -164,7 +180,7 @@ public class ContentFragment extends FragmentFramework {
                 }
             }
         };
-        mScrollListener = new HackyWebView.OnScrollListener() {
+        mOnScrollListener = new HackyWebView.OnScrollListener() {
             @Override
             public void onScrollChange(int dx, int dy) {
             }
@@ -182,7 +198,7 @@ public class ContentFragment extends FragmentFramework {
                 }
             }
         };
-        mClickListener = new View.OnClickListener() {
+        mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 start(CommentActivity.create(getActivity(), mContent.getContentId()));
@@ -230,10 +246,48 @@ public class ContentFragment extends FragmentFramework {
                 "</body>";
     }
 
+    private boolean imageCached(int position) {
+        return ImageExecutorConfig.isImageCacheAvailable(mImageList.get(position));
+    }
+
+    private void jsReplaceImageUrl(int position) {
+        String imageUrl = mImageList.get(position);
+
+        content_web.loadUrl("javascript:(" +
+                "function(){" +
+                "var objs = document.getElementsByTagName(\"img\");" +
+                "objs[" + position + "].setAttribute(\"src\", \"file://" +
+                ImageExecutorConfig.getImageCachePathByUrl(imageUrl) +
+                "\");" +
+                "})" +
+                "()");
+    }
+
+    private void jsReplaceLoading(int position) {
+        content_web.loadUrl("javascript:(" +
+                "function(){" +
+                "var objs = document.getElementsByTagName(\"img\");" +
+                "objs[" + position + "].setAttribute(\"src\", \"file://" + AcFunRead.CacheDir + "/" + AcFunRead.DIR_ASSETS +
+                "/web_loading\");" +
+                "})" +
+                "()");
+    }
+
     @Override
     public void onDestroyView() {
         mRedirectHelper.hide();
         super.onDestroyView();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (mFirstRefresh) {
+            mFirstRefresh = false;
+        } else {
+            refreshWeb();
+        }
     }
 
     private void parseHref(String href) {
@@ -259,17 +313,24 @@ public class ContentFragment extends FragmentFramework {
         }
     }
 
-    private void replaceImageUrl(int position) {
-        String imageUrl = mImageList.get(position);
+    private void refreshWeb() {
+        int i;
 
-        content_web.loadUrl("javascript:(" +
-                "function(){" +
-                "var objs = document.getElementsByTagName(\"img\");" +
-                "objs[" + position + "].setAttribute(\"src\", \"file://" +
-                ImageExecutorConfig.getImageCachePathByUrl(imageUrl) +
-                "\");" +
-                "})" +
-                "()");
+        for (i = 0; i < mImageList.size(); i++) {
+            if (imageCached(i)) {
+                jsReplaceImageUrl(i);
+            }
+        }
+    }
+
+    private String replaceImageUrlForDownload(String article, int position) {
+        return article.replace(mImageList.get(position),
+                "file://" + AcFunRead.CacheDir + "/" + AcFunRead.DIR_ASSETS + "/web_download");
+    }
+
+    private String replaceImageUrlForLoading(String article, int position) {
+        return article.replace(mImageList.get(position),
+                "file://" + AcFunRead.CacheDir + "/" + AcFunRead.DIR_ASSETS + "/web_loading");
     }
 
     private void saveBitmap(String imageUrl, Bitmap bitmap) {
@@ -294,9 +355,20 @@ public class ContentFragment extends FragmentFramework {
         String article = mArticle;
         int i;
 
-        for (i = 0; i < mImageList.size(); i++) {
-            article = article.replace(mImageList.get(i),
-                    "file://" + AcFunRead.CacheDir + "/" + AcFunRead.DIR_ASSETS + "/web_loading");
+        if (mImageList.size() > 0) {
+            if (ConnectionHelper.shouldLoadImage()) {
+                for (i = 0; i < mImageList.size(); i++) {
+                    article = replaceImageUrlForLoading(article, i);
+                }
+            } else {
+                for (i = 0; i < mImageList.size(); i++) {
+                    if (imageCached(i)) {
+                        article = replaceImageUrlForLoading(article, i);
+                    } else {
+                        article = replaceImageUrlForDownload(article, i);
+                    }
+                }
+            }
         }
         content_web.loadDataWithBaseURL(null, generateHtml(article), "text/html", "UTF-8", null);
     }
@@ -334,7 +406,7 @@ public class ContentFragment extends FragmentFramework {
             if (bitmap != null) {
                 saveBitmap(requestUrl, bitmap);
             }
-            replaceImageUrl(mPosition);
+            jsReplaceImageUrl(mPosition);
         }
     }
 }

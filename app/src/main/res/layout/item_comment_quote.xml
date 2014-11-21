@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     style="@style/mw.h"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:divider="@drawable/divider_vertical_dot"
-    android:showDividers="middle"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:showDividers="middle">
 
     <com.daimajia.swipe.SwipeLayout
         android:id="@+id/comment_quote_swipe"
@@ -53,7 +53,6 @@
             <TextView
                 android:id="@+id/comment_quote_text"
                 style="@style/ww"
-                android:text="@string/comment_quote_text"
                 android:textColor="@color/Content"
                 android:textSize="16dp"/>
 
@@ -64,7 +63,6 @@
                 <TextView
                     android:id="@+id/comment_quote_username"
                     style="@style/mww"
-                    android:text="@string/comment_quote_user_name"
                     android:textColor="@color/Assist"
                     android:textSize="12dp"/>
 

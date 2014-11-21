@@ -7,6 +7,8 @@
         android:id="@+id/main_slidingmenu"
         style="@style/mm"
         app:behindWidth="240dp"
+        app:shadowDrawable="@drawable/shape_shadow_vertical"
+        app:shadowWidth="6dp"
         app:touchModeAbove="fullscreen"
         app:viewAbove="@layout/activity_main_content"
         app:viewBehind="@layout/activity_main_menu"/>

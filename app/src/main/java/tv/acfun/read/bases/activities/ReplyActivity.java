@@ -46,6 +46,7 @@ public class ReplyActivity extends ActivityFramework {
     private int mFloorIndex;
     private View.OnFocusChangeListener mFocusChangeListener;
     private View.OnClickListener mOnClickListener;
+    private UBBEditText.OnSelectionChangeListener mOnSelectionChangeListener;
     private int mQuoteId;
     private IRequestCallback<String> mSendCallback;
     private SizePickerHelper mSizePickerHelper;
@@ -105,6 +106,7 @@ public class ReplyActivity extends ActivityFramework {
         reply_selectall.setOnClickListener(mOnClickListener);
         reply_unselect.setOnClickListener(mOnClickListener);
 
+        reply_input.setOnSelectionChangeListener(mOnSelectionChangeListener);
         reply_input.setOnFocusChangeListener(mFocusChangeListener);
 
         mColorPickerHelper.setPositiveButton(R.string.app_ok);
@@ -113,14 +115,6 @@ public class ReplyActivity extends ActivityFramework {
         mColorPickerHelper.setOnClickListener(mColorPickerClickListener);
 
         mSizePickerHelper.setOnItemClickListener(mSizePickerItemListener);
-    }
-
-    private void doSelectAll() {
-        if (reply_input.getText().length() > 0) {
-            reply_input.selectAllWithAction();
-            reply_selectall.setVisibility(View.GONE);
-            reply_unselect.setVisibility(View.VISIBLE);
-        }
     }
 
     private void doSend() {
@@ -157,8 +151,7 @@ public class ReplyActivity extends ActivityFramework {
 
     private void doUnselect() {
         reply_input.unselect();
-        reply_selectall.setVisibility(View.VISIBLE);
-        reply_unselect.setVisibility(View.GONE);
+        showSelectAll();
     }
 
     @Override
@@ -256,7 +249,7 @@ public class ReplyActivity extends ActivityFramework {
                         hideSoftInputMethod();
                         break;
                     case R.id.reply_selectall:
-                        doSelectAll();
+                        selectAll();
                         break;
                     case R.id.reply_unselect:
                         doUnselect();
@@ -319,6 +312,16 @@ public class ReplyActivity extends ActivityFramework {
                 onBackPressed();
             }
         };
+        mOnSelectionChangeListener = new UBBEditText.OnSelectionChangeListener() {
+            @Override
+            public void onSelectionChanged(int start, int end) {
+                if (start != end) {
+                    showUnselect();
+                } else {
+                    showSelectAll();
+                }
+            }
+        };
     }
 
     private void hideEmot() {
@@ -355,6 +358,13 @@ public class ReplyActivity extends ActivityFramework {
         reply_input.setUBBText(AcFunRead.getInstance().readString("replyText", ""));
     }
 
+    private void selectAll() {
+        if (reply_input.getText().length() > 0) {
+            reply_input.selectAllWithAction();
+            showUnselect();
+        }
+    }
+
     @Override
     public void setLayout() {
         setContentView(R.layout.activity_reply);
@@ -366,8 +376,18 @@ public class ReplyActivity extends ActivityFramework {
         reply_style_emot_off.setVisibility(View.GONE);
     }
 
+    private void showSelectAll() {
+        reply_selectall.setVisibility(View.VISIBLE);
+        reply_unselect.setVisibility(View.GONE);
+    }
+
     private void showSoftInputMethod() {
         ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).showSoftInput(reply_input, 0);
+    }
+
+    private void showUnselect() {
+        reply_selectall.setVisibility(View.GONE);
+        reply_unselect.setVisibility(View.VISIBLE);
     }
 
     @Override

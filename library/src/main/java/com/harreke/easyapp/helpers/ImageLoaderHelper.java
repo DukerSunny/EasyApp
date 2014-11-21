@@ -22,6 +22,6 @@ public class ImageLoaderHelper {
     }
 
     public static IRequestExecutor loadImage(ImageView image, String imageUrl) {
-        return ImageExecutorConfig.create(image, imageUrl, null);
+        return loadImage(image, imageUrl, null);
     }
 }

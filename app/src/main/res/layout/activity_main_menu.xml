@@ -43,7 +43,8 @@
         style="@style/mw.h"
         android:layout_marginTop="16dp"
         android:background="@drawable/button_transparent"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="48dp"
@@ -184,7 +185,8 @@
         <LinearLayout
             android:id="@+id/menu_pattern"
             style="@style/mmw.h"
-            android:background="@drawable/button_transparent">
+            android:background="@drawable/button_transparent"
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="32dp"

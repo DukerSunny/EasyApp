@@ -36,4 +36,12 @@
         <item>40</item>
     </integer-array>
 
+    <string-array name="comment_text_size">
+        <item>12</item>
+        <item>14</item>
+        <item>16</item>
+        <item>18</item>
+        <item>20</item>
+    </string-array>
+
 </resources>

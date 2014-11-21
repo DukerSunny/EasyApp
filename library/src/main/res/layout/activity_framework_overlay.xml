@@ -28,7 +28,7 @@
             android:id="@+id/framework_actionbar_shadow"
             android:layout_width="match_parent"
             android:layout_height="6dp"
-            android:src="@drawable/shape_shadow"/>
+            android:src="@drawable/shape_shadow_horizontal"/>
 
     </LinearLayout>
 

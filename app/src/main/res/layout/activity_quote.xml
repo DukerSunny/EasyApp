@@ -7,8 +7,10 @@
     <ListView
         android:id="@+id/quote_list"
         style="@style/mm"
-        android:divider="@color/Transparent"
+        android:divider="@drawable/divider_horizontal_dot"
+        android:dividerHeight="1px"
         android:drawSelectorOnTop="true"
-        android:listSelector="@drawable/button_transparent"/>
+        android:listSelector="@drawable/button_transparent"
+        android:scrollbars="none"/>
 
 </FrameLayout>

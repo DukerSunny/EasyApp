@@ -2,6 +2,7 @@ package com.harreke.easyapp.frameworks.bases.application;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -23,10 +24,6 @@ public class ApplicationFramework extends Application {
      */
     public static final String DIR_ASSETS = "assets";
     /**
-     * 缓存目录
-     */
-    public static final String DIR_CACHES = "caches";
-    /**
      * 数据库目录
      */
     public static final String DIR_DATABASES = "databases";
@@ -35,14 +32,19 @@ public class ApplicationFramework extends Application {
      */
     public static final String DIR_MISCS = "miscs";
     /**
+     * 缓存目录
+     */
+    public static final String DIR_TEMPS = "temps";
+    /**
      * app临时目录
      */
     public static String CacheDir;
     public static float Density;
+    public static String StorageDir;
     private static final String TAG = "ApplicationFramework";
     private boolean mAssetsEnabled = false;
-    private boolean mCachesEnabled = false;
     private boolean mMiscsEnabled = false;
+    private boolean mTempsEnabled = false;
 
     /**
      * 将指定附件拷贝至设备内存
@@ -62,7 +64,7 @@ public class ApplicationFramework extends Application {
         File file;
         boolean success = false;
         if (mAssetsEnabled && assetName != null && assetName.length() > 0 && targetPath != null) {
-            file = new File(CacheDir + "/" + DIR_ASSETS + "/" + targetPath + "/" + assetName);
+            file = new File(CacheDir + "/" + DIR_ASSETS + "/" + targetPath + (targetPath.length() == 0 ? "" : "/") + assetName);
             try {
                 if (!file.exists() || file.createNewFile() || file.canWrite()) {
                     FileUtil.copyFile(getAssets().open(assetName), new FileOutputStream(file));
@@ -86,7 +88,7 @@ public class ApplicationFramework extends Application {
      *
      * @return 是否创建成功
      */
-    public final boolean createDir(String dir) {
+    public final boolean createCacheDir(String dir) {
         File file;
         boolean success = true;
 
@@ -94,11 +96,29 @@ public class ApplicationFramework extends Application {
         if (!file.exists()) {
             if (!file.mkdir()) {
                 success = false;
-                Log.e(TAG, "Cannot create \"" + dir + "\" directory!");
+                Log.e(TAG, "Cannot create cache/" + dir + " directory!");
             }
         } else if (!file.isDirectory()) {
             success = false;
-            Log.e(TAG, "Cannot access \"" + dir + "\" as directory!");
+            Log.e(TAG, "Cannot access cache/" + dir + " as directory!");
+        }
+
+        return success;
+    }
+
+    public final boolean createStorageDir(String dir) {
+        File file;
+        boolean success = true;
+
+        file = new File(StorageDir + "/" + dir);
+        if (!file.exists()) {
+            if (!file.mkdir()) {
+                success = false;
+                Log.e(TAG, "Cannot create storage/" + dir + " directory!");
+            }
+        } else if (!file.isDirectory()) {
+            success = false;
+            Log.e(TAG, "Cannot access storage/" + dir + " as directory!");
         }
 
         return success;
@@ -118,15 +138,6 @@ public class ApplicationFramework extends Application {
     }
 
     /**
-     * 判断缓存目录是否可用
-     *
-     * @return 缓存目录是否可用
-     */
-    public boolean isCachesEnabled() {
-        return mCachesEnabled;
-    }
-
-    /**
      * 判断杂项目录是否可用
      *
      * @return 杂项目录是否可用
@@ -135,16 +146,26 @@ public class ApplicationFramework extends Application {
         return mMiscsEnabled;
     }
 
+    /**
+     * 判断缓存目录是否可用
+     *
+     * @return 缓存目录是否可用
+     */
+    public boolean isTempsEnabled() {
+        return mTempsEnabled;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
 
         Density = getResources().getDisplayMetrics().density;
         CacheDir = getCacheDir().getAbsolutePath();
+        StorageDir = Environment.getExternalStorageDirectory().getAbsolutePath();
 
-        mAssetsEnabled = createDir(DIR_ASSETS);
-        mCachesEnabled = createDir(DIR_CACHES);
-        mMiscsEnabled = createDir(DIR_MISCS);
+        mAssetsEnabled = createCacheDir(DIR_ASSETS);
+        mTempsEnabled = createCacheDir(DIR_TEMPS);
+        mMiscsEnabled = createCacheDir(DIR_MISCS);
 
         ImageExecutorConfig.config(this);
     }

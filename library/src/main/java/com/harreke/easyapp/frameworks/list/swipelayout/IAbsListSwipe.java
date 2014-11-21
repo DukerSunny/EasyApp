@@ -2,7 +2,6 @@ package com.harreke.easyapp.frameworks.list.swipelayout;
 
 import android.view.View;
 
-import com.daimajia.swipe.SwipeLayout;
 import com.harreke.easyapp.holders.abslistview.IAbsListHolder;
 
 /**
@@ -27,4 +26,16 @@ public interface IAbsListSwipe<ITEM, HOLDER extends IAbsListHolder<ITEM>> {
      * @return 项目视图
      */
     public View createView();
+
+    /**
+     * 填充数据
+     *
+     * @param position
+     *         项目位置
+     * @param holder
+     *         项目视图容器
+     * @param item
+     *         项目
+     */
+    public void setItem(int position, HOLDER holder, ITEM item);
 }

@@ -1,6 +1,7 @@
 package tv.acfun.read.holders;
 
 import android.text.method.LinkMovementMethod;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
@@ -95,6 +96,10 @@ public class CommentQuoteHolder implements IAbsListHolder<Conversion> {
 
     public final void setOnUserClickListener(View.OnClickListener onUserClickListener) {
         comment_quote_swipe_user.setOnClickListener(onUserClickListener);
+    }
+
+    public final void setTextSize(int textSize) {
+        comment_quote_text.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
     }
 
     public void show() {

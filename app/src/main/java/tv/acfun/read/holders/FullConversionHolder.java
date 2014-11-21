@@ -57,7 +57,7 @@ public class FullConversionHolder implements IAbsListHolder<FullConversion> {
         }
     };
 
-    public FullConversionHolder(View convertView, int maxQuoteCount, View.OnClickListener onUserClickListener,
+    public FullConversionHolder(View convertView, int textSize, int maxQuoteCount, View.OnClickListener onUserClickListener,
             View.OnClickListener onCopyClickListener, View.OnClickListener onReplyClickListener,
             View.OnClickListener onQuoteExpandClickListener) {
         Context context = convertView.getContext();
@@ -73,6 +73,7 @@ public class FullConversionHolder implements IAbsListHolder<FullConversion> {
             quoteView = View.inflate(context, R.layout.item_comment_quote, null);
             comment_quotes.addView(quoteView);
             mCommentQuotes[i] = new CommentQuoteHolder(quoteView);
+            mCommentQuotes[i].setTextSize(textSize);
             mCommentQuotes[i].setOnOpenClickListener(mOnOpenClickListener);
             mCommentQuotes[i].setOnCloseClickListener(mOnCloseClickListener);
             mCommentQuotes[i].setOnUserClickListener(onUserClickListener);
@@ -81,6 +82,7 @@ public class FullConversionHolder implements IAbsListHolder<FullConversion> {
         }
 
         mCommentFloor = new CommentFloorHolder(convertView);
+        mCommentFloor.setTextSize(textSize);
         mCommentFloor.setOnOpenClickListener(mOnOpenClickListener);
         mCommentFloor.setOnCloseClickListener(mOnCloseClickListener);
         mCommentFloor.setOnUserClickListener(onUserClickListener);

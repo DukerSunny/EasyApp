@@ -21,6 +21,7 @@ public class EmotHolder implements IAbsListHolder<String> {
     @Override
     public void setItem(int position, String emotName) {
         ImageLoaderHelper.loadImage(mEmot,
-                "file://" + AcFunRead.CacheDir + "/" + AcFunRead.DIR_ASSETS + "/" + emotName + "/" + (position < 9 ? "0" : "") + (position + 1));
+                "file://" + AcFunRead.CacheDir + "/" + AcFunRead.DIR_ASSETS + "/" + emotName + "/" + (position < 9 ? "0" : "") +
+                        (position + 1));
     }
 }

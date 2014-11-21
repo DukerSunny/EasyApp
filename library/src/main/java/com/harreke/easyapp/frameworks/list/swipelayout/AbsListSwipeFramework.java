@@ -95,6 +95,14 @@ public abstract class AbsListSwipeFramework<ITEM, HOLDER extends IAbsListHolder<
         }
     }
 
+    public final void closeAll() {
+        int i;
+
+        for (i = 0; i < getItemCount(); i++) {
+            mAdapter.closeItem(i);
+        }
+    }
+
     /**
      * 获得条目
      *
@@ -175,6 +183,11 @@ public abstract class AbsListSwipeFramework<ITEM, HOLDER extends IAbsListHolder<
         mAdapter.setEnabled(enabled);
     }
 
+    @Override
+    public void setItem(int position, HOLDER holder, ITEM item) {
+        holder.setItem(position, item);
+    }
+
     /**
      * 设置列表视图
      *
@@ -224,16 +237,17 @@ public abstract class AbsListSwipeFramework<ITEM, HOLDER extends IAbsListHolder<
         public void fillValues(int position, View convertView) {
             HOLDER holder = (HOLDER) convertView.getTag();
 
-            holder.setItem(position, getItem(position));
+            setItem(position, holder, getItem(position));
         }
 
         @Override
         public View generateView(int position, ViewGroup parent) {
-            SwipeLayout convertView = (SwipeLayout) createView();
+            View convertView = createView();
+            SwipeLayout swipeLayout = (SwipeLayout) createView().findViewById(mSwipeLayoutId);
             HOLDER holder = createHolder(convertView);
 
-            convertView.addSwipeListener(AbsListSwipeFramework.this);
-            convertView.setShowMode(mShowMode);
+            swipeLayout.addSwipeListener(AbsListSwipeFramework.this);
+            swipeLayout.setShowMode(mShowMode);
             convertView.setTag(holder);
 
             return convertView;

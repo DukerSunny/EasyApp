@@ -3,6 +3,8 @@
 
     <string name="app_name">Ac阅读</string>
     <string name="app_profile">账号信息</string>
+    <string name="app_imageview">浏览图片</string>
+    <string name="app_quote">浏览盖楼</string>
 
     <string name="app_cancel">取消</string>
     <string name="app_dropdown">▼</string>
@@ -112,9 +114,16 @@
     <string name="search_tooshort">关键字过短，请重新输入！</string>
 
     <string name="setting_aboutus">关于我们</string>
-    <string name="setting_autoloadimage">2G/3G网络下自动加载图片</string>
+    <string name="setting_autoloadimage">移动网络加载图片</string>
+    <string name="setting_maxquotecount">评论最大楼层</string>
+    <string name="setting_maxquotecount_toosmall">楼层不能为负！</string>
+    <string name="setting_maxquotecount_toobig">楼层过高可能影响性能！</string>
     <string name="setting_misc">综合</string>
     <string name="setting_other">其他</string>
+    <string name="setting_restoredefault">恢复默认</string>
+    <string name="setting_textfont">界面字体</string>
+    <string name="setting_textfont_default">系统默认字体</string>
+    <string name="setting_textsize">评论默认字号</string>
 
     <string name="share_title">分享</string>
     <string name="share_content">我从%1$s分享了视频“%2$s”（UP主：%3$s，链接：%4$s）</string>

@@ -77,6 +77,11 @@ public abstract class PopupAbsListHelper<ITEM, HOLDER extends IAbsListHolder<ITE
         return popupWindow.isShowing();
     }
 
+    @Override
+    public void setItem(int position, HOLDER holder, ITEM item) {
+        holder.setItem(position, item);
+    }
+
     public final void setOnDismissListener(PopupWindow.OnDismissListener dismissListener) {
         popupWindow.setOnDismissListener(dismissListener);
     }
@@ -111,7 +116,7 @@ public abstract class PopupAbsListHelper<ITEM, HOLDER extends IAbsListHolder<ITE
                 holder = createHolder(convertView);
                 convertView.setTag(holder);
             }
-            holder.setItem(position, item);
+            setItem(position, holder, item);
 
             return convertView;
         }

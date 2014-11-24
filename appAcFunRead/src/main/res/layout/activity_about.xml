@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    style="@style/mm.v"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="8dp">
+
+    <LinearLayout
+        style="@style/mw.v"
+        android:background="@drawable/whitecard"
+        android:padding="8dp">
+
+        <LinearLayout
+            style="@style/mw.h"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:src="@drawable/ic_launcher"/>
+
+            <LinearLayout
+                style="@style/mw.v"
+                android:layout_marginLeft="8dp">
+
+                <TextView
+                    android:id="@+id/about_version"
+                    style="@style/mw"
+                    android:text="@string/app_name"
+                    android:textColor="@color/Title"
+                    android:textSize="20dp"/>
+
+                <TextView
+                    style="@style/mw"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/about_author"
+                    android:textColor="@color/Title"
+                    android:textSize="14dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            style="@style/mw"
+            android:layout_marginTop="8dp"
+            android:text="@string/about_info"
+            android:textColor="@color/Content"
+            android:textSize="16dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/mw.v"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/whitecard"
+        android:padding="8dp">
+
+        <TextView
+            style="@style/mw"
+            android:text="@string/about_thanks"
+            android:textColor="@color/Red"
+            android:textSize="18dp"
+            android:textStyle="bold"/>
+
+        <TextView
+            style="@style/mw"
+            android:layout_marginTop="8dp"
+            android:text="@string/about_list"
+            android:textColor="@color/Content"
+            android:textSize="16dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

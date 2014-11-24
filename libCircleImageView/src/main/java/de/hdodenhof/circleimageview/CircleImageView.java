@@ -19,34 +19,26 @@ import android.widget.ImageView;
 
 public class CircleImageView extends ImageView {
 
-    private static final ScaleType SCALE_TYPE = ScaleType.CENTER_CROP;
-
     private static final Bitmap.Config BITMAP_CONFIG = Bitmap.Config.ARGB_8888;
     private static final int COLORDRAWABLE_DIMENSION = 1;
-
-    private static final int DEFAULT_BORDER_WIDTH = 0;
     private static final int DEFAULT_BORDER_COLOR = Color.BLACK;
-
-    private final RectF mDrawableRect = new RectF();
-    private final RectF mBorderRect = new RectF();
-
-    private final Matrix mShaderMatrix = new Matrix();
-    private final Paint mBitmapPaint = new Paint();
-    private final Paint mBorderPaint = new Paint();
-
     private int mBorderColor = DEFAULT_BORDER_COLOR;
+    private static final int DEFAULT_BORDER_WIDTH = 0;
     private int mBorderWidth = DEFAULT_BORDER_WIDTH;
-
+    private static final ScaleType SCALE_TYPE = ScaleType.CENTER_CROP;
     private Bitmap mBitmap;
+    private int mBitmapHeight;
+    private final Paint mBitmapPaint = new Paint();
     private BitmapShader mBitmapShader;
     private int mBitmapWidth;
-    private int mBitmapHeight;
-
-    private float mDrawableRadius;
+    private final Paint mBorderPaint = new Paint();
     private float mBorderRadius;
-
+    private final RectF mBorderRect = new RectF();
+    private float mDrawableRadius;
+    private final RectF mDrawableRect = new RectF();
     private boolean mReady;
     private boolean mSetupPending;
+    private final Matrix mShaderMatrix = new Matrix();
 
     public CircleImageView(Context context) {
         super(context);
@@ -71,14 +63,39 @@ public class CircleImageView extends ImageView {
         init();
     }
 
-    private void init() {
-        super.setScaleType(SCALE_TYPE);
-        mReady = true;
-
-        if (mSetupPending) {
-            setup();
-            mSetupPending = false;
+    private Bitmap getBitmapFromDrawable(Drawable drawable) {
+        if (drawable == null) {
+            return null;
         }
+
+        if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable) drawable).getBitmap();
+        }
+
+        try {
+            Bitmap bitmap;
+
+            if (drawable instanceof ColorDrawable) {
+                bitmap = Bitmap.createBitmap(COLORDRAWABLE_DIMENSION, COLORDRAWABLE_DIMENSION, BITMAP_CONFIG);
+            } else {
+                bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), BITMAP_CONFIG);
+            }
+
+            Canvas canvas = new Canvas(bitmap);
+            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            drawable.draw(canvas);
+            return bitmap;
+        } catch (OutOfMemoryError e) {
+            return null;
+        }
+    }
+
+    public int getBorderColor() {
+        return mBorderColor;
+    }
+
+    public int getBorderWidth() {
+        return mBorderWidth;
     }
 
     @Override
@@ -86,10 +103,13 @@ public class CircleImageView extends ImageView {
         return SCALE_TYPE;
     }
 
-    @Override
-    public void setScaleType(ScaleType scaleType) {
-        if (scaleType != SCALE_TYPE) {
-            throw new IllegalArgumentException(String.format("ScaleType %s not supported.", scaleType));
+    private void init() {
+        super.setScaleType(SCALE_TYPE);
+        mReady = true;
+
+        if (mSetupPending) {
+            setup();
+            mSetupPending = false;
         }
     }
 
@@ -111,10 +131,6 @@ public class CircleImageView extends ImageView {
         setup();
     }
 
-    public int getBorderColor() {
-        return mBorderColor;
-    }
-
     public void setBorderColor(int borderColor) {
         if (borderColor == mBorderColor) {
             return;
@@ -123,10 +139,6 @@ public class CircleImageView extends ImageView {
         mBorderColor = borderColor;
         mBorderPaint.setColor(mBorderColor);
         invalidate();
-    }
-
-    public int getBorderWidth() {
-        return mBorderWidth;
     }
 
     public void setBorderWidth(int borderWidth) {
@@ -166,30 +178,10 @@ public class CircleImageView extends ImageView {
         setup();
     }
 
-    private Bitmap getBitmapFromDrawable(Drawable drawable) {
-        if (drawable == null) {
-            return null;
-        }
-
-        if (drawable instanceof BitmapDrawable) {
-            return ((BitmapDrawable) drawable).getBitmap();
-        }
-
-        try {
-            Bitmap bitmap;
-
-            if (drawable instanceof ColorDrawable) {
-                bitmap = Bitmap.createBitmap(COLORDRAWABLE_DIMENSION, COLORDRAWABLE_DIMENSION, BITMAP_CONFIG);
-            } else {
-                bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), BITMAP_CONFIG);
-            }
-
-            Canvas canvas = new Canvas(bitmap);
-            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-            drawable.draw(canvas);
-            return bitmap;
-        } catch (OutOfMemoryError e) {
-            return null;
+    @Override
+    public void setScaleType(ScaleType scaleType) {
+        if (scaleType != SCALE_TYPE) {
+            throw new IllegalArgumentException(String.format("ScaleType %s not supported.", scaleType));
         }
     }
 

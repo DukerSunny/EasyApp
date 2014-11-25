@@ -2,113 +2,158 @@
 <LinearLayout
     style="@style/mm.v"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:padding="8dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/White"
-        android:divider="@drawable/divider_vertical_dot"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:showDividers="middle">
-
-        <ImageView
-            android:id="@+id/reply_style_bold"
-            style="@style/mmw"
-            android:background="@drawable/button_transparent"
-            android:src="@drawable/image_style_bold"/>
-
-        <ImageView
-            android:id="@+id/reply_style_italic"
-            style="@style/mmw"
-            android:background="@drawable/button_transparent"
-            android:src="@drawable/image_style_italic"
-            android:visibility="gone"/>
-
-        <ImageView
-            android:id="@+id/reply_style_underline"
-            style="@style/mmw"
-            android:background="@drawable/button_transparent"
-            android:src="@drawable/image_style_underline"/>
-
-        <ImageView
-            android:id="@+id/reply_style_strikethrough"
-            style="@style/mmw"
-            android:background="@drawable/button_transparent"
-            android:src="@drawable/image_style_strikethrough"/>
+    <android.support.v7.widget.CardView
+        style="@style/mw">
 
         <LinearLayout
-            android:id="@+id/reply_style_color"
-            style="@style/mmw"
-            android:background="@drawable/button_transparent"
-            android:gravity="center_vertical">
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:divider="@drawable/shape_divider_vertical"
+            android:dividerPadding="8dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:showDividers="middle">
 
-            <FrameLayout
-                android:id="@+id/reply_style_color_indicator"
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginRight="4dp"
-                android:layout_weight="1"
-                android:background="@color/Content"/>
+            <com.gc.materialdesign.views.LayoutRipple
+                android:id="@+id/reply_style_bold"
+                style="@style/mmw">
 
-            <TextView
-                android:id="@+id/reply_style_color_picker"
+                <ImageView
+                    style="@style/mm"
+                    android:src="@drawable/image_style_bold"/>
+
+            </com.gc.materialdesign.views.LayoutRipple>
+
+            <com.gc.materialdesign.views.LayoutRipple
+                android:id="@+id/reply_style_italic"
                 style="@style/mmw"
-                android:background="@drawable/button_transparent"
-                android:gravity="center"
-                android:src="@drawable/image_style_bold"
-                android:text="@string/app_dropdown"
-                android:textColor="@color/Black"
-                android:textSize="16dp"/>
+                android:visibility="gone">
+
+                <ImageView
+                    style="@style/mm"
+                    android:src="@drawable/image_style_italic"/>
+
+            </com.gc.materialdesign.views.LayoutRipple>
+
+            <com.gc.materialdesign.views.LayoutRipple
+                android:id="@+id/reply_style_underline"
+                style="@style/mmw">
+
+                <ImageView
+                    style="@style/mm"
+                    android:src="@drawable/image_style_underline"/>
+
+            </com.gc.materialdesign.views.LayoutRipple>
+
+            <com.gc.materialdesign.views.LayoutRipple
+                android:id="@+id/reply_style_strikethrough"
+                style="@style/mmw">
+
+                <ImageView
+                    style="@style/mm"
+                    android:src="@drawable/image_style_strikethrough"/>
+
+            </com.gc.materialdesign.views.LayoutRipple>
+
+            <LinearLayout
+                style="@style/mmw.h">
+
+                <com.gc.materialdesign.views.LayoutRipple
+                    android:id="@+id/reply_style_color"
+                    style="@style/mmw"
+                    android:gravity="center_vertical">
+
+                    <FrameLayout
+                        android:id="@+id/reply_style_color_indicator"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginRight="4dp"
+                        android:layout_weight="1"
+                        android:background="@color/Content"/>
+
+                </com.gc.materialdesign.views.LayoutRipple>
+
+                <com.gc.materialdesign.views.LayoutRipple
+                    android:id="@+id/reply_style_color_picker"
+                    style="@style/mmw">
+
+                    <TextView
+                        style="@style/mm"
+                        android:gravity="center"
+                        android:src="@drawable/image_style_bold"
+                        android:text="@string/app_dropdown"
+                        android:textColor="@color/Black"
+                        android:textSize="16dp"/>
+
+                </com.gc.materialdesign.views.LayoutRipple>
+
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/mmw">
+
+                <com.gc.materialdesign.views.LayoutRipple
+                    android:id="@+id/reply_style_size"
+                    style="@style/mmw"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/reply_style_size_indicator"
+                        style="@style/mww"
+                        android:gravity="center"
+                        android:src="@drawable/image_style_bold"
+                        android:text="@string/reply_size"
+                        android:textAppearance="@style/Subhead"/>
+                </com.gc.materialdesign.views.LayoutRipple>
+
+                <com.gc.materialdesign.views.LayoutRipple
+                    android:id="@+id/reply_style_size_picker"
+                    style="@style/mmw">
+
+                    <TextView
+                        style="@style/mmw"
+                        android:gravity="center"
+                        android:src="@drawable/image_style_bold"
+                        android:text="@string/app_dropdown"
+                        android:textColor="@color/Black"
+                        android:textSize="16dp"/>
+
+                </com.gc.materialdesign.views.LayoutRipple>
+
+            </LinearLayout>
+
+            <com.gc.materialdesign.views.LayoutRipple
+                android:id="@+id/reply_style_emot_off"
+                style="@style/mmw">
+
+                <ImageView
+                    style="@style/mm"
+                    android:src="@drawable/image_style_emot"/>
+
+            </com.gc.materialdesign.views.LayoutRipple>
+
+            <com.gc.materialdesign.views.LayoutRipple
+                android:id="@+id/reply_style_emot_on"
+                style="@style/mmw"
+                android:visibility="gone">
+
+                <ImageView
+                    style="@style/mm"
+                    android:background="@color/Accent"
+                    android:src="@drawable/image_style_emot_inverse"/>
+
+            </com.gc.materialdesign.views.LayoutRipple>
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/reply_style_size"
-            style="@style/mmw"
-            android:background="@drawable/button_transparent"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:id="@+id/reply_style_size_indicator"
-                style="@style/mww"
-                android:gravity="center"
-                android:src="@drawable/image_style_bold"
-                android:text="@string/reply_size"
-                android:textColor="@color/Black"
-                android:textSize="16dp"/>
-
-            <TextView
-                android:id="@+id/reply_style_size_picker"
-                style="@style/mmw"
-                android:background="@drawable/button_transparent"
-                android:gravity="center"
-                android:src="@drawable/image_style_bold"
-                android:text="@string/app_dropdown"
-                android:textColor="@color/Black"
-                android:textSize="16dp"/>
-
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/reply_style_emot_off"
-            style="@style/mmw"
-            android:background="@drawable/button_transparent"
-            android:src="@drawable/image_style_emot"/>
-
-        <ImageView
-            android:id="@+id/reply_style_emot_on"
-            style="@style/mmw"
-            android:background="@drawable/button_themetransparent"
-            android:src="@drawable/image_style_emot"
-            android:visibility="gone"/>
-
-    </LinearLayout>
+    </android.support.v7.widget.CardView>
 
     <FrameLayout
-        style="@style/mmw">
+        style="@style/mmw"
+        android:padding="8dp">
 
         <tv.acfun.read.widgets.UBBEditText
             android:id="@+id/reply_input"
@@ -117,33 +162,29 @@
             android:gravity="start|top"
             android:hint="@string/reply_input"
             android:padding="8dp"
-            android:textColor="@color/Content"
-            android:textColorHint="@color/Assist"
-            android:textSize="16dp"/>
+            android:textAppearance="@style/Body1"
+            android:textColorHint="@color/Assist"/>
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="6dp"
-            android:src="@drawable/shape_shadow_horizontal"/>
-
-        <ImageView
+        <com.gc.materialdesign.views.ButtonFloat
             android:id="@+id/reply_selectall"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
-            android:background="@drawable/button_floating"
-            android:src="@drawable/image_selectall"/>
+            android:background="@color/Primary"
+            app:iconFloat="@drawable/image_selectall_inverse"
+            app:rippleColor="@color/Primary_Dark"/>
 
-        <ImageView
+        <com.gc.materialdesign.views.ButtonFloat
             android:id="@+id/reply_unselect"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
-            android:background="@drawable/button_floating"
-            android:src="@drawable/image_unselect"
-            android:visibility="gone"/>
+            android:background="@color/Primary"
+            android:visibility="gone"
+            app:iconFloat="@drawable/image_unselect_inverse"
+            app:rippleColor="@color/Primary_Dark"/>
 
     </FrameLayout>
 

@@ -67,11 +67,6 @@ public class ChatActivity extends ActivityFramework {
     }
 
     @Override
-    public void onActionBarItemClick(int id, View item) {
-
-    }
-
-    @Override
     public void onBackPressed() {
         exit(false);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);

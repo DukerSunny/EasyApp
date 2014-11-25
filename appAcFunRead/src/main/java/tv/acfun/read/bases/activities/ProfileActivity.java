@@ -15,6 +15,7 @@ import com.harreke.easyapp.tools.GsonUtil;
 import com.harreke.easyapp.widgets.InfoView;
 import com.umeng.analytics.MobclickAgent;
 
+import tv.acfun.read.BuildConfig;
 import tv.acfun.read.R;
 import tv.acfun.read.api.API;
 import tv.acfun.read.bases.application.AcFunRead;
@@ -156,6 +157,12 @@ public class ProfileActivity extends ActivityFramework {
         }
     }
 
+    @Override
+    public void createMenu() {
+        setToolbarTitle(R.string.app_profile);
+        setToolbarNavigation(R.drawable.image_back_inverse);
+    }
+
     private void doLogout() {
         AcFunRead acFunRead = AcFunRead.getInstance();
 
@@ -166,8 +173,6 @@ public class ProfileActivity extends ActivityFramework {
 
     @Override
     public void enquiryViews() {
-        setActionBarTitle(R.string.app_profile);
-
         profile_user_avatar = (ImageView) findViewById(R.id.profile_user_avatar);
         profile_user_name = (TextView) findViewById(R.id.profile_user_name);
         profile_user_id = (TextView) findViewById(R.id.profile_user_id);
@@ -201,7 +206,6 @@ public class ProfileActivity extends ActivityFramework {
                     case R.id.profile_user_contributes:
                         start(ContributionActivity.create(getActivity(), mUserId,
                                 mSelfProfile ? getString(R.string.user_refer_mine) : mFullUser.getUsername()));
-                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                         break;
                     case R.id.profile_user_chats:
                         //                        start(ChatActivity.create(getActivity(), AcFunRead.getInstance().readFullUser().getUserId(), mUserId));
@@ -261,26 +265,19 @@ public class ProfileActivity extends ActivityFramework {
     }
 
     @Override
-    public void onActionBarItemClick(int id, View item) {
-
-    }
-
-    @Override
-    public void onBackPressed() {
-        exit(false);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
-        MobclickAgent.onPause(this);
+        if (!BuildConfig.DEBUG) {
+            MobclickAgent.onPause(this);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        MobclickAgent.onResume(this);
+        if (!BuildConfig.DEBUG) {
+            MobclickAgent.onResume(this);
+        }
     }
 
     @Override

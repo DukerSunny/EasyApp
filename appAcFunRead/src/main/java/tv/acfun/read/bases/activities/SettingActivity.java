@@ -20,6 +20,7 @@ import com.umeng.analytics.MobclickAgent;
 import java.util.ArrayList;
 import java.util.List;
 
+import tv.acfun.read.BuildConfig;
 import tv.acfun.read.R;
 import tv.acfun.read.bases.application.AcFunRead;
 import tv.acfun.read.beans.Setting;
@@ -70,9 +71,13 @@ public class SettingActivity extends ActivityFramework {
     }
 
     @Override
-    public void enquiryViews() {
-        setActionBarTitle(R.string.menu_setting);
+    public void createMenu() {
+        setToolbarTitle(R.string.menu_setting);
+        setToolbarNavigation(R.drawable.image_back_inverse);
+    }
 
+    @Override
+    public void enquiryViews() {
         setting_autoloadimage = (ChildTabView) findViewById(R.id.setting_autoloadimage);
         setting_maxquotecount = (EditText) findViewById(R.id.setting_maxquotecount);
         setting_maxquotecount_ok = findViewById(R.id.setting_maxquotecount_ok);
@@ -173,10 +178,6 @@ public class SettingActivity extends ActivityFramework {
     }
 
     @Override
-    public void onActionBarItemClick(int id, View item) {
-    }
-
-    @Override
     public void onBackPressed() {
         exit(false);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
@@ -185,13 +186,17 @@ public class SettingActivity extends ActivityFramework {
     @Override
     protected void onPause() {
         super.onPause();
-        MobclickAgent.onPause(this);
+        if (!BuildConfig.DEBUG) {
+            MobclickAgent.onPause(this);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        MobclickAgent.onResume(this);
+        if (!BuildConfig.DEBUG) {
+            MobclickAgent.onResume(this);
+        }
     }
 
     private void readFonts() {

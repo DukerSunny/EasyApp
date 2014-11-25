@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.harreke.easyapp.adapters.fragment.FragmentPageAdapter;
@@ -16,6 +17,7 @@ import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
 import com.umeng.analytics.MobclickAgent;
 
+import tv.acfun.read.BuildConfig;
 import tv.acfun.read.R;
 import tv.acfun.read.bases.application.AcFunRead;
 import tv.acfun.read.bases.fragments.CommentFragment;
@@ -63,10 +65,14 @@ public class CommentActivity extends ActivityFramework implements OnCommentListe
     }
 
     @Override
-    public void enquiryViews() {
-        setActionBarTitle("ac" + mContentId);
-        addActionBarImageItem(0, R.drawable.image_reply);
+    public void createMenu() {
+        setToolbarTitle("ac" + mContentId);
+        setToolbarNavigation(R.drawable.image_back_inverse);
+        addToolbarItem(0, R.string.comment_reply, R.drawable.image_reply);
+    }
 
+    @Override
+    public void enquiryViews() {
         comment_pager = (ViewPager) findViewById(R.id.comment_pager);
         comment_pager_indicator = (PagerTabStrip) findViewById(R.id.comment_pager_indicator);
 
@@ -112,15 +118,6 @@ public class CommentActivity extends ActivityFramework implements OnCommentListe
     }
 
     @Override
-    public void onActionBarItemClick(int id, View item) {
-        if (AcFunRead.getInstance().readFullUser() == null) {
-            mLoginHelper.show();
-        } else {
-            start(ReplyActivity.create(getActivity(), mContentId, 0, 0), 0);
-        }
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -137,9 +134,22 @@ public class CommentActivity extends ActivityFramework implements OnCommentListe
     }
 
     @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
+        if (AcFunRead.getInstance().readFullUser() == null) {
+            mLoginHelper.show();
+        } else {
+            start(ReplyActivity.create(getActivity(), mContentId, 0, 0), 0);
+        }
+
+        return false;
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
-        MobclickAgent.onPause(this);
+        if (!BuildConfig.DEBUG) {
+            MobclickAgent.onPause(this);
+        }
     }
 
     @Override
@@ -150,7 +160,9 @@ public class CommentActivity extends ActivityFramework implements OnCommentListe
     @Override
     protected void onResume() {
         super.onResume();
-        MobclickAgent.onResume(this);
+        if (!BuildConfig.DEBUG) {
+            MobclickAgent.onResume(this);
+        }
     }
 
     @Override

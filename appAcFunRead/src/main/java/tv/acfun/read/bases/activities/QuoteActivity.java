@@ -5,6 +5,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.harreke.easyapp.frameworks.bases.IFramework;
@@ -18,6 +19,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import java.util.List;
 
+import tv.acfun.read.BuildConfig;
 import tv.acfun.read.R;
 import tv.acfun.read.api.API;
 import tv.acfun.read.bases.application.AcFunRead;
@@ -93,11 +95,15 @@ public class QuoteActivity extends ActivityFramework {
     }
 
     @Override
+    public void createMenu() {
+        setToolbarTitle(R.string.comment_text);
+        setToolbarNavigation(R.drawable.image_back_inverse);
+        addToolbarItem(0, R.string.comment_reply, R.drawable.image_reply);
+    }
+
+    @Override
     public void enquiryViews() {
         View commentFloor = View.inflate(this, R.layout.item_comment_floor, null);
-
-        setActionBarTitle(R.string.comment_text);
-        addActionBarImageItem(0, R.drawable.image_reply);
 
         mCommentFloorHolder = new CommentFloorHolder(commentFloor);
         mCommentFloorHolder.setTextSize(mTextSize);
@@ -234,24 +240,30 @@ public class QuoteActivity extends ActivityFramework {
     }
 
     @Override
-    public void onActionBarItemClick(int id, View item) {
+    public boolean onMenuItemClick(MenuItem menuItem) {
         if (AcFunRead.getInstance().readFullUser() == null) {
             mLoginHelper.show();
         } else {
             start(ReplyActivity.create(getActivity(), mContentId, 0, 0), 0);
         }
+
+        return false;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        MobclickAgent.onPause(this);
+        if (!BuildConfig.DEBUG) {
+            MobclickAgent.onPause(this);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        MobclickAgent.onResume(this);
+        if (!BuildConfig.DEBUG) {
+            MobclickAgent.onResume(this);
+        }
     }
 
     private void openSwipe(int position) {

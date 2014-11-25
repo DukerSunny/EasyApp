@@ -1,16 +1,16 @@
-<LinearLayout
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout
+    android:id="@+id/main_drawer"
     style="@style/mm.v"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.jeremyfeinstein.slidingmenu.lib.SlidingMenu
-        android:id="@+id/main_slidingmenu"
-        style="@style/mm"
-        app:behindWidth="240dp"
-        app:shadowDrawable="@drawable/shape_shadow_vertical"
-        app:shadowWidth="6dp"
-        app:touchModeAbove="fullscreen"
-        app:viewAbove="@layout/activity_main_content"
-        app:viewBehind="@layout/activity_main_menu"/>
+    <include
+        layout="@layout/activity_main_content"/>
 
-</LinearLayout>
+    <include
+        layout="@layout/activity_main_menu"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"/>
+
+</android.support.v4.widget.DrawerLayout>

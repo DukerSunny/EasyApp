@@ -9,9 +9,9 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.harreke.easyapp.R;
-import com.harreke.easyapp.frameworks.bases.IActionBar;
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
+import com.harreke.easyapp.frameworks.bases.activity.IToolbar;
 import com.harreke.easyapp.helpers.RequestHelper;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
@@ -22,7 +22,7 @@ import com.harreke.easyapp.widgets.InfoView;
  *
  * Fragment框架
  */
-public abstract class FragmentFramework extends Fragment implements IFramework, IFragment, IActionBar {
+public abstract class FragmentFramework extends Fragment implements IFramework, IFragment, IToolbar {
     private static final String TAG = "FragmentFramework";
     private FrameLayout framework_content;
     private InfoView framework_info;
@@ -40,33 +40,6 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
     public FragmentFramework() {
     }
 
-    @Override
-    public void addActionBarImageItem(int id, int imageId) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.addActionBarImageItem(id, imageId);
-        }
-    }
-
-    @Override
-    public void addActionBarViewItem(int id, int layoutId, boolean clickable) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.addActionBarViewItem(id, layoutId, clickable);
-        }
-    }
-
-    @Override
-    public void addActionBarViewItem(int id, View item, boolean clickable) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.addActionBarViewItem(id, item, clickable);
-        }
-    }
-
     /**
      * 布局新增视图
      *
@@ -78,6 +51,24 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
     @Override
     public final void addContentView(View view, FrameLayout.LayoutParams params) {
         framework_content.addView(view, params);
+    }
+
+    @Override
+    public void addToolbarItem(int id, int titleId, int imageId) {
+        ActivityFramework activity = getActivityFramework();
+
+        if (activity != null) {
+            activity.addToolbarItem(id, titleId, imageId);
+        }
+    }
+
+    @Override
+    public void addToolbarViewItem(int id, int titleId, View view) {
+        ActivityFramework activity = getActivityFramework();
+
+        if (activity != null) {
+            activity.addToolbarViewItem(id, titleId, view);
+        }
     }
 
     /**
@@ -170,15 +161,6 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
         return framework_info;
     }
 
-    @Override
-    public void hideActionbarItem(int id) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.hideActionbarItem(id);
-        }
-    }
-
     /**
      * 隐藏Toast
      */
@@ -188,6 +170,15 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
 
         if (activity != null) {
             activity.hideToast();
+        }
+    }
+
+    @Override
+    public void hideToolbarItem(int id) {
+        ActivityFramework activity = getActivityFramework();
+
+        if (activity != null) {
+            activity.hideToolbarItem(id);
         }
     }
 
@@ -203,7 +194,7 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
 
     @Override
     public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_framework, null);
+        View root = inflater.inflate(R.layout.widget_framework, null);
 
         if (root != null) {
             framework_content = (FrameLayout) root.findViewById(R.id.framework_content);
@@ -245,24 +236,6 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
         if (!mCreated) {
             mCreated = true;
             startAction();
-        }
-    }
-
-    @Override
-    public void setActionBarTitle(String text) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.setActionBarTitle(text);
-        }
-    }
-
-    @Override
-    public void setActionBarTitle(int textId) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.setActionBarTitle(textId);
         }
     }
 
@@ -321,29 +294,29 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
     }
 
     @Override
-    public void showActionBarHome(boolean show) {
+    public void setToolbarNavigation(int imageId) {
         ActivityFramework activity = getActivityFramework();
 
         if (activity != null) {
-            activity.showActionBarHome(show);
+            activity.setToolbarNavigation(imageId);
         }
     }
 
     @Override
-    public void showActionBarItem(int id) {
+    public void setToolbarTitle(String text) {
         ActivityFramework activity = getActivityFramework();
 
         if (activity != null) {
-            activity.showActionBarItem(id);
+            activity.setToolbarTitle(text);
         }
     }
 
     @Override
-    public void showActionBarTitle(boolean show) {
+    public void setToolbarTitle(int textId) {
         ActivityFramework activity = getActivityFramework();
 
         if (activity != null) {
-            activity.showActionBarTitle(show);
+            activity.setToolbarTitle(textId);
         }
     }
 
@@ -397,6 +370,15 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
     @Override
     public final void showToast(int textId, boolean progress) {
         showToast(getString(textId), progress);
+    }
+
+    @Override
+    public void showToolbarItem(int id) {
+        ActivityFramework activity = getActivityFramework();
+
+        if (activity != null) {
+            activity.showToolbarItem(id);
+        }
     }
 
     /**

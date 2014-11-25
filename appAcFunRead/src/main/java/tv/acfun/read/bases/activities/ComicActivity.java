@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.os.Environment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -28,6 +29,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import tv.acfun.read.BuildConfig;
 import tv.acfun.read.R;
 import tv.acfun.read.bases.application.AcFunRead;
 import tv.acfun.read.helpers.ConnectionHelper;
@@ -127,14 +129,18 @@ public class ComicActivity extends ActivityFramework {
 
     @Override
     public void configActivity() {
-        setActionBarMode(ActionBarMode.Overlay);
+        setToolbarMode(ToolbarMode.Overlay);
+    }
+
+    @Override
+    public void createMenu() {
+        setToolbarTitle(R.string.app_imageview);
+        setToolbarNavigation(R.drawable.image_back_inverse);
+        addToolbarItem(0, R.string.comic_save, R.drawable.image_save);
     }
 
     @Override
     public void enquiryViews() {
-        setActionBarTitle(R.string.app_imageview);
-        addActionBarImageItem(0, R.drawable.image_save);
-
         comic_pager = (ViewPager) findViewById(R.id.comic_pager);
         comic_page = (TextView) findViewById(R.id.comic_page);
 
@@ -251,7 +257,14 @@ public class ComicActivity extends ActivityFramework {
     }
 
     @Override
-    public void onActionBarItemClick(int id, View item) {
+    protected void onDestroy() {
+        mSaveDialog.hide();
+        mOverwriteDialog.hide();
+        super.onDestroy();
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
         if (mSavePosition != -1 || mSaveFile != null) {
             showToast(getString(R.string.comic_save_downloading));
         } else {
@@ -260,25 +273,24 @@ public class ComicActivity extends ActivityFramework {
             comic_save_input.setSelection(comic_save_input.getText().length());
             mSaveDialog.show();
         }
-    }
 
-    @Override
-    protected void onDestroy() {
-        mSaveDialog.hide();
-        mOverwriteDialog.hide();
-        super.onDestroy();
+        return false;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        MobclickAgent.onPause(this);
+        if (!BuildConfig.DEBUG) {
+            MobclickAgent.onPause(this);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        MobclickAgent.onResume(this);
+        if (!BuildConfig.DEBUG) {
+            MobclickAgent.onResume(this);
+        }
     }
 
     private void saveBitmap() {
@@ -311,10 +323,10 @@ public class ComicActivity extends ActivityFramework {
     }
 
     private void toggleActionBar() {
-        if (isActionBarShowing()) {
-            hideActionBar();
+        if (isToolbarShowing()) {
+            hideToolbar();
         } else {
-            showActionBar();
+            showToolbar();
         }
     }
 

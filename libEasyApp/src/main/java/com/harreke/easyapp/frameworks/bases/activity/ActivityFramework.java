@@ -5,22 +5,22 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.view.LayoutInflater;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
 import com.github.johnpersano.supertoasts.SuperActivityToast;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.harreke.easyapp.R;
-import com.harreke.easyapp.frameworks.bases.IActionBar;
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.helpers.RequestHelper;
 import com.harreke.easyapp.receivers.ExitReceiver;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
 import com.harreke.easyapp.tools.NetUtil;
-import com.harreke.easyapp.widgets.ActionBarView;
 import com.harreke.easyapp.widgets.InfoView;
 
 /**
@@ -28,17 +28,15 @@ import com.harreke.easyapp.widgets.InfoView;
  *
  * Activity框架
  */
-public abstract class ActivityFramework extends FragmentActivity
-        implements IFramework, IActivity, IActionBar, ActionBarView.OnActionBarClickListener {
+public abstract class ActivityFramework extends ActionBarActivity
+        implements IFramework, IActivity, IToolbar, Toolbar.OnMenuItemClickListener {
     private static final String TAG = "ActivityFramework";
-    private ActionBarView framework_actionbar;
-    private View framework_actionbar_shadow;
     private FrameLayout framework_content;
     private InfoView framework_info;
-    private ActionBarMode mActionBarMode = ActionBarMode.Normal;
     private boolean mCreated = false;
     private ExitReceiver mExitReceiver = new ExitReceiver();
-    private View.OnClickListener mInfoClickListener = new View.OnClickListener() {
+    private Menu mMenu;
+    private View.OnClickListener mOnInfoClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (framework_info.isShowingRetry()) {
@@ -46,23 +44,17 @@ public abstract class ActivityFramework extends FragmentActivity
             }
         }
     };
+    private View.OnClickListener mOnNavigationClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            onToolbarNavigationClick();
+        }
+    };
     private RequestHelper mRequest = new RequestHelper();
     private SuperActivityToast mToast;
-
-    @Override
-    public void addActionBarImageItem(int id, int imageId) {
-        framework_actionbar.addActionBarImageItem(id, imageId);
-    }
-
-    @Override
-    public void addActionBarViewItem(int id, int layoutId, boolean clickable) {
-        framework_actionbar.addActionBarViewItem(id, layoutId, clickable);
-    }
-
-    @Override
-    public void addActionBarViewItem(int id, View item, boolean clickable) {
-        framework_actionbar.addActionBarViewItem(id, item, clickable);
-    }
+    private Toolbar mToolbar;
+    private ToolbarMode mToolbarMode = ToolbarMode.Linear;
+    private View mToolbarShadow;
 
     /**
      * 布局新增视图
@@ -75,6 +67,32 @@ public abstract class ActivityFramework extends FragmentActivity
     @Override
     public void addContentView(View view, FrameLayout.LayoutParams params) {
         framework_content.addView(view, params);
+    }
+
+    @Override
+    public void addToolbarItem(int id, int titleId, int imageId) {
+        MenuItem item = mMenu.add(0, id, id, titleId);
+
+        item.setIcon(imageId);
+        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    }
+
+    @Override
+    public void addToolbarViewItem(int id, int titleId, View view) {
+        MenuItem item = mMenu.add(0, id, id, titleId);
+
+        item.setActionView(view);
+        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    }
+
+    public void bindToolbar(int toolbarSolidId, int toolbarShadowId) {
+        mToolbar = (Toolbar) findViewById(toolbarSolidId);
+        mToolbarShadow = findViewById(toolbarShadowId);
+        if (mToolbar != null) {
+            setSupportActionBar(mToolbar);
+            mToolbar.setNavigationOnClickListener(mOnNavigationClickListener);
+            mToolbar.setOnMenuItemClickListener(this);
+        }
     }
 
     /**
@@ -92,6 +110,10 @@ public abstract class ActivityFramework extends FragmentActivity
      */
     @Override
     public void configActivity() {
+    }
+
+    @Override
+    public void createMenu() {
     }
 
     /**
@@ -126,7 +148,7 @@ public abstract class ActivityFramework extends FragmentActivity
     public final void exit(boolean animate) {
         super.onBackPressed();
         if (animate) {
-            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+            overridePendingTransition(R.anim.zoom_out_enter, R.anim.zoom_in_exit);
         }
     }
 
@@ -180,14 +202,8 @@ public abstract class ActivityFramework extends FragmentActivity
         return framework_info;
     }
 
-    public void hideActionBar() {
-        framework_actionbar.setVisibility(View.GONE);
-        framework_actionbar_shadow.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void hideActionbarItem(int id) {
-        framework_actionbar.hideActionbarItem(id);
+    public Toolbar getToolBar() {
+        return mToolbar;
     }
 
     /**
@@ -198,8 +214,46 @@ public abstract class ActivityFramework extends FragmentActivity
         SuperActivityToast.clearSuperActivityToastsForActivity(this);
     }
 
-    public boolean isActionBarShowing() {
-        return framework_actionbar.getVisibility() == View.VISIBLE;
+    public void hideToolbar() {
+        if (mToolbar != null) {
+            mToolbar.setVisibility(View.GONE);
+        }
+        if (mToolbarShadow != null) {
+            mToolbarShadow.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void hideToolbarItem(int id) {
+        mMenu.findItem(id).setVisible(false);
+    }
+
+    private void initRoot() {
+        View root;
+
+        switch (mToolbarMode) {
+            case None:
+                root = View.inflate(this, R.layout.widget_framework, null);
+                break;
+            case Overlay:
+                root = View.inflate(this, R.layout.widget_framework_toolbar_overlay, null);
+                break;
+            default:
+                root = View.inflate(this, R.layout.widget_framework_toolbar_linear, null);
+        }
+        framework_content = (FrameLayout) root.findViewById(R.id.framework_content);
+        framework_info = (InfoView) root.findViewById(R.id.framework_info);
+        framework_info.setOnClickListener(mOnInfoClickListener);
+        super.setContentView(root);
+    }
+
+    private void initToast() {
+        mToast = new SuperActivityToast(this);
+        mToast.setAnimations(SuperToast.Animations.POPUP);
+        mToast.setDuration(SuperToast.Duration.SHORT);
+        mToast.setBackground(SuperToast.Background.GRAY);
+        mToast.setTextSize(SuperToast.TextSize.MEDIUM);
+        mToast.setTextColor(Color.WHITE);
     }
 
     /**
@@ -210,12 +264,8 @@ public abstract class ActivityFramework extends FragmentActivity
         return mRequest.isExecuting();
     }
 
-    /**
-     * 当ActionBar的Home键被点击时触发
-     */
-    @Override
-    public void onActionBarHomeClick() {
-        onBackPressed();
+    public boolean isToolbarShowing() {
+        return mToolbar != null && mToolbar.getVisibility() == View.VISIBLE;
     }
 
     @Override
@@ -226,39 +276,28 @@ public abstract class ActivityFramework extends FragmentActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View root;
 
         registerReceiver(mExitReceiver, new IntentFilter(getPackageName() + ".EXIT"));
         NetUtil.checkConnection(this);
 
         configActivity();
-
-        if (mActionBarMode == ActionBarMode.Normal) {
-            root = LayoutInflater.from(this).inflate(R.layout.activity_framework, null);
-        } else {
-            root = LayoutInflater.from(this).inflate(R.layout.activity_framework_overlay, null);
-        }
-        framework_actionbar = (ActionBarView) root.findViewById(R.id.framework_actionbar);
-        framework_actionbar.setOnActionBarClickListener(this);
-        framework_actionbar_shadow = root.findViewById(R.id.framework_actionbar_shadow);
-        framework_content = (FrameLayout) root.findViewById(R.id.framework_content);
-        framework_info = (InfoView) root.findViewById(R.id.framework_info);
-        framework_info.setOnClickListener(mInfoClickListener);
-
-        super.setContentView(root);
-
-        mToast = new SuperActivityToast(this);
-        mToast.setAnimations(SuperToast.Animations.POPUP);
-        mToast.setDuration(SuperToast.Duration.SHORT);
-        mToast.setBackground(SuperToast.Background.GRAY);
-        mToast.setTextSize(SuperToast.TextSize.MEDIUM);
-        mToast.setTextColor(Color.WHITE);
-
+        initRoot();
+        bindToolbar(R.id.toolbar_solid, R.id.toolbar_shadow);
+        initToast();
         setLayout();
         acquireArguments(getIntent());
         establishCallbacks();
         enquiryViews();
         attachCallbacks();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        mMenu = menu;
+
+        createMenu();
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -281,6 +320,11 @@ public abstract class ActivityFramework extends FragmentActivity
     }
 
     @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
+        return false;
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
@@ -290,18 +334,8 @@ public abstract class ActivityFramework extends FragmentActivity
         }
     }
 
-    public void setActionBarMode(ActionBarMode mode) {
-        mActionBarMode = mode;
-    }
-
-    @Override
-    public void setActionBarTitle(int textId) {
-        framework_actionbar.setActionBarTitle(textId);
-    }
-
-    @Override
-    public void setActionBarTitle(String text) {
-        framework_actionbar.setActionBarTitle(text);
+    protected void onToolbarNavigationClick() {
+        onBackPressed();
     }
 
     /**
@@ -358,24 +392,29 @@ public abstract class ActivityFramework extends FragmentActivity
         framework_info.setInfoVisibility(infoVisibility);
     }
 
-    public void showActionBar() {
-        framework_actionbar.setVisibility(View.VISIBLE);
-        framework_actionbar_shadow.setVisibility(View.VISIBLE);
+    public void setToolbarMode(ToolbarMode toolbarMode) {
+        mToolbarMode = toolbarMode;
     }
 
     @Override
-    public void showActionBarHome(boolean show) {
-        framework_actionbar.showActionBarHome(show);
+    public void setToolbarNavigation(int imageId) {
+        if (mToolbar != null) {
+            mToolbar.setNavigationIcon(imageId);
+        }
     }
 
     @Override
-    public void showActionBarItem(int id) {
-        framework_actionbar.showActionBarItem(id);
+    public void setToolbarTitle(int textId) {
+        if (mToolbar != null) {
+            mToolbar.setTitle(textId);
+        }
     }
 
     @Override
-    public void showActionBarTitle(boolean show) {
-        framework_actionbar.showActionBarTitle(show);
+    public void setToolbarTitle(String text) {
+        if (mToolbar != null) {
+            mToolbar.setTitle(text);
+        }
     }
 
     /**
@@ -433,6 +472,20 @@ public abstract class ActivityFramework extends FragmentActivity
         showToast(getString(textId), progress);
     }
 
+    public void showToolbar() {
+        if (mToolbar != null) {
+            mToolbar.setVisibility(View.VISIBLE);
+        }
+        if (mToolbarShadow != null) {
+            mToolbarShadow.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void showToolbarItem(int id) {
+        mMenu.findItem(id).setVisible(true);
+    }
+
     /**
      * 启动Intent
      *
@@ -459,7 +512,7 @@ public abstract class ActivityFramework extends FragmentActivity
             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
             if (animate) {
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                overridePendingTransition(R.anim.zoom_in_enter, R.anim.zoom_out_exit);
             }
         }
     }
@@ -482,7 +535,7 @@ public abstract class ActivityFramework extends FragmentActivity
         }
     }
 
-    public enum ActionBarMode {
-        Normal, Overlay
+    public enum ToolbarMode {
+        None, Linear, Overlay
     }
 }

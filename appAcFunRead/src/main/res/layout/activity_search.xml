@@ -2,34 +2,57 @@
 <LinearLayout
     style="@style/mm.v"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/Background">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/White"
-        android:orientation="horizontal">
+    <android.support.v7.widget.CardView
+        style="@style/mw">
 
-        <Spinner
-            android:id="@+id/search_sortresult"
-            style="@style/mmw"
-            android:entries="@array/search_sortresult"
-            android:gravity="center"/>
+        <LinearLayout
+            style="@style/mw.v"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:padding="8dp">
 
-        <Spinner
-            android:id="@+id/search_target"
-            style="@style/mmw"
-            android:entries="@array/search_target"
-            android:gravity="center"/>
+            <EditText
+                android:id="@+id/search_input"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:gravity="center_vertical"
+                android:hint="@string/channel_search"
+                android:lines="1"
+                android:padding="8dp"
+                android:textAppearance="@style/Subhead"
+                android:textColorHint="@color/Assist"/>
 
-        <Spinner
-            android:id="@+id/search_range"
-            style="@style/mmw"
-            android:entries="@array/search_range"
-            android:gravity="center"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@color/White"
+                android:orientation="horizontal">
 
-    </LinearLayout>
+                <Spinner
+                    android:id="@+id/search_sortresult"
+                    style="@style/mmw"
+                    android:entries="@array/search_sortresult"
+                    android:gravity="center"/>
+
+                <Spinner
+                    android:id="@+id/search_target"
+                    style="@style/mmw"
+                    android:entries="@array/search_target"
+                    android:gravity="center"/>
+
+                <Spinner
+                    android:id="@+id/search_range"
+                    style="@style/mmw"
+                    android:entries="@array/search_range"
+                    android:gravity="center"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
 
     <FrameLayout
         style="@style/mm">

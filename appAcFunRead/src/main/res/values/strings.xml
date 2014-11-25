@@ -5,6 +5,7 @@
     <string name="app_profile">账号信息</string>
     <string name="app_imageview">浏览图片</string>
     <string name="app_quote">浏览盖楼</string>
+    <string name="app_clear">清空</string>
 
     <string name="app_cancel">取消</string>
     <string name="app_dropdown">▼</string>
@@ -13,6 +14,7 @@
     <string name="app_logout">注销</string>
     <string name="app_ok">确定</string>
     <string name="app_reset">重置</string>
+    <string name="app_search">搜索</string>
 
     <string name="app_cannotread_cache">无法访问缓存目录！</string>
 
@@ -48,6 +50,7 @@
 
     <string name="comment_onlyemot">禁止发布纯表情评论！</string>
     <string name="comment_pager_title">第%s页</string>
+    <string name="comment_send">发送评论</string>
     <string name="comment_sending">正在发送评论 …</string>
     <string name="comment_success">评论发送成功，请等待服务器刷新评论缓存！</string>
     <string name="comment_failure">评论发送失败，请检查网络连接！</string>
@@ -68,11 +71,15 @@
     <string name="content_redirect_ac">该链接指向投稿 ac%s，确认跳转？</string>
     <string name="content_redirect_aa">该链接指向合辑 ac%s，请使用视频客户端浏览</string>
 
+    <string name="favourite_add">添加收藏</string>
     <string name="favourite_add_success">成功添加收藏！</string>
     <string name="favourite_add_failure">添加收藏失败！</string>
+    <string name="favourite_remove">移除收藏</string>
     <string name="favourite_remove_success">成功移除收藏！</string>
     <string name="favourite_remove_failure">移除收藏失败！</string>
     <string name="favourite_operating">正在操作中 …</string>
+
+    <string name="history_clear">确认清空浏览记录？</string>
 
     <string name="login_account">账号</string>
     <string name="login_progress">正在登录 …</string>
@@ -103,6 +110,8 @@
     <string name="menu_pattern_day">白天</string>
     <string name="menu_pattern_night">夜间</string>
     <string name="menu_setting">设置</string>
+
+    <string name="empty"/>
 
     <string name="quote_title">浏览引用</string>
 

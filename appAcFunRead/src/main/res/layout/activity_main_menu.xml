@@ -2,41 +2,49 @@
 <LinearLayout
     style="@style/mm.v"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:padding="8dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/Background">
 
-    <LinearLayout
+    <com.gc.materialdesign.views.LayoutRipple
         android:id="@+id/menu_user_description"
-        style="@style/mw.h"
-        android:background="@drawable/button_transparent"
-        android:gravity="center_vertical"
-        android:padding="8dp">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/menu_user_avatar"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:src="@drawable/image_avatar"/>
-
-        <TextView
-            android:id="@+id/menu_user_name"
-            style="@style/mw"
-            android:layout_marginLeft="8dp"
-            android:maxLines="3"
-            android:text="@string/login_required"
-            android:textColor="@color/Content"
-            android:textSize="20dp"/>
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/menu_user_signature"
         style="@style/mw"
-        android:layout_marginTop="8dp"
-        android:lines="2"
-        android:padding="8dp"
-        android:text="@string/user_signature"
-        android:textColor="@color/Assist"
-        android:textSize="16dp"/>
+        android:background="@color/Primary"
+        app:rippleColor="@color/Primary_Dark">
+
+        <LinearLayout
+            style="@style/mw.v">
+
+            <LinearLayout
+                style="@style/mw.h"
+                android:gravity="center_vertical"
+                android:padding="16dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/menu_user_avatar"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/image_avatar"/>
+
+                <TextView
+                    android:id="@+id/menu_user_name"
+                    style="@style/mw"
+                    android:layout_marginLeft="8dp"
+                    android:maxLines="3"
+                    android:text="@string/login_required"
+                    android:textAppearance="@style/Title.Inverse"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/menu_user_signature"
+                style="@style/mw"
+                android:lines="2"
+                android:padding="16dp"
+                android:textAppearance="@style/Subhead.Inverse"/>
+
+        </LinearLayout>
+
+    </com.gc.materialdesign.views.LayoutRipple>
 
     <LinearLayout
         android:id="@+id/menu_at"
@@ -109,78 +117,87 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <com.gc.materialdesign.views.LayoutRipple
         android:id="@+id/menu_favourite"
-        style="@style/mw.h"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/button_transparent"
-        android:gravity="center_vertical">
-
-        <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/image_favourite"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginLeft="8dp"
-            android:gravity="center_vertical"
-            android:text="@string/menu_favourite"
-            android:textColor="@color/Title"
-            android:textSize="20dp"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/menu_history"
-        style="@style/mw.h"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/button_transparent"
-        android:gravity="center_vertical">
-
-        <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/image_history"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginLeft="8dp"
-            android:gravity="center_vertical"
-            android:text="@string/menu_history"
-            android:textColor="@color/Title"
-            android:textSize="20dp"/>
-
-    </LinearLayout>
-
-    <FrameLayout
-        style="@style/mmw"/>
-
-    <LinearLayout
-        style="@style/mw.h">
+        style="@style/mw">
 
         <LinearLayout
-            android:id="@+id/menu_setting"
-            style="@style/mmw.h"
-            android:background="@drawable/button_transparent">
+            style="@style/mw.h"
+            android:gravity="center_vertical"
+            android:padding="8dp">
 
             <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/image_setting"/>
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/image_favourite"/>
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="32dp"
-                android:layout_marginLeft="8dp"
+                android:layout_height="48dp"
                 android:gravity="center_vertical"
-                android:text="@string/menu_setting"
-                android:textColor="@color/Title"
-                android:textSize="16dp"/>
+                android:text="@string/menu_favourite"
+                android:textAppearance="@style/Title"/>
 
         </LinearLayout>
+
+    </com.gc.materialdesign.views.LayoutRipple>
+
+    <com.gc.materialdesign.views.LayoutRipple
+        android:id="@+id/menu_history"
+        style="@style/mw">
+
+        <LinearLayout
+            style="@style/mw.h"
+            android:gravity="center_vertical"
+            android:padding="8dp">
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/image_history"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:gravity="center_vertical"
+                android:text="@string/menu_history"
+                android:textAppearance="@style/Title"/>
+
+        </LinearLayout>
+
+    </com.gc.materialdesign.views.LayoutRipple>
+
+    <View
+        style="@style/mmw"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal">
+
+        <com.gc.materialdesign.views.LayoutRipple
+            android:id="@+id/menu_setting"
+            style="@style/mw">
+
+            <LinearLayout
+                style="@style/mmw.h">
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/image_setting"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="8dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/menu_setting"
+                    android:textAppearance="@style/Subhead"/>
+
+            </LinearLayout>
+
+        </com.gc.materialdesign.views.LayoutRipple>
 
         <LinearLayout
             android:id="@+id/menu_pattern"

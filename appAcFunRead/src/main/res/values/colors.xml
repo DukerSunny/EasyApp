@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="Primary">#00bcd4</color>
+    <color name="Primary_Dark">#0097a7</color>
+    <color name="Accent">#ffc107</color>
+
     <color name="Selection_1st">#008B8B</color>
     <color name="Selection_2nd">#D2691E</color>
     <color name="Selection_3rd">#8B008B</color>

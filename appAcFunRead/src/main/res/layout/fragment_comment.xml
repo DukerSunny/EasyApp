@@ -2,6 +2,7 @@
 <FrameLayout
     style="@style/mm.v"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="8dp">
 
     <ListView
@@ -11,13 +12,14 @@
         android:dividerHeight="16dp"
         android:scrollbars="none"/>
 
-    <ImageView
+    <com.gc.materialdesign.views.ButtonFloat
         android:id="@+id/comment_refresh"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:background="@drawable/button_floating"
-        android:src="@drawable/image_refresh"/>
+        android:background="@color/Primary"
+        app:iconFloat="@drawable/image_refresh_inverse"
+        app:rippleColor="@color/Primary_Dark"/>
 
 </FrameLayout>

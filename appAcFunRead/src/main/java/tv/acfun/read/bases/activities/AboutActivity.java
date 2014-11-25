@@ -4,11 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.view.View;
 import android.widget.TextView;
 
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
+import com.umeng.analytics.MobclickAgent;
 
+import tv.acfun.read.BuildConfig;
 import tv.acfun.read.R;
 
 /**
@@ -28,19 +29,21 @@ public class AboutActivity extends ActivityFramework {
 
     @Override
     public void attachCallbacks() {
+    }
 
+    @Override
+    public void createMenu() {
+        setToolbarTitle(R.string.setting_about);
+        setToolbarNavigation(R.drawable.image_back_inverse);
     }
 
     @Override
     public void enquiryViews() {
-        setActionBarTitle(R.string.setting_about);
-
         about_version = (TextView) findViewById(R.id.about_version);
     }
 
     @Override
     public void establishCallbacks() {
-
     }
 
     @Override
@@ -50,8 +53,19 @@ public class AboutActivity extends ActivityFramework {
     }
 
     @Override
-    public void onActionBarItemClick(int id, View item) {
+    protected void onPause() {
+        super.onPause();
+        if (!BuildConfig.DEBUG) {
+            MobclickAgent.onPause(this);
+        }
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!BuildConfig.DEBUG) {
+            MobclickAgent.onResume(this);
+        }
     }
 
     @Override

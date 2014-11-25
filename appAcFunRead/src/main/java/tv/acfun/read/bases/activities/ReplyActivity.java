@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -24,6 +25,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import java.util.regex.Matcher;
 
+import tv.acfun.read.BuildConfig;
 import tv.acfun.read.R;
 import tv.acfun.read.api.API;
 import tv.acfun.read.bases.application.AcFunRead;
@@ -118,6 +120,17 @@ public class ReplyActivity extends ActivityFramework {
         mSizePickerHelper.setOnItemClickListener(mSizePickerItemListener);
     }
 
+    @Override
+    public void createMenu() {
+        if (mFloorIndex > 0) {
+            setToolbarTitle(getString(R.string.reply_id_quote, "#" + mFloorIndex));
+        } else {
+            setToolbarTitle(R.string.reply_id);
+        }
+        setToolbarNavigation(R.drawable.image_back_inverse);
+        addToolbarItem(0, R.string.comment_send, R.drawable.image_send);
+    }
+
     private void doSend() {
         AcFunRead acFunRead;
         String originalContent = reply_input.getUBBText();
@@ -159,13 +172,6 @@ public class ReplyActivity extends ActivityFramework {
     public void enquiryViews() {
         PagerTabStrip reply_pager_indicator;
         View dialog_colorpicker;
-
-        if (mFloorIndex > 0) {
-            setActionBarTitle(getString(R.string.reply_id_quote, "#" + mFloorIndex));
-        } else {
-            setActionBarTitle(R.string.reply_id);
-        }
-        addActionBarImageItem(0, R.drawable.image_send);
 
         reply_style_bold = findViewById(R.id.reply_style_bold);
         reply_style_italic = findViewById(R.id.reply_style_italic);
@@ -336,11 +342,6 @@ public class ReplyActivity extends ActivityFramework {
     }
 
     @Override
-    public void onActionBarItemClick(int id, View item) {
-        doSend();
-    }
-
-    @Override
     protected void onDestroy() {
         mColorPickerHelper.hide();
         mSizePickerHelper.hide();
@@ -348,16 +349,27 @@ public class ReplyActivity extends ActivityFramework {
     }
 
     @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
+        doSend();
+
+        return false;
+    }
+
+    @Override
     protected void onPause() {
         AcFunRead.getInstance().writeString("replyText", reply_input.getUBBText());
         super.onPause();
-        MobclickAgent.onPause(this);
+        if (!BuildConfig.DEBUG) {
+            MobclickAgent.onPause(this);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        MobclickAgent.onResume(this);
+        if (!BuildConfig.DEBUG) {
+            MobclickAgent.onResume(this);
+        }
 
         reply_input.setUBBText(AcFunRead.getInstance().readString("replyText", ""));
     }

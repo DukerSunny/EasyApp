@@ -7,8 +7,8 @@
       <module fileurl="file://$PROJECT_DIR$/libCircleImageView/libCircleImageView.iml" filepath="$PROJECT_DIR$/libCircleImageView/libCircleImageView.iml" />
       <module fileurl="file://$PROJECT_DIR$/libColorPicker/libColorPicker.iml" filepath="$PROJECT_DIR$/libColorPicker/libColorPicker.iml" />
       <module fileurl="file://$PROJECT_DIR$/libEasyApp/libEasyApp.iml" filepath="$PROJECT_DIR$/libEasyApp/libEasyApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libMaterialDesign/libMaterialDesign.iml" filepath="$PROJECT_DIR$/libMaterialDesign/libMaterialDesign.iml" />
       <module fileurl="file://$PROJECT_DIR$/libPhotoView/libPhotoView.iml" filepath="$PROJECT_DIR$/libPhotoView/libPhotoView.iml" />
-      <module fileurl="file://$PROJECT_DIR$/libSlidingMenu/libSlidingMenu.iml" filepath="$PROJECT_DIR$/libSlidingMenu/libSlidingMenu.iml" />
     </modules>
   </component>
 </project>

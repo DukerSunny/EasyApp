@@ -2,6 +2,7 @@ package tv.acfun.read.bases.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.harreke.easyapp.frameworks.bases.IFramework;
@@ -63,11 +64,6 @@ public class MailActivity extends ActivityFramework {
                 }
             }
         };
-    }
-
-    @Override
-    public void onActionBarItemClick(int id, View item) {
-
     }
 
     @Override

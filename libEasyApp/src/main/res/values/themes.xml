@@ -1,47 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="App" parent="@android:style/Theme.Holo.Light.NoActionBar">
-        <item name="actionBarViewStyle">@style/App.ActionBarView</item>
-        <item name="childTabViewStyle">@style/App.ChildTabView</item>
-        <item name="drawableTextViewStyle">@style/App.DrawableTextView</item>
-        <item name="infoViewStyle">@style/App.InfoView</item>
-        <item name="ratioImageViewStyle">@style/App.RatioImageView</item>
+    <style name="Theme.EasyApp.Base" parent="Theme.AppCompat.Light">
+        <item name="android:windowNoTitle">true</item>
+        <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.ActionBar</item>
+        <item name="actionBarWidgetTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+
+        <item name="childTabViewStyle">@style/Theme.EasyApp.ChildTabView</item>
+        <item name="infoViewStyle">@style/Theme.EasyApp.InfoView</item>
     </style>
 
-    <style name="App.Fullscreen" parent="App">
+    <style name="Theme.EasyApp" parent="Theme.EasyApp.Base">
+        <item name="windowActionBar">false</item>
+    </style>
+
+    <style name="Theme.EasyApp.Fullscreen" parent="Theme.EasyApp">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-    <style name="App.Splash" parent="@style/App">
-        <item name="android:windowBackground">@color/Theme</item>
-    </style>
-
-    <style name="App.ActionBarView">
-        <item name="background">@color/Theme</item>
-        <item name="homeIcon">@drawable/back_small</item>
-        <item name="itemBackground">@drawable/button_transparent</item>
-        <item name="textSize">16dp</item>
-        <item name="textColor">@color/White</item>
-    </style>
-
-    <style name="App.ChildTabView">
+    <style name="Theme.EasyApp.ChildTabView">
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
     </style>
 
-    <style name="App.DrawableTextView">
-        <item name="drawableWidth">-1dp</item>
-        <item name="drawableHeight">-1dp</item>
-    </style>
-
-    <style name="App.InfoView">
+    <style name="Theme.EasyApp.InfoView">
         <item name="android:padding">8dp</item>
-        <item name="loadingImage">@drawable/anim_progress_radiant</item>
         <item name="loadingText">@string/info_loading</item>
         <item name="emptyImage">@drawable/info_empty</item>
         <item name="emptyText">@string/info_empty</item>
+        <item name="progressColor">?attr/colorPrimary</item>
         <item name="retryHint">@string/info_retryhint</item>
         <item name="retryHintColor">@color/Theme</item>
         <item name="retryImage">@drawable/info_retry</item>
@@ -50,10 +39,6 @@
         <item name="text">@string/info_loading</item>
         <item name="textColor">@color/Content</item>
         <item name="textSize">16dp</item>
-    </style>
-
-    <style name="App.RatioImageView">
-        <item name="ratio">-1</item>
     </style>
 
 </resources>

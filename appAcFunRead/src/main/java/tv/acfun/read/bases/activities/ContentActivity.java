@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
@@ -19,6 +20,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import java.util.List;
 
+import tv.acfun.read.BuildConfig;
 import tv.acfun.read.R;
 import tv.acfun.read.api.API;
 import tv.acfun.read.bases.application.AcFunRead;
@@ -62,6 +64,18 @@ public class ContentActivity extends ActivityFramework {
     public void attachCallbacks() {
     }
 
+    @Override
+    public void createMenu() {
+        setToolbarTitle("ac" + mContentId);
+        setToolbarNavigation(R.drawable.image_back_inverse);
+        addToolbarItem(0, R.string.favourite_add, R.drawable.image_favourite_add_inverse);
+        addToolbarItem(1, R.string.favourite_remove, R.drawable.image_favourite_remove_inverse);
+        addToolbarItem(2, R.string.share_title, R.drawable.image_share_inverse);
+
+        hideToolbarItem(0);
+        hideToolbarItem(1);
+    }
+
     private void doFavouriteAdd() {
         showToast(R.string.favourite_operating, true);
         executeRequest(API.getFavouriteAdd(mLoginHelper.getToken(), mContentId), mFavouriteAddCallback);
@@ -89,14 +103,6 @@ public class ContentActivity extends ActivityFramework {
 
     @Override
     public void enquiryViews() {
-        setActionBarTitle("ac" + mContentId);
-        addActionBarImageItem(0, R.drawable.image_favourite_add);
-        addActionBarImageItem(1, R.drawable.image_favourite_remove);
-        addActionBarImageItem(2, R.drawable.image_share);
-
-        hideActionbarItem(0);
-        hideActionbarItem(1);
-
         content_pager = (ViewPager) findViewById(R.id.content_pager);
         content_pager_indicator = (PagerTabStrip) findViewById(R.id.content_pager_indicator);
         content_pager_indicator.setTabIndicatorColorResource(R.color.Theme);
@@ -184,20 +190,6 @@ public class ContentActivity extends ActivityFramework {
     }
 
     @Override
-    public void onActionBarItemClick(int id, View item) {
-        switch (id) {
-            case 0:
-                doFavouriteAdd();
-                break;
-            case 1:
-                doFavouriteRemove();
-                break;
-            case 2:
-                doShare();
-        }
-    }
-
-    @Override
     protected void onDestroy() {
         if (isRequestExecuting()) {
             cancelRequest();
@@ -209,15 +201,35 @@ public class ContentActivity extends ActivityFramework {
     }
 
     @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case 0:
+                doFavouriteAdd();
+                break;
+            case 1:
+                doFavouriteRemove();
+                break;
+            case 2:
+                doShare();
+        }
+        return false;
+
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
-        MobclickAgent.onPause(this);
+        if (!BuildConfig.DEBUG) {
+            MobclickAgent.onPause(this);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        MobclickAgent.onResume(this);
+        if (!BuildConfig.DEBUG) {
+            MobclickAgent.onResume(this);
+        }
     }
 
     @Override
@@ -226,13 +238,13 @@ public class ContentActivity extends ActivityFramework {
     }
 
     private void showFavouriteAdd() {
-        showActionBarItem(0);
-        hideActionbarItem(1);
+        showToolbarItem(0);
+        hideToolbarItem(1);
     }
 
     private void showFavouriteRemove() {
-        hideActionbarItem(0);
-        showActionBarItem(1);
+        hideToolbarItem(0);
+        showToolbarItem(1);
     }
 
     @Override

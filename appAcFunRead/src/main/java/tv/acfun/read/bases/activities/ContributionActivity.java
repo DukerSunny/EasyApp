@@ -12,6 +12,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 
+import tv.acfun.read.BuildConfig;
 import tv.acfun.read.R;
 import tv.acfun.read.api.API;
 import tv.acfun.read.beans.Content;
@@ -46,10 +47,14 @@ public class ContributionActivity extends ActivityFramework {
     }
 
     @Override
+    public void createMenu() {
+        setToolbarTitle(getString(R.string.user_contributes, mUsername));
+        setToolbarNavigation(R.drawable.image_back_inverse);
+    }
+
+    @Override
     public void enquiryViews() {
         View footer_loadmore = View.inflate(getActivity(), R.layout.footer_loadmore, null);
-
-        setActionBarTitle(getString(R.string.user_contributes, mUsername));
 
         mContributionListHelper = new Helper(this, R.id.contribution_list);
         mContributionListHelper.setRefresh(findViewById(R.id.contribution_refresh));
@@ -60,11 +65,6 @@ public class ContributionActivity extends ActivityFramework {
 
     @Override
     public void establishCallbacks() {
-    }
-
-    @Override
-    public void onActionBarItemClick(int id, View item) {
-
     }
 
     @Override
@@ -81,13 +81,17 @@ public class ContributionActivity extends ActivityFramework {
     @Override
     protected void onPause() {
         super.onPause();
-        MobclickAgent.onPause(this);
+        if (!BuildConfig.DEBUG) {
+            MobclickAgent.onPause(this);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        MobclickAgent.onResume(this);
+        if (!BuildConfig.DEBUG) {
+            MobclickAgent.onResume(this);
+        }
     }
 
     @Override

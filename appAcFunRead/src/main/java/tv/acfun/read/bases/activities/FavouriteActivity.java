@@ -15,6 +15,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 
+import tv.acfun.read.BuildConfig;
 import tv.acfun.read.R;
 import tv.acfun.read.api.API;
 import tv.acfun.read.bases.application.AcFunRead;
@@ -48,10 +49,14 @@ public class FavouriteActivity extends ActivityFramework {
     }
 
     @Override
+    public void createMenu() {
+        setToolbarTitle(R.string.menu_favourite);
+        setToolbarNavigation(R.drawable.image_back_inverse);
+    }
+
+    @Override
     public void enquiryViews() {
         View footer_loadmore = View.inflate(getActivity(), R.layout.footer_loadmore, null);
-
-        setActionBarTitle(R.string.menu_favourite);
 
         mFavouriteListHelper = new Helper(this, R.id.favourite_list, R.id.favourite_swipe);
         mFavouriteListHelper.setRefresh(findViewById(R.id.favourite_refresh));
@@ -127,14 +132,8 @@ public class FavouriteActivity extends ActivityFramework {
     }
 
     @Override
-    public void onActionBarItemClick(int id, View item) {
-
-    }
-
-    @Override
     public void onBackPressed() {
         exit(false);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     @Override
@@ -146,13 +145,17 @@ public class FavouriteActivity extends ActivityFramework {
     @Override
     protected void onPause() {
         super.onPause();
-        MobclickAgent.onPause(this);
+        if (!BuildConfig.DEBUG) {
+            MobclickAgent.onPause(this);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        MobclickAgent.onResume(this);
+        if (!BuildConfig.DEBUG) {
+            MobclickAgent.onResume(this);
+        }
 
         mFavouriteListHelper.clear();
         readList();

@@ -9,14 +9,16 @@ import android.content.Intent;
  */
 public interface IActivity {
     /**
+     * 初始化Activity传参数据
+     */
+    public void acquireArguments(Intent intent);
+
+    /**
      * 初始化Activity配置信息
      *
      * 如设置屏幕样式，屏幕亮度，是否全屏等
      */
     public void configActivity();
 
-    /**
-     * 初始化Activity传参数据
-     */
-    public void acquireArguments(Intent intent);
+    public void createMenu();
 }

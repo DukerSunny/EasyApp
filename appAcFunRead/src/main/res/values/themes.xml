@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AcFunRead" parent="@style/App">
-        <item name="actionBarViewStyle">@style/AcFunRead.ActionBarView</item>
+    <style name="Theme.AcFunRead" parent="Theme.EasyApp">
+        <item name="colorPrimary">@color/Primary</item>
+        <item name="colorPrimaryDark">@color/Primary_Dark</item>
+        <item name="colorAccent">@color/Accent</item>
+        <item name="actionBarTheme">@style/Theme.AcFunRead.ActionBar</item>
     </style>
 
-    <style name="AcFunRead.ActionBarView" parent="@style/App.ActionBarView">
-        <item name="background">@color/White</item>
-        <item name="homeIcon">@drawable/image_back</item>
-        <item name="textColor">@color/Title</item>
+    <style name="Theme.AcFunRead.ActionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:background">@color/Primary</item>
     </style>
 
 </resources>

@@ -1,7 +1,9 @@
 package tv.acfun.read.bases.activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.daimajia.swipe.SwipeLayout;
@@ -9,11 +11,13 @@ import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.frameworks.list.abslistview.FooterLoadStatus;
 import com.harreke.easyapp.frameworks.list.swipelayout.AbsListSwipeFramework;
+import com.harreke.easyapp.helpers.DialogHelper;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import tv.acfun.read.BuildConfig;
 import tv.acfun.read.R;
 import tv.acfun.read.bases.application.AcFunRead;
 import tv.acfun.read.beans.Content;
@@ -24,9 +28,11 @@ import tv.acfun.read.parsers.ChannelListParser;
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/23
  */
 public class HistoryActivity extends ActivityFramework {
-    private HistoryListHelper mHistoryListHelper;
+    private HistoryListHelper mHistoryList;
     private SwipeLayout mOpenSwipeLayout = null;
     private View.OnClickListener mRemoveClickListener;
+    private DialogHelper mRemoveDialog;
+    private DialogInterface.OnClickListener mRemoveDialogClickListener;
 
     public static Intent create(Context context) {
         return new Intent(context, HistoryActivity.class);
@@ -41,17 +47,27 @@ public class HistoryActivity extends ActivityFramework {
     }
 
     @Override
+    public void createMenu() {
+        setToolbarTitle(R.string.menu_history);
+        setToolbarNavigation(R.drawable.image_back_inverse);
+        addToolbarItem(0, R.string.app_clear, R.drawable.image_clear);
+    }
+
+    @Override
     public void enquiryViews() {
         View footer_loadmore = View.inflate(getActivity(), R.layout.footer_loadmore, null);
 
-        setActionBarTitle(R.string.menu_history);
-        addActionBarImageItem(0, R.drawable.image_clear);
+        mHistoryList = new HistoryListHelper(this, R.id.history_list, R.id.history_swipe);
+        mHistoryList.addFooterView(footer_loadmore);
+        mHistoryList.setLoadMore(new FooterLoadStatus(footer_loadmore));
+        mHistoryList.setShowRetryHintWhenEmpty(false);
+        mHistoryList.bindAdapter();
 
-        mHistoryListHelper = new HistoryListHelper(this, R.id.history_list, R.id.history_swipe);
-        mHistoryListHelper.addFooterView(footer_loadmore);
-        mHistoryListHelper.setLoadMore(new FooterLoadStatus(footer_loadmore));
-        mHistoryListHelper.setShowRetryHintWhenEmpty(false);
-        mHistoryListHelper.bindAdapter();
+        mRemoveDialog = new DialogHelper(this);
+        mRemoveDialog.setTitle(R.string.history_clear);
+        mRemoveDialog.setPositiveButton(R.string.app_ok);
+        mRemoveDialog.setNegativeButton(R.string.app_cancel);
+        mRemoveDialog.setOnClickListener(mRemoveDialogClickListener);
     }
 
     @Override
@@ -65,39 +81,54 @@ public class HistoryActivity extends ActivityFramework {
                     mOpenSwipeLayout.close();
                     mOpenSwipeLayout = null;
                 }
-                mHistoryListHelper.removeItem(position);
-                AcFunRead.getInstance().writeHistory(mHistoryListHelper.getItemList());
-                mHistoryListHelper.clear();
+                mHistoryList.removeItem(position);
+                AcFunRead.getInstance().writeHistory(mHistoryList.getItemList());
+                mHistoryList.clear();
                 readList();
+            }
+        };
+        mRemoveDialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mRemoveDialog.hide();
+                if (which == DialogInterface.BUTTON_POSITIVE) {
+                    AcFunRead.getInstance().writeHistory(null);
+                    mHistoryList.clear();
+                    mHistoryList.refresh();
+                }
             }
         };
     }
 
     @Override
-    public void onActionBarItemClick(int id, View item) {
-        AcFunRead.getInstance().writeHistory(null);
-        mHistoryListHelper.clear();
-        mHistoryListHelper.refresh();
+    protected void onDestroy() {
+        mRemoveDialog.hide();
+        super.onDestroy();
     }
 
     @Override
-    public void onBackPressed() {
-        exit(false);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    public boolean onMenuItemClick(MenuItem menuItem) {
+        mRemoveDialog.show();
+
+        return false;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        MobclickAgent.onPause(this);
+        if (!BuildConfig.DEBUG) {
+            MobclickAgent.onPause(this);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        MobclickAgent.onResume(this);
+        if (!BuildConfig.DEBUG) {
+            MobclickAgent.onResume(this);
+        }
 
-        mHistoryListHelper.clear();
+        mHistoryList.clear();
         readList();
     }
 
@@ -107,7 +138,7 @@ public class HistoryActivity extends ActivityFramework {
         if (historyList == null) {
             showToast(R.string.app_cannotread_cache);
         }
-        mHistoryListHelper.from(historyList);
+        mHistoryList.from(historyList);
     }
 
     @Override

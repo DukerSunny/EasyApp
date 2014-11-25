@@ -2,7 +2,6 @@ package com.harreke.easyapp.widgets;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -12,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.gc.materialdesign.views.ProgressBarCircularIndetermininate;
 import com.harreke.easyapp.R;
 
 /**
@@ -40,11 +40,10 @@ public class InfoView extends LinearLayout {
     public static final int INFO_LOADING = 1;
 
     private ImageView info_empty;
-    private ImageView info_loading;
+    private ProgressBarCircularIndetermininate info_loading;
     private ImageView info_retry;
     private TextView info_retryhint;
     private TextView info_text;
-    private AnimationDrawable mDrawable = null;
     private String mEmptyText;
     private String mLoadingText;
     private String mRetryText;
@@ -59,8 +58,8 @@ public class InfoView extends LinearLayout {
 
         TypedArray style;
         LayoutParams params;
-        Drawable loadingImage;
         Drawable emptyImage;
+        int progressColor;
         String retryHint;
         int retryHintColor;
         Drawable retryImage;
@@ -68,10 +67,10 @@ public class InfoView extends LinearLayout {
         int textSize;
 
         style = context.obtainStyledAttributes(attrs, R.styleable.InfoView, defStyle, 0);
-        loadingImage = style.getDrawable(R.styleable.InfoView_loadingImage);
         mLoadingText = style.getString(R.styleable.InfoView_loadingText);
         emptyImage = style.getDrawable(R.styleable.InfoView_emptyImage);
         mEmptyText = style.getString(R.styleable.InfoView_emptyText);
+        progressColor = style.getColor(R.styleable.InfoView_progressColor, 0);
         retryHint = style.getString(R.styleable.InfoView_retryHint);
         retryHintColor = style.getColor(R.styleable.InfoView_retryHintColor, 0);
         retryImage = style.getDrawable(R.styleable.InfoView_retryImage);
@@ -84,15 +83,10 @@ public class InfoView extends LinearLayout {
         setOrientation(HORIZONTAL);
         setGravity(Gravity.CENTER);
 
-        info_loading = new ImageView(context);
+        info_loading = new ProgressBarCircularIndetermininate(context, attrs);
         info_loading.setLayoutParams(new LayoutParams(textSize * 2, textSize * 2));
+        info_loading.setBackgroundColor(progressColor);
         info_loading.setVisibility(GONE);
-        if (loadingImage != null) {
-            info_loading.setImageDrawable(loadingImage);
-            if (loadingImage instanceof AnimationDrawable) {
-                mDrawable = (AnimationDrawable) loadingImage;
-            }
-        }
         addView(info_loading);
 
         info_empty = new ImageView(context);
@@ -190,9 +184,6 @@ public class InfoView extends LinearLayout {
      */
     private void showEmpty() {
         setVisibility(VISIBLE);
-        if (mDrawable != null) {
-            mDrawable.stop();
-        }
         info_loading.setVisibility(View.GONE);
         info_empty.setVisibility(View.VISIBLE);
         info_retry.setVisibility(View.GONE);
@@ -209,9 +200,6 @@ public class InfoView extends LinearLayout {
      */
     private void showLoading() {
         setVisibility(VISIBLE);
-        if (mDrawable != null) {
-            mDrawable.start();
-        }
         info_loading.setVisibility(View.VISIBLE);
         info_empty.setVisibility(View.GONE);
         info_retry.setVisibility(View.GONE);
@@ -224,9 +212,6 @@ public class InfoView extends LinearLayout {
      */
     private void showRetry() {
         setVisibility(VISIBLE);
-        if (mDrawable != null) {
-            mDrawable.stop();
-        }
         info_loading.setVisibility(View.GONE);
         info_empty.setVisibility(View.GONE);
         info_retry.setVisibility(View.VISIBLE);

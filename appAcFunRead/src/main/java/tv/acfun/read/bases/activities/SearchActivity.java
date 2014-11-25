@@ -2,6 +2,8 @@ package tv.acfun.read.bases.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.SearchView;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -59,6 +61,13 @@ public class SearchActivity extends ActivityFramework {
         search_range.setOnItemSelectedListener(mSearchRangeItemClickListener);
     }
 
+    @Override
+    public void createMenu() {
+        setToolbarTitle(R.string.app_search);
+        setToolbarNavigation(R.drawable.image_back_inverse);
+        addToolbarViewItem(0, R.string.app_search, new SearchView(this));
+    }
+
     private void doSearch() {
         String text = search_input.getText().toString().trim();
 
@@ -75,9 +84,6 @@ public class SearchActivity extends ActivityFramework {
     @Override
     public void enquiryViews() {
         View footer_loadmore = View.inflate(getActivity(), R.layout.footer_loadmore, null);
-
-        addActionBarViewItem(0, R.layout.activity_search_header, false);
-        addActionBarImageItem(1, R.drawable.image_search);
 
         search_input = (EditText) findViewById(R.id.search_input);
         search_sortresult = (Spinner) findViewById(R.id.search_sortresult);
@@ -160,8 +166,10 @@ public class SearchActivity extends ActivityFramework {
     }
 
     @Override
-    public void onActionBarItemClick(int id, View item) {
+    public boolean onMenuItemClick(MenuItem menuItem) {
         doSearch();
+
+        return false;
     }
 
     @Override

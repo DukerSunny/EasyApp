@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Display4" parent="Base.TextAppearance.AppCompat.Display4"/>
+
+    <style name="Display3" parent="Base.TextAppearance.AppCompat.Display3"/>
+
+    <style name="Display2" parent="Base.TextAppearance.AppCompat.Display2"/>
+
+    <style name="Display1" parent="Base.TextAppearance.AppCompat.Display1"/>
+
+    <style name="Headline" parent="Base.TextAppearance.AppCompat.Headline"/>
+
+    <style name="Title" parent="Base.TextAppearance.AppCompat.Title"/>
+
+    <style name="Title.Inverse" parent="Base.TextAppearance.AppCompat.Title.Inverse"/>
+
+    <style name="Subhead" parent="Base.TextAppearance.AppCompat.Subhead"/>
+
+    <style name="Subhead.Inverse" parent="Base.TextAppearance.AppCompat.Subhead.Inverse"/>
+
+    <style name="Body2" parent="Base.TextAppearance.AppCompat.Body2"/>
+
+    <style name="Body1" parent="Base.TextAppearance.AppCompat.Body1"/>
+
+    <style name="Caption" parent="Base.TextAppearance.AppCompat.Caption"/>
+
+    <style name="Menu" parent="Base.TextAppearance.AppCompat.Menu"/>
+
+    <style name="Button" parent="Base.TextAppearance.AppCompat.Button"/>
+
+</resources>

@@ -2,23 +2,23 @@
 <FrameLayout
     style="@style/mm"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="8dp">
 
     <ListView
         android:id="@+id/recommend_list"
         style="@style/mm"
         android:divider="@color/Transparent"
-        android:dividerHeight="16dp"
-        android:drawSelectorOnTop="true"
-        android:listSelector="@drawable/button_transparent"/>
+        android:dividerHeight="8dp"/>
 
-    <ImageView
+    <com.gc.materialdesign.views.ButtonFloat
         android:id="@+id/recommend_refresh"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:background="@drawable/button_floating"
-        android:src="@drawable/image_refresh"/>
+        android:background="@color/Primary"
+        app:iconFloat="@drawable/image_refresh_inverse"
+        app:rippleColor="@color/Primary_Dark"/>
 
 </FrameLayout>

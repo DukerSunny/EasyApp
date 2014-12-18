@@ -1,53 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.daimajia.swipe.SwipeLayout
-    android:id="@+id/history_swipe"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="64dp">
+<FrameLayout
+    style="@style/mw">
 
-    <FrameLayout
-        android:layout_width="96dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="end"
-        android:background="@color/Background">
+    <com.daimajia.swipe.SwipeLayout
+        android:id="@+id/history_swipe"
+        style="@style/mw"
+        xmlns:android="http://schemas.android.com/apk/res/android">
 
-        <ImageView
-            android:id="@+id/history_remove"
-            style="@style/mm"
-            android:layout_gravity="center"
-            android:background="@color/Crimson"
-            android:padding="16dp"
-            android:src="@drawable/image_remove"/>
+        <FrameLayout
+            android:layout_width="72dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:layout_margin="4dp"
+            android:background="?attr/colorAccent">
 
-    </FrameLayout>
+            <ImageView
+                android:id="@+id/history_remove"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_gravity="center"
+                android:padding="12dp"
+                android:src="@drawable/image_remove_inverse"/>
 
-    <LinearLayout
-        style="@style/mm"
-        android:background="@drawable/button_white"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="8dp">
+        </FrameLayout>
 
-        <TextView
-            android:id="@+id/history_channel"
-            android:layout_width="64dp"
-            android:layout_height="48dp"
-            android:background="@color/Search_Misc"
-            android:gravity="center"
-            android:text="@string/channel_misc"
-            android:textColor="@color/White"
-            android:textSize="12dp"/>
+        <LinearLayout
+            style="@style/mm.h"
+            android:gravity="center_vertical"
+            android:padding="16dp">
 
-        <TextView
-            android:id="@+id/history_title"
-            style="@style/mw"
-            android:layout_marginLeft="8dp"
-            android:ellipsize="end"
-            android:lines="2"
-            android:text="@string/content_title"
-            android:textColor="@color/Title"
-            android:textSize="20dp"/>
+            <FrameLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp">
 
-    </LinearLayout>
+                <ImageView
+                    android:id="@+id/history_icon"
+                    style="@style/mm"
+                    android:src="@drawable/shape_circle_misc"/>
 
-</com.daimajia.swipe.SwipeLayout>
+                <TextView
+                    android:id="@+id/history_channel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textColor="@color/White"
+                    android:textSize="@dimen/Caption"/>
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/history_title"
+                style="@style/mw"
+                android:layout_marginLeft="16dp"
+                android:ellipsize="end"
+                android:lines="2"
+                android:textAppearance="@style/Title"/>
+
+        </LinearLayout>
+
+    </com.daimajia.swipe.SwipeLayout>
+
+</FrameLayout>

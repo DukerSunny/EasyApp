@@ -1,20 +1,21 @@
 package tv.acfun.read.bases.activities;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
-import com.harreke.easyapp.frameworks.list.abslistview.AbsListFramework;
+import com.harreke.easyapp.frameworks.lists.recyclerview.RecyclerFramework;
+import com.harreke.easyapp.holders.recycerview.RecyclerHolder;
 import com.harreke.easyapp.listeners.OnTagClickListener;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
-import com.harreke.easyapp.widgets.InfoView;
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.listeners.ActionClickListener;
+import com.nispok.snackbar.listeners.EventListener;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.List;
@@ -35,24 +36,21 @@ import tv.acfun.read.parsers.CommentListParser;
  * 由 Harreke（harreke@live.cn） 创建于 2014/11/14
  */
 public class QuoteActivity extends ActivityFramework {
-    private IRequestCallback<String> mCallback;
-    private Conversion mCommentFloor;
-    private CommentFloorHolder mCommentFloorHolder;
+    private View comment_new;
+    private ActionClickListener mActionClickListener;
     private int mCommentId;
     private int mContentId;
+    private EventListener mEventListener;
     private LoginHelper.LoginCallback mLoginCallback;
     private LoginHelper mLoginHelper;
     private int mMaxQuoteCount;
-    private View.OnClickListener mOnCloseClickListener;
-    private View.OnClickListener mOnCopyClickListener;
-    private View.OnClickListener mOnOpenClickListener;
-    private View.OnClickListener mOnReplyClickListener;
+    private View.OnClickListener mOnAvatarClickListener;
+    private View.OnClickListener mOnClickListener;
     private OnTagClickListener mOnTagClickListener;
-    private View.OnClickListener mOnUserClickListener;
     private int mPageNo;
     private QuoteListHelper mQuoteListHelper;
-    private QuoteParseTask mQuoteParseTask = null;
-    private boolean[] mSwipeStatus;
+    private Conversion mSelectedConversion = null;
+    private Snackbar mSnackbar;
     private int mTextSize;
 
     public static Intent create(Context context, int contentId, int pageNo, int commentId) {
@@ -79,59 +77,36 @@ public class QuoteActivity extends ActivityFramework {
 
     @Override
     public void attachCallbacks() {
-
-    }
-
-    private void closeAllSwipe() {
-        int i;
-
-        for (i = 0; i < mSwipeStatus.length; i++) {
-            closeSwipe(i);
-        }
-    }
-
-    private void closeSwipe(int position) {
-        mSwipeStatus[position] = false;
+        comment_new.setOnClickListener(mOnClickListener);
     }
 
     @Override
     public void createMenu() {
         setToolbarTitle(R.string.comment_text);
-        setToolbarNavigation(R.drawable.image_back_inverse);
-        addToolbarItem(0, R.string.comment_reply, R.drawable.image_reply);
+        setToolbarNavigation();
     }
 
     @Override
     public void enquiryViews() {
-        View commentFloor = View.inflate(this, R.layout.item_comment_floor, null);
-
-        mCommentFloorHolder = new CommentFloorHolder(commentFloor);
-        mCommentFloorHolder.setTextSize(mTextSize);
-        mCommentFloorHolder.setOnOpenClickListener(mOnOpenClickListener);
-        mCommentFloorHolder.setOnCloseClickListener(mOnCloseClickListener);
-        mCommentFloorHolder.setOnUserClickListener(mOnUserClickListener);
-        mCommentFloorHolder.setOnCopyClickListener(mOnCopyClickListener);
-        mCommentFloorHolder.setOnReplyClickListener(mOnReplyClickListener);
-
+        comment_new = findViewById(R.id.comment_new);
         mLoginHelper = new LoginHelper(getActivity(), mLoginCallback);
 
-        mQuoteListHelper = new QuoteListHelper(this, R.id.quote_list);
-        mQuoteListHelper.addFooterView(commentFloor);
-        mQuoteListHelper.bindAdapter();
+        mQuoteListHelper = new QuoteListHelper(this);
+        mQuoteListHelper.setCanLoad(false);
+        mQuoteListHelper.setHasFixedSize(false);
+        mQuoteListHelper.attachAdapter();
     }
 
     @Override
     public void establishCallbacks() {
-        mCallback = new IRequestCallback<String>() {
+        mOnClickListener = new View.OnClickListener() {
             @Override
-            public void onFailure(String requestUrl) {
-                setInfoVisibility(InfoView.INFO_ERROR);
-            }
-
-            @Override
-            public void onSuccess(String requestUrl, String result) {
-                mQuoteParseTask = new QuoteParseTask();
-                mQuoteParseTask.execute(result);
+            public void onClick(View v) {
+                if (AcFunRead.getInstance().readFullUser() == null) {
+                    mLoginHelper.show();
+                } else {
+                    start(ReplyActivity.create(getActivity(), mContentId, 0, 0), 0);
+                }
             }
         };
         mOnTagClickListener = new OnTagClickListener() {
@@ -147,62 +122,10 @@ public class QuoteActivity extends ActivityFramework {
                 }
             }
         };
-        mOnUserClickListener = new View.OnClickListener() {
+        mOnAvatarClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                start(ProfileActivity.create(getActivity(), (Integer) v.getTag()));
-                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-            }
-        };
-        mOnCopyClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Conversion conversion = getConversionFromViewTag(v);
-                ClipboardManager manager = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-
-                manager.setPrimaryClip(ClipData.newPlainText(null, conversion.getContent()));
-                showToast(R.string.comment_copied);
-            }
-        };
-        mOnReplyClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Conversion conversion = getConversionFromViewTag(v);
-
-                start(ReplyActivity.create(getActivity(), mContentId, conversion.getCid(), conversion.getCount()), 0);
-            }
-        };
-        mOnCloseClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = (Integer) v.getTag();
-
-                if (position == -1) {
-                    mCommentFloorHolder.closeSwipe();
-                } else {
-                    closeSwipe(position);
-                    mQuoteListHelper.refresh();
-                }
-            }
-        };
-        mOnOpenClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = (Integer) v.getTag();
-                int i;
-
-                if (position == -1) {
-                    mCommentFloorHolder.openSwipe();
-                    closeAllSwipe();
-                } else {
-                    for (i = 0; i < mQuoteListHelper.getItemCount(); i++) {
-                        if (position != i) {
-                            closeSwipe(i);
-                        }
-                    }
-                    openSwipe(position);
-                }
-                mQuoteListHelper.refresh();
+                start(ProfileActivity.create(getActivity(), (Integer) v.getTag()), R.anim.slide_in_left, R.anim.zoom_in_exit);
             }
         };
         mLoginCallback = new LoginHelper.LoginCallback() {
@@ -224,30 +147,42 @@ public class QuoteActivity extends ActivityFramework {
                 mLoginHelper.hide();
             }
         };
-    }
+        mActionClickListener = new ActionClickListener() {
+            @Override
+            public void onActionClicked(Snackbar snackbar) {
+                start(ReplyActivity
+                        .create(getActivity(), mContentId, mSelectedConversion.getCid(), mSelectedConversion.getCount()));
+            }
+        };
+        mEventListener = new EventListener() {
+            @Override
+            public void onDismiss(Snackbar snackbar) {
+            }
 
-    private Conversion getConversionFromViewTag(View v) {
-        Conversion conversion;
-        int position = (Integer) v.getTag(R.id.comment_quote_position);
+            @Override
+            public void onDismissed(Snackbar snackbar) {
+                mSelectedConversion = null;
+            }
 
-        if (position == -1) {
-            conversion = mCommentFloor;
-        } else {
-            conversion = mQuoteListHelper.getItem(position);
-        }
+            @Override
+            public void onShow(Snackbar snackbar) {
+            }
 
-        return conversion;
+            @Override
+            public void onShown(Snackbar snackbar) {
+            }
+        };
     }
 
     @Override
-    public boolean onMenuItemClick(MenuItem menuItem) {
-        if (AcFunRead.getInstance().readFullUser() == null) {
-            mLoginHelper.show();
-        } else {
-            start(ReplyActivity.create(getActivity(), mContentId, 0, 0), 0);
-        }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-        return false;
+        if (resultCode == RESULT_OK) {
+            showToast(R.string.comment_success);
+            mQuoteListHelper.clear();
+            startAction();
+        }
     }
 
     @Override
@@ -266,10 +201,6 @@ public class QuoteActivity extends ActivityFramework {
         }
     }
 
-    private void openSwipe(int position) {
-        mSwipeStatus[position] = true;
-    }
-
     @Override
     public void setLayout() {
         setContentView(R.layout.activity_quote);
@@ -277,99 +208,82 @@ public class QuoteActivity extends ActivityFramework {
 
     @Override
     public void startAction() {
-        setInfoVisibility(InfoView.INFO_LOADING);
-        executeRequest(API.getContentComment(mContentId, 50, mPageNo), mCallback);
+        mQuoteListHelper.from(API.getContentComment(mContentId, 50, mPageNo), true);
     }
 
-    private class QuoteListHelper extends AbsListFramework<Conversion, CommentQuoteHolder> {
-        public QuoteListHelper(IFramework framework, int listId) {
-            super(framework, listId);
+    private class QuoteListHelper extends RecyclerFramework<Conversion> {
+        private final static int TYPE_FLOOR = 1;
+        private final static int TYPE_QUOTE = 0;
+
+        public QuoteListHelper(IFramework framework) {
+            super(framework);
         }
 
         @Override
-        public CommentQuoteHolder createHolder(View convertView) {
-            CommentQuoteHolder holder = new CommentQuoteHolder(convertView);
+        protected RecyclerHolder<Conversion> createHolder(View convertView, int viewType) {
+            CommentQuoteHolder quoteHolder;
+            CommentFloorHolder floorHolder;
 
-            holder.setTextSize(mTextSize);
-            holder.setOnOpenClickListener(mOnOpenClickListener);
-            holder.setOnCloseClickListener(mOnCloseClickListener);
-            holder.setOnUserClickListener(mOnUserClickListener);
-            holder.setOnCopyClickListener(mOnCopyClickListener);
-            holder.setOnReplyClickListener(mOnReplyClickListener);
+            if (viewType == TYPE_QUOTE) {
+                quoteHolder = new CommentQuoteHolder(convertView);
+                quoteHolder.setTextSize(mTextSize);
 
-            return holder;
+                return quoteHolder;
+            } else {
+                floorHolder = new CommentFloorHolder(convertView);
+                floorHolder.setTextSize(mTextSize);
+                floorHolder.setOnAvatarClickListener(mOnAvatarClickListener);
+
+                return floorHolder;
+            }
         }
 
         @Override
-        public View createView() {
-            return View.inflate(getActivity(), R.layout.item_comment_quote, null);
+        protected View createView(ViewGroup parent, int viewType) {
+            if (viewType == TYPE_QUOTE) {
+                return LayoutInflater.from(getActivity()).inflate(R.layout.item_comment_quote, parent, false);
+            } else {
+                return LayoutInflater.from(getActivity()).inflate(R.layout.item_comment_floor, parent, false);
+            }
         }
 
         @Override
-        public void onAction() {
+        protected int getViewType(int position) {
+            return position == getItemCount() - 1 ? TYPE_FLOOR : TYPE_QUOTE;
         }
 
         @Override
         public void onItemClick(int position, Conversion conversion) {
+            if (mSnackbar != null && mSnackbar.isShowing()) {
+                mSnackbar.dismiss();
+            }
+            mSelectedConversion = conversion;
+            mSnackbar = Snackbar.with(getActivity()).actionLabel(R.string.comment_reply).dismissOnActionClicked(true);
+            mSnackbar.text(getString(R.string.comment_select, conversion.getCount()));
+            mSnackbar.actionListener(mActionClickListener).eventListener(mEventListener);
+            mSnackbar.show(getActivity());
         }
 
         @Override
         public List<Conversion> onParse(String json) {
-            return null;
-        }
+            CommentListParser parser = CommentListParser.parse(json, mMaxQuoteCount, mCommentId, mOnTagClickListener);
+            FullConversion fullConversion;
+            List<Conversion> itemList;
 
-        @Override
-        public int parseItemId(Conversion conversion) {
-            return conversion.getCid();
-        }
+            if (parser != null && parser.getItemList() != null && parser.getItemList().size() > 0) {
+                fullConversion = parser.getItemList().get(0);
+                itemList = fullConversion.getQuoteList();
+                itemList.add(fullConversion.getConversion());
 
-        @Override
-        public void setItem(int position, CommentQuoteHolder holder, Conversion conversion) {
-            super.setItem(position, holder, conversion);
-            if (mSwipeStatus[position]) {
-                holder.openSwipe();
-            } else {
-                holder.closeSwipe();
-            }
-        }
-    }
-
-    private class QuoteParseTask extends AsyncTask<String, Void, List<FullConversion>> {
-        @Override
-        protected List<FullConversion> doInBackground(String... params) {
-            CommentListParser parser = CommentListParser.parse(params[0], mMaxQuoteCount, mCommentId, mOnTagClickListener);
-
-            if (parser != null) {
-                return parser.getItemList();
+                return itemList;
             } else {
                 return null;
             }
         }
 
         @Override
-        protected void onCancelled() {
-            mQuoteParseTask = null;
-        }
-
-        @Override
-        protected void onPostExecute(List<FullConversion> result) {
-            FullConversion fullConversion;
-
-            mQuoteParseTask = null;
-            if (result != null) {
-                setInfoVisibility(InfoView.INFO_HIDE);
-                fullConversion = result.get(0);
-                mCommentFloor = fullConversion.getConversion();
-                mCommentFloorHolder.setItem(-1, mCommentFloor);
-                mSwipeStatus = new boolean[fullConversion.getQuoteList().size()];
-                mQuoteListHelper.from(fullConversion.getQuoteList());
-            } else {
-                setInfoVisibility(InfoView.INFO_ERROR);
-            }
-        }
-
-        @Override
-        protected void onPreExecute() {
+        protected void onRequestAction() {
+            startAction();
         }
     }
 }

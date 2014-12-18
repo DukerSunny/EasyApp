@@ -1,4 +1,4 @@
-include ':appAcFunRead', ':libMaterialDesign'
+include ':appAcFunRead'
 include ':libEasyApp'
 include ':libCircleImageView'
 include ':libPhotoView'

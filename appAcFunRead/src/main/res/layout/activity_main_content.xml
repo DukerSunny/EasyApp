@@ -1,15 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     style="@style/mm.v"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.harreke.easyapp.widgets.SlidingTabLayout
-        android:id="@+id/main_slidingtab"
-        style="@style/mw"
-        android:background="@color/White"/>
+    <include
+        layout="@layout/widget_toolbar"/>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/content_pager"
-        style="@style/mm"/>
+    <com.astuetz.PagerSlidingTabStrip
+        android:id="@+id/main_content_pager_strip"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:pstsDividerColor="@color/Transparent"
+        app:pstsIndicatorColor="@color/White"
+        app:pstsIndicatorHeight="3dp"/>
+
+    <FrameLayout
+        style="@style/mm">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/main_content_pager"
+            style="@style/mm"/>
+
+        <include
+            layout="@layout/widget_toolbar_shadow"/>
+
+    </FrameLayout>
 
 </LinearLayout>

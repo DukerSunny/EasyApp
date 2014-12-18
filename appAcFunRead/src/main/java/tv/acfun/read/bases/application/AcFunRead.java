@@ -19,7 +19,7 @@ import tv.acfun.read.beans.Content;
 import tv.acfun.read.beans.FullUser;
 import tv.acfun.read.beans.Setting;
 import tv.acfun.read.beans.Token;
-import tv.acfun.read.helpers.ConnectionHelper;
+import tv.acfun.read.helpers.ImageConnectionHelper;
 import tv.acfun.read.tools.FontFilter;
 
 /**
@@ -190,7 +190,7 @@ public class AcFunRead extends ApplicationFramework {
         if (mConnectionReceiver == null) {
             mConnectionReceiver = new ConnectionReceiver();
         }
-        ConnectionHelper.checkConnection(this);
+        ImageConnectionHelper.checkConnection(this);
         registerReceiver(mConnectionReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 

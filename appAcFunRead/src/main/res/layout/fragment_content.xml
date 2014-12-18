@@ -2,21 +2,9 @@
 <FrameLayout
     style="@style/mm"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="8dp">
 
-    <com.harreke.easyapp.widgets.HackyWebView
-        android:id="@+id/content_web"
-        style="@style/mm"/>
-
-    <com.gc.materialdesign.views.ButtonFloat
-        android:id="@+id/content_comments"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:background="@color/Primary"
-        app:iconFloat="@drawable/image_comments_inverse"
-        app:rippleColor="@color/Primary_Dark"/>
+    <include
+        layout="@layout/widget_web"/>
 
 </FrameLayout>

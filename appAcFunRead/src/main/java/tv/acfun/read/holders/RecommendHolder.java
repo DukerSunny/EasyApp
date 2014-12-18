@@ -5,7 +5,8 @@ import android.graphics.Color;
 import android.view.View;
 import android.widget.TextView;
 
-import com.harreke.easyapp.holders.abslistview.IAbsListHolder;
+import com.harreke.easyapp.holders.recycerview.RecyclerHolder;
+import com.harreke.easyapp.widgets.RippleDrawable;
 
 import tv.acfun.read.R;
 import tv.acfun.read.beans.Content;
@@ -13,13 +14,15 @@ import tv.acfun.read.beans.Content;
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/24
  */
-public class RecommendHolder implements IAbsListHolder<Content> {
+public class RecommendHolder extends RecyclerHolder<Content> {
     private TextView recommend_channel;
     private TextView recommend_description;
     private TextView recommend_number;
     private TextView recommend_title;
 
     public RecommendHolder(View convertView) {
+        super(convertView);
+        RippleDrawable.attach(convertView);
         recommend_number = (TextView) convertView.findViewById(R.id.recommend_number);
         recommend_channel = (TextView) convertView.findViewById(R.id.recommend_channel);
         recommend_title = (TextView) convertView.findViewById(R.id.recommend_title);
@@ -27,11 +30,11 @@ public class RecommendHolder implements IAbsListHolder<Content> {
     }
 
     @Override
-    public void setItem(int position, Content content) {
+    public void setItem(Content content) {
         Resources resources = recommend_number.getResources();
         int color;
 
-        switch (position) {
+        switch (getPosition()) {
             case 0:
                 recommend_number.setTextColor(Color.WHITE);
                 recommend_number.setBackgroundResource(R.drawable.shape_circle_1st);
@@ -76,7 +79,7 @@ public class RecommendHolder implements IAbsListHolder<Content> {
             case 75:
                 recommend_channel.setText(R.string.channel_comic_novel);
         }
-        recommend_number.setText(String.valueOf(position + 1));
+        recommend_number.setText(String.valueOf(getPosition() + 1));
         recommend_title.setText(content.getTitle());
         recommend_description.setText(content.getSpanned());
     }

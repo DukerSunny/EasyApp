@@ -2,20 +2,21 @@ package tv.acfun.read.bases.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
-import com.harreke.easyapp.widgets.InfoView;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.List;
@@ -34,8 +35,9 @@ import tv.acfun.read.parsers.ContentListParser;
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/25
  */
 public class ContentActivity extends ActivityFramework {
+    private View content_comments;
     private ViewPager content_pager;
-    private PagerTabStrip content_pager_indicator;
+    private PagerSlidingTabStrip content_pager_strip;
     private Content mContent;
     private IRequestCallback<String> mContentCallback;
     private int mContentId;
@@ -45,6 +47,7 @@ public class ContentActivity extends ActivityFramework {
     private IRequestCallback<String> mFavouriteRemoveCallback;
     private LoginHelper.LoginCallback mLoginCallback;
     private LoginHelper mLoginHelper;
+    private View.OnClickListener mOnClickListener;
     private List<ArticlePage> mPageList;
 
     public static Intent create(Context context, int contentId) {
@@ -62,12 +65,13 @@ public class ContentActivity extends ActivityFramework {
 
     @Override
     public void attachCallbacks() {
+        content_comments.setOnClickListener(mOnClickListener);
     }
 
     @Override
     public void createMenu() {
         setToolbarTitle("ac" + mContentId);
-        setToolbarNavigation(R.drawable.image_back_inverse);
+        setToolbarNavigation();
         addToolbarItem(0, R.string.favourite_add, R.drawable.image_favourite_add_inverse);
         addToolbarItem(1, R.string.favourite_remove, R.drawable.image_favourite_remove_inverse);
         addToolbarItem(2, R.string.share_title, R.drawable.image_share_inverse);
@@ -104,10 +108,12 @@ public class ContentActivity extends ActivityFramework {
     @Override
     public void enquiryViews() {
         content_pager = (ViewPager) findViewById(R.id.content_pager);
-        content_pager_indicator = (PagerTabStrip) findViewById(R.id.content_pager_indicator);
-        content_pager_indicator.setTabIndicatorColorResource(R.color.Theme);
-        content_pager_indicator.setTextColor(getResources().getColor(R.color.Title));
 
+        content_pager_strip = (PagerSlidingTabStrip) findViewById(R.id.content_pager_strip);
+        content_pager_strip.setTextColor(Color.WHITE);
+        content_pager_strip.setTextSize((int) getResources().getDimension(R.dimen.Subhead));
+
+        content_comments = findViewById(R.id.content_comments);
         mLoginHelper = new LoginHelper(this, mLoginCallback);
     }
 
@@ -116,7 +122,7 @@ public class ContentActivity extends ActivityFramework {
         mContentCallback = new IRequestCallback<String>() {
             @Override
             public void onFailure(String requestUrl) {
-                setInfoVisibility(InfoView.INFO_ERROR);
+                //                setInfoVisibility(InfoView.INFO_ERROR);
             }
 
             @Override
@@ -132,8 +138,9 @@ public class ContentActivity extends ActivityFramework {
             }
 
             @Override
-            public void onSuccess(String requestUrl, String s) {
-                if (s.contains("ok")) {
+            public void onSuccess(String requestUrl, String result) {
+                Log.e(null, "add result=" + result);
+                if (result.contains("ok")) {
                     showToast(R.string.favourite_add_success);
                     showFavouriteRemove();
                 } else {
@@ -148,8 +155,9 @@ public class ContentActivity extends ActivityFramework {
             }
 
             @Override
-            public void onSuccess(String requestUrl, String s) {
-                if (s.contains("ok")) {
+            public void onSuccess(String requestUrl, String result) {
+                Log.e(null, "remove result=" + result);
+                if (result.contains("ok")) {
                     showToast(R.string.favourite_remove_success);
                     showFavouriteAdd();
                 } else {
@@ -185,6 +193,12 @@ public class ContentActivity extends ActivityFramework {
             @Override
             public void onSuccess() {
                 mLoginHelper.hide();
+            }
+        };
+        mOnClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                start(CommentActivity.create(getActivity(), mContent.getContentId()));
             }
         };
     }
@@ -249,7 +263,7 @@ public class ContentActivity extends ActivityFramework {
 
     @Override
     public void startAction() {
-        setInfoVisibility(InfoView.INFO_LOADING);
+        //        setInfoVisibility(InfoView.INFO_LOADING);
         executeRequest(API.getArticleContent(mContentId), mContentCallback);
     }
 
@@ -283,7 +297,7 @@ public class ContentActivity extends ActivityFramework {
         @Override
         protected void onCancelled() {
             mContentParseTask = null;
-            setInfoVisibility(InfoView.INFO_ERROR);
+            //            setInfoVisibility(InfoView.INFO_ERROR);
         }
 
         @Override
@@ -294,26 +308,27 @@ public class ContentActivity extends ActivityFramework {
                 if (AcFunRead.isArticle(mContent.getChannelId())) {
                     mPageList = result.getPageList();
                     if (mPageList.size() == 0) {
-                        setInfoVisibility(InfoView.INFO_ERROR);
+                        //                        setInfoVisibility(InfoView.INFO_ERROR);
                     } else {
-                        setInfoVisibility(InfoView.INFO_HIDE);
+                        //                        setInfoVisibility(InfoView.INFO_HIDE);
                         if (mPageList.size() == 1) {
-                            content_pager_indicator.setVisibility(View.GONE);
+                            content_pager_strip.setVisibility(View.GONE);
                         } else {
-                            content_pager_indicator.setVisibility(View.VISIBLE);
+                            content_pager_strip.setVisibility(View.VISIBLE);
                         }
                         content_pager.setAdapter(new Adapter(getSupportFragmentManager()));
+                        content_pager_strip.setViewPager(content_pager);
                         AcFunRead.getInstance().addHistory(mContent);
                         if (mLoginHelper.isLogin()) {
                             doFavouriteCheck();
                         }
                     }
                 } else {
-                    setInfoVisibility(InfoView.INFO_ERROR);
+                    //                    setInfoVisibility(InfoView.INFO_ERROR);
                     showToast("该投稿为视频，请使用视频客户端浏览！");
                 }
             } else {
-                setInfoVisibility(InfoView.INFO_ERROR);
+                //                setInfoVisibility(InfoView.INFO_ERROR);
             }
         }
     }

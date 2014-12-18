@@ -84,6 +84,11 @@ public class Search {
         return views;
     }
 
+    @Override
+    public int hashCode() {
+        return id;
+    }
+
     public void setChannelId(int channelId) {
         this.channelId = channelId;
     }

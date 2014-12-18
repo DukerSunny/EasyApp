@@ -1,20 +1,20 @@
 package tv.acfun.read.bases.fragments;
 
 import android.app.Activity;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.fragment.FragmentFramework;
-import com.harreke.easyapp.frameworks.list.abslistview.AbsListFramework;
+import com.harreke.easyapp.frameworks.lists.recyclerview.RecyclerFramework;
+import com.harreke.easyapp.holders.recycerview.RecyclerHolder;
 import com.harreke.easyapp.listeners.OnTagClickListener;
-import com.harreke.easyapp.requests.IRequestCallback;
-import com.harreke.easyapp.widgets.InfoView;
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.listeners.ActionClickListener;
 
 import java.util.ArrayList;
 
@@ -24,7 +24,6 @@ import tv.acfun.read.bases.activities.ComicActivity;
 import tv.acfun.read.bases.activities.ContentActivity;
 import tv.acfun.read.bases.activities.ProfileActivity;
 import tv.acfun.read.bases.activities.QuoteActivity;
-import tv.acfun.read.bases.activities.ReplyActivity;
 import tv.acfun.read.bases.application.AcFunRead;
 import tv.acfun.read.beans.Conversion;
 import tv.acfun.read.beans.FullConversion;
@@ -37,20 +36,18 @@ import tv.acfun.read.parsers.CommentListParser;
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/26
  */
 public class CommentFragment extends FragmentFramework {
-    private View comment_refresh;
-    private IRequestCallback<String> mCallback;
+    private ActionClickListener mActionClickListener;
     private CommentListHelper mCommentListHelper;
-    private OnCommentListener mCommentListener;
-    private CommentParseTask mCommentParseTask = null;
     private int mContentId;
     private int mMaxQuoteCount;
-    private View.OnClickListener mOnClickListener;
-    private View.OnClickListener mOnCopyClickListener;
+    private View.OnClickListener mOnAvatarClickListener;
+    private OnCommentListener mOnCommentListener;
+    private View.OnClickListener mOnQuoteClickListener;
     private View.OnClickListener mOnQuoteExpandClickListener;
-    private View.OnClickListener mOnReplyClickListener;
     private OnTagClickListener mOnTagClickListener;
-    private View.OnClickListener mOnUserClickListener;
     private int mPageNo;
+    private int mPosition = 0;
+    private Snackbar mSnackbar;
     private int mTextSize;
 
     public static CommentFragment create(int contentId, int pageNo) {
@@ -77,40 +74,21 @@ public class CommentFragment extends FragmentFramework {
 
     @Override
     public void attachCallbacks() {
-        comment_refresh.setOnClickListener(mOnClickListener);
+        mSnackbar.actionListener(mActionClickListener);
     }
 
     @Override
     public void enquiryViews() {
-        comment_refresh = findViewById(R.id.comment_refresh);
+        mCommentListHelper = new CommentListHelper(this);
+        mCommentListHelper.setCanLoad(false);
+        mCommentListHelper.setHasFixedSize(false);
+        mCommentListHelper.attachAdapter();
 
-        mCommentListHelper = new CommentListHelper(this, R.id.comment_list);
-        mCommentListHelper.setRefresh(comment_refresh);
-        mCommentListHelper.bindAdapter();
+        mSnackbar = Snackbar.with(getActivity()).actionLabel(R.string.comment_reply);
     }
 
     @Override
     public void establishCallbacks() {
-        mOnClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mCommentListener != null) {
-                    mCommentListener.onRefresh();
-                }
-            }
-        };
-        mCallback = new IRequestCallback<String>() {
-            @Override
-            public void onFailure(String requestUrl) {
-                setInfoVisibility(InfoView.INFO_ERROR);
-            }
-
-            @Override
-            public void onSuccess(String requestUrl, String result) {
-                mCommentParseTask = new CommentParseTask();
-                mCommentParseTask.execute(result);
-            }
-        };
         mOnQuoteExpandClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,59 +111,40 @@ public class CommentFragment extends FragmentFramework {
                 }
             }
         };
-        mOnUserClickListener = new View.OnClickListener() {
+        mOnAvatarClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentActivity activity = getActivity();
 
-                start(ProfileActivity.create(activity, (Integer) v.getTag()));
-                activity.overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                start(ProfileActivity.create(activity, (Integer) v.getTag()), R.anim.slide_in_left, R.anim.zoom_in_exit);
             }
         };
-        mOnCopyClickListener = new View.OnClickListener() {
+        mOnQuoteClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Conversion conversion = getConversionFromViewTag(v);
-                ClipboardManager manager = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                int floorPosition;
+                int quotePosition;
+                Conversion conversion;
 
-                manager.setPrimaryClip(ClipData.newPlainText(null, conversion.getContent()));
-                showToast(R.string.comment_copied);
+                if (mOnCommentListener != null) {
+                    floorPosition = (Integer) v.getTag(R.id.comment_floor_position);
+                    quotePosition = (Integer) v.getTag(R.id.comment_quote_position);
+                    conversion = mCommentListHelper.getItem(floorPosition).getQuoteList().get(quotePosition);
+                    mOnCommentListener.onCommentClick(conversion);
+                }
             }
         };
-        mOnReplyClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Conversion conversion = getConversionFromViewTag(v);
-
-                start(ReplyActivity.create(getActivity(), mContentId, conversion.getCid(), conversion.getCount()), 0);
-            }
-        };
-    }
-
-    private Conversion getConversionFromViewTag(View v) {
-        int floorPosition = (Integer) v.getTag(R.id.comment_floor_position);
-        int quotePosition = (Integer) v.getTag(R.id.comment_quote_position);
-        FullConversion fullConversion = mCommentListHelper.getItem(floorPosition);
-
-        if (quotePosition == -1) {
-            return fullConversion.getConversion();
-        } else {
-            return fullConversion.getQuoteList().get(quotePosition);
-        }
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mCommentListener = (OnCommentListener) getActivity();
+        mOnCommentListener = (OnCommentListener) getActivity();
     }
 
     @Override
     public void onDestroyView() {
-        if (mCommentParseTask != null) {
-            mCommentParseTask.cancel(true);
-            mCommentParseTask = null;
-        }
+        mCommentListHelper.destroy();
         super.onDestroyView();
     }
 
@@ -196,55 +155,48 @@ public class CommentFragment extends FragmentFramework {
 
     @Override
     public void startAction() {
-        setInfoVisibility(InfoView.INFO_LOADING);
-        executeRequest(API.getContentComment(mContentId, 50, mPageNo), mCallback);
+        mCommentListHelper.from(API.getContentComment(mContentId, 50, mPageNo), true);
     }
 
-    private class CommentListHelper extends AbsListFramework<FullConversion, FullConversionHolder> {
-        public CommentListHelper(IFramework framework, int listId) {
-            super(framework, listId);
+    private class CommentListHelper extends RecyclerFramework<FullConversion> {
+        public CommentListHelper(IFramework framework) {
+            super(framework);
         }
 
         @Override
-        public FullConversionHolder createHolder(View convertView) {
-            return new FullConversionHolder(convertView, mTextSize, mMaxQuoteCount, mOnUserClickListener, mOnCopyClickListener,
-                    mOnReplyClickListener, mOnQuoteExpandClickListener);
+        protected RecyclerHolder<FullConversion> createHolder(View convertView, int viewType) {
+            return new FullConversionHolder(convertView, mTextSize, mMaxQuoteCount, mOnAvatarClickListener,
+                    mOnQuoteExpandClickListener, mOnQuoteClickListener);
         }
 
         @Override
-        public View createView() {
-            return View.inflate(getActivity(), R.layout.item_comment, null);
+        protected View createView(ViewGroup parent, int viewType) {
+            return LayoutInflater.from(getActivity()).inflate(R.layout.item_comment, parent, false);
         }
 
         @Override
-        public void onAction() {
+        protected void onHandleMessage(Message message) {
+            if (mOnCommentListener != null) {
+                mOnCommentListener.onTotalPageChanged(message.what);
+            }
         }
 
         @Override
         public void onItemClick(int position, FullConversion fullConversion) {
+            Conversion conversion;
 
+            if (mOnCommentListener != null) {
+                conversion = fullConversion.getConversion();
+                mOnCommentListener.onCommentClick(conversion);
+            }
         }
 
         @Override
         public ArrayList<FullConversion> onParse(String json) {
-            return null;
-        }
-
-        @Override
-        public int parseItemId(FullConversion fullConversion) {
-            return fullConversion.getConversion().getCid();
-        }
-    }
-
-    private class CommentParseTask extends AsyncTask<String, Void, ArrayList<FullConversion>> {
-        @Override
-        protected ArrayList<FullConversion> doInBackground(String... params) {
-            CommentListParser parser = CommentListParser.parse(params[0], mMaxQuoteCount, 0, mOnTagClickListener);
+            CommentListParser parser = CommentListParser.parse(json, mMaxQuoteCount, 0, mOnTagClickListener);
 
             if (parser != null) {
-                if (mCommentListener != null) {
-                    mCommentListener.onTotalPageChanged(parser.getTotalPage());
-                }
+                postMessage(parser.getTotalPage());
 
                 return parser.getItemList();
             } else {
@@ -253,23 +205,8 @@ public class CommentFragment extends FragmentFramework {
         }
 
         @Override
-        protected void onCancelled() {
-            mCommentParseTask = null;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<FullConversion> result) {
-            mCommentParseTask = null;
-            if (result != null) {
-                setInfoVisibility(InfoView.INFO_HIDE);
-                mCommentListHelper.from(result);
-            } else {
-                setInfoVisibility(InfoView.INFO_ERROR);
-            }
-        }
-
-        @Override
-        protected void onPreExecute() {
+        public void onRequestAction() {
+            startAction();
         }
     }
 }

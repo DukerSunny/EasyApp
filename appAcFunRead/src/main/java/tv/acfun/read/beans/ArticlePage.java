@@ -20,7 +20,7 @@ public class ArticlePage {
         String attr;
         int position;
 
-        mTitle = title;
+        mTitle = title == null ? "" : title;
         mArticle = article;
         mImageList = new ArrayList<String>();
         tagMatcher = StringUtil.getMatcher("<img[\\S\\s]+?/>", mArticle);
@@ -43,7 +43,7 @@ public class ArticlePage {
             if (attrMatcher.find()) {
                 attr = attrMatcher.group(1);
                 mArticle = mArticle.replace(tag, "<a onClick=\"content.onAClick('" + attr + "')\">" + tagMatcher.group(1) +
-                                "</a>");
+                        "</a>");
             }
         }
     }

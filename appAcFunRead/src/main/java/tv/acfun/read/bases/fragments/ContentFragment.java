@@ -8,20 +8,18 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.View;
 import android.webkit.JavascriptInterface;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.harreke.easyapp.configs.ImageExecutorConfig;
 import com.harreke.easyapp.frameworks.bases.fragment.FragmentFramework;
+import com.harreke.easyapp.frameworks.webs.WebFramework;
 import com.harreke.easyapp.helpers.DialogHelper;
 import com.harreke.easyapp.helpers.ImageLoaderHelper;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.tools.GsonUtil;
 import com.harreke.easyapp.tools.StringUtil;
-import com.harreke.easyapp.widgets.HackyWebView;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -33,13 +31,12 @@ import java.util.regex.Matcher;
 
 import tv.acfun.read.R;
 import tv.acfun.read.bases.activities.ComicActivity;
-import tv.acfun.read.bases.activities.CommentActivity;
 import tv.acfun.read.bases.activities.ContentActivity;
 import tv.acfun.read.bases.activities.ProfileActivity;
 import tv.acfun.read.bases.application.AcFunRead;
 import tv.acfun.read.beans.ArticlePage;
 import tv.acfun.read.beans.Content;
-import tv.acfun.read.helpers.ConnectionHelper;
+import tv.acfun.read.helpers.ImageConnectionHelper;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/25
@@ -50,17 +47,14 @@ public class ContentFragment extends FragmentFramework {
     private final static int CONTENT_IMG = 0;
     private final static String TAG = "ContentFragment";
 
-    private View content_comments;
-    private HackyWebView content_web;
     private String mArticle;
     private WebViewClient mClient;
     private Content mContent;
+    private WebFramework mContentWebHelper;
     private boolean mFirstRefresh = true;
     private Handler mHandler;
     private List<String> mImageList;
-    private View.OnClickListener mOnClickListener;
     private DialogInterface.OnClickListener mOnRedirectClickListener;
-    private HackyWebView.OnScrollListener mOnScrollListener;
     private int mPagePosition;
     private DialogHelper mRedirectHelper;
     private int mRedirectId;
@@ -89,28 +83,17 @@ public class ContentFragment extends FragmentFramework {
 
     @Override
     public void attachCallbacks() {
-        WebSettings settings = content_web.getSettings();
-
-        settings.setAppCacheEnabled(false);
-        settings.setSupportZoom(true);
-        settings.setBuiltInZoomControls(true);
-        settings.setDisplayZoomControls(false);
-        settings.setJavaScriptEnabled(true);
-        settings.setJavaScriptCanOpenWindowsAutomatically(false);
-
-        content_web.addJavascriptInterface(new JsInterface(), "content");
-        content_web.setWebViewClient(mClient);
-        content_web.setOnScrollListener(mOnScrollListener);
-
-        content_comments.setOnClickListener(mOnClickListener);
     }
 
     @Override
     public void enquiryViews() {
-        content_web = (HackyWebView) findViewById(R.id.content_web);
-        content_comments = findViewById(R.id.content_comments);
-
-        content_comments.setAlpha(0.75f);
+        mContentWebHelper = new WebFramework(this);
+        mContentWebHelper.setCanRefresh(false);
+        mContentWebHelper.setCanLoad(false);
+        mContentWebHelper.setAppCacheEnabled(false);
+        mContentWebHelper.setJavaScriptEnabled(true);
+        mContentWebHelper.addJavascriptInterface(new JsInterface(), "content");
+        mContentWebHelper.setWebViewClient(mClient);
 
         mRedirectHelper = new DialogHelper(getActivity());
         mRedirectHelper.setPositiveButton(R.string.app_ok);
@@ -128,7 +111,7 @@ public class ContentFragment extends FragmentFramework {
                 switch (msg.what) {
                     case CONTENT_IMG:
                         position = (Integer) msg.obj;
-                        if (ConnectionHelper.shouldLoadImage() || imageCached(position)) {
+                        if (ImageConnectionHelper.shouldLoadImage() || imageCached(position)) {
                             start(ComicActivity
                                     .create(getActivity(), mContent.getContentId(), mPagePosition, mImageList, position));
                         } else {
@@ -152,7 +135,7 @@ public class ContentFragment extends FragmentFramework {
             public void onPageFinished(WebView view, String url) {
                 int i;
 
-                if (ConnectionHelper.shouldLoadImage()) {
+                if (ImageConnectionHelper.shouldLoadImage()) {
                     for (i = 0; i < mImageList.size(); i++) {
                         ImageLoaderHelper.loadBitmap(mImageList.get(i), new ReplaceCallback(i));
                     }
@@ -178,30 +161,6 @@ public class ContentFragment extends FragmentFramework {
                     case DialogInterface.BUTTON_POSITIVE:
                         start(ContentActivity.create(getActivity(), mRedirectId));
                 }
-            }
-        };
-        mOnScrollListener = new HackyWebView.OnScrollListener() {
-            @Override
-            public void onScrollChange(int dx, int dy) {
-            }
-
-            @Override
-            public void onScrollStateChange(int scrollState) {
-                if (scrollState == HackyWebView.SCROLL_STATE_IDEL) {
-                    if (content_comments.getAlpha() == 0.25f) {
-                        content_comments.setAlpha(0.75f);
-                    }
-                } else {
-                    if (content_comments.getAlpha() == 0.75f) {
-                        content_comments.setAlpha(0.25f);
-                    }
-                }
-            }
-        };
-        mOnClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                start(CommentActivity.create(getActivity(), mContent.getContentId()));
             }
         };
     }
@@ -253,7 +212,7 @@ public class ContentFragment extends FragmentFramework {
     private void jsReplaceImageUrl(int position) {
         String imageUrl = mImageList.get(position);
 
-        content_web.loadUrl("javascript:(" +
+        mContentWebHelper.loadUrl("javascript:(" +
                 "function(){" +
                 "var objs = document.getElementsByTagName(\"img\");" +
                 "objs[" + position + "].setAttribute(\"src\", \"file://" +
@@ -264,7 +223,7 @@ public class ContentFragment extends FragmentFramework {
     }
 
     private void jsReplaceLoading(int position) {
-        content_web.loadUrl("javascript:(" +
+        mContentWebHelper.loadUrl("javascript:(" +
                 "function(){" +
                 "var objs = document.getElementsByTagName(\"img\");" +
                 "objs[" + position + "].setAttribute(\"src\", \"file://" + AcFunRead.CacheDir + "/" + AcFunRead.DIR_ASSETS +
@@ -309,7 +268,7 @@ public class ContentFragment extends FragmentFramework {
         matcher = StringUtil.getMatcher("http://[\\S\\s]+?", href);
         if (matcher.find()) {
             intent = new Intent(Intent.ACTION_VIEW, Uri.parse(href));
-            start(intent, false);
+            start(intent);
         }
     }
 
@@ -356,7 +315,7 @@ public class ContentFragment extends FragmentFramework {
         int i;
 
         if (mImageList.size() > 0) {
-            if (ConnectionHelper.shouldLoadImage()) {
+            if (ImageConnectionHelper.shouldLoadImage()) {
                 for (i = 0; i < mImageList.size(); i++) {
                     article = replaceImageUrlForLoading(article, i);
                 }
@@ -370,7 +329,7 @@ public class ContentFragment extends FragmentFramework {
                 }
             }
         }
-        content_web.loadDataWithBaseURL(null, generateHtml(article), "text/html", "UTF-8", null);
+        mContentWebHelper.loadHtml(null, generateHtml(article));
     }
 
     private class JsInterface {

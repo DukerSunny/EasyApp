@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 
-import com.harreke.easyapp.R;
 import com.harreke.easyapp.frameworks.bases.application.ApplicationFramework;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.IRequestExecutor;
@@ -22,15 +21,11 @@ import java.io.File;
  * 图片加载器的全局配置
  */
 public class ImageExecutorConfig {
-    public static int imageCacheSize = 48 * 1024 * 1024;
-    public static int loadingImageId = R.drawable.anim_progress_radiant;
-    public static int retryImageId = R.drawable.progress_retry;
-
-    public static void config(Context context) {
+    public static void config(Context context, int loadingImageId, int errorImageId) {
         ImageLoaderConfiguration configuration = new ImageLoaderConfiguration.Builder(context).diskCache(
                 new UnlimitedDiscCache(new File(ApplicationFramework.CacheDir + "/" + ApplicationFramework.DIR_TEMPS)))
                 .defaultDisplayImageOptions(
-                        new DisplayImageOptions.Builder().showImageForEmptyUri(retryImageId).showImageOnFail(retryImageId)
+                        new DisplayImageOptions.Builder().showImageForEmptyUri(errorImageId).showImageOnFail(errorImageId)
                                 .showImageOnLoading(loadingImageId).cacheOnDisk(true).build()).build();
         ImageLoader.getInstance().init(configuration);
     }

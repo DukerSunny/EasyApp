@@ -58,20 +58,11 @@
     <color name="Yellow">#ffff00</color>
     <color name="DarkCyan">#008b8b</color>
 
-    <color name="Background">#eeeeee</color>
-
-    <color name="Divider">#1e000000</color>
+    <color name="Divider">#8a000000</color>
 
     <color name="Transparent">#00000000</color>
     <color name="TransparentBlack">#40000000</color>
     <color name="TransparentGray">#80000000</color>
     <color name="TransparentWhite">#c0ffffff</color>
-
-    <color name="Title">#4b565e</color>
-    <color name="Content">#333333</color>
-    <color name="Assist">#999999</color>
-
-    <color name="Theme">#00bffF</color>
-    <color name="Theme_Transparent">#8000bffF</color>
     
 </resources>

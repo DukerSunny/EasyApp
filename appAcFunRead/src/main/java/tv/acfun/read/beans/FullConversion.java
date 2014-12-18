@@ -22,6 +22,11 @@ public class FullConversion {
         return mQuoteList;
     }
 
+    @Override
+    public int hashCode() {
+        return mConversion.hashCode();
+    }
+
     public void setConversion(Conversion conversion) {
         mConversion = conversion;
     }

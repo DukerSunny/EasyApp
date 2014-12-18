@@ -3,8 +3,8 @@ package tv.acfun.read.bases.activities;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +15,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.chiralcode.colorpicker.ColorPicker;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.helpers.DialogHelper;
@@ -59,6 +60,7 @@ public class ReplyActivity extends ActivityFramework {
     private ColorPicker picker;
     private UBBEditText reply_input;
     private ViewPager reply_pager;
+    private PagerSlidingTabStrip reply_pager_strip;
     private View reply_selectall;
     private View reply_style_bold;
     private View reply_style_color;
@@ -127,8 +129,8 @@ public class ReplyActivity extends ActivityFramework {
         } else {
             setToolbarTitle(R.string.reply_id);
         }
-        setToolbarNavigation(R.drawable.image_back_inverse);
-        addToolbarItem(0, R.string.comment_send, R.drawable.image_send);
+        setToolbarNavigation();
+        addToolbarItem(0, R.string.comment_send, R.drawable.image_send_inverse);
     }
 
     private void doSend() {
@@ -170,7 +172,6 @@ public class ReplyActivity extends ActivityFramework {
 
     @Override
     public void enquiryViews() {
-        PagerTabStrip reply_pager_indicator;
         View dialog_colorpicker;
 
         reply_style_bold = findViewById(R.id.reply_style_bold);
@@ -188,15 +189,16 @@ public class ReplyActivity extends ActivityFramework {
 
         reply_input = (UBBEditText) findViewById(R.id.reply_input);
         reply_pager = (ViewPager) findViewById(R.id.reply_pager);
-        reply_pager_indicator = (PagerTabStrip) findViewById(R.id.reply_pager_indicator);
-        reply_pager_indicator.setTabIndicatorColorResource(R.color.Theme);
-        reply_pager_indicator.setTextColor(getResources().getColor(R.color.Title));
+        reply_pager_strip = (PagerSlidingTabStrip) findViewById(R.id.reply_pager_strip);
         reply_selectall = findViewById(R.id.reply_selectall);
         reply_unselect = findViewById(R.id.reply_unselect);
 
+        reply_pager_strip.setTextColor(Color.DKGRAY);
+        reply_pager_strip.setTextSize((int) getResources().getDimension(R.dimen.Subhead));
+
         mAdapter = new Adapter();
 
-        mDefaultColor = getResources().getColor(R.color.Content);
+        mDefaultColor = Color.BLACK;
         mStyleColor = mDefaultColor;
         dialog_colorpicker = View.inflate(getActivity(), R.layout.dialog_colorpicker, null);
         picker = (ColorPicker) dialog_colorpicker.findViewById(R.id.picker);
@@ -300,6 +302,7 @@ public class ReplyActivity extends ActivityFramework {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
                     showSoftInputMethod();
+                    reply_pager_strip.setVisibility(View.GONE);
                     reply_pager.setVisibility(View.GONE);
                 } else {
                     hideSoftInputMethod();
@@ -332,6 +335,7 @@ public class ReplyActivity extends ActivityFramework {
     }
 
     private void hideEmot() {
+        reply_pager_strip.setVisibility(View.VISIBLE);
         reply_pager.setVisibility(View.GONE);
         reply_style_emot_on.setVisibility(View.GONE);
         reply_style_emot_off.setVisibility(View.VISIBLE);
@@ -387,6 +391,7 @@ public class ReplyActivity extends ActivityFramework {
     }
 
     private void showEmot() {
+        reply_pager_strip.setVisibility(View.VISIBLE);
         reply_pager.setVisibility(View.VISIBLE);
         reply_style_emot_on.setVisibility(View.VISIBLE);
         reply_style_emot_off.setVisibility(View.GONE);
@@ -409,6 +414,7 @@ public class ReplyActivity extends ActivityFramework {
     @Override
     public void startAction() {
         reply_pager.setAdapter(mAdapter);
+        reply_pager_strip.setViewPager(reply_pager);
     }
 
     private class Adapter extends PagerAdapter {

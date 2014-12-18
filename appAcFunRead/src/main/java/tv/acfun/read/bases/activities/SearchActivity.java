@@ -3,22 +3,23 @@ package tv.acfun.read.bases.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.SearchView;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
-import com.harreke.easyapp.frameworks.list.abslistview.AbsListFramework;
-import com.harreke.easyapp.frameworks.list.abslistview.FooterLoadStatus;
-import com.harreke.easyapp.widgets.InfoView;
+import com.harreke.easyapp.frameworks.lists.recyclerview.RecyclerFramework;
+import com.harreke.easyapp.holders.recycerview.RecyclerHolder;
+import com.harreke.easyapp.widgets.HackySearchView;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 
+import tv.acfun.read.BuildConfig;
 import tv.acfun.read.R;
 import tv.acfun.read.api.API;
 import tv.acfun.read.beans.Search;
@@ -28,16 +29,17 @@ import tv.acfun.read.parsers.SearchListParser;
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/29
  */
-public class SearchActivity extends ActivityFramework {
+public class SearchActivity extends ActivityFramework implements SearchView.OnQueryTextListener {
     private int mChannelId;
+    private boolean mFirstSearch = true;
     private int mOrderBy;
     private int mOrderId;
     private String mQuery;
-    private SearchListHelper mSearchListHelper;
     private AdapterView.OnItemSelectedListener mSearchRangeItemClickListener;
+    private SearchRecyclerHelper mSearchRecyclerHelper;
     private AdapterView.OnItemSelectedListener mSearchSortResultItemClickListener;
     private AdapterView.OnItemSelectedListener mSearchTargetItemClickListener;
-    private EditText search_input;
+    private SearchView mSearchView;
     private Spinner search_range;
     private Spinner search_sortresult;
     private Spinner search_target;
@@ -56,25 +58,27 @@ public class SearchActivity extends ActivityFramework {
 
     @Override
     public void attachCallbacks() {
-        search_sortresult.setOnItemSelectedListener(mSearchSortResultItemClickListener);
-        search_target.setOnItemSelectedListener(mSearchTargetItemClickListener);
-        search_range.setOnItemSelectedListener(mSearchRangeItemClickListener);
+        //        search_sortresult.setOnItemSelectedListener(mSearchSortResultItemClickListener);
+        //        search_target.setOnItemSelectedListener(mSearchTargetItemClickListener);
+        //        search_range.setOnItemSelectedListener(mSearchRangeItemClickListener);
     }
 
     @Override
     public void createMenu() {
+        setToolbarNavigation();
         setToolbarTitle(R.string.app_search);
-        setToolbarNavigation(R.drawable.image_back_inverse);
-        addToolbarViewItem(0, R.string.app_search, new SearchView(this));
+        mSearchView = new HackySearchView(this);
+        mSearchView.setOnQueryTextListener(this);
+        addToolbarViewItem(0, R.string.app_search, mSearchView);
     }
 
-    private void doSearch() {
-        String text = search_input.getText().toString().trim();
-
-        ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(search_input.getWindowToken(), 0);
-        if (text.length() > 1) {
-            mQuery = text;
-            mSearchListHelper.clear();
+    private void doSearch(String input) {
+        ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(mSearchView.getWindowToken(), 0);
+        if (input.length() > 1) {
+            mQuery = input;
+            mSearchRecyclerHelper.clear();
+            mSearchRecyclerHelper.setCanRefresh(true);
+            mSearchRecyclerHelper.setCanLoad(true);
             startAction();
         } else {
             showToast(getString(R.string.search_tooshort));
@@ -83,20 +87,18 @@ public class SearchActivity extends ActivityFramework {
 
     @Override
     public void enquiryViews() {
-        View footer_loadmore = View.inflate(getActivity(), R.layout.footer_loadmore, null);
+        //        search_sortresult = (Spinner) findViewById(R.id.search_sortresult);
+        //        search_target = (Spinner) findViewById(R.id.search_target);
+        //        search_range = (Spinner) findViewById(R.id.search_range);
+        //        search_ptr = (PtrFrameLayout) findViewById(R.id.search_ptr);
 
-        search_input = (EditText) findViewById(R.id.search_input);
-        search_sortresult = (Spinner) findViewById(R.id.search_sortresult);
-        search_target = (Spinner) findViewById(R.id.search_target);
-        search_range = (Spinner) findViewById(R.id.search_range);
-
-        mSearchListHelper = new SearchListHelper(this, R.id.search_list);
-        mSearchListHelper.addFooterView(footer_loadmore);
-        mSearchListHelper.setLoadMore(new FooterLoadStatus(footer_loadmore));
-        mSearchListHelper.setRootView(findViewById(R.id.search_list));
-        mSearchListHelper.setInfoView((InfoView) findViewById(R.id.search_info));
-        mSearchListHelper.bindAdapter();
-        mSearchListHelper.onPostAction();
+        mSearchRecyclerHelper = new SearchRecyclerHelper(this);
+        mSearchRecyclerHelper.showRetryWhenEmptyIdle(false);
+        mSearchRecyclerHelper.setClickableWhenEmptyIdle(false);
+        mSearchRecyclerHelper.hideEmpty();
+        mSearchRecyclerHelper.setCanRefresh(false);
+        mSearchRecyclerHelper.setCanLoad(false);
+        mSearchRecyclerHelper.attachAdapter();
     }
 
     @Override
@@ -166,22 +168,31 @@ public class SearchActivity extends ActivityFramework {
     }
 
     @Override
-    public boolean onMenuItemClick(MenuItem menuItem) {
-        doSearch();
+    protected void onPause() {
+        super.onPause();
+        if (!BuildConfig.DEBUG) {
+            MobclickAgent.onPause(this);
+        }
+    }
+
+    @Override
+    public boolean onQueryTextChange(String s) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+        doSearch(s);
 
         return false;
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPause(this);
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
-        MobclickAgent.onResume(this);
+        if (!BuildConfig.DEBUG) {
+            MobclickAgent.onResume(this);
+        }
     }
 
     @Override
@@ -191,29 +202,28 @@ public class SearchActivity extends ActivityFramework {
 
     @Override
     public void startAction() {
-        if (mQuery != null) {
-            mSearchListHelper
-                    .from(API.getSearch(mQuery, mChannelId, mOrderBy, mOrderId, 20, mSearchListHelper.getCurrentPage()));
-        }
+        mSearchRecyclerHelper
+                .from(API.getSearch(mQuery, mChannelId, mOrderBy, mOrderId, 20, mSearchRecyclerHelper.getCurrentPage()));
     }
 
-    private class SearchListHelper extends AbsListFramework<Search, SearchHolder> {
-        public SearchListHelper(IFramework framework, int listId) {
-            super(framework, listId);
+    private class SearchRecyclerHelper extends RecyclerFramework<Search> {
+        public SearchRecyclerHelper(IFramework framework) {
+            super(framework);
         }
 
         @Override
-        public SearchHolder createHolder(View convertView) {
+        protected RecyclerHolder<Search> createHolder(View convertView, int viewType) {
             return new SearchHolder(convertView);
         }
 
         @Override
-        public View createView() {
-            return View.inflate(getActivity(), R.layout.item_search, null);
+        protected View createView(ViewGroup parent, int viewType) {
+            return LayoutInflater.from(getActivity()).inflate(R.layout.item_search, parent, false);
         }
 
         @Override
-        public void onAction() {
+        public void onRequestAction() {
+            startAction();
         }
 
         @Override
@@ -226,17 +236,10 @@ public class SearchActivity extends ActivityFramework {
             SearchListParser parser = SearchListParser.parse(json);
 
             if (parser != null) {
-                setTotalPage(parser.getTotalPage());
-
                 return parser.getContents();
             } else {
                 return null;
             }
-        }
-
-        @Override
-        public int parseItemId(Search search) {
-            return search.getId();
         }
     }
 }

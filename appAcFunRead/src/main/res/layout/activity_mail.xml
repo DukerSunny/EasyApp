@@ -2,8 +2,7 @@
 <LinearLayout
     style="@style/mm.v"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/Background">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,16 +16,14 @@
             android:id="@+id/mail_back"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="@drawable/button_transparent"
             android:padding="8dp"
-            android:src="@drawable/image_back"/>
+            android:src="@drawable/image_back_inverse"/>
 
         <TextView
             style="@style/mmw"
             android:gravity="center_vertical"
             android:padding="8dp"
             android:text="@string/menu_mail"
-            android:textColor="@color/Title"
             android:textSize="16dp"/>
 
     </LinearLayout>
@@ -39,7 +36,6 @@
             style="@style/mm"
             android:divider="@color/Transparent"
             android:dividerHeight="16dp"
-            android:listSelector="@drawable/button_transparent"
             android:padding="8dp"/>
 
         <com.harreke.easyapp.widgets.InfoView

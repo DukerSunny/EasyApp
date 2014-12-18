@@ -11,25 +11,19 @@
             style="@style/ww"
             android:padding="8dp"
             android:text="@string/setting_misc"
-            android:textColor="@color/Assist"
-            android:textSize="12dp"/>
+            android:textAppearance="@style/Caption"/>
 
         <LinearLayout
-            style="@style/mw.v"
-            android:divider="@drawable/divider_horizontal_dot"
-            android:showDividers="middle">
+            style="@style/mw.v">
 
-            <com.harreke.easyapp.widgets.ChildTabView
+            <android.support.v7.widget.SwitchCompat
                 android:id="@+id/setting_autoloadimage"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:background="@drawable/button_white"
-                android:drawableRight="@drawable/button_check"
                 android:gravity="center_vertical"
                 android:padding="8dp"
                 android:text="@string/setting_autoloadimage"
-                android:textColor="@color/Title"
-                android:textSize="16dp"/>
+                android:textAppearance="@style/Subhead"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -42,8 +36,7 @@
                     android:gravity="center_vertical"
                     android:padding="8dp"
                     android:text="@string/setting_maxquotecount"
-                    android:textColor="@color/Title"
-                    android:textSize="16dp"/>
+                    android:textAppearance="@style/Subhead"/>
 
                 <EditText
                     android:id="@+id/setting_maxquotecount"
@@ -52,15 +45,12 @@
                     android:layout_margin="8dp"
                     android:inputType="number"
                     android:maxLength="2"
-                    android:textColor="@color/Title"
-                    android:textColorHint="@color/Assist"
-                    android:textSize="16dp"/>
+                    android:textAppearance="@style/Caption"/>
 
                 <ImageView
                     android:id="@+id/setting_maxquotecount_ok"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@drawable/button_transparent"
                     android:padding="8dp"
                     android:src="@drawable/image_ok"
                     android:visibility="gone"/>
@@ -78,8 +68,7 @@
                     android:gravity="center_vertical"
                     android:padding="8dp"
                     android:text="@string/setting_textsize"
-                    android:textColor="@color/Title"
-                    android:textSize="16dp"/>
+                    android:textAppearance="@style/Subhead"/>
 
                 <Spinner
                     android:id="@+id/setting_textsize"
@@ -102,8 +91,7 @@
                     android:gravity="center_vertical"
                     android:padding="8dp"
                     android:text="@string/setting_textfont"
-                    android:textColor="@color/Title"
-                    android:textSize="16dp"/>
+                    android:textAppearance="@style/Subhead"/>
 
                 <Spinner
                     android:id="@+id/setting_textfont"
@@ -120,36 +108,29 @@
             android:layout_marginTop="8dp"
             android:padding="8dp"
             android:text="@string/setting_other"
-            android:textColor="@color/Assist"
-            android:textSize="12dp"/>
+            android:textAppearance="@style/Caption"/>
 
 
         <LinearLayout
-            style="@style/mw.v"
-            android:divider="@drawable/divider_horizontal_dot"
-            android:showDividers="middle">
+            style="@style/mw.v">
 
             <TextView
                 android:id="@+id/setting_restoredefault"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:background="@drawable/button_white"
                 android:gravity="center_vertical"
                 android:padding="8dp"
                 android:text="@string/setting_restoredefault"
-                android:textColor="@color/Title"
-                android:textSize="16dp"/>
+                android:textAppearance="@style/Subhead"/>
 
             <TextView
                 android:id="@+id/setting_about"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:background="@drawable/button_white"
                 android:gravity="center_vertical"
                 android:padding="8dp"
                 android:text="@string/setting_about"
-                android:textColor="@color/Title"
-                android:textSize="16dp"/>
+                android:textAppearance="@style/Subhead"/>
 
         </LinearLayout>
 

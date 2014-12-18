@@ -5,11 +5,14 @@
         <item name="colorPrimary">@color/Primary</item>
         <item name="colorPrimaryDark">@color/Primary_Dark</item>
         <item name="colorAccent">@color/Accent</item>
-        <item name="actionBarTheme">@style/Theme.AcFunRead.ActionBar</item>
+
+        <item name="searchViewStyle">@style/Theme.AcFunRead.SearchView</item>
     </style>
 
-    <style name="Theme.AcFunRead.ActionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="android:background">@color/Primary</item>
+    <style name="Theme.AcFunRead.SearchView" parent="Widget.AppCompat.SearchView">
+        <item name="searchIcon">@drawable/image_toolbar_search</item>
+        <item name="closeIcon">@drawable/image_toolbar_close</item>
+        <item name="android:textColor">@color/White</item>
     </style>
 
 </resources>

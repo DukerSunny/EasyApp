@@ -5,10 +5,10 @@
     <string name="dialog_ok">确定</string>
     <string name="dialog_cancel">取消</string>
 
-    <string name="info_empty">没有内容</string>
-    <string name="info_loading">数据加载中 …</string>
-    <string name="info_retry">加载失败</string>
-    <string name="info_retryhint">，重试</string>
+    <string name="empty_idle">没有内容</string>
+    <string name="empty_loading">数据加载中 …</string>
+    <string name="empty_failure">加载失败</string>
+    <string name="empty_retry">，重试</string>
 
     <string name="loadmore_idle">点击加载下一页</string>
     <string name="loadmore_loading">数据加载中 …</string>

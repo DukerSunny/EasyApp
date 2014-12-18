@@ -1,39 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    style="@style/mw.v"
+    style="@style/mw.h"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/White"
-    android:padding="8dp">
+    android:gravity="center_vertical"
+    android:padding="16dp">
 
     <FrameLayout
-        style="@style/mw"
-        android:gravity="center_vertical">
+        android:layout_width="40dp"
+        android:layout_height="40dp">
+
+        <ImageView
+            android:id="@+id/search_icon"
+            style="@style/mm"
+            android:src="@drawable/shape_circle_misc"/>
 
         <TextView
             android:id="@+id/search_channel"
-            android:layout_width="64dp"
-            android:layout_height="24dp"
-            android:background="@color/Search_Misc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:gravity="center"
-            android:text="@string/channel_misc"
             android:textColor="@color/White"
-            android:textSize="12dp"/>
+            android:textSize="@dimen/Caption"/>
+
+    </FrameLayout>
+
+    <LinearLayout
+        style="@style/mw.v"
+        android:layout_marginLeft="16dp">
 
         <TextView
             android:id="@+id/search_title"
             style="@style/mw"
-            android:text="@string/content_title"
-            android:textColor="@color/Title"
-            android:textSize="20dp"/>
+            android:textAppearance="@style/Title"/>
 
-    </FrameLayout>
+        <TextView
+            android:id="@+id/search_description"
+            style="@style/mw"
+            android:layout_marginTop="8dp"
+            android:textAppearance="@style/Caption"/>
 
-    <TextView
-        android:id="@+id/search_description"
-        style="@style/mw"
-        android:layout_marginTop="8dp"
-        android:text="@string/content_description"
-        android:textColor="@color/Content"
-        android:textSize="12dp"/>
+    </LinearLayout>
 
 </LinearLayout>

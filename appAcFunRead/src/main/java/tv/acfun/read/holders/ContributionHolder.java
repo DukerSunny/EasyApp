@@ -25,19 +25,19 @@ public class ContributionHolder implements IAbsListHolder<Content> {
         switch (content.getChannelId()) {
             case 110:
                 contribution_channel.setText(R.string.channel_misc);
-                contribution_channel.setBackgroundResource(R.color.Search_Misc);
+                contribution_channel.setBackgroundResource(R.color.Channel_Misc);
                 break;
             case 73:
                 contribution_channel.setText(R.string.channel_work_emotion);
-                contribution_channel.setBackgroundResource(R.color.Search_Work_Emotion);
+                contribution_channel.setBackgroundResource(R.color.Channel_Work_Emotion);
                 break;
             case 74:
                 contribution_channel.setText(R.string.channel_dramaculture);
-                contribution_channel.setBackgroundResource(R.color.Search_DramaCulture);
+                contribution_channel.setBackgroundResource(R.color.Channel_DramaCulture);
                 break;
             case 75:
                 contribution_channel.setText(R.string.channel_comic_novel);
-                contribution_channel.setBackgroundResource(R.color.Search_Comic_Novel);
+                contribution_channel.setBackgroundResource(R.color.Channel_Comic_Novel);
         }
         contribution_title.setText(content.getTitle());
     }

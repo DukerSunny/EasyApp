@@ -6,6 +6,7 @@
     <string name="app_imageview">浏览图片</string>
     <string name="app_quote">浏览盖楼</string>
     <string name="app_clear">清空</string>
+    <string name="app_os_too_old">系统版本过低，不支持此功能！</string>
 
     <string name="app_cancel">取消</string>
     <string name="app_dropdown">▼</string>
@@ -24,9 +25,9 @@
     <string name="about_list">创意指导：辰音奈奈\n美工素材：南墙亚男</string>
 
     <string name="channel_misc">综合</string>
-    <string name="channel_work_emotion">工作•情感</string>
+    <string name="channel_work_emotion">工作\n情感</string>
     <string name="channel_dramaculture">动漫文化</string>
-    <string name="channel_comic_novel">漫画•轻小说</string>
+    <string name="channel_comic_novel">漫画\n轻小说</string>
 
     <string name="channel_search">输入AC号或关键字</string>
 
@@ -56,9 +57,7 @@
     <string name="comment_failure">评论发送失败，请检查网络连接！</string>
     <string name="comment_tooshort">评论字数少于5个，请重新输入！</string>
 
-    <string name="comment_user">用户信息</string>
-    <string name="comment_copy">复制评论</string>
-    <string name="comment_copied">已复制该评论文本</string>
+    <string name="comment_select">已选中%s楼</string>
     <string name="comment_reply">回复该楼</string>
 
     <string name="content_comments">评论</string>
@@ -124,6 +123,10 @@
     <string name="reply_input">输入评论内容</string>
 
     <string name="reply_pickcolor">选择颜色</string>
+
+    <string name="search_sort">结果排序</string>
+    <string name="search_range">搜索范围</string>
+    <string name="search_target">搜索项目</string>
 
     <string name="search_tooshort">关键字过短，请重新输入！</string>
 

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="Subhead">16dp</dimen>
+    <dimen name="Title">@dimen/abc_text_size_title_material</dimen>
+
+    <dimen name="Subhead">@dimen/abc_text_size_subhead_material</dimen>
+
+    <dimen name="Caption">@dimen/abc_text_size_caption_material</dimen>
 
 </resources>

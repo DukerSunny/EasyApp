@@ -32,7 +32,7 @@ import java.util.List;
 import tv.acfun.read.BuildConfig;
 import tv.acfun.read.R;
 import tv.acfun.read.bases.application.AcFunRead;
-import tv.acfun.read.helpers.ConnectionHelper;
+import tv.acfun.read.helpers.ImageConnectionHelper;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -128,15 +128,10 @@ public class ComicActivity extends ActivityFramework {
     }
 
     @Override
-    public void configActivity() {
-        setToolbarMode(ToolbarMode.Overlay);
-    }
-
-    @Override
     public void createMenu() {
         setToolbarTitle(R.string.app_imageview);
-        setToolbarNavigation(R.drawable.image_back_inverse);
-        addToolbarItem(0, R.string.comic_save, R.drawable.image_save);
+        setToolbarNavigation();
+        addToolbarItem(0, R.string.comic_save, R.drawable.image_save_inverse);
     }
 
     @Override
@@ -358,7 +353,7 @@ public class ComicActivity extends ActivityFramework {
             photoView.setMediumScale(2f);
             photoView.setMaximumScale(6f);
             photoView.setOnPhotoTapListener(mOnTapListener);
-            if (ConnectionHelper.shouldLoadImage() || imageCached(position)) {
+            if (ImageConnectionHelper.shouldLoadImage() || imageCached(position)) {
                 ImageLoaderHelper.loadImage(photoView, mImageList.get(position));
             } else {
                 ImageLoaderHelper

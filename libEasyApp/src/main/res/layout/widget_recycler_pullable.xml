@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    style="@style/mm"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.harreke.easyapp.widgets.pullablelayout.PullableLayout
+        android:id="@+id/recycler_pullable"
+        style="@style/mm">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_solid"
+            style="@style/mm"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"/>
+
+    </com.harreke.easyapp.widgets.pullablelayout.PullableLayout>
+
+    <include
+        layout="@layout/widget_empty"/>
+
+</FrameLayout>

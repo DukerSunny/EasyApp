@@ -1,24 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    style="@style/mm.v"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:padding="8dp">
+<LinearLayout
+    style="@style/mm.v">
 
-    <ListView
-        android:id="@+id/favourite_list"
-        style="@style/mm"
-        android:divider="@color/Transparent"
-        android:dividerHeight="16dp"
-        android:drawSelectorOnTop="true"
-        android:listSelector="@drawable/button_transparent"/>
+    <include
+        layout="@layout/widget_toolbar"/>
 
-    <ImageView
-        android:id="@+id/favourite_refresh"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:background="@drawable/button_floating"
-        android:src="@drawable/image_refresh"/>
+    <FrameLayout
+        style="@style/mm">
 
-</FrameLayout>
+        <include
+            layout="@layout/widget_recycler_pullable"/>
+
+        <include
+            layout="@layout/widget_toolbar_shadow"/>
+
+    </FrameLayout>
+
+</LinearLayout>

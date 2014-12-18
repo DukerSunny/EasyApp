@@ -209,8 +209,14 @@ public class UBBEncoder {
     }
 
     private void startColor(int start, String value) {
+        Matcher matcher = StringUtil.getMatcher("#[0-9a-fA-F]{3,6}", value);
+
         mColorStartQueue.offer(start);
-        mColorValueQueue.offer(Color.parseColor(value));
+        if (matcher.find()) {
+            mColorValueQueue.offer(Color.parseColor(matcher.group(0)));
+        } else {
+            mColorValueQueue.offer(Color.BLACK);
+        }
     }
 
     private void startImg(int start, String value) {

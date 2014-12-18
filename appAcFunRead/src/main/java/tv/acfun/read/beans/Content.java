@@ -74,6 +74,11 @@ public class Content {
         return views;
     }
 
+    @Override
+    public int hashCode() {
+        return contentId;
+    }
+
     public void setChannelId(int channelId) {
         this.channelId = channelId;
     }

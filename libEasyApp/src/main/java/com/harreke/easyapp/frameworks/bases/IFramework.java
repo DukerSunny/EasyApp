@@ -3,18 +3,17 @@ package com.harreke.easyapp.frameworks.bases;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.view.ViewGroup;
 
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
-import com.harreke.easyapp.widgets.InfoView;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/07/24
  *
  * 框架接口
  */
-public interface IFramework extends IInfoClickListener {
+public interface IFramework {
     /**
      * 内容层新增视图
      *
@@ -23,7 +22,7 @@ public interface IFramework extends IInfoClickListener {
      * @param params
      *         布局参数
      */
-    public void addContentView(View view, FrameLayout.LayoutParams params);
+    public void addContentView(View view, ViewGroup.LayoutParams params);
 
     /**
      * 分派事件
@@ -63,14 +62,6 @@ public interface IFramework extends IInfoClickListener {
      */
     public void executeRequest(RequestBuilder builder, IRequestCallback<String> callback);
 
-    /**
-     * 查找内容层指定视图
-     *
-     * @param viewId
-     *         视图id
-     *
-     * @return 视图
-     */
     public View findViewById(int viewId);
 
     /**
@@ -81,35 +72,11 @@ public interface IFramework extends IInfoClickListener {
     public Activity getActivity();
 
     /**
-     * 获得内容层视图
-     *
-     * 框架拥有两层视图，内容层和消息层
-     * 内容层为xml文件中编写的实际布局内容
-     *
-     * @return 内容层视图
-     */
-    public View getContent();
-
-    /**
      * 获得框架
      *
      * @return 框架
      */
     public IFramework getFramework();
-
-    /**
-     * 获得消息层视图
-     *
-     * 框架拥有两层视图，内容层和消息层
-     * 消息层为一个InfoView（消息视图），盖在内容层上，用来提示相关信息（如加载中）
-     * 框架因执行启动、刷新数据等异步操作，而导致内容层里的内容不可用时，会显示出消息层，屏蔽内容层一切触摸点击事件
-     * 当异步操作完成后，消息层会隐藏，重新显示出内容层，并解除对内容层事件的屏蔽
-     *
-     * @return 消息层视图
-     *
-     * @see com.harreke.easyapp.widgets.InfoView
-     */
-    public InfoView getInfo();
 
     /**
      * 隐藏Toast
@@ -126,38 +93,10 @@ public interface IFramework extends IInfoClickListener {
     /**
      * 设置内容层布局
      *
-     * @param view
-     *         布局视图
+     * @param contentLayoutId
+     *         内容层布局Id
      */
-    public void setContentView(View view);
-
-    /**
-     * 设置内容层布局
-     *
-     * @param layoutId
-     *         布局Id
-     */
-    public void setContentView(int layoutId);
-
-    /**
-     * 设置内容层是否可见
-     *
-     * @param visible
-     *         是否可见
-     */
-    public void setContentVisible(boolean visible);
-
-    /**
-     * 设置消息层可见方式
-     *
-     * @param infoVisibility
-     *         可见方式
-     *         {@link com.harreke.easyapp.widgets.InfoView#INFO_HIDE}
-     *         {@link com.harreke.easyapp.widgets.InfoView#INFO_LOADING}
-     *         {@link com.harreke.easyapp.widgets.InfoView#INFO_EMPTY}
-     *         {@link com.harreke.easyapp.widgets.InfoView#INFO_ERROR}
-     */
-    public void setInfoVisibility(int infoVisibility);
+    public void setContentView(int contentLayoutId);
 
     /**
      * 设置内容层布局
@@ -215,20 +154,48 @@ public interface IFramework extends IInfoClickListener {
      *
      * @param intent
      *         目标Intent
-     * @param animate
-     *         是否显示切换动画
+     * @param animIn
+     *         进入动画Id
+     *
+     *         设置为0则使用默认进入动画
+     * @param animOut
+     *         退出动画Id
+     *
+     *         设置为0则使用默认退出动画
      */
-    public void start(Intent intent, boolean animate);
+    public void start(Intent intent, int animIn, int animOut);
 
     /**
-     * 启动带回调的Intent
+     * 启动Intent
      *
      * @param intent
      *         目标Intent
      * @param requestCode
      *         请求代码
+     *
+     *         如果需要回调，则设置requestCode为正整数；否则设为-1；
      */
     public void start(Intent intent, int requestCode);
+
+    /**
+     * 启动Intent
+     *
+     * @param intent
+     *         目标Intent
+     * @param requestCode
+     *         请求代码
+     *
+     *         如果需要回调，则设置requestCode为正整数；否则设为-1；
+     * @param animIn
+     *         进入动画Id
+     *
+     *         设置为0则使用默认进入动画
+     * @param animOut
+     *         退出动画Id
+     *
+     *         设置为0则使用默认退出动画
+     */
+    public void start(Intent intent, int requestCode, int animIn, int animOut);
 
     /**
      * 开始运作

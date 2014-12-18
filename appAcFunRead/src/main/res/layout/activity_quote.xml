@@ -1,16 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    style="@style/mm"
+<LinearLayout
+    style="@style/mm.v"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:padding="8dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ListView
-        android:id="@+id/quote_list"
-        style="@style/mm"
-        android:divider="@drawable/divider_horizontal_dot"
-        android:dividerHeight="1px"
-        android:drawSelectorOnTop="true"
-        android:listSelector="@drawable/button_transparent"
-        android:scrollbars="none"/>
+    <include
+        layout="@layout/widget_toolbar"/>
 
-</FrameLayout>
+    <FrameLayout
+        style="@style/mm">
+
+        <include
+            layout="@layout/widget_recycler_pullable"/>
+
+        <include
+            layout="@layout/widget_toolbar_shadow"/>
+
+        <com.melnykov.fab.FloatingActionButton
+            style="@style/ww"
+            android:id="@+id/comment_new"
+            android:layout_gravity="right|bottom"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="16dp"
+            android:scaleType="center"
+            android:src="@drawable/image_new"
+            app:fab_colorNormal="?attr/colorAccent"
+            app:fab_colorPressed="?attr/colorPrimaryDark"/>
+
+    </FrameLayout>
+
+</LinearLayout>

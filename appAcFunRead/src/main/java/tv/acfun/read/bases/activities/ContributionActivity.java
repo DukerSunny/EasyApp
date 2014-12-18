@@ -6,8 +6,8 @@ import android.view.View;
 
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
-import com.harreke.easyapp.frameworks.list.abslistview.AbsListFramework;
-import com.harreke.easyapp.frameworks.list.abslistview.FooterLoadStatus;
+import com.harreke.easyapp.frameworks.lists.abslistview.AbsListFramework;
+import com.harreke.easyapp.frameworks.lists.abslistview.FooterLoadStatus;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public class ContributionActivity extends ActivityFramework {
     @Override
     public void createMenu() {
         setToolbarTitle(getString(R.string.user_contributes, mUsername));
-        setToolbarNavigation(R.drawable.image_back_inverse);
+        setToolbarNavigation();
     }
 
     @Override
@@ -57,7 +57,7 @@ public class ContributionActivity extends ActivityFramework {
         View footer_loadmore = View.inflate(getActivity(), R.layout.footer_loadmore, null);
 
         mContributionListHelper = new Helper(this, R.id.contribution_list);
-        mContributionListHelper.setRefresh(findViewById(R.id.contribution_refresh));
+        mContributionListHelper.setFloating(findViewById(R.id.contribution_refresh));
         mContributionListHelper.addFooterView(footer_loadmore);
         mContributionListHelper.setLoadMore(new FooterLoadStatus(footer_loadmore));
         mContributionListHelper.bindAdapter();
@@ -69,8 +69,7 @@ public class ContributionActivity extends ActivityFramework {
 
     @Override
     public void onBackPressed() {
-        exit(false);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        exit(R.anim.zoom_in_enter, R.anim.slide_out_left);
     }
 
     @Override

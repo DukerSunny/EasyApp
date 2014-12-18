@@ -16,10 +16,10 @@ android {
         }
     }
     compileSdkVersion 21
-    buildToolsVersion '21.0.2'
+    buildToolsVersion '21.1.1'
     defaultConfig {
         applicationId 'tv.acfun.read'
-        minSdkVersion 14
+        minSdkVersion 9
         targetSdkVersion 21
         versionCode 4
         versionName '1.2.1'

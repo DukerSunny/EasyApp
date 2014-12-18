@@ -1,76 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     style="@style/mm.v"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.widget.CardView
-        style="@style/mw">
+    <include
+        layout="@layout/widget_toolbar"/>
 
-        <LinearLayout
-            style="@style/mw.v"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:padding="8dp">
+    <LinearLayout
+        android:id="@+id/search_handler"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/search_input"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:hint="@string/channel_search"
-                android:lines="1"
-                android:padding="8dp"
-                android:textAppearance="@style/Subhead"
-                android:textColorHint="@color/Assist"/>
+        <TextView
+            android:id="@+id/search_sort"
+            style="@style/mmw"
+            android:gravity="center"
+            android:text="@string/search_sort"
+            android:textColor="@color/White"
+            android:textSize="@dimen/Subhead"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="@color/White"
-                android:orientation="horizontal">
+        <TextView
+            android:id="@+id/search_range"
+            style="@style/mmw"
+            android:gravity="center"
+            android:text="@string/search_range"
+            android:textColor="@color/White"
+            android:textSize="@dimen/Subhead"/>
 
-                <Spinner
-                    android:id="@+id/search_sortresult"
-                    style="@style/mmw"
-                    android:entries="@array/search_sortresult"
-                    android:gravity="center"/>
+        <TextView
+            android:id="@+id/search_target"
+            style="@style/mmw"
+            android:gravity="center"
+            android:text="@string/search_target"
+            android:textColor="@color/White"
+            android:textSize="@dimen/Subhead"/>
 
-                <Spinner
-                    android:id="@+id/search_target"
-                    style="@style/mmw"
-                    android:entries="@array/search_target"
-                    android:gravity="center"/>
-
-                <Spinner
-                    android:id="@+id/search_range"
-                    style="@style/mmw"
-                    android:entries="@array/search_range"
-                    android:gravity="center"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
+    </LinearLayout>
 
     <FrameLayout
         style="@style/mm">
 
-        <ListView
-            android:id="@+id/search_list"
-            style="@style/mm"
-            android:divider="@color/Transparent"
-            android:dividerHeight="16dp"
-            android:listSelector="@drawable/button_transparent"
-            android:padding="8dp"/>
+        <include
+            layout="@layout/widget_recycler_pullable"/>
 
-        <com.harreke.easyapp.widgets.InfoView
-            android:id="@+id/search_info"
-            style="@style/mm"
-            android:background="@color/TransparentWhite"
-            android:visibility="gone"
-            app:showRetryHintWhenEmpty="false"/>
+        <include
+            layout="@layout/widget_toolbar_shadow"/>
 
     </FrameLayout>
 

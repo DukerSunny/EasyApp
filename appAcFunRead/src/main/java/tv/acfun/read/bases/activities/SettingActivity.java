@@ -3,6 +3,7 @@ package tv.acfun.read.bases.activities;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.widget.SwitchCompat;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -41,7 +42,7 @@ public class SettingActivity extends ActivityFramework {
     private View.OnTouchListener mOnTouchListener;
     private Setting mSetting;
     private View setting_about;
-    private ChildTabView setting_autoloadimage;
+    private SwitchCompat setting_autoloadimage;
     private EditText setting_maxquotecount;
     private View setting_maxquotecount_ok;
     private View setting_restoredefault;
@@ -73,12 +74,12 @@ public class SettingActivity extends ActivityFramework {
     @Override
     public void createMenu() {
         setToolbarTitle(R.string.menu_setting);
-        setToolbarNavigation(R.drawable.image_back_inverse);
+        setToolbarNavigation();
     }
 
     @Override
     public void enquiryViews() {
-        setting_autoloadimage = (ChildTabView) findViewById(R.id.setting_autoloadimage);
+        setting_autoloadimage = (SwitchCompat) findViewById(R.id.setting_autoloadimage);
         setting_maxquotecount = (EditText) findViewById(R.id.setting_maxquotecount);
         setting_maxquotecount_ok = findViewById(R.id.setting_maxquotecount_ok);
         setting_textsize = (Spinner) findViewById(R.id.setting_textsize);
@@ -179,8 +180,7 @@ public class SettingActivity extends ActivityFramework {
 
     @Override
     public void onBackPressed() {
-        exit(false);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        exit(R.anim.zoom_in_enter, R.anim.slide_out_left);
     }
 
     @Override

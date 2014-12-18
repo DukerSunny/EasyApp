@@ -2,25 +2,27 @@ package tv.acfun.read.bases.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Message;
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
-import android.view.MenuItem;
 import android.view.View;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.harreke.easyapp.adapters.fragment.FragmentPageAdapter;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.listeners.ActionClickListener;
+import com.nispok.snackbar.listeners.EventListener;
 import com.umeng.analytics.MobclickAgent;
 
 import tv.acfun.read.BuildConfig;
 import tv.acfun.read.R;
 import tv.acfun.read.bases.application.AcFunRead;
 import tv.acfun.read.bases.fragments.CommentFragment;
+import tv.acfun.read.beans.Conversion;
 import tv.acfun.read.helpers.LoginHelper;
 import tv.acfun.read.listeners.OnCommentListener;
 
@@ -28,13 +30,18 @@ import tv.acfun.read.listeners.OnCommentListener;
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/26
  */
 public class CommentActivity extends ActivityFramework implements OnCommentListener {
+    private View comment_new;
     private ViewPager comment_pager;
-    private PagerTabStrip comment_pager_indicator;
+    private PagerSlidingTabStrip comment_pager_strip;
+    private ActionClickListener mActionClickListener;
     private Adapter mAdapter;
     private int mContentId;
-    private Handler mHandler;
+    private EventListener mEventListener;
     private LoginHelper.LoginCallback mLoginCallback;
     private LoginHelper mLoginHelper;
+    private View.OnClickListener mOnClickListener;
+    private Conversion mSelectedConversion = null;
+    private Snackbar mSnackbar;
     private int mTotalPage;
 
     public static Intent create(Context context, int contentId) {
@@ -54,30 +61,29 @@ public class CommentActivity extends ActivityFramework implements OnCommentListe
 
     @Override
     public void attachCallbacks() {
+        comment_new.setOnClickListener(mOnClickListener);
     }
 
     private void checkTotalPage() {
         if (mTotalPage > 1) {
-            comment_pager_indicator.setVisibility(View.VISIBLE);
-        } else {
-            comment_pager_indicator.setVisibility(View.GONE);
+            comment_pager_strip.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
-    public void createMenu() {
+    protected void createMenu() {
         setToolbarTitle("ac" + mContentId);
-        setToolbarNavigation(R.drawable.image_back_inverse);
-        addToolbarItem(0, R.string.comment_reply, R.drawable.image_reply);
+        setToolbarNavigation();
     }
 
     @Override
     public void enquiryViews() {
         comment_pager = (ViewPager) findViewById(R.id.comment_pager);
-        comment_pager_indicator = (PagerTabStrip) findViewById(R.id.comment_pager_indicator);
+        comment_pager_strip = (PagerSlidingTabStrip) findViewById(R.id.comment_pager_strip);
+        comment_pager_strip.setTextColor(Color.WHITE);
+        comment_pager_strip.setTextSize((int) getResources().getDimension(R.dimen.Subhead));
 
-        comment_pager_indicator.setTabIndicatorColorResource(R.color.Theme);
-        comment_pager_indicator.setTextColor(getResources().getColor(R.color.Title));
+        comment_new = findViewById(R.id.comment_new);
 
         mLoginHelper = new LoginHelper(getActivity(), mLoginCallback);
 
@@ -87,15 +93,6 @@ public class CommentActivity extends ActivityFramework implements OnCommentListe
 
     @Override
     public void establishCallbacks() {
-        mHandler = new Handler(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg) {
-                mAdapter.refresh();
-                checkTotalPage();
-
-                return false;
-            }
-        });
         mLoginCallback = new LoginHelper.LoginCallback() {
             @Override
             public void onCancelRequest() {
@@ -115,6 +112,41 @@ public class CommentActivity extends ActivityFramework implements OnCommentListe
                 mLoginHelper.hide();
             }
         };
+        mOnClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (AcFunRead.getInstance().readFullUser() == null) {
+                    mLoginHelper.show();
+                } else {
+                    start(ReplyActivity.create(getActivity(), mContentId, 0, 0), 0);
+                }
+            }
+        };
+        mActionClickListener = new ActionClickListener() {
+            @Override
+            public void onActionClicked(Snackbar snackbar) {
+                start(ReplyActivity
+                        .create(getActivity(), mContentId, mSelectedConversion.getCid(), mSelectedConversion.getCount()));
+            }
+        };
+        mEventListener = new EventListener() {
+            @Override
+            public void onDismiss(Snackbar snackbar) {
+            }
+
+            @Override
+            public void onDismissed(Snackbar snackbar) {
+                mSelectedConversion = null;
+            }
+
+            @Override
+            public void onShow(Snackbar snackbar) {
+            }
+
+            @Override
+            public void onShown(Snackbar snackbar) {
+            }
+        };
     }
 
     @Override
@@ -128,20 +160,21 @@ public class CommentActivity extends ActivityFramework implements OnCommentListe
     }
 
     @Override
-    protected void onDestroy() {
-        mLoginHelper.hide();
-        super.onDestroy();
+    public void onCommentClick(Conversion conversion) {
+        if (mSnackbar != null && mSnackbar.isShowing()) {
+            mSnackbar.dismiss();
+        }
+        mSelectedConversion = conversion;
+        mSnackbar = Snackbar.with(this).actionLabel(R.string.comment_reply).dismissOnActionClicked(true);
+        mSnackbar.text(getString(R.string.comment_select, conversion.getCount()));
+        mSnackbar.actionListener(mActionClickListener).eventListener(mEventListener);
+        mSnackbar.show(this);
     }
 
     @Override
-    public boolean onMenuItemClick(MenuItem menuItem) {
-        if (AcFunRead.getInstance().readFullUser() == null) {
-            mLoginHelper.show();
-        } else {
-            start(ReplyActivity.create(getActivity(), mContentId, 0, 0), 0);
-        }
-
-        return false;
+    protected void onDestroy() {
+        mLoginHelper.hide();
+        super.onDestroy();
     }
 
     @Override
@@ -150,11 +183,6 @@ public class CommentActivity extends ActivityFramework implements OnCommentListe
         if (!BuildConfig.DEBUG) {
             MobclickAgent.onPause(this);
         }
-    }
-
-    @Override
-    public void onRefresh() {
-        refreshComment();
     }
 
     @Override
@@ -169,7 +197,9 @@ public class CommentActivity extends ActivityFramework implements OnCommentListe
     public void onTotalPageChanged(int totalPage) {
         if (mTotalPage < totalPage) {
             mTotalPage = totalPage;
-            mHandler.sendEmptyMessage(0);
+            checkTotalPage();
+            mAdapter.refresh();
+            comment_pager_strip.setViewPager(comment_pager);
         }
     }
 
@@ -186,6 +216,7 @@ public class CommentActivity extends ActivityFramework implements OnCommentListe
     @Override
     public void startAction() {
         comment_pager.setAdapter(mAdapter);
+        comment_pager_strip.setViewPager(comment_pager);
     }
 
     private class Adapter extends FragmentPageAdapter {

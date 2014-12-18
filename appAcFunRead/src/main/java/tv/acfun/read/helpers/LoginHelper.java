@@ -6,11 +6,13 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.harreke.easyapp.helpers.DialogHelper;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
+import com.harreke.easyapp.widgets.CircularProgressDrawable;
 
 import tv.acfun.read.R;
 import tv.acfun.read.api.API;
@@ -24,15 +26,14 @@ import tv.acfun.read.parsers.TokenParser;
  * 由 Harreke（harreke@live.cn） 创建于 2014/10/17
  */
 public class LoginHelper extends DialogHelper implements DialogInterface.OnClickListener {
-    private int color_Assist;
-    private int color_Red;
     private EditText login_account;
     private TextView login_error;
+    private TextView login_message;
     private EditText login_password;
-    private View login_progress;
+    private ImageView login_progress;
     private CheckBox login_remember;
     private View login_status;
-    private CompoundButton.OnCheckedChangeListener mCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+    private CheckBox.OnCheckedChangeListener mCheckedChangeListener = new CheckBox.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             AcFunRead.getInstance().writeBoolean("rememberAccount", isChecked);
@@ -100,13 +101,13 @@ public class LoginHelper extends DialogHelper implements DialogInterface.OnClick
         login_password = (EditText) view.findViewById(R.id.login_password);
         login_remember = (CheckBox) view.findViewById(R.id.login_remember);
         login_status = view.findViewById(R.id.login_status);
-        login_progress = view.findViewById(R.id.login_progress);
+        login_progress = (ImageView) view.findViewById(R.id.login_progress);
+        login_message = (TextView) view.findViewById(R.id.login_message);
         login_error = (TextView) view.findViewById(R.id.login_message);
 
+        mProgressDrawable = new CircularProgressDrawable();
+        login_progress.setImageDrawable(mProgressDrawable);
         login_remember.setOnCheckedChangeListener(mCheckedChangeListener);
-
-        color_Assist = context.getResources().getColor(R.color.Assist);
-        color_Red = context.getResources().getColor(R.color.Red);
 
         setTitle(R.string.login_required);
         setView(view);
@@ -171,8 +172,11 @@ public class LoginHelper extends DialogHelper implements DialogInterface.OnClick
     @Override
     public void hide() {
         super.hide();
+        mProgressDrawable.setProgress(0);
         login_status.setVisibility(View.GONE);
     }
+
+    private CircularProgressDrawable mProgressDrawable;
 
     /**
      * 检查用户身份
@@ -219,19 +223,21 @@ public class LoginHelper extends DialogHelper implements DialogInterface.OnClick
     private void showError(int errorId) {
         login_status.setVisibility(View.VISIBLE);
         login_progress.setVisibility(View.GONE);
+        login_message.setVisibility(View.GONE);
         login_error.setVisibility(View.VISIBLE);
 
-        login_error.setTextColor(color_Red);
+        mProgressDrawable.setProgress(0);
         login_error.setText(errorId);
     }
 
     private void showProgress() {
         login_status.setVisibility(View.VISIBLE);
         login_progress.setVisibility(View.VISIBLE);
-        login_error.setVisibility(View.VISIBLE);
+        login_message.setVisibility(View.VISIBLE);
+        login_error.setVisibility(View.GONE);
 
-        login_error.setTextColor(color_Assist);
-        login_error.setText(R.string.login_progress);
+        mProgressDrawable.setProgress(-1);
+        login_message.setText(R.string.login_progress);
     }
 
     /**

@@ -1,44 +1,43 @@
 package com.harreke.easyapp.frameworks.bases.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
-import com.harreke.easyapp.R;
 import com.harreke.easyapp.frameworks.bases.IFramework;
+import com.harreke.easyapp.frameworks.bases.IToolbar;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
-import com.harreke.easyapp.frameworks.bases.activity.IToolbar;
 import com.harreke.easyapp.helpers.RequestHelper;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
-import com.harreke.easyapp.widgets.InfoView;
+
+import java.lang.ref.WeakReference;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/07/24
  *
  * Fragment框架
  */
-public abstract class FragmentFramework extends Fragment implements IFramework, IFragment, IToolbar {
+public abstract class FragmentFramework extends Fragment implements IFramework, IToolbar {
     private static final String TAG = "FragmentFramework";
-    private FrameLayout framework_content;
-    private InfoView framework_info;
-    private boolean mCreated = false;
-    private View.OnClickListener mInfoClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (framework_info.isShowingRetry()) {
-                onInfoClick();
-            }
-        }
-    };
+    private WeakReference<ActivityFramework> mActivityReference;
+    private int mContentLayoutId;
+    private View mContentView;
+    private boolean mCreated;
     private RequestHelper mRequest;
 
     public FragmentFramework() {
+        mActivityReference = null;
     }
+
+    /**
+     * 初始化Bundle传参数据
+     */
+    protected abstract void acquireArguments(Bundle bundle);
 
     /**
      * 布局新增视图
@@ -49,8 +48,10 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
      *         布局参数
      */
     @Override
-    public final void addContentView(View view, FrameLayout.LayoutParams params) {
-        framework_content.addView(view, params);
+    public final void addContentView(View view, ViewGroup.LayoutParams params) {
+        if (mContentView instanceof ViewGroup) {
+            ((ViewGroup) mContentView).addView(view, params);
+        }
     }
 
     @Override
@@ -95,43 +96,17 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
         mRequest.execute(getActivity(), builder, callback);
     }
 
-    /**
-     * 查找视图
-     *
-     * @param viewId
-     *         视图id
-     *
-     * @return 视图
-     */
     @Override
-    public final View findViewById(int viewId) {
-        return framework_content.findViewById(viewId);
+    public View findViewById(int viewId) {
+        return mContentView.findViewById(viewId);
     }
 
     private ActivityFramework getActivityFramework() {
-        ActivityFramework activity;
-
-        try {
-            activity = (ActivityFramework) getActivity();
-        } catch (ClassCastException e) {
-            activity = null;
+        if (mActivityReference != null) {
+            return mActivityReference.get();
+        } else {
+            return null;
         }
-
-        return activity;
-    }
-
-    /**
-     * 获得内容层视图
-     *
-     * 框架拥有两层视图，内容层和消息层
-     *
-     * 内容层为xml文件中编写的实际布局内容
-     *
-     * @return 内容层视图
-     */
-    @Override
-    public final View getContent() {
-        return framework_content;
     }
 
     /**
@@ -145,23 +120,6 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
     }
 
     /**
-     * 获得消息层视图
-     *
-     * 框架拥有两层视图，内容层和消息层
-     * 消息层为一个InfoView（消息视图），盖在内容层上，用来提示相关信息（如加载中）
-     * 框架因执行启动、刷新数据等异步操作，而导致内容层里的内容不可用时，会显示出消息层
-     * 当异步操作完成后，消息层会隐藏，重新显示出内容层
-     *
-     * @return 消息层视图
-     *
-     * @see com.harreke.easyapp.widgets.InfoView
-     */
-    @Override
-    public final InfoView getInfo() {
-        return framework_info;
-    }
-
-    /**
      * 隐藏Toast
      */
     @Override
@@ -170,6 +128,15 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
 
         if (activity != null) {
             activity.hideToast();
+        }
+    }
+
+    @Override
+    public void hideToolbar() {
+        ActivityFramework activity = getActivityFramework();
+
+        if (activity != null) {
+            activity.hideToolbar();
         }
     }
 
@@ -193,23 +160,30 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
     }
 
     @Override
+    public boolean isToolbarShowing() {
+        ActivityFramework activity = getActivityFramework();
+
+        return activity != null && activity.isToolbarShowing();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mActivityReference = new WeakReference<ActivityFramework>((ActivityFramework) activity);
+    }
+
+    @Override
     public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.widget_framework, null);
+        mRequest = new RequestHelper();
 
-        if (root != null) {
-            framework_content = (FrameLayout) root.findViewById(R.id.framework_content);
-            framework_info = (InfoView) root.findViewById(R.id.framework_info);
-            mRequest = new RequestHelper();
-            framework_info.setOnClickListener(mInfoClickListener);
+        setLayout();
+        mContentView = inflater.inflate(mContentLayoutId, container, false);
+        acquireArguments(getArguments());
+        establishCallbacks();
+        enquiryViews();
+        attachCallbacks();
 
-            setLayout();
-            acquireArguments(getArguments());
-            establishCallbacks();
-            enquiryViews();
-            attachCallbacks();
-        }
-
-        return root;
+        return mContentView;
     }
 
     @Override
@@ -219,14 +193,11 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
         super.onDestroyView();
     }
 
-    /**
-     * 当消息层被点击时触发
-     */
     @Override
-    public void onInfoClick() {
-        if (!isRequestExecuting()) {
-            startAction();
-        }
+    public void onDetach() {
+        mActivityReference.clear();
+        mActivityReference = null;
+        super.onDetach();
     }
 
     @Override
@@ -239,58 +210,18 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
         }
     }
 
-    /**
-     * 设置内容层布局
-     *
-     * @param view
-     *         布局视图
-     */
     @Override
-    public final void setContentView(View view) {
-        framework_content.removeAllViews();
-        framework_content.addView(view);
+    public void setContentView(int contentLayoutId) {
+        mContentLayoutId = contentLayoutId;
     }
 
-    /**
-     * 设置内容层布局
-     *
-     * @param layoutId
-     *         布局Id
-     */
     @Override
-    public final void setContentView(int layoutId) {
-        framework_content.removeAllViews();
-        View.inflate(getActivity(), layoutId, framework_content);
-    }
+    public void setToolbarNavigation() {
+        ActivityFramework activity = getActivityFramework();
 
-    /**
-     * 设置内容层是否可见
-     *
-     * @param visible
-     *         是否可见
-     */
-    @Override
-    public void setContentVisible(boolean visible) {
-        if (visible) {
-            framework_content.setVisibility(View.VISIBLE);
-        } else {
-            framework_content.setVisibility(View.GONE);
+        if (activity != null) {
+            activity.setToolbarNavigation();
         }
-    }
-
-    /**
-     * 设置消息层可见方式
-     *
-     * @param infoVisibility
-     *         可见方式
-     *         {@link com.harreke.easyapp.widgets.InfoView#INFO_HIDE}
-     *         {@link com.harreke.easyapp.widgets.InfoView#INFO_LOADING}
-     *         {@link com.harreke.easyapp.widgets.InfoView#INFO_EMPTY}
-     *         {@link com.harreke.easyapp.widgets.InfoView#INFO_ERROR}
-     */
-    @Override
-    public void setInfoVisibility(int infoVisibility) {
-        framework_info.setInfoVisibility(infoVisibility);
     }
 
     @Override
@@ -373,6 +304,15 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
     }
 
     @Override
+    public void showToolbar() {
+        ActivityFramework activity = getActivityFramework();
+
+        if (activity != null) {
+            activity.showToolbar();
+        }
+    }
+
+    @Override
     public void showToolbarItem(int id) {
         ActivityFramework activity = getActivityFramework();
 
@@ -386,26 +326,43 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
      *
      * @param intent
      *         目标Intent
-     */
-    @Override
-    public final void start(Intent intent) {
-        start(intent, true);
-    }
-
-    /**
-     * 启动Intent
+     * @param requestCode
+     *         请求代码
      *
-     * @param intent
-     *         目标Intent
-     * @param animate
-     *         是否显示切换动画
+     *         如果需要回调，则设置requestCode为正整数；否则设为-1；
+     * @param animIn
+     *         进入动画Id
+     *
+     *         如果不需要进入动画，则设置为0
+     * @param animOut
+     *         退出动画Id
+     *
+     *         如果不需要退出动画，则设置为0
      */
     @Override
-    public final void start(Intent intent, boolean animate) {
+    public void start(Intent intent, int requestCode, int animIn, int animOut) {
         ActivityFramework activity = getActivityFramework();
 
         if (activity != null) {
-            activity.start(intent, animate);
+            activity.start(intent, requestCode, animIn, animOut);
+        }
+    }
+
+    @Override
+    public void start(Intent intent, int animIn, int animOut) {
+        ActivityFramework activity = getActivityFramework();
+
+        if (activity != null) {
+            activity.start(intent, animIn, animOut);
+        }
+    }
+
+    @Override
+    public final void start(Intent intent) {
+        ActivityFramework activity = getActivityFramework();
+
+        if (activity != null) {
+            activity.start(intent);
         }
     }
 
@@ -422,9 +379,7 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
         ActivityFramework activity = getActivityFramework();
 
         if (activity != null) {
-            hideToast();
-            startActivityForResult(intent, requestCode);
-            activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            activity.start(intent, requestCode);
         }
     }
 }

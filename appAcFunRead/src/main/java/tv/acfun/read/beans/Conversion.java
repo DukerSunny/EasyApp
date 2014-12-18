@@ -3,6 +3,7 @@ package tv.acfun.read.beans;
 import android.text.Spanned;
 
 import com.harreke.easyapp.listeners.OnTagClickListener;
+import com.harreke.easyapp.tools.StringUtil;
 
 import tv.acfun.read.tools.ubb.UBBEncoder;
 
@@ -35,6 +36,6 @@ public class Conversion extends Comment {
     }
 
     public void parse(UBBEncoder encoder, OnTagClickListener tagClickListener) {
-        mSpanned = encoder.encode(getContent(), tagClickListener);
+        mSpanned = encoder.encode(StringUtil.cleanHtmlSymbols(getContent()), tagClickListener);
     }
 }

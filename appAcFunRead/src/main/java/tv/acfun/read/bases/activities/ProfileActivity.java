@@ -12,7 +12,7 @@ import com.harreke.easyapp.helpers.DialogHelper;
 import com.harreke.easyapp.helpers.ImageLoaderHelper;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.tools.GsonUtil;
-import com.harreke.easyapp.widgets.InfoView;
+import com.harreke.easyapp.widgets.RippleDrawable;
 import com.umeng.analytics.MobclickAgent;
 
 import tv.acfun.read.BuildConfig;
@@ -93,6 +93,17 @@ public class ProfileActivity extends ActivityFramework {
         profile_user_contributes.setOnClickListener(mClickListener);
         profile_user_chats.setOnClickListener(mClickListener);
         profile_user_logout.setOnClickListener(mClickListener);
+
+        RippleDrawable.attach(findViewById(R.id.profile_user_avatar_root));
+        RippleDrawable.attach(findViewById(R.id.profile_user_id_root));
+        RippleDrawable.attach(findViewById(R.id.profile_user_signature_root));
+        RippleDrawable.attach(findViewById(R.id.profile_user_gender_root));
+        RippleDrawable.attach(findViewById(R.id.profile_user_location_root));
+        RippleDrawable.attach(findViewById(R.id.profile_user_qq_root));
+        RippleDrawable.attach(findViewById(R.id.profile_user_phone_root));
+        RippleDrawable.attach(findViewById(R.id.profile_user_contributes));
+        RippleDrawable.attach(findViewById(R.id.profile_user_chats));
+        RippleDrawable.attach(findViewById(R.id.profile_user_logout), RippleDrawable.RIPPLE_STYLE_LIGHT);
     }
 
     private void checkUser() {
@@ -148,7 +159,7 @@ public class ProfileActivity extends ActivityFramework {
             }
         } else {
             profile_user_logout.setVisibility(View.GONE);
-            setInfoVisibility(InfoView.INFO_LOADING);
+            //            setInfoVisibility(InfoView.INFO_LOADING);
             if (mUserId != 0) {
                 executeRequest(API.getFullUser(mUserId), mUserIdCallback);
             } else {
@@ -160,7 +171,7 @@ public class ProfileActivity extends ActivityFramework {
     @Override
     public void createMenu() {
         setToolbarTitle(R.string.app_profile);
-        setToolbarNavigation(R.drawable.image_back_inverse);
+        setToolbarNavigation();
     }
 
     private void doLogout() {
@@ -228,7 +239,7 @@ public class ProfileActivity extends ActivityFramework {
         mUserIdCallback = new IRequestCallback<String>() {
             @Override
             public void onFailure(String requestUrl) {
-                setInfoVisibility(InfoView.INFO_ERROR);
+                //                setInfoVisibility(InfoView.INFO_ERROR);
             }
 
             @Override
@@ -237,17 +248,17 @@ public class ProfileActivity extends ActivityFramework {
 
                 if (parser != null) {
                     mFullUser = parser.getFullUser();
-                    setInfoVisibility(InfoView.INFO_HIDE);
+                    //                    setInfoVisibility(InfoView.INFO_HIDE);
                     checkUser();
                 } else {
-                    setInfoVisibility(InfoView.INFO_ERROR);
+                    //                    setInfoVisibility(InfoView.INFO_ERROR);
                 }
             }
         };
         mUsernameCallback = new IRequestCallback<String>() {
             @Override
             public void onFailure(String requestUrl) {
-                setInfoVisibility(InfoView.INFO_ERROR);
+                //                setInfoVisibility(InfoView.INFO_ERROR);
             }
 
             @Override
@@ -258,10 +269,15 @@ public class ProfileActivity extends ActivityFramework {
                     mUserId = parser.getUserjson().getUid();
                     checkUser();
                 } else {
-                    setInfoVisibility(InfoView.INFO_ERROR);
+                    //                    setInfoVisibility(InfoView.INFO_ERROR);
                 }
             }
         };
+    }
+
+    @Override
+    public void onBackPressed() {
+        exit(R.anim.zoom_in_enter, R.anim.slide_out_left);
     }
 
     @Override

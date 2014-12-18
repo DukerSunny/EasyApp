@@ -1,8 +1,8 @@
 package tv.acfun.read.bases.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,20 +12,16 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.harreke.easyapp.adapters.fragment.FragmentPageAdapter;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.helpers.ImageLoaderHelper;
-import com.harreke.easyapp.helpers.PopupAbsListHelper;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
-import com.harreke.easyapp.widgets.ChildTabView;
-import com.harreke.easyapp.widgets.GroupTabView;
-import com.harreke.easyapp.widgets.SlidingTabLayout;
+import com.harreke.easyapp.widgets.RippleDrawable;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 
@@ -35,31 +31,24 @@ import tv.acfun.read.bases.application.AcFunRead;
 import tv.acfun.read.bases.fragments.ChannelFragment;
 import tv.acfun.read.bases.fragments.RecommendFragment;
 import tv.acfun.read.beans.FullUser;
-import tv.acfun.read.helpers.ConnectionHelper;
+import tv.acfun.read.helpers.ImageConnectionHelper;
 import tv.acfun.read.helpers.LoginHelper;
 import tv.acfun.read.helpers.OfflineImageLoaderHelper;
-import tv.acfun.read.holders.ChannelSelectHolder;
-import tv.acfun.read.widgets.RepeatCheckableChildTabView;
 
 public class MainActivity extends ActivityFramework {
-    private String app_dropdown;
-    private ViewPager content_pager;
-    private Adapter mAdapter = null;
-    private GroupTabView.OnCheckedChangeListener mCheckedChangeListener;
+    private int[] channel_id;
+    private String[] channel_name;
     private View.OnClickListener mClickListener;
-    private DrawerLayout.DrawerListener mDrawerListener;
     private ActionBarDrawerToggle mDrawerToggle;
     private long mExitTime = 0;
     private FullUser mFullUser = null;
-    private Helper mHelper;
-    private AdapterView.OnItemClickListener mItemClickListener;
     private LoginHelper mLoginHelper;
     private LoginHelper.LoginCallback mLoginListener;
     private ViewPager.OnPageChangeListener mPageChangeListener;
     private int mPosition = 0;
-    private RepeatCheckableChildTabView.OnRepeatCheckedListener mRepeatCheckedListener;
+    private ViewPager main_content_pager;
+    private PagerSlidingTabStrip main_content_pager_strip;
     private DrawerLayout main_drawer;
-    private SlidingTabLayout main_slidingtab;
     private View menu_at;
     private TextView menu_at_text;
     private View menu_favourite;
@@ -76,10 +65,12 @@ public class MainActivity extends ActivityFramework {
     @Override
     public void acquireArguments(Intent intent) {
         AcFunRead acFunRead = AcFunRead.getInstance();
+        Resources resources = getResources();
 
         mPosition = acFunRead.readInt("lastChannelPosition", 0);
 
-        app_dropdown = getString(R.string.app_dropdown);
+        channel_name = resources.getStringArray(R.array.channel_name);
+        channel_id = resources.getIntArray(R.array.channel_id);
     }
 
     @Override
@@ -88,7 +79,7 @@ public class MainActivity extends ActivityFramework {
 
         menu_setting.setOnClickListener(mClickListener);
 
-        content_pager.setOnPageChangeListener(mPageChangeListener);
+        main_content_pager_strip.setOnPageChangeListener(mPageChangeListener);
 
         menu_user_description.setOnClickListener(mClickListener);
         menu_at.setOnClickListener(mClickListener);
@@ -96,8 +87,6 @@ public class MainActivity extends ActivityFramework {
         menu_favourite.setOnClickListener(mClickListener);
         menu_history.setOnClickListener(mClickListener);
         menu_pattern.setOnClickListener(mClickListener);
-
-        mHelper.setOnItemClickListener(mItemClickListener);
     }
 
     private void checkUser() {
@@ -125,7 +114,7 @@ public class MainActivity extends ActivityFramework {
     @Override
     public void createMenu() {
         setToolbarTitle(R.string.app_name);
-        addToolbarItem(0, R.string.app_search, R.drawable.image_search_inverse);
+        addToolbarItem(0, R.string.app_search, R.drawable.image_toolbar_search);
     }
 
     @Override
@@ -137,10 +126,11 @@ public class MainActivity extends ActivityFramework {
         mDrawerToggle = new ActionBarDrawerToggle(this, main_drawer, getToolBar(), R.string.empty, R.string.empty);
         mDrawerToggle.syncState();
 
-        content_pager = (ViewPager) findViewById(R.id.content_pager);
+        main_content_pager = (ViewPager) findViewById(R.id.main_content_pager);
 
-        main_slidingtab = (SlidingTabLayout) findViewById(R.id.main_slidingtab);
-        main_slidingtab.setCustomTabView(R.layout.item_slidingtab_fixed, R.id.slidingtab_text);
+        main_content_pager_strip = (PagerSlidingTabStrip) findViewById(R.id.main_content_pager_strip);
+        main_content_pager_strip.setTextColor(Color.WHITE);
+        main_content_pager_strip.setTextSize((int) resources.getDimension(R.dimen.Subhead));
 
         menu_user_description = findViewById(R.id.menu_user_description);
         menu_user_name = (TextView) findViewById(R.id.menu_user_name);
@@ -155,37 +145,16 @@ public class MainActivity extends ActivityFramework {
         menu_setting = findViewById(R.id.menu_setting);
         menu_pattern = findViewById(R.id.menu_pattern);
 
+        RippleDrawable.attach(menu_user_description, RippleDrawable.RIPPLE_STYLE_LIGHT);
+        RippleDrawable.attach(menu_user_signature, RippleDrawable.RIPPLE_STYLE_LIGHT);
+        RippleDrawable.attach(menu_favourite);
+        RippleDrawable.attach(menu_history);
+
         mLoginHelper = new LoginHelper(this, mLoginListener);
-
-        mHelper = new Helper(getActivity(), main_slidingtab);
-        mHelper.add(0, resources.getString(R.string.channel_misc));
-        mHelper.add(1, resources.getString(R.string.channel_work_emotion));
-        mHelper.add(2, resources.getString(R.string.channel_dramaculture));
-        mHelper.add(3, resources.getString(R.string.channel_comic_novel));
-
-        //        content_channel.setText(mHelper.getItem(mPosition) + " " + app_dropdown);
     }
 
     @Override
     public void establishCallbacks() {
-        mDrawerListener = new DrawerLayout.DrawerListener() {
-            @Override
-            public void onDrawerClosed(View view) {
-                hideSoftInputMethod();
-            }
-
-            @Override
-            public void onDrawerOpened(View view) {
-            }
-
-            @Override
-            public void onDrawerSlide(View view, float v) {
-            }
-
-            @Override
-            public void onDrawerStateChanged(int i) {
-            }
-        };
         mClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -198,7 +167,8 @@ public class MainActivity extends ActivityFramework {
                                 acFunRead.clearLogin();
                                 mLoginHelper.show(LoginHelper.Reason.Expired);
                             } else {
-                                start(ProfileActivity.create(getActivity(), mFullUser), false);
+                                start(ProfileActivity.create(getActivity(), mFullUser), R.anim.slide_in_left,
+                                        R.anim.zoom_in_exit);
                             }
                         } else {
                             mLoginHelper.show(LoginHelper.Reason.Unauthorized);
@@ -210,7 +180,7 @@ public class MainActivity extends ActivityFramework {
                                 acFunRead.clearLogin();
                                 mLoginHelper.show(LoginHelper.Reason.Expired);
                             } else {
-                                start(MailActivity.create(getActivity()), false);
+                                start(MailActivity.create(getActivity()), R.anim.slide_in_left, R.anim.zoom_in_exit);
                             }
                         } else {
                             mLoginHelper.show(LoginHelper.Reason.Unauthorized);
@@ -222,59 +192,34 @@ public class MainActivity extends ActivityFramework {
                                 acFunRead.clearLogin();
                                 mLoginHelper.show(LoginHelper.Reason.Expired);
                             } else {
-                                start(FavouriteActivity.create(getActivity()), false);
+                                start(FavouriteActivity.create(getActivity()), R.anim.slide_in_left, R.anim.zoom_in_exit);
                             }
                         } else {
                             mLoginHelper.show(LoginHelper.Reason.Unauthorized);
                         }
                         break;
                     case R.id.menu_history:
-                        start(HistoryActivity.create(getActivity()));
+                        start(HistoryActivity.create(getActivity()), R.anim.slide_in_left, R.anim.zoom_in_exit);
                         break;
                     case R.id.menu_setting:
-                        start(SettingActivity.create(getActivity()), false);
+                        start(SettingActivity.create(getActivity()), R.anim.slide_in_left, R.anim.zoom_in_exit);
                 }
             }
         };
-        mCheckedChangeListener = new GroupTabView.OnCheckedChangeListener() {
+        mPageChangeListener = new ViewPager.OnPageChangeListener() {
             @Override
-            public void onCheckedChanged(GroupTabView groupTabView, int position, ChildTabView childTabView) {
-                content_pager.setCurrentItem(position, true);
+            public void onPageScrollStateChanged(int i) {
+            }
+
+            @Override
+            public void onPageScrolled(int i, float v, int i2) {
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                mPosition = i;
             }
         };
-        //        mPageChangeListener = new ViewPager.OnPageChangeListener() {
-        //            @Override
-        //            public void onPageScrollStateChanged(int i) {
-        //            }
-        //
-        //            @Override
-        //            public void onPageScrolled(int i, float v, int i2) {
-        //            }
-        //
-        //            @Override
-        //            public void onPageSelected(int i) {
-        //                content_group.check(i);
-        //            }
-        //        };
-        //        mRepeatCheckedListener = new RepeatCheckableChildTabView.OnRepeatCheckedListener() {
-        //            @Override
-        //            public void onRepeatChecked(RepeatCheckableChildTabView childTabView) {
-        //                mHelper.toggle();
-        //            }
-        //        };
-        //        mItemClickListener = new AdapterView.OnItemClickListener() {
-        //            @Override
-        //            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //                mHelper.hide();
-        //                content_channel.setText(mHelper.getItem(position) + " " + app_dropdown);
-        //                if (mPosition != position) {
-        //                    mPosition = position;
-        //                    mAdapter.remove(1);
-        //                    mAdapter.refresh();
-        //                    writeLastPosition();
-        //                }
-        //            }
-        //        };
         mLoginListener = new LoginHelper.LoginCallback() {
             @Override
             public void onCancelRequest() {
@@ -294,35 +239,8 @@ public class MainActivity extends ActivityFramework {
         };
     }
 
-    private int getChannelIdByPosition(int position) {
-        int channelId;
-
-        switch (position) {
-            case 0:
-                channelId = 110;
-                break;
-            case 1:
-                channelId = 73;
-                break;
-            case 2:
-                channelId = 74;
-                break;
-            case 3:
-                channelId = 75;
-                break;
-            default:
-                channelId = 110;
-        }
-
-        return channelId;
-    }
-
-    private void hideSoftInputMethod() {
-        ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(main_drawer.getWindowToken(), 0);
-    }
-
     private void loadAvatar() {
-        if (mFullUser.getUserImg().equals("avatar") || !ConnectionHelper.shouldLoadImage()) {
+        if (mFullUser.getUserImg().equals("avatar") || !ImageConnectionHelper.shouldLoadImage()) {
             OfflineImageLoaderHelper.loadImage(menu_user_avatar, OfflineImageLoaderHelper.OfflineImage.Avatar);
         } else {
             ImageLoaderHelper.loadImage(menu_user_avatar, mFullUser.getUserImg());
@@ -333,12 +251,12 @@ public class MainActivity extends ActivityFramework {
     public void onBackPressed() {
         long exitTime;
 
-        if (main_drawer.isDrawerOpen(Gravity.START)) {
-            main_drawer.closeDrawer(Gravity.START);
+        if (main_drawer.isDrawerOpen(Gravity.LEFT)) {
+            main_drawer.closeDrawer(Gravity.LEFT);
         } else {
             exitTime = System.currentTimeMillis();
             if (exitTime - mExitTime <= 3000) {
-                exit(false);
+                exit(R.anim.none, R.anim.none);
             } else {
                 mExitTime = exitTime;
                 showToast(getString(R.string.app_exit));
@@ -356,9 +274,7 @@ public class MainActivity extends ActivityFramework {
     @Override
     protected void onDestroy() {
         AcFunRead.getInstance().unregisterConnectionReceiver();
-
-        mHelper.hide();
-
+        writeLastPosition();
         super.onDestroy();
     }
 
@@ -383,12 +299,6 @@ public class MainActivity extends ActivityFramework {
         if (!BuildConfig.DEBUG) {
             MobclickAgent.onResume(this);
         }
-
-        if (mAdapter == null) {
-            mAdapter = new Adapter(getSupportFragmentManager());
-            content_pager.setAdapter(mAdapter);
-            main_slidingtab.setViewPager(content_pager);
-        }
         checkUser();
     }
 
@@ -399,6 +309,9 @@ public class MainActivity extends ActivityFramework {
 
     @Override
     public void startAction() {
+        main_content_pager.setAdapter(new Adapter(getSupportFragmentManager()));
+        main_content_pager_strip.setViewPager(main_content_pager);
+        main_content_pager.setCurrentItem(mPosition);
     }
 
     private void writeLastPosition() {
@@ -412,7 +325,7 @@ public class MainActivity extends ActivityFramework {
 
         @Override
         public int getCount() {
-            return 2;
+            return 5;
         }
 
         @Override
@@ -420,11 +333,9 @@ public class MainActivity extends ActivityFramework {
             switch (position) {
                 case 0:
                     return new RecommendFragment();
-                case 1:
-                    return ChannelFragment.create(getChannelIdByPosition(mPosition));
+                default:
+                    return ChannelFragment.create(channel_id[position - 1]);
             }
-
-            return null;
         }
 
         @Override
@@ -432,27 +343,9 @@ public class MainActivity extends ActivityFramework {
             switch (position) {
                 case 0:
                     return getString(R.string.main_recommend);
-                case 1:
-                    return mHelper.getItem(mPosition) + " " + app_dropdown;
+                default:
+                    return channel_name[position - 1];
             }
-
-            return null;
-        }
-    }
-
-    private class Helper extends PopupAbsListHelper<String, ChannelSelectHolder> {
-        public Helper(Context context, View anchor) {
-            super(context, anchor);
-        }
-
-        @Override
-        public ChannelSelectHolder createHolder(View convertView) {
-            return new ChannelSelectHolder(convertView);
-        }
-
-        @Override
-        public View createView() {
-            return View.inflate(getActivity(), R.layout.item_channelselect, null);
         }
     }
 }

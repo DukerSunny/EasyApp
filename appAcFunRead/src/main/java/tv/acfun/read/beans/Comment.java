@@ -49,4 +49,9 @@ public class Comment {
     public String getUserName() {
         return userName;
     }
+
+    @Override
+    public int hashCode() {
+        return cid;
+    }
 }

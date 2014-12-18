@@ -6,6 +6,7 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.harreke.easyapp.R;
 import com.harreke.easyapp.configs.ImageExecutorConfig;
 import com.harreke.easyapp.tools.FileUtil;
 
@@ -45,6 +46,10 @@ public class ApplicationFramework extends Application {
     private boolean mAssetsEnabled = false;
     private boolean mMiscsEnabled = false;
     private boolean mTempsEnabled = false;
+
+    protected void configImageExecutor() {
+        ImageExecutorConfig.config(this, R.drawable.image_loading, R.drawable.image_idle);
+    }
 
     /**
      * 将指定附件拷贝至设备内存
@@ -167,7 +172,7 @@ public class ApplicationFramework extends Application {
         mTempsEnabled = createCacheDir(DIR_TEMPS);
         mMiscsEnabled = createCacheDir(DIR_MISCS);
 
-        ImageExecutorConfig.config(this);
+        configImageExecutor();
     }
 
     public final boolean readBoolean(String key, boolean defaultVaule) {

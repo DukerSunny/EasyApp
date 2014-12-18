@@ -2,55 +2,49 @@
 <LinearLayout
     style="@style/mm.v"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/Background">
+    android:background="?android:attr/colorBackground"
+    android:clickable="true">
 
-    <com.gc.materialdesign.views.LayoutRipple
-        android:id="@+id/menu_user_description"
-        style="@style/mw"
-        android:background="@color/Primary"
-        app:rippleColor="@color/Primary_Dark">
+    <LinearLayout
+        style="@style/mw.v">
 
         <LinearLayout
-            style="@style/mw.v">
+            android:id="@+id/menu_user_description"
+            style="@style/mw.h"
+            android:background="?attr/colorPrimary"
+            android:gravity="center_vertical"
+            android:padding="16dp">
 
-            <LinearLayout
-                style="@style/mw.h"
-                android:gravity="center_vertical"
-                android:padding="16dp">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/menu_user_avatar"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:src="@drawable/image_avatar"/>
-
-                <TextView
-                    android:id="@+id/menu_user_name"
-                    style="@style/mw"
-                    android:layout_marginLeft="8dp"
-                    android:maxLines="3"
-                    android:text="@string/login_required"
-                    android:textAppearance="@style/Title.Inverse"/>
-
-            </LinearLayout>
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/menu_user_avatar"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:src="@drawable/image_avatar"/>
 
             <TextView
-                android:id="@+id/menu_user_signature"
+                android:id="@+id/menu_user_name"
                 style="@style/mw"
-                android:lines="2"
-                android:padding="16dp"
-                android:textAppearance="@style/Subhead.Inverse"/>
+                android:layout_marginLeft="8dp"
+                android:maxLines="3"
+                android:text="@string/login_required"
+                android:textAppearance="@style/Title.Inverse"/>
 
         </LinearLayout>
 
-    </com.gc.materialdesign.views.LayoutRipple>
+        <TextView
+            android:id="@+id/menu_user_signature"
+            style="@style/mw"
+            android:background="?attr/colorPrimary"
+            android:lines="2"
+            android:padding="16dp"
+            android:textAppearance="@style/Subhead.Inverse"/>
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/menu_at"
         style="@style/mw.h"
         android:layout_marginTop="16dp"
-        android:background="@drawable/button_transparent"
         android:gravity="center_vertical"
         android:visibility="gone">
 
@@ -66,7 +60,6 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="@string/menu_at"
-            android:textColor="@color/Title"
             android:textSize="20dp"/>
 
         <TextView
@@ -85,7 +78,6 @@
         android:id="@+id/menu_mail"
         style="@style/mw.h"
         android:layout_marginTop="8dp"
-        android:background="@drawable/button_transparent"
         android:gravity="center_vertical"
         android:visibility="gone">
 
@@ -102,7 +94,6 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="@string/menu_mail"
-            android:textColor="@color/Title"
             android:textSize="20dp"/>
 
         <TextView
@@ -117,92 +108,75 @@
 
     </LinearLayout>
 
-    <com.gc.materialdesign.views.LayoutRipple
+    <LinearLayout
         android:id="@+id/menu_favourite"
-        style="@style/mw">
+        style="@style/mw.h"
+        android:gravity="center_vertical"
+        android:padding="8dp">
 
-        <LinearLayout
-            style="@style/mw.h"
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/image_favourite"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
             android:gravity="center_vertical"
-            android:padding="8dp">
+            android:text="@string/menu_favourite"
+            android:textAppearance="@style/Title"/>
 
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/image_favourite"/>
+    </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:text="@string/menu_favourite"
-                android:textAppearance="@style/Title"/>
-
-        </LinearLayout>
-
-    </com.gc.materialdesign.views.LayoutRipple>
-
-    <com.gc.materialdesign.views.LayoutRipple
+    <LinearLayout
         android:id="@+id/menu_history"
-        style="@style/mw">
+        style="@style/mw.h"
+        android:gravity="center_vertical"
+        android:padding="8dp">
 
-        <LinearLayout
-            style="@style/mw.h"
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/image_history"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
             android:gravity="center_vertical"
-            android:padding="8dp">
+            android:text="@string/menu_history"
+            android:textAppearance="@style/Title"/>
 
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/image_history"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:text="@string/menu_history"
-                android:textAppearance="@style/Title"/>
-
-        </LinearLayout>
-
-    </com.gc.materialdesign.views.LayoutRipple>
+    </LinearLayout>
 
     <View
         style="@style/mmw"/>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:orientation="horizontal">
+        style="@style/mw.h">
 
-        <com.gc.materialdesign.views.LayoutRipple
+        <LinearLayout
             android:id="@+id/menu_setting"
-            style="@style/mw">
+            style="@style/mww.h"
+            android:padding="8dp">
 
-            <LinearLayout
-                style="@style/mmw.h">
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/image_setting"/>
 
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/image_setting"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginLeft="8dp"
+                android:gravity="center_vertical"
+                android:text="@string/menu_setting"
+                android:textAppearance="@style/Subhead"/>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginLeft="8dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/menu_setting"
-                    android:textAppearance="@style/Subhead"/>
-
-            </LinearLayout>
-
-        </com.gc.materialdesign.views.LayoutRipple>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/menu_pattern"
             style="@style/mmw.h"
-            android:background="@drawable/button_transparent"
             android:visibility="gone">
 
             <ImageView
@@ -215,9 +189,7 @@
                 android:layout_height="32dp"
                 android:layout_marginLeft="8dp"
                 android:gravity="center_vertical"
-                android:text="@string/menu_pattern_night"
-                android:textColor="@color/Title"
-                android:textSize="16dp"/>
+                android:text="@string/menu_pattern_night"/>
 
         </LinearLayout>
 

@@ -32,6 +32,7 @@ public class AsyncHttpClientExecutor extends TextHttpResponseHandler implements 
 
         mCallback = callback;
         client = new AsyncHttpClient();
+        client.setTimeout(6000);
 
         map = builder.getHeader();
         iterator = map.keySet().iterator();

@@ -2,5 +2,4 @@
 <uk.co.senab.photoview.PhotoView
     style="@style/mm"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_margin="8dp"
-    android:src="@drawable/anim_progress_radiant"/>
+    android:layout_margin="8dp"/>

@@ -3,9 +3,7 @@
     android:id="@+id/emot_grid"
     style="@style/mm"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:drawSelectorOnTop="true"
     android:horizontalSpacing="8dp"
-    android:listSelector="@drawable/button_transparent"
     android:numColumns="5"
     android:padding="8dp"
     android:verticalSpacing="8dp"/>

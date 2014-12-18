@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * @param <ITEM>
  *         列表框架的条目类型
  *
- * @see com.harreke.easyapp.frameworks.list.ListFramework
+ * @see com.harreke.easyapp.frameworks.lists.ListFramework
  */
 public interface IListParser<ITEM> {
     /**

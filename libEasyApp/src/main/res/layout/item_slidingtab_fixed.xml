@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView
     android:id="@+id/slidingtab_text"
+    style="@style/mw"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="0dp"
-    android:layout_height="48dp"
+    android:layout_height="?attr/actionBarSize"
     android:layout_weight="1"
     android:gravity="center"
-    android:textColor="?attr/colorPrimary"
-    android:textSize="@dimen/Subhead"/>
+    android:textColor="@color/White"
+    android:textSize="@dimen/Title"/>

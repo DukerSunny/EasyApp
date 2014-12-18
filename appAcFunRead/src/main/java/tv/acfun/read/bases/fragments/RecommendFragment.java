@@ -1,11 +1,14 @@
 package tv.acfun.read.bases.fragments;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.fragment.FragmentFramework;
-import com.harreke.easyapp.frameworks.list.abslistview.AbsListFramework;
+import com.harreke.easyapp.frameworks.lists.recyclerview.RecyclerFramework;
+import com.harreke.easyapp.holders.recycerview.RecyclerHolder;
 
 import java.util.ArrayList;
 
@@ -20,25 +23,25 @@ import tv.acfun.read.parsers.ChannelListParser;
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/23
  */
 public class RecommendFragment extends FragmentFramework {
-    private Helper mHelper;
-
-    @Override
-    public void attachCallbacks() {
-    }
+    private RecommendRecyclerHelper mRecommendRecyclerHelper;
 
     @Override
     public void acquireArguments(Bundle bundle) {
     }
 
     @Override
-    public void establishCallbacks() {
+    public void attachCallbacks() {
     }
 
     @Override
     public void enquiryViews() {
-        mHelper = new Helper(this, R.id.recommend_list);
-        mHelper.setRefresh(findViewById(R.id.recommend_refresh));
-        mHelper.bindAdapter();
+        mRecommendRecyclerHelper = new RecommendRecyclerHelper(this);
+        mRecommendRecyclerHelper.setHasFixedSize(false);
+        mRecommendRecyclerHelper.attachAdapter();
+    }
+
+    @Override
+    public void establishCallbacks() {
     }
 
     @Override
@@ -48,26 +51,26 @@ public class RecommendFragment extends FragmentFramework {
 
     @Override
     public void startAction() {
-        mHelper.from(API.getChannelRecommend("110,73,74,75", 10));
+        mRecommendRecyclerHelper.from(API.getChannelRecommend("110,73,74,75", 10));
     }
 
-    private class Helper extends AbsListFramework<Content, RecommendHolder> {
-        public Helper(IFramework framework, int listId) {
-            super(framework, listId);
+    private class RecommendRecyclerHelper extends RecyclerFramework<Content> {
+        public RecommendRecyclerHelper(IFramework framework) {
+            super(framework);
         }
 
         @Override
-        public RecommendHolder createHolder(View convertView) {
+        public RecyclerHolder<Content> createHolder(View convertView, int viewType) {
             return new RecommendHolder(convertView);
         }
 
         @Override
-        public View createView() {
-            return View.inflate(getActivity(), R.layout.item_recommend, null);
+        public View createView(ViewGroup parent, int viewType) {
+            return LayoutInflater.from(getActivity()).inflate(R.layout.item_recommend, parent, false);
         }
 
         @Override
-        public void onAction() {
+        public void onRequestAction() {
             startAction();
         }
 
@@ -85,42 +88,6 @@ public class RecommendFragment extends FragmentFramework {
             } else {
                 return null;
             }
-        }
-
-        //        @Override
-        //        public void onPostAction() {
-        //            super.onPostAction();
-        //            long millisecond = System.currentTimeMillis();
-        //            int hour;
-        //            String time;
-        //
-        //            mDate.setTime(millisecond);
-        //            selection_date.setText(mDateFormat.format(mDate));
-        //            selection_date_stroke.setText(mDateFormat.format(mDate));
-        //            hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-        //            Log.e(null, "hour=" + hour);
-        //            if (hour >= 3 && hour < 6) {
-        //                time = header_selection_time_early;
-        //            } else if (hour >= 6 && hour < 12) {
-        //                time = header_selection_time_morning;
-        //            } else if (hour >= 12 && hour < 15) {
-        //                time = header_selection_time_noon;
-        //            } else if (hour >= 15 && hour < 18) {
-        //                time = header_selection_time_afternoon;
-        //            } else if (hour >= 18 && hour < 21) {
-        //                time = header_selection_time_nightfall;
-        //            } else if (hour >= 21 && hour < 24) {
-        //                time = header_selection_time_evening;
-        //            } else {
-        //                time = header_selection_time_night;
-        //            }
-        //            selection_time.setText(mTimeFormat.format(mDate) + " " + time);
-        //            selection_time_stroke.setText(mTimeFormat.format(mDate) + " " + time);
-        //        }
-
-        @Override
-        public int parseItemId(Content content) {
-            return content.getContentId();
         }
     }
 }

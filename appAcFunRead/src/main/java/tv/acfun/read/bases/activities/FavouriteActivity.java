@@ -2,18 +2,20 @@ package tv.acfun.read.bases.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
-import com.harreke.easyapp.frameworks.list.abslistview.FooterLoadStatus;
-import com.harreke.easyapp.frameworks.list.swipelayout.AbsListSwipeFramework;
+import com.harreke.easyapp.frameworks.lists.recyclerview.RecyclerFramework;
+import com.harreke.easyapp.holders.recycerview.RecyclerHolder;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
 import com.umeng.analytics.MobclickAgent;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import tv.acfun.read.BuildConfig;
 import tv.acfun.read.R;
@@ -28,13 +30,14 @@ import tv.acfun.read.parsers.ChannelListParser;
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/23
  */
 public class FavouriteActivity extends ActivityFramework {
-    private Helper mFavouriteListHelper;
+    private FavouriteRecyclerHelper mFavouriteRecyclerHelper;
     private LoginHelper.LoginCallback mLoginCallback;
     private LoginHelper mLoginHelper;
+    private View.OnClickListener mOnRemoveClickListener;
     private SwipeLayout mOpenSwipeLayout = null;
     private IRequestCallback<String> mRemoveCallback;
-    private View.OnClickListener mRemoveClickListener;
-    private int mRemovingPosition = -1;
+    private int mRemovingHashCode = -1;
+    private SwipeLayout.SwipeListener mSwipeListener;
 
     public static Intent create(Context context) {
         return new Intent(context, FavouriteActivity.class);
@@ -51,18 +54,15 @@ public class FavouriteActivity extends ActivityFramework {
     @Override
     public void createMenu() {
         setToolbarTitle(R.string.menu_favourite);
-        setToolbarNavigation(R.drawable.image_back_inverse);
+        setToolbarNavigation();
+        addToolbarItem(0, R.string.app_clear, R.drawable.image_clear_inverse);
     }
 
     @Override
     public void enquiryViews() {
-        View footer_loadmore = View.inflate(getActivity(), R.layout.footer_loadmore, null);
-
-        mFavouriteListHelper = new Helper(this, R.id.favourite_list, R.id.favourite_swipe);
-        mFavouriteListHelper.setRefresh(findViewById(R.id.favourite_refresh));
-        mFavouriteListHelper.addFooterView(footer_loadmore);
-        mFavouriteListHelper.setLoadMore(new FooterLoadStatus(footer_loadmore));
-        mFavouriteListHelper.bindAdapter();
+        mFavouriteRecyclerHelper = new FavouriteRecyclerHelper(this);
+        mFavouriteRecyclerHelper.setHasFixedSize(true);
+        mFavouriteRecyclerHelper.attachAdapter();
 
         mLoginHelper = new LoginHelper(getActivity(), mLoginCallback);
     }
@@ -86,26 +86,29 @@ public class FavouriteActivity extends ActivityFramework {
                 readList();
             }
         };
-        mRemoveClickListener = new View.OnClickListener() {
+        mOnRemoveClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int position;
                 Content content;
+                int hashCode = (Integer) v.getTag();
+                int position = mFavouriteRecyclerHelper.findItem(hashCode);
 
-                if (mRemovingPosition == -1) {
-                    showToast(R.string.favourite_operating, true);
-                    position = (Integer) v.getTag();
-                    content = mFavouriteListHelper.getItem(position);
-                    mRemovingPosition = position;
-                    executeRequest(API.getFavouriteRemove(AcFunRead.getInstance().readToken(), content.getContentId()),
-                            mRemoveCallback);
+                if (mOpenSwipeLayout != null) {
+                    mOpenSwipeLayout.close();
+                    mOpenSwipeLayout = null;
                 }
+                showToast(R.string.favourite_operating, true);
+                position = (Integer) v.getTag();
+                content = mFavouriteRecyclerHelper.getItem(position);
+                mRemovingHashCode = hashCode;
+                executeRequest(API.getFavouriteRemove(AcFunRead.getInstance().readToken(), content.getContentId()),
+                        mRemoveCallback);
             }
         };
         mRemoveCallback = new IRequestCallback<String>() {
             @Override
             public void onFailure(String requestUrl) {
-                mRemovingPosition = -1;
+                mRemovingHashCode = -1;
                 if (mOpenSwipeLayout != null) {
                     mOpenSwipeLayout.close();
                     mOpenSwipeLayout = null;
@@ -115,25 +118,59 @@ public class FavouriteActivity extends ActivityFramework {
 
             @Override
             public void onSuccess(String requestUrl, String s) {
+                int position;
+
                 if (s.contains("ok")) {
-                    showToast(R.string.favourite_remove_success);
                     if (mOpenSwipeLayout != null) {
                         mOpenSwipeLayout.close();
                         mOpenSwipeLayout = null;
                     }
-                    mFavouriteListHelper.removeItem(mRemovingPosition);
-                    mFavouriteListHelper.refresh();
+                    position = mFavouriteRecyclerHelper.findItem(mRemovingHashCode);
+                    mFavouriteRecyclerHelper.removeItem(position);
+                    showToast(R.string.favourite_remove_success);
                 } else {
                     showToast(R.string.favourite_remove_failure);
                 }
-                mRemovingPosition = -1;
+                mRemovingHashCode = -1;
+            }
+        };
+        mSwipeListener = new SwipeLayout.SwipeListener() {
+            @Override
+            public void onClose(SwipeLayout swipeLayout) {
+            }
+
+            @Override
+            public void onHandRelease(SwipeLayout swipeLayout, float v, float v2) {
+
+            }
+
+            @Override
+            public void onOpen(SwipeLayout swipeLayout) {
+                mOpenSwipeLayout = swipeLayout;
+            }
+
+            @Override
+            public void onStartClose(SwipeLayout swipeLayout) {
+
+            }
+
+            @Override
+            public void onStartOpen(SwipeLayout swipeLayout) {
+                if (mOpenSwipeLayout != null && mOpenSwipeLayout != swipeLayout) {
+                    mOpenSwipeLayout.close();
+                }
+            }
+
+            @Override
+            public void onUpdate(SwipeLayout swipeLayout, int i, int i2) {
+
             }
         };
     }
 
     @Override
     public void onBackPressed() {
-        exit(false);
+        exit(R.anim.zoom_in_enter, R.anim.slide_out_left);
     }
 
     @Override
@@ -157,14 +194,14 @@ public class FavouriteActivity extends ActivityFramework {
             MobclickAgent.onResume(this);
         }
 
-        mFavouriteListHelper.clear();
+        mFavouriteRecyclerHelper.clear();
         readList();
     }
 
     private void readList() {
         if (mLoginHelper.validateLogin()) {
-            mFavouriteListHelper
-                    .from(API.getFavourite(mLoginHelper.getToken(), "110,73,74,75", 20, mFavouriteListHelper.getCurrentPage()));
+            mFavouriteRecyclerHelper.from(API
+                    .getFavourite(mLoginHelper.getToken(), "110,73,74,75", 20, mFavouriteRecyclerHelper.getCurrentPage()));
         }
     }
 
@@ -177,32 +214,29 @@ public class FavouriteActivity extends ActivityFramework {
     public void startAction() {
     }
 
-    private class Helper extends AbsListSwipeFramework<Content, FavouriteHolder> {
-        public Helper(IFramework framework, int listId, int swipeLayoutId) {
-            super(framework, listId, swipeLayoutId);
+    private class FavouriteRecyclerHelper extends RecyclerFramework<Content> {
+        public FavouriteRecyclerHelper(IFramework framework) {
+            super(framework);
         }
 
         @Override
-        public FavouriteHolder createHolder(View convertView) {
-            return new FavouriteHolder(convertView, mRemoveClickListener);
+        public RecyclerHolder<Content> createHolder(View convertView, int viewType) {
+            FavouriteHolder holder = new FavouriteHolder(convertView);
+
+            holder.setOnRemoveClickListener(mOnRemoveClickListener);
+            holder.addSwipeListener(mSwipeListener);
+
+            return holder;
         }
 
         @Override
-        public View createView() {
-            return View.inflate(getActivity(), R.layout.item_favourite, null);
+        public View createView(ViewGroup parent, int viewType) {
+            return LayoutInflater.from(getActivity()).inflate(R.layout.item_favourite, parent, false);
         }
 
         @Override
-        public void onAction() {
+        public void onRequestAction() {
             readList();
-        }
-
-        @Override
-        public void onClose(SwipeLayout swipeLayout) {
-        }
-
-        @Override
-        public void onHandRelease(SwipeLayout swipeLayout, float v, float v2) {
         }
 
         @Override
@@ -211,47 +245,19 @@ public class FavouriteActivity extends ActivityFramework {
                 mOpenSwipeLayout.close();
                 mOpenSwipeLayout = null;
             } else {
-                if (content != null) {
-                    start(ContentActivity.create(getActivity(), content.getContentId()));
-                } else {
-                    start(SearchActivity.create(getActivity()));
-                }
+                start(ContentActivity.create(getActivity(), content.getContentId()));
             }
         }
 
         @Override
-        public void onOpen(SwipeLayout swipeLayout) {
-            mOpenSwipeLayout = swipeLayout;
-        }
-
-        @Override
-        public ArrayList<Content> onParse(String json) {
+        public List<Content> onParse(String json) {
             ChannelListParser listParser = ChannelListParser.parse(json);
 
             if (listParser != null) {
-                setTotalPage(listParser.getTotalPage());
-
                 return listParser.getItemList();
             } else {
                 return null;
             }
-        }
-
-        @Override
-        public void onStartClose(SwipeLayout swipeLayout) {
-        }
-
-        @Override
-        public void onStartOpen(SwipeLayout swipeLayout) {
-        }
-
-        @Override
-        public void onUpdate(SwipeLayout swipeLayout, int i, int i2) {
-        }
-
-        @Override
-        public int parseItemId(Content content) {
-            return content.getContentId();
         }
     }
 }

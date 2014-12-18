@@ -1,277 +1,303 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<LinearLayout
     style="@style/mm.v"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:padding="8dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-        style="@style/mm.v">
+    <include
+        layout="@layout/widget_toolbar"/>
 
-        <TextView
-            style="@style/ww"
-            android:padding="8dp"
-            android:text="@string/user_basics"
-            android:textColor="@color/Assist"
-            android:textSize="16dp"/>
+    <FrameLayout
+        style="@style/mm">
 
-        <LinearLayout
-            style="@style/mw.v"
-            android:background="@color/White"
-            android:divider="@drawable/divider_horizontal_dot"
-            android:showDividers="middle">
+        <ScrollView
+            style="@style/mm.v">
 
             <LinearLayout
-                style="@style/mw.h"
-                android:gravity="center_vertical"
-                android:padding="16dp">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/profile_user_avatar"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:src="@drawable/image_avatar"/>
+                style="@style/mm.v"
+                android:padding="8dp">
 
                 <TextView
-                    android:id="@+id/profile_user_name"
+                    style="@style/ww"
+                    android:padding="16dp"
+                    android:text="@string/user_basics"
+                    android:textAppearance="@style/Caption"/>
+
+                <android.support.v7.widget.CardView
+                    style="@style/mw">
+
+                    <LinearLayout
+                        style="@style/mw.v">
+
+                        <LinearLayout
+                            android:id="@+id/profile_user_avatar_root"
+                            style="@style/mw.h"
+                            android:gravity="center_vertical"
+                            android:padding="16dp">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/profile_user_avatar"
+                                android:layout_width="64dp"
+                                android:layout_height="64dp"
+                                android:src="@drawable/image_avatar"/>
+
+                            <TextView
+                                android:id="@+id/profile_user_name"
+                                style="@style/mw"
+                                android:layout_marginLeft="16dp"
+                                android:maxLines="3"
+                                android:textAppearance="@style/Subhead"/>
+
+                        </LinearLayout>
+
+                        <include
+                            layout="@layout/widget_divider_horizontal"/>
+
+                        <LinearLayout
+                            android:id="@+id/profile_user_id_root"
+                            style="@style/mw.h"
+                            android:gravity="center_vertical"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:layout_width="64dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="start"
+                                android:text="@string/user_id"
+                                android:textAppearance="@style/Caption"/>
+
+                            <TextView
+                                android:id="@+id/profile_user_id"
+                                style="@style/mw"
+                                android:layout_marginLeft="16dp"
+                                android:maxLines="3"
+                                android:textAppearance="@style/Subhead"/>
+
+                        </LinearLayout>
+
+                        <include
+                            layout="@layout/widget_divider_horizontal"/>
+
+                        <LinearLayout
+                            android:id="@+id/profile_user_signature_root"
+                            style="@style/mw.h"
+                            android:gravity="center_vertical"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:layout_width="64dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="start"
+                                android:text="@string/user_signature"
+                                android:textAppearance="@style/Caption"/>
+
+                            <TextView
+                                android:id="@+id/profile_user_signature"
+                                style="@style/mw"
+                                android:layout_marginLeft="16dp"
+                                android:textAppearance="@style/Subhead"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <TextView
+                    style="@style/ww"
+                    android:padding="16dp"
+                    android:text="@string/user_extras"
+                    android:textAppearance="@style/Caption"/>
+
+                <android.support.v7.widget.CardView
+                    style="@style/mw">
+
+                    <LinearLayout
+                        style="@style/mw.v">
+
+                        <LinearLayout
+                            android:id="@+id/profile_user_gender_root"
+                            style="@style/mw.h"
+                            android:gravity="center_vertical"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:layout_width="64dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="start"
+                                android:text="@string/user_gender"
+                                android:textAppearance="@style/Caption"/>
+
+                            <TextView
+                                android:id="@+id/profile_user_gender"
+                                style="@style/mw"
+                                android:layout_marginLeft="16dp"
+                                android:maxLines="3"
+                                android:textAppearance="@style/Subhead"/>
+
+                        </LinearLayout>
+
+
+                        <include
+                            layout="@layout/widget_divider_horizontal"/>
+
+                        <LinearLayout
+                            android:id="@+id/profile_user_location_root"
+                            style="@style/mw.h"
+                            android:gravity="center_vertical"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:layout_width="64dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="start"
+                                android:text="@string/user_location"
+                                android:textAppearance="@style/Caption"/>
+
+                            <TextView
+                                android:id="@+id/profile_user_location"
+                                style="@style/mw"
+                                android:layout_marginLeft="16dp"
+                                android:textAppearance="@style/Subhead"/>
+
+                        </LinearLayout>
+
+                        <include
+                            layout="@layout/widget_divider_horizontal"/>
+
+                        <LinearLayout
+                            android:id="@+id/profile_user_qq_root"
+                            style="@style/mw.h"
+                            android:gravity="center_vertical"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:layout_width="64dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="start"
+                                android:text="@string/user_qq"
+                                android:textAppearance="@style/Caption"/>
+
+                            <TextView
+                                android:id="@+id/profile_user_qq"
+                                style="@style/mw"
+                                android:layout_marginLeft="16dp"
+                                android:textAppearance="@style/Subhead"/>
+
+                        </LinearLayout>
+
+                        <include
+                            layout="@layout/widget_divider_horizontal"/>
+
+                        <LinearLayout
+                            android:id="@+id/profile_user_phone_root"
+                            style="@style/mw.h"
+                            android:gravity="center_vertical"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:layout_width="64dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="start"
+                                android:text="@string/user_phone"
+                                android:textAppearance="@style/Caption"/>
+
+                            <TextView
+                                android:id="@+id/profile_user_phone"
+                                style="@style/mw"
+                                android:layout_marginLeft="16dp"
+                                android:textAppearance="@style/Subhead"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <TextView
+                    style="@style/ww"
+                    android:padding="16dp"
+                    android:text="@string/user_basics"
+                    android:textAppearance="@style/Caption"/>
+
+                <android.support.v7.widget.CardView
+                    style="@style/mw">
+
+                    <LinearLayout
+                        style="@style/mw.v">
+
+                        <LinearLayout
+                            android:id="@+id/profile_user_contributes"
+                            style="@style/mw.h"
+                            android:gravity="center_vertical"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:id="@+id/profile_user_contributes_text"
+                                style="@style/mww"
+                                android:maxLines="3"
+                                android:text="@string/user_contributes"
+                                android:textAppearance="@style/Subhead"/>
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_marginLeft="8dp"
+                                android:src="@drawable/image_forward"/>
+
+                        </LinearLayout>
+
+                        <include
+                            layout="@layout/widget_divider_horizontal"
+                            android:visibility="gone"/>
+
+                        <LinearLayout
+                            android:id="@+id/profile_user_chats"
+                            style="@style/mw.h"
+                            android:gravity="center_vertical"
+                            android:padding="16dp"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:id="@+id/profile_user_chats_text"
+                                style="@style/mww"
+                                android:maxLines="3"
+                                android:text="@string/user_chats"
+                                android:textAppearance="@style/Subhead"/>
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:src="@drawable/image_forward"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
                     style="@style/mw"
-                    android:layout_marginLeft="16dp"
-                    android:maxLines="3"
-                    android:textColor="@color/Content"
-                    android:textSize="16dp"/>
+                    android:layout_margin="16dp"
+                    app:cardBackgroundColor="@color/Crimson">
+
+                    <TextView
+                        android:id="@+id/profile_user_logout"
+                        style="@style/mw"
+                        android:gravity="center"
+                        android:padding="16dp"
+                        android:text="@string/app_logout"
+                        android:textAppearance="@style/Title.Inverse"/>
+
+                </android.support.v7.widget.CardView>
 
             </LinearLayout>
 
-            <LinearLayout
-                style="@style/mw.h"
-                android:background="@color/White"
-                android:gravity="center_vertical"
-                android:padding="16dp">
+        </ScrollView>
 
-                <TextView
-                    android:layout_width="64dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:text="@string/user_id"
-                    android:textColor="@color/Assist"
-                    android:textSize="16dp"/>
+        <include
+            layout="@layout/widget_toolbar_shadow"/>
 
-                <TextView
-                    android:id="@+id/profile_user_id"
-                    style="@style/mw"
-                    android:layout_marginLeft="16dp"
-                    android:maxLines="3"
-                    android:textColor="@color/Content"
-                    android:textSize="16dp"/>
+    </FrameLayout>
 
-            </LinearLayout>
-
-            <LinearLayout
-                style="@style/mw.h"
-                android:background="@color/White"
-                android:gravity="center_vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="64dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:text="@string/user_signature"
-                    android:textColor="@color/Assist"
-                    android:textSize="16dp"/>
-
-                <TextView
-                    android:id="@+id/profile_user_signature"
-                    style="@style/mw"
-                    android:layout_marginLeft="16dp"
-                    android:textColor="@color/Content"
-                    android:textSize="16dp"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <TextView
-            style="@style/ww"
-            android:layout_marginTop="8dp"
-            android:padding="8dp"
-            android:text="@string/user_extras"
-            android:textColor="@color/Assist"
-            android:textSize="16dp"/>
-
-        <LinearLayout
-            style="@style/mw.v"
-            android:background="@color/White"
-            android:divider="@drawable/divider_horizontal_dot"
-            android:showDividers="middle">
-
-            <LinearLayout
-                style="@style/mw.h"
-                android:background="@color/White"
-                android:gravity="center_vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="64dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:text="@string/user_gender"
-                    android:textColor="@color/Assist"
-                    android:textSize="16dp"/>
-
-                <TextView
-                    android:id="@+id/profile_user_gender"
-                    style="@style/mw"
-                    android:layout_marginLeft="16dp"
-                    android:maxLines="3"
-                    android:textColor="@color/Content"
-                    android:textSize="16dp"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                style="@style/mw.h"
-                android:background="@color/White"
-                android:gravity="center_vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="64dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:text="@string/user_location"
-                    android:textColor="@color/Assist"
-                    android:textSize="16dp"/>
-
-                <TextView
-                    android:id="@+id/profile_user_location"
-                    style="@style/mw"
-                    android:layout_marginLeft="16dp"
-                    android:textColor="@color/Content"
-                    android:textSize="16dp"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                style="@style/mw.h"
-                android:background="@color/White"
-                android:gravity="center_vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="64dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:text="@string/user_qq"
-                    android:textColor="@color/Assist"
-                    android:textSize="16dp"/>
-
-                <TextView
-                    android:id="@+id/profile_user_qq"
-                    style="@style/mw"
-                    android:layout_marginLeft="16dp"
-                    android:textColor="@color/Content"
-                    android:textSize="16dp"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                style="@style/mw.h"
-                android:background="@color/White"
-                android:gravity="center_vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="64dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:text="@string/user_phone"
-                    android:textColor="@color/Assist"
-                    android:textSize="16dp"/>
-
-                <TextView
-                    android:id="@+id/profile_user_phone"
-                    style="@style/mw"
-                    android:layout_marginLeft="16dp"
-                    android:textColor="@color/Content"
-                    android:textSize="16dp"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <TextView
-            style="@style/ww"
-            android:layout_marginTop="8dp"
-            android:padding="8dp"
-            android:text="@string/user_basics"
-            android:textColor="@color/Assist"
-            android:textSize="16dp"/>
-
-        <LinearLayout
-            style="@style/mw.v"
-            android:background="@color/White"
-            android:divider="@drawable/divider_horizontal_dot"
-            android:showDividers="middle">
-
-            <LinearLayout
-                android:id="@+id/profile_user_contributes"
-                style="@style/mw.h"
-                android:background="@drawable/button_transparent"
-                android:gravity="center_vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:id="@+id/profile_user_contributes_text"
-                    style="@style/mww"
-                    android:maxLines="3"
-                    android:text="@string/user_contributes"
-                    android:textColor="@color/Content"
-                    android:textSize="16dp"/>
-
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginLeft="8dp"
-                    android:src="@drawable/image_front"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/profile_user_chats"
-                style="@style/mw.h"
-                android:background="@color/White"
-                android:gravity="center_vertical"
-                android:padding="16dp"
-                android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/profile_user_chats_text"
-                    style="@style/mww"
-                    android:maxLines="3"
-                    android:text="@string/user_chats"
-                    android:textColor="@color/Content"
-                    android:textSize="16dp"/>
-
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/image_front"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/profile_user_logout"
-            style="@style/mw"
-            android:layout_margin="16dp"
-            android:background="@color/Crimson"
-            android:gravity="center"
-            android:padding="16dp"
-            android:text="@string/app_logout"
-            android:textColor="@color/White"
-            android:textSize="16dp"/>
-
-    </LinearLayout>
-
-</ScrollView>
+</LinearLayout>

@@ -9,7 +9,7 @@ import android.widget.ListPopupWindow;
 import android.widget.PopupWindow;
 
 import com.harreke.easyapp.adapters.abslistview.AbsListAdapter;
-import com.harreke.easyapp.frameworks.list.abslistview.IAbsList;
+import com.harreke.easyapp.frameworks.lists.abslistview.IAbsList;
 import com.harreke.easyapp.holders.abslistview.IAbsListHolder;
 
 import java.util.ArrayList;

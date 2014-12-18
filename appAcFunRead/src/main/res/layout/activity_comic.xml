@@ -24,4 +24,15 @@
 
     </FrameLayout>
 
+    <LinearLayout
+        style="@style/mw.v">
+
+        <include
+            layout="@layout/widget_toolbar"/>
+
+        <include
+            layout="@layout/widget_toolbar_shadow"/>
+
+    </LinearLayout>
+
 </FrameLayout>

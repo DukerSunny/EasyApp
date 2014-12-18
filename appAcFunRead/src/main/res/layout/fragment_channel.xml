@@ -1,24 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
-    style="@style/mm"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="8dp">
+    style="@style/mm">
 
-    <ListView
-        android:id="@+id/channel_list"
-        style="@style/mm"
-        android:divider="@color/Transparent"
-        android:dividerHeight="8dp"/>
-
-    <com.gc.materialdesign.views.ButtonFloat
-        android:id="@+id/channel_refresh"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:background="@color/Primary"
-        app:iconFloat="@drawable/image_refresh_inverse"
-        app:rippleColor="@color/Primary_Dark"/>
+    <include
+        layout="@layout/widget_recycler_pullable"/>
 
 </FrameLayout>

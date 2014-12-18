@@ -34,7 +34,7 @@ public class AboutActivity extends ActivityFramework {
     @Override
     public void createMenu() {
         setToolbarTitle(R.string.setting_about);
-        setToolbarNavigation(R.drawable.image_back_inverse);
+        setToolbarNavigation();
     }
 
     @Override
@@ -48,8 +48,7 @@ public class AboutActivity extends ActivityFramework {
 
     @Override
     public void onBackPressed() {
-        exit(false);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        exit(R.anim.zoom_in_enter, R.anim.slide_out_left);
     }
 
     @Override

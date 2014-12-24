@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    style="@style/mw"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_margin="8dp">
+
+    <LinearLayout
+        android:id="@+id/room_root"
+        style="@style/mw.v">
+
+        <com.harreke.easyapp.widgets.RatioImageView
+            android:id="@+id/room_src"
+            style="@style/mw"
+            android:src="@drawable/image_loading_16x9"/>
+
+        <LinearLayout
+            style="@style/mw.v"
+            android:padding="4dp">
+
+            <LinearLayout
+                style="@style/mw.h"
+                android:layout_marginTop="4dp">
+
+                <LinearLayout
+                    style="@style/mww.h"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/image_user"/>
+
+                    <TextView
+                        android:id="@+id/room_nickname"
+                        style="@style/mw"
+                        android:singleLine="true"
+                        android:textAppearance="@style/Caption"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/mww.h"
+                    android:layout_marginLeft="8dp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/image_online"/>
+
+                    <TextView
+                        android:id="@+id/room_online"
+                        style="@style/ww"
+                        android:singleLine="true"
+                        android:textAppearance="@style/Caption"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/room_name"
+                style="@style/mw"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:singleLine="true"
+                android:textAppearance="@style/Subhead"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

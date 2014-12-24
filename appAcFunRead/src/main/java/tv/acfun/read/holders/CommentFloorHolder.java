@@ -1,14 +1,15 @@
 package tv.acfun.read.holders;
 
 import android.content.res.Resources;
+import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.harreke.easyapp.helpers.ImageLoaderHelper;
-import com.harreke.easyapp.holders.recycerview.RecyclerHolder;
-import com.harreke.easyapp.widgets.RippleDrawable;
+import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
+import com.harreke.easyapp.widgets.rippleeffects.RippleDrawable;
 
 import tv.acfun.read.R;
 import tv.acfun.read.beans.Conversion;
@@ -36,13 +37,16 @@ public class CommentFloorHolder extends RecyclerHolder<Conversion> {
 
         comment_date_text = resources.getString(R.string.comment_date);
 
+        comment_text.setMovementMethod(LinkMovementMethod.getInstance());
+
         RippleDrawable.attach(convertView.findViewById(R.id.comment_floor));
     }
 
     @Override
     public void setItem(Conversion conversion) {
         if (ImageConnectionHelper.shouldLoadImage()) {
-            ImageLoaderHelper.loadImage(comment_userImg, conversion.getUserImg());
+            ImageLoaderHelper
+                    .loadImage(comment_userImg, conversion.getUserImg(), R.drawable.image_loading, R.drawable.image_idle);
         } else {
             OfflineImageLoaderHelper.loadImage(comment_userImg, OfflineImageLoaderHelper.OfflineImage.Avatar);
         }

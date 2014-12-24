@@ -9,10 +9,9 @@ import android.view.ViewGroup;
 import com.daimajia.swipe.SwipeLayout;
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
-import com.harreke.easyapp.frameworks.lists.recyclerview.RecyclerFramework;
-import com.harreke.easyapp.holders.recycerview.RecyclerHolder;
+import com.harreke.easyapp.frameworks.recyclerview.RecyclerFramework;
+import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
 import com.harreke.easyapp.requests.IRequestCallback;
-import com.harreke.easyapp.requests.RequestBuilder;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.List;
@@ -23,7 +22,7 @@ import tv.acfun.read.api.API;
 import tv.acfun.read.bases.application.AcFunRead;
 import tv.acfun.read.beans.Content;
 import tv.acfun.read.helpers.LoginHelper;
-import tv.acfun.read.holders.FavouriteHolder;
+import tv.acfun.read.holders.ChannelUnspecificRemovableHolder;
 import tv.acfun.read.parsers.ChannelListParser;
 
 /**
@@ -49,6 +48,7 @@ public class FavouriteActivity extends ActivityFramework {
 
     @Override
     public void attachCallbacks() {
+        mLoginHelper.setLoginCallback(mLoginCallback);
     }
 
     @Override
@@ -64,22 +64,12 @@ public class FavouriteActivity extends ActivityFramework {
         mFavouriteRecyclerHelper.setHasFixedSize(true);
         mFavouriteRecyclerHelper.attachAdapter();
 
-        mLoginHelper = new LoginHelper(getActivity(), mLoginCallback);
+        mLoginHelper = new LoginHelper(this);
     }
 
     @Override
     public void establishCallbacks() {
         mLoginCallback = new LoginHelper.LoginCallback() {
-            @Override
-            public void onCancelRequest() {
-                cancelRequest();
-            }
-
-            @Override
-            public void onExecuteRequest(RequestBuilder builder, IRequestCallback<String> callback) {
-                executeRequest(builder, callback);
-            }
-
             @Override
             public void onSuccess() {
                 mLoginHelper.hide();
@@ -141,7 +131,6 @@ public class FavouriteActivity extends ActivityFramework {
 
             @Override
             public void onHandRelease(SwipeLayout swipeLayout, float v, float v2) {
-
             }
 
             @Override
@@ -151,7 +140,6 @@ public class FavouriteActivity extends ActivityFramework {
 
             @Override
             public void onStartClose(SwipeLayout swipeLayout) {
-
             }
 
             @Override
@@ -163,7 +151,6 @@ public class FavouriteActivity extends ActivityFramework {
 
             @Override
             public void onUpdate(SwipeLayout swipeLayout, int i, int i2) {
-
             }
         };
     }
@@ -175,7 +162,7 @@ public class FavouriteActivity extends ActivityFramework {
 
     @Override
     protected void onDestroy() {
-        mLoginHelper.hide();
+        mLoginHelper.destroy();
         super.onDestroy();
     }
 
@@ -221,7 +208,7 @@ public class FavouriteActivity extends ActivityFramework {
 
         @Override
         public RecyclerHolder<Content> createHolder(View convertView, int viewType) {
-            FavouriteHolder holder = new FavouriteHolder(convertView);
+            ChannelUnspecificRemovableHolder holder = new ChannelUnspecificRemovableHolder(convertView);
 
             holder.setOnRemoveClickListener(mOnRemoveClickListener);
             holder.addSwipeListener(mSwipeListener);
@@ -230,13 +217,8 @@ public class FavouriteActivity extends ActivityFramework {
         }
 
         @Override
-        public View createView(ViewGroup parent, int viewType) {
-            return LayoutInflater.from(getActivity()).inflate(R.layout.item_favourite, parent, false);
-        }
-
-        @Override
-        public void onRequestAction() {
-            readList();
+        public View createView(LayoutInflater inflater, ViewGroup parent, int viewType) {
+            return inflater.inflate(R.layout.item_channel_unspecific_removable, parent, false);
         }
 
         @Override
@@ -245,7 +227,7 @@ public class FavouriteActivity extends ActivityFramework {
                 mOpenSwipeLayout.close();
                 mOpenSwipeLayout = null;
             } else {
-                start(ContentActivity.create(getActivity(), content.getContentId()));
+                start(ContentActivity.create(getContext(), content.getContentId()));
             }
         }
 
@@ -258,6 +240,11 @@ public class FavouriteActivity extends ActivityFramework {
             } else {
                 return null;
             }
+        }
+
+        @Override
+        protected void onRequestAction() {
+            readList();
         }
     }
 }

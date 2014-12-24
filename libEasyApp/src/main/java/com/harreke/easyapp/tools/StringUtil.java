@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  * 正则工具
  */
 public class StringUtil {
-    public static String cleanHtmlSymbols(String input) {
+    public static String escapeHtmlSymbols(String input) {
         if (input != null && input.length() > 0) {
             input = input.replace("&amp;", "&");
             input = input.replace("&ldquo;", "“");
@@ -43,6 +43,18 @@ public class StringUtil {
         builder.getChars(start, end, chars, 0);
 
         return new String(chars);
+    }
+
+    public static String indentNumber(int number) {
+        String result;
+
+        if (number < 10000) {
+            return String.valueOf(number);
+        } else {
+            result = String.valueOf(number / 10000f);
+
+            return result.substring(0, result.indexOf(".") + 1) + "万";
+        }
     }
 
     public static int toInt(String input) {

@@ -21,17 +21,16 @@ import java.io.File;
  * 图片加载器的全局配置
  */
 public class ImageExecutorConfig {
-    public static void config(Context context, int loadingImageId, int errorImageId) {
+    public static void config(Context context) {
         ImageLoaderConfiguration configuration = new ImageLoaderConfiguration.Builder(context).diskCache(
                 new UnlimitedDiscCache(new File(ApplicationFramework.CacheDir + "/" + ApplicationFramework.DIR_TEMPS)))
-                .defaultDisplayImageOptions(
-                        new DisplayImageOptions.Builder().showImageForEmptyUri(errorImageId).showImageOnFail(errorImageId)
-                                .showImageOnLoading(loadingImageId).cacheOnDisk(true).build()).build();
+                .defaultDisplayImageOptions(new DisplayImageOptions.Builder().cacheOnDisk(true).build()).build();
         ImageLoader.getInstance().init(configuration);
     }
 
-    public static IRequestExecutor create(ImageView image, String imageUrl, IRequestCallback<ImageView> callback) {
-        return new UniversalImageExecutor(image, imageUrl, callback);
+    public static IRequestExecutor create(ImageView image, String imageUrl, int loadingImageId, int retryImageId,
+            IRequestCallback<ImageView> callback) {
+        return new UniversalImageExecutor(image, imageUrl, loadingImageId, retryImageId, callback);
     }
 
     public static IRequestExecutor create(String imageUrl, IRequestCallback<Bitmap> callback) {

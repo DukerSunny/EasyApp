@@ -1,11 +1,12 @@
 package tv.acfun.read.holders;
 
+import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
-import com.harreke.easyapp.holders.recycerview.RecyclerHolder;
-import com.harreke.easyapp.widgets.RippleDrawable;
+import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
+import com.harreke.easyapp.widgets.rippleeffects.RippleDrawable;
 
 import tv.acfun.read.R;
 import tv.acfun.read.beans.Conversion;
@@ -24,6 +25,8 @@ public class CommentQuoteHolder extends RecyclerHolder<Conversion> {
         comment_quote_text = (TextView) convertView.findViewById(R.id.comment_quote_text);
         comment_quote_username = (TextView) convertView.findViewById(R.id.comment_quote_username);
         comment_quote_reference = (TextView) convertView.findViewById(R.id.comment_quote_reference);
+
+        comment_quote_text.setMovementMethod(LinkMovementMethod.getInstance());
 
         RippleDrawable.attach(convertView.findViewById(R.id.comment_quote));
     }

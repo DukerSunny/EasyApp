@@ -8,11 +8,11 @@ import android.view.ViewGroup;
 
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
-import com.harreke.easyapp.frameworks.lists.recyclerview.RecyclerFramework;
-import com.harreke.easyapp.holders.recycerview.RecyclerHolder;
+import com.harreke.easyapp.frameworks.recyclerview.RecyclerFramework;
+import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
 import com.harreke.easyapp.listeners.OnTagClickListener;
-import com.harreke.easyapp.requests.IRequestCallback;
-import com.harreke.easyapp.requests.RequestBuilder;
+import com.nineoldandroids.view.ViewHelper;
+import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.listeners.ActionClickListener;
 import com.nispok.snackbar.listeners.EventListener;
@@ -39,6 +39,8 @@ public class QuoteActivity extends ActivityFramework {
     private View comment_new;
     private ActionClickListener mActionClickListener;
     private int mCommentId;
+    private ViewPropertyAnimator mCommentNewAnimator;
+    private float mCommentNewPosition = -1;
     private int mContentId;
     private EventListener mEventListener;
     private LoginHelper.LoginCallback mLoginCallback;
@@ -48,7 +50,7 @@ public class QuoteActivity extends ActivityFramework {
     private View.OnClickListener mOnClickListener;
     private OnTagClickListener mOnTagClickListener;
     private int mPageNo;
-    private QuoteListHelper mQuoteListHelper;
+    private QuoteRecyclerHelper mQuoteRecyclerHelper;
     private Conversion mSelectedConversion = null;
     private Snackbar mSnackbar;
     private int mTextSize;
@@ -78,6 +80,7 @@ public class QuoteActivity extends ActivityFramework {
     @Override
     public void attachCallbacks() {
         comment_new.setOnClickListener(mOnClickListener);
+        mLoginHelper.setLoginCallback(mLoginCallback);
     }
 
     @Override
@@ -89,12 +92,14 @@ public class QuoteActivity extends ActivityFramework {
     @Override
     public void enquiryViews() {
         comment_new = findViewById(R.id.comment_new);
-        mLoginHelper = new LoginHelper(getActivity(), mLoginCallback);
+        mCommentNewAnimator = ViewPropertyAnimator.animate(comment_new);
 
-        mQuoteListHelper = new QuoteListHelper(this);
-        mQuoteListHelper.setCanLoad(false);
-        mQuoteListHelper.setHasFixedSize(false);
-        mQuoteListHelper.attachAdapter();
+        mLoginHelper = new LoginHelper(this);
+
+        mQuoteRecyclerHelper = new QuoteRecyclerHelper(this);
+        mQuoteRecyclerHelper.setCanLoad(false);
+        mQuoteRecyclerHelper.setHasFixedSize(false);
+        mQuoteRecyclerHelper.attachAdapter();
     }
 
     @Override
@@ -102,61 +107,49 @@ public class QuoteActivity extends ActivityFramework {
         mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (AcFunRead.getInstance().readFullUser() == null) {
-                    mLoginHelper.show();
-                } else {
-                    start(ReplyActivity.create(getActivity(), mContentId, 0, 0), 0);
+                if (mLoginHelper.validateLogin()) {
+                    start(ReplyActivity.create(getContext(), mContentId, 0, 0), 0);
                 }
             }
         };
         mOnTagClickListener = new OnTagClickListener() {
             @Override
             public void onTagClick(String tag, String link) {
-                if ("img".equals(tag)) {
-                    start(ComicActivity.create(getActivity(), link));
-                } else if ("ac".equals(tag)) {
-                    start(ContentActivity.create(getActivity(), Integer.valueOf(link)));
-                } else if ("at".equals(tag)) {
-                    start(ProfileActivity.create(getActivity(), link));
-                    getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                switch (tag) {
+                    case "img":
+                        start(ComicActivity.create(getContext(), link));
+                        break;
+                    case "ac":
+                        start(ContentActivity.create(getContext(), Integer.valueOf(link)));
+                        break;
+                    case "at":
+                        start(ProfileActivity.create(getContext(), link), R.anim.slide_in_left, R.anim.slide_out_right);
                 }
             }
         };
         mOnAvatarClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                start(ProfileActivity.create(getActivity(), (Integer) v.getTag()), R.anim.slide_in_left, R.anim.zoom_in_exit);
+                start(ProfileActivity.create(getContext(), (Integer) v.getTag()), R.anim.slide_in_left, R.anim.zoom_in_exit);
             }
         };
         mLoginCallback = new LoginHelper.LoginCallback() {
             @Override
-            public void onCancelRequest() {
-                cancelRequest();
-            }
-
-            @Override
-            public void onExecuteRequest(RequestBuilder builder, IRequestCallback<String> callback) {
-                executeRequest(builder, callback);
-            }
-
-            @Override
             public void onSuccess() {
-                if (mLoginHelper.isShowing()) {
-                    start(ReplyActivity.create(getActivity(), mContentId, 0, 0), 0);
-                }
-                mLoginHelper.hide();
+                start(ReplyActivity.create(getContext(), mContentId, 0, 0), 0);
             }
         };
         mActionClickListener = new ActionClickListener() {
             @Override
             public void onActionClicked(Snackbar snackbar) {
                 start(ReplyActivity
-                        .create(getActivity(), mContentId, mSelectedConversion.getCid(), mSelectedConversion.getCount()));
+                        .create(getContext(), mContentId, mSelectedConversion.getCid(), mSelectedConversion.getCount()));
             }
         };
         mEventListener = new EventListener() {
             @Override
             public void onDismiss(Snackbar snackbar) {
+                mCommentNewAnimator.y(mCommentNewPosition);
             }
 
             @Override
@@ -166,6 +159,10 @@ public class QuoteActivity extends ActivityFramework {
 
             @Override
             public void onShow(Snackbar snackbar) {
+                if (mCommentNewPosition == -1) {
+                    mCommentNewPosition = ViewHelper.getY(comment_new);
+                }
+                mCommentNewAnimator.y(mCommentNewPosition - comment_new.getMeasuredHeight());
             }
 
             @Override
@@ -180,7 +177,7 @@ public class QuoteActivity extends ActivityFramework {
 
         if (resultCode == RESULT_OK) {
             showToast(R.string.comment_success);
-            mQuoteListHelper.clear();
+            mQuoteRecyclerHelper.clear();
             startAction();
         }
     }
@@ -208,14 +205,14 @@ public class QuoteActivity extends ActivityFramework {
 
     @Override
     public void startAction() {
-        mQuoteListHelper.from(API.getContentComment(mContentId, 50, mPageNo), true);
+        mQuoteRecyclerHelper.from(API.getContentComment(mContentId, 50, mPageNo));
     }
 
-    private class QuoteListHelper extends RecyclerFramework<Conversion> {
+    private class QuoteRecyclerHelper extends RecyclerFramework<Conversion> {
         private final static int TYPE_FLOOR = 1;
         private final static int TYPE_QUOTE = 0;
 
-        public QuoteListHelper(IFramework framework) {
+        public QuoteRecyclerHelper(IFramework framework) {
             super(framework);
         }
 
@@ -239,11 +236,11 @@ public class QuoteActivity extends ActivityFramework {
         }
 
         @Override
-        protected View createView(ViewGroup parent, int viewType) {
+        protected View createView(LayoutInflater inflater, ViewGroup parent, int viewType) {
             if (viewType == TYPE_QUOTE) {
-                return LayoutInflater.from(getActivity()).inflate(R.layout.item_comment_quote, parent, false);
+                return inflater.inflate(R.layout.item_comment_quote, parent, false);
             } else {
-                return LayoutInflater.from(getActivity()).inflate(R.layout.item_comment_floor, parent, false);
+                return inflater.inflate(R.layout.item_comment_floor, parent, false);
             }
         }
 
@@ -258,7 +255,7 @@ public class QuoteActivity extends ActivityFramework {
                 mSnackbar.dismiss();
             }
             mSelectedConversion = conversion;
-            mSnackbar = Snackbar.with(getActivity()).actionLabel(R.string.comment_reply).dismissOnActionClicked(true);
+            mSnackbar = Snackbar.with(getContext()).actionLabel(R.string.comment_reply).dismissOnActionClicked(true);
             mSnackbar.text(getString(R.string.comment_select, conversion.getCount()));
             mSnackbar.actionListener(mActionClickListener).eventListener(mEventListener);
             mSnackbar.show(getActivity());
@@ -282,8 +279,7 @@ public class QuoteActivity extends ActivityFramework {
         }
 
         @Override
-        protected void onRequestAction() {
-            startAction();
+        protected void setItemDecoration() {
         }
     }
 }

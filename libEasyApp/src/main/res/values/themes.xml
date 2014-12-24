@@ -7,6 +7,7 @@
 
         <item name="childTabViewStyle">@style/Theme.EasyApp.ChildTabView</item>
         <item name="infoViewStyle">@style/Theme.EasyApp.InfoView</item>
+        <item name="ratioImageViewStyle">@style/Theme.EasyApp.RatioImageView</item>
     </style>
 
     <style name="Theme.EasyApp" parent="Theme.EasyApp.Base"/>
@@ -34,6 +35,10 @@
         <item name="retryText">@string/empty_failure</item>
         <item name="showRetryHintWhenEmpty">true</item>
         <item name="text">@string/empty_loading</item>
+    </style>
+
+    <style name="Theme.EasyApp.RatioImageView">
+        <item name="ratio">1.78</item>
     </style>
 
 </resources>

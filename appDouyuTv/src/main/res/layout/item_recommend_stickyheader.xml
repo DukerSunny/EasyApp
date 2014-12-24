@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    style="@style/mw"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/White"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/recommend_stickyheader_title"
+        style="@style/mww"
+        android:textAppearance="@style/Title"/>
+
+    <ImageView
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:background="@drawable/image_more"/>
+
+</LinearLayout>

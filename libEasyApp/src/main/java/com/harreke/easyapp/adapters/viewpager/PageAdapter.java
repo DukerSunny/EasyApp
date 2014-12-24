@@ -5,9 +5,8 @@ import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.harreke.easyapp.frameworks.pages.IPager;
-
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/07/24
@@ -19,12 +18,16 @@ import java.util.ArrayList;
  * @param <VIEW>
  *         页面的类型
  */
-public abstract class PageAdapter<ITEM, VIEW extends View> extends PagerAdapter implements IPager<ITEM, VIEW> {
+public abstract class PageAdapter<ITEM, VIEW extends View> extends PagerAdapter {
     protected SparseArray<VIEW> mViewList = new SparseArray<VIEW>();
-    private ArrayList<ITEM> mItemList = new ArrayList<ITEM>();
+    private List<ITEM> mItemList = new ArrayList<ITEM>();
 
     public final void add(ITEM item) {
         mItemList.add(item);
+    }
+
+    public final void add(List<ITEM> itemList) {
+        mItemList.addAll(itemList);
     }
 
     public final void clear() {
@@ -32,20 +35,7 @@ public abstract class PageAdapter<ITEM, VIEW extends View> extends PagerAdapter 
         mViewList.clear();
     }
 
-    @Override
-    public int getCount() {
-        return mItemList.size();
-    }
-
-    @Override
-    public View instantiateItem(ViewGroup container, int position) {
-        VIEW view = createPage(position, mItemList.get(position));
-
-        container.addView(view);
-        mViewList.put(position, view);
-
-        return view;
-    }
+    protected abstract VIEW createPage(ViewGroup container, int position, ITEM item);
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
@@ -56,8 +46,8 @@ public abstract class PageAdapter<ITEM, VIEW extends View> extends PagerAdapter 
     }
 
     @Override
-    public boolean isViewFromObject(View view, Object object) {
-        return view == object;
+    public int getCount() {
+        return mItemList.size();
     }
 
     public final ITEM getItem(int position) {
@@ -70,6 +60,21 @@ public abstract class PageAdapter<ITEM, VIEW extends View> extends PagerAdapter 
 
     public final VIEW getView(int position) {
         return mViewList.get(position);
+    }
+
+    @Override
+    public View instantiateItem(ViewGroup container, int position) {
+        VIEW view = createPage(container, position, mItemList.get(position));
+
+        container.addView(view);
+        mViewList.put(position, view);
+
+        return view;
+    }
+
+    @Override
+    public boolean isViewFromObject(View view, Object object) {
+        return view == object;
     }
 
     public final void refresh() {

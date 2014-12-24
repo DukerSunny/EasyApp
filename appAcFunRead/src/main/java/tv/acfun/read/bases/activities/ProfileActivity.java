@@ -1,18 +1,18 @@
 package tv.acfun.read.bases.activities;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
-import com.harreke.easyapp.helpers.DialogHelper;
 import com.harreke.easyapp.helpers.ImageLoaderHelper;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.tools.GsonUtil;
-import com.harreke.easyapp.widgets.RippleDrawable;
+import com.harreke.easyapp.widgets.rippleeffects.RippleDrawable;
+import com.harreke.easyapp.widgets.rippleeffects.RippleOnClickListener;
 import com.umeng.analytics.MobclickAgent;
 
 import tv.acfun.read.BuildConfig;
@@ -27,10 +27,10 @@ import tv.acfun.read.parsers.UserJsonParser;
  * 由 Harreke（harreke@live.cn） 创建于 2014/10/09
  */
 public class ProfileActivity extends ActivityFramework {
-    private View.OnClickListener mClickListener;
     private FullUser mFullUser;
-    private DialogInterface.OnClickListener mLogoutClickListener;
-    private DialogHelper mLogoutHelper;
+    private MaterialDialog.SimpleCallback mLogoutCallback;
+    private MaterialDialog mLogoutDialog;
+    private View.OnClickListener mOnClickListener;
     private boolean mSelfProfile;
     private int mUserId;
     private IRequestCallback<String> mUserIdCallback;
@@ -45,6 +45,7 @@ public class ProfileActivity extends ActivityFramework {
     private TextView profile_user_id;
     private TextView profile_user_location;
     private View profile_user_logout;
+    private View profile_user_logout_text;
     private TextView profile_user_name;
     private TextView profile_user_phone;
     private TextView profile_user_qq;
@@ -90,20 +91,10 @@ public class ProfileActivity extends ActivityFramework {
 
     @Override
     public void attachCallbacks() {
-        profile_user_contributes.setOnClickListener(mClickListener);
-        profile_user_chats.setOnClickListener(mClickListener);
-        profile_user_logout.setOnClickListener(mClickListener);
+        //        profile_user_chats.setOnClickListener(mOnClickListener);
 
-        RippleDrawable.attach(findViewById(R.id.profile_user_avatar_root));
-        RippleDrawable.attach(findViewById(R.id.profile_user_id_root));
-        RippleDrawable.attach(findViewById(R.id.profile_user_signature_root));
-        RippleDrawable.attach(findViewById(R.id.profile_user_gender_root));
-        RippleDrawable.attach(findViewById(R.id.profile_user_location_root));
-        RippleDrawable.attach(findViewById(R.id.profile_user_qq_root));
-        RippleDrawable.attach(findViewById(R.id.profile_user_phone_root));
-        RippleDrawable.attach(findViewById(R.id.profile_user_contributes));
-        RippleDrawable.attach(findViewById(R.id.profile_user_chats));
-        RippleDrawable.attach(findViewById(R.id.profile_user_logout), RippleDrawable.RIPPLE_STYLE_LIGHT);
+        RippleOnClickListener.attach(profile_user_contributes, mOnClickListener);
+        RippleOnClickListener.attach(profile_user_logout_text, mOnClickListener);
     }
 
     private void checkUser() {
@@ -111,7 +102,8 @@ public class ProfileActivity extends ActivityFramework {
         String refer;
 
         if (mFullUser != null) {
-            ImageLoaderHelper.loadImage(profile_user_avatar, mFullUser.getUserImg());
+            ImageLoaderHelper
+                    .loadImage(profile_user_avatar, mFullUser.getUserImg(), R.drawable.image_loading, R.drawable.image_idle);
             profile_user_name.setText(mFullUser.getUsername());
             profile_user_id.setText(String.valueOf(mFullUser.getUserId()));
             profile_user_signature.setText(mFullUser.getSignature());
@@ -174,14 +166,6 @@ public class ProfileActivity extends ActivityFramework {
         setToolbarNavigation();
     }
 
-    private void doLogout() {
-        AcFunRead acFunRead = AcFunRead.getInstance();
-
-        acFunRead.writeFullUser(null);
-        acFunRead.writeToken(null);
-        onBackPressed();
-    }
-
     @Override
     public void enquiryViews() {
         profile_user_avatar = (ImageView) findViewById(R.id.profile_user_avatar);
@@ -200,40 +184,42 @@ public class ProfileActivity extends ActivityFramework {
         profile_user_chats_text = (TextView) findViewById(R.id.profile_user_chats_text);
 
         profile_user_logout = findViewById(R.id.profile_user_logout);
+        profile_user_logout_text = findViewById(R.id.profile_user_logout_text);
 
-        mLogoutHelper = new DialogHelper(getActivity());
-        mLogoutHelper.setTitle(R.string.app_logout);
-        mLogoutHelper.setPositiveButton(R.string.app_ok);
-        mLogoutHelper.setNegativeButton(R.string.app_cancel);
-        mLogoutHelper.setOnClickListener(mLogoutClickListener);
+        mLogoutDialog = new MaterialDialog.Builder(getContext()).title(R.string.logout_sure).positiveText(R.string.app_ok)
+                .negativeText(R.string.app_cancel).callback(mLogoutCallback).build();
+
+        RippleDrawable.attach(profile_user_contributes);
+        RippleDrawable.attach(profile_user_logout_text, RippleDrawable.RIPPLE_STYLE_LIGHT);
     }
 
     @Override
     public void establishCallbacks() {
-        mClickListener = new View.OnClickListener() {
+        mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.profile_user_contributes:
-                        start(ContributionActivity.create(getActivity(), mUserId,
-                                mSelfProfile ? getString(R.string.user_refer_mine) : mFullUser.getUsername()));
+                        if (mSelfProfile) {
+                            start(ContributionActivity.create(getContext(), mUserId, getString(R.string.user_refer_mine)),
+                                    R.anim.slide_in_left, R.anim.zoom_in_exit);
+                        } else {
+                            start(ContributionActivity.create(getContext(), mUserId, mFullUser.getUsername()));
+                        }
                         break;
-                    case R.id.profile_user_chats:
-                        //                        start(ChatActivity.create(getActivity(), AcFunRead.getInstance().readFullUser().getUserId(), mUserId));
-                        break;
-                    case R.id.profile_user_logout:
-                        doLogout();
+                    //                    case R.id.profile_user_chats:
+                    //                        start(ChatActivity.create(getActivity(), AcFunRead.getInstance().readFullUser().getUserId(), mUserId));
+                    //                        break;
+                    case R.id.profile_user_logout_text:
+                        mLogoutDialog.show();
                 }
             }
         };
-        mLogoutClickListener = new DialogInterface.OnClickListener() {
+        mLogoutCallback = new MaterialDialog.SimpleCallback() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mLogoutHelper.hide();
-                if (which == DialogInterface.BUTTON_POSITIVE) {
-                    AcFunRead.getInstance().clearLogin();
-                    onBackPressed();
-                }
+            public void onPositive(MaterialDialog materialDialog) {
+                AcFunRead.getInstance().clearLogin();
+                onBackPressed();
             }
         };
         mUserIdCallback = new IRequestCallback<String>() {
@@ -277,7 +263,17 @@ public class ProfileActivity extends ActivityFramework {
 
     @Override
     public void onBackPressed() {
-        exit(R.anim.zoom_in_enter, R.anim.slide_out_left);
+        if (mSelfProfile) {
+            exit(R.anim.zoom_in_enter, R.anim.slide_out_left);
+        } else {
+            exit();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        mLogoutDialog.dismiss();
+        super.onDestroy();
     }
 
     @Override

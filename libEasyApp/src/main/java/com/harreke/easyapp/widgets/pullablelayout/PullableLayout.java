@@ -6,10 +6,12 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
 
+import com.harreke.easyapp.frameworks.bases.application.ApplicationFramework;
 import com.harreke.easyapp.widgets.pullablelayout.viewdelegates.IViewDelegate;
 import com.harreke.easyapp.widgets.pullablelayout.viewdelegates.RecyclerViewDelegate;
 import com.harreke.easyapp.widgets.pullablelayout.viewdelegates.ScrollViewDelegate;
@@ -22,7 +24,7 @@ import com.nineoldandroids.view.ViewPropertyAnimator;
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/12/09
  */
-public class PullableLayout extends FrameLayout {
+public class PullableLayout extends FrameLayout implements ViewGroup.OnHierarchyChangeListener {
     private final static long DURATION_TOAST = 2500;
     private boolean mCanLoad = true;
     private boolean mCanRefresh = true;
@@ -70,10 +72,13 @@ public class PullableLayout extends FrameLayout {
     private float mRefreshIndicatorOffset = 0f;
     private int mRefreshThreshold = 0;
     private boolean mRefreshing = false;
+    private float mTouchThreshold = ApplicationFramework.Density * 8;
     private IViewDelegate mViewDelegate = null;
 
     public PullableLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        setOnHierarchyChangeListener(this);
     }
 
     public boolean canLoad() {
@@ -122,24 +127,25 @@ public class PullableLayout extends FrameLayout {
     }
 
     @Override
+    public void onChildViewAdded(View parent, View child) {
+        if (child instanceof RecyclerView) {
+            mViewDelegate = new RecyclerViewDelegate((RecyclerView) child);
+        } else if (child instanceof WebView) {
+            mViewDelegate = new WebViewDelegate((WebView) child);
+        } else if (child instanceof ScrollView) {
+            mViewDelegate = new ScrollViewDelegate((ScrollView) child);
+        }
+    }
+
+    @Override
+    public void onChildViewRemoved(View parent, View child) {
+
+    }
+
+    @Override
     protected void onFinishInflate() {
         Context context;
-        View child;
-        int i;
 
-        for (i = 0; i < getChildCount(); i++) {
-            child = getChildAt(i);
-            if (child instanceof RecyclerView) {
-                mViewDelegate = new RecyclerViewDelegate((RecyclerView) child);
-                break;
-            } else if (child instanceof WebView) {
-                mViewDelegate = new WebViewDelegate((WebView) child);
-                break;
-            } else if (child instanceof ScrollView) {
-                mViewDelegate = new ScrollViewDelegate((ScrollView) child);
-                break;
-            }
-        }
         if (mViewDelegate == null) {
             throw new IllegalArgumentException("Cannot find a pullable view!");
         } else {
@@ -248,6 +254,7 @@ public class PullableLayout extends FrameLayout {
 
                     return true;
                 }
+            case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
                 if (mRefreshIndicatorOffset > 0) {
                     if (mRefreshIndicatorOffset > mRefreshThreshold) {
@@ -341,11 +348,13 @@ public class PullableLayout extends FrameLayout {
     }
 
     private boolean shouldInterceptForLoad(float dy) {
-        return isScrollBottom() && canLoad() && !isLoading() && (dy < 0 || dy > 0 && mLoadIndicatorOffset > 0);
+        return isScrollBottom() && canLoad() && !isLoading() && !isRefreshing() &&
+                (dy < -mTouchThreshold || dy > mTouchThreshold && mLoadIndicatorOffset > 0);
     }
 
     private boolean shouldInterceptForRefresh(float dy) {
-        return isScrollTop() && canRefresh() && !isRefreshing() && (dy > 0 || (dy < 0 && mRefreshIndicatorOffset > 0));
+        return isScrollTop() && canRefresh() && !isRefreshing() && !isLoading() &&
+                (dy > mTouchThreshold || (dy < -mTouchThreshold && mRefreshIndicatorOffset > 0));
     }
 
     public interface OnPullableListener {

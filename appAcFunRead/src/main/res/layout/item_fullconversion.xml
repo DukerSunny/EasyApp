@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    style="@style/mw.v"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/White"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:id="@+id/fullconversion_quote_expand"
+        style="@style/mw.v">
+
+        <TextView
+            android:id="@+id/fullconversion_quote_expand_text"
+            style="@style/mw"
+            android:background="@drawable/shape_quote"
+            android:gravity="center_horizontal"
+            android:padding="8dp"
+            android:textAppearance="@style/Caption"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/fullconversion_quotes"
+        style="@style/mw.v"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/fullconversion_userImg"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/image_avatar"/>
+
+        <LinearLayout
+            style="@style/mmw.v"
+            android:layout_marginLeft="16dp">
+
+            <TextView
+                android:id="@+id/fullconversion_username"
+                style="@style/mw"
+                android:textAppearance="@style/Caption"/>
+
+            <TextView
+                android:id="@+id/fullconversion_date"
+                style="@style/mw"
+                android:layout_marginTop="4dp"
+                android:textAppearance="@style/Caption"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/fullconversion_text"
+        style="@style/mw"
+        android:layout_marginLeft="56dp"
+        android:layout_marginTop="8dp"
+        android:textAppearance="@style/Subhead"/>
+
+</LinearLayout>

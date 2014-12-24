@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    style="@style/mw"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.harreke.easyapp.widgets.RatioImageView
+        android:id="@+id/slideshow_root"
+        style="@style/mw"
+        android:src="@drawable/image_loading_16x9"/>
+
+    <com.imbryk.viewPager.LoopViewPager
+        android:id="@+id/slideshow_pager"
+        style="@style/mw"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        style="@style/mw"
+        android:layout_gravity="bottom"
+        android:background="@color/TransparentGray"
+        android:gravity="center_vertical"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/slideshow_title"
+            style="@style/mww"
+            android:ellipsize="end"
+            android:lines="1"
+            android:textAppearance="@style/Subhead.Inverse"/>
+
+        <me.relex.circleindicator.CircleIndicator
+            android:id="@+id/slideshow_indicator"
+            style="@style/ww"
+            app:ci_drawable="@drawable/shape_circle_white"
+            app:ci_height="20dp"
+            app:ci_width="20dp"/>
+
+    </LinearLayout>
+
+</FrameLayout>

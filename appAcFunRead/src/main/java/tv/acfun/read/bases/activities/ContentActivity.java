@@ -3,6 +3,7 @@ package tv.acfun.read.bases.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.Fragment;
@@ -15,11 +16,18 @@ import android.view.View;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
+import com.harreke.easyapp.helpers.EmptyHelper;
 import com.harreke.easyapp.requests.IRequestCallback;
-import com.harreke.easyapp.requests.RequestBuilder;
+import com.harreke.easyapp.tools.StringUtil;
+import com.nineoldandroids.view.ViewHelper;
+import com.nineoldandroids.view.ViewPropertyAnimator;
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.listeners.ActionClickListener;
+import com.nispok.snackbar.listeners.EventListener;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.List;
+import java.util.regex.Matcher;
 
 import tv.acfun.read.BuildConfig;
 import tv.acfun.read.R;
@@ -29,26 +37,35 @@ import tv.acfun.read.bases.fragments.ContentFragment;
 import tv.acfun.read.beans.ArticlePage;
 import tv.acfun.read.beans.Content;
 import tv.acfun.read.helpers.LoginHelper;
+import tv.acfun.read.listeners.OnContentListener;
 import tv.acfun.read.parsers.ContentListParser;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/25
  */
-public class ContentActivity extends ActivityFramework {
+public class ContentActivity extends ActivityFramework implements OnContentListener {
     private View content_comments;
     private ViewPager content_pager;
     private PagerSlidingTabStrip content_pager_strip;
     private Content mContent;
     private IRequestCallback<String> mContentCallback;
+    private ViewPropertyAnimator mContentCommentsAnimator;
+    private float mContentCommentsPosition = -1;
     private int mContentId;
     private ContentParseTask mContentParseTask;
+    private EmptyHelper mEmptyHelper;
     private IRequestCallback<String> mFavouriteAddCallback;
     private IRequestCallback<String> mFavouriteCheckCallback;
     private IRequestCallback<String> mFavouriteRemoveCallback;
+    private String mLink;
     private LoginHelper.LoginCallback mLoginCallback;
     private LoginHelper mLoginHelper;
     private View.OnClickListener mOnClickListener;
+    private View.OnClickListener mOnEmptyClickListener;
     private List<ArticlePage> mPageList;
+    private ActionClickListener mRedirectActionListener;
+    private EventListener mRedirectEventListener;
+    private Snackbar mSnackbar = null;
 
     public static Intent create(Context context, int contentId) {
         Intent intent = new Intent(context, ContentActivity.class);
@@ -66,6 +83,10 @@ public class ContentActivity extends ActivityFramework {
     @Override
     public void attachCallbacks() {
         content_comments.setOnClickListener(mOnClickListener);
+
+        mEmptyHelper.setOnClickListener(mOnEmptyClickListener);
+
+        mLoginHelper.setLoginCallback(mLoginCallback);
     }
 
     @Override
@@ -114,7 +135,11 @@ public class ContentActivity extends ActivityFramework {
         content_pager_strip.setTextSize((int) getResources().getDimension(R.dimen.Subhead));
 
         content_comments = findViewById(R.id.content_comments);
-        mLoginHelper = new LoginHelper(this, mLoginCallback);
+
+        mContentCommentsAnimator = ViewPropertyAnimator.animate(content_comments);
+
+        mLoginHelper = new LoginHelper(this);
+        mEmptyHelper = new EmptyHelper(findViewById(R.id.empty_root));
     }
 
     @Override
@@ -122,7 +147,7 @@ public class ContentActivity extends ActivityFramework {
         mContentCallback = new IRequestCallback<String>() {
             @Override
             public void onFailure(String requestUrl) {
-                //                setInfoVisibility(InfoView.INFO_ERROR);
+                mEmptyHelper.showIdle();
             }
 
             @Override
@@ -181,24 +206,50 @@ public class ContentActivity extends ActivityFramework {
         };
         mLoginCallback = new LoginHelper.LoginCallback() {
             @Override
-            public void onCancelRequest() {
-                cancelRequest();
-            }
-
-            @Override
-            public void onExecuteRequest(RequestBuilder builder, IRequestCallback<String> callback) {
-                executeRequest(builder, callback);
-            }
-
-            @Override
             public void onSuccess() {
-                mLoginHelper.hide();
+                start(CommentActivity.create(getContext(), mContentId));
             }
         };
         mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                start(CommentActivity.create(getActivity(), mContent.getContentId()));
+                start(CommentActivity.create(getContext(), mContent.getContentId()));
+            }
+        };
+        mOnEmptyClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isRequestExecuting()) {
+                    startAction();
+                }
+            }
+        };
+        mRedirectActionListener = new ActionClickListener() {
+            @Override
+            public void onActionClicked(Snackbar snackbar) {
+                parseLink();
+            }
+        };
+        mRedirectEventListener = new EventListener() {
+            @Override
+            public void onDismiss(Snackbar snackbar) {
+                mContentCommentsAnimator.y(mContentCommentsPosition);
+            }
+
+            @Override
+            public void onDismissed(Snackbar snackbar) {
+            }
+
+            @Override
+            public void onShow(Snackbar snackbar) {
+                if (mContentCommentsPosition == -1) {
+                    mContentCommentsPosition = ViewHelper.getY(content_comments);
+                }
+                mContentCommentsAnimator.y(mContentCommentsPosition - mSnackbar.getMeasuredHeight());
+            }
+
+            @Override
+            public void onShown(Snackbar snackbar) {
             }
         };
     }
@@ -212,6 +263,16 @@ public class ContentActivity extends ActivityFramework {
             mContentParseTask.cancel(true);
         }
         super.onDestroy();
+    }
+
+    @Override
+    public void onLinkClick(String link) {
+        mLink = link;
+        if (mSnackbar != null && mSnackbar.isShowing()) {
+            mSnackbar.dismiss();
+        }
+        mSnackbar = Snackbar.with(getContext()).text(getString(R.string.content_redirect, link)).actionLabel(R.string.app_ok)
+                .actionListener(mRedirectActionListener).eventListener(mRedirectEventListener);
     }
 
     @Override
@@ -246,6 +307,27 @@ public class ContentActivity extends ActivityFramework {
         }
     }
 
+    private void parseLink() {
+        Matcher matcher;
+
+        matcher = StringUtil.getMatcher("/a/ac([0-9]+)", mLink);
+        if (matcher.find()) {
+            start(ContentActivity.create(this, Integer.valueOf(matcher.group(1))));
+
+            return;
+        }
+        matcher = StringUtil.getMatcher("/a/aa([0-9]+)", mLink);
+        if (matcher.find()) {
+            showToast(getString(R.string.content_redirect_aa, matcher.group(1)));
+
+            return;
+        }
+        matcher = StringUtil.getMatcher("http://[\\S\\s]+?", mLink);
+        if (matcher.find()) {
+            start(new Intent(Intent.ACTION_VIEW, Uri.parse(mLink)));
+        }
+    }
+
     @Override
     public void setLayout() {
         setContentView(R.layout.activity_content);
@@ -263,7 +345,7 @@ public class ContentActivity extends ActivityFramework {
 
     @Override
     public void startAction() {
-        //        setInfoVisibility(InfoView.INFO_LOADING);
+        mEmptyHelper.showLoading();
         executeRequest(API.getArticleContent(mContentId), mContentCallback);
     }
 
@@ -297,7 +379,7 @@ public class ContentActivity extends ActivityFramework {
         @Override
         protected void onCancelled() {
             mContentParseTask = null;
-            //            setInfoVisibility(InfoView.INFO_ERROR);
+            mEmptyHelper.showIdle();
         }
 
         @Override
@@ -308,9 +390,9 @@ public class ContentActivity extends ActivityFramework {
                 if (AcFunRead.isArticle(mContent.getChannelId())) {
                     mPageList = result.getPageList();
                     if (mPageList.size() == 0) {
-                        //                        setInfoVisibility(InfoView.INFO_ERROR);
+                        mEmptyHelper.showIdle();
                     } else {
-                        //                        setInfoVisibility(InfoView.INFO_HIDE);
+                        mEmptyHelper.hide();
                         if (mPageList.size() == 1) {
                             content_pager_strip.setVisibility(View.GONE);
                         } else {
@@ -324,11 +406,11 @@ public class ContentActivity extends ActivityFramework {
                         }
                     }
                 } else {
-                    //                    setInfoVisibility(InfoView.INFO_ERROR);
+                    mEmptyHelper.showIdle();
                     showToast("该投稿为视频，请使用视频客户端浏览！");
                 }
             } else {
-                //                setInfoVisibility(InfoView.INFO_ERROR);
+                mEmptyHelper.showIdle();
             }
         }
     }

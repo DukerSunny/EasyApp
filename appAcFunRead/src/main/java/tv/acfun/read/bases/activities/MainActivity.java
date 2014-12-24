@@ -1,5 +1,6 @@
 package tv.acfun.read.bases.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -19,9 +20,8 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.harreke.easyapp.adapters.fragment.FragmentPageAdapter;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.helpers.ImageLoaderHelper;
-import com.harreke.easyapp.requests.IRequestCallback;
-import com.harreke.easyapp.requests.RequestBuilder;
-import com.harreke.easyapp.widgets.RippleDrawable;
+import com.harreke.easyapp.widgets.rippleeffects.RippleDrawable;
+import com.harreke.easyapp.widgets.rippleeffects.RippleOnClickListener;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 
@@ -38,12 +38,12 @@ import tv.acfun.read.helpers.OfflineImageLoaderHelper;
 public class MainActivity extends ActivityFramework {
     private int[] channel_id;
     private String[] channel_name;
-    private View.OnClickListener mClickListener;
     private ActionBarDrawerToggle mDrawerToggle;
     private long mExitTime = 0;
     private FullUser mFullUser = null;
     private LoginHelper mLoginHelper;
     private LoginHelper.LoginCallback mLoginListener;
+    private View.OnClickListener mOnClickListener;
     private ViewPager.OnPageChangeListener mPageChangeListener;
     private int mPosition = 0;
     private ViewPager main_content_pager;
@@ -62,6 +62,10 @@ public class MainActivity extends ActivityFramework {
     private TextView menu_user_name;
     private TextView menu_user_signature;
 
+    public static Intent create(Context context) {
+        return new Intent(context, MainActivity.class);
+    }
+
     @Override
     public void acquireArguments(Intent intent) {
         AcFunRead acFunRead = AcFunRead.getInstance();
@@ -77,16 +81,21 @@ public class MainActivity extends ActivityFramework {
     public void attachCallbacks() {
         main_drawer.setDrawerListener(mDrawerToggle);
 
-        menu_setting.setOnClickListener(mClickListener);
+        menu_setting.setOnClickListener(mOnClickListener);
 
         main_content_pager_strip.setOnPageChangeListener(mPageChangeListener);
 
-        menu_user_description.setOnClickListener(mClickListener);
-        menu_at.setOnClickListener(mClickListener);
-        menu_mail.setOnClickListener(mClickListener);
-        menu_favourite.setOnClickListener(mClickListener);
-        menu_history.setOnClickListener(mClickListener);
-        menu_pattern.setOnClickListener(mClickListener);
+        menu_at.setOnClickListener(mOnClickListener);
+        menu_mail.setOnClickListener(mOnClickListener);
+        menu_pattern.setOnClickListener(mOnClickListener);
+
+        mLoginHelper.setLoginCallback(mLoginListener);
+
+        RippleOnClickListener.attach(menu_user_description, mOnClickListener);
+        RippleOnClickListener.attach(menu_user_signature, mOnClickListener);
+        RippleOnClickListener.attach(menu_favourite, mOnClickListener);
+        RippleOnClickListener.attach(menu_history, mOnClickListener);
+        RippleOnClickListener.attach(menu_setting, mOnClickListener);
     }
 
     private void checkUser() {
@@ -149,13 +158,14 @@ public class MainActivity extends ActivityFramework {
         RippleDrawable.attach(menu_user_signature, RippleDrawable.RIPPLE_STYLE_LIGHT);
         RippleDrawable.attach(menu_favourite);
         RippleDrawable.attach(menu_history);
+        RippleDrawable.attach(menu_setting);
 
-        mLoginHelper = new LoginHelper(this, mLoginListener);
+        mLoginHelper = new LoginHelper(this);
     }
 
     @Override
     public void establishCallbacks() {
-        mClickListener = new View.OnClickListener() {
+        mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AcFunRead acFunRead = AcFunRead.getInstance();
@@ -167,7 +177,7 @@ public class MainActivity extends ActivityFramework {
                                 acFunRead.clearLogin();
                                 mLoginHelper.show(LoginHelper.Reason.Expired);
                             } else {
-                                start(ProfileActivity.create(getActivity(), mFullUser), R.anim.slide_in_left,
+                                start(ProfileActivity.create(getContext(), mFullUser), R.anim.slide_in_left,
                                         R.anim.zoom_in_exit);
                             }
                         } else {
@@ -180,7 +190,7 @@ public class MainActivity extends ActivityFramework {
                                 acFunRead.clearLogin();
                                 mLoginHelper.show(LoginHelper.Reason.Expired);
                             } else {
-                                start(MailActivity.create(getActivity()), R.anim.slide_in_left, R.anim.zoom_in_exit);
+                                start(MailActivity.create(getContext()), R.anim.slide_in_left, R.anim.zoom_in_exit);
                             }
                         } else {
                             mLoginHelper.show(LoginHelper.Reason.Unauthorized);
@@ -192,17 +202,17 @@ public class MainActivity extends ActivityFramework {
                                 acFunRead.clearLogin();
                                 mLoginHelper.show(LoginHelper.Reason.Expired);
                             } else {
-                                start(FavouriteActivity.create(getActivity()), R.anim.slide_in_left, R.anim.zoom_in_exit);
+                                start(FavouriteActivity.create(getContext()), R.anim.slide_in_left, R.anim.zoom_in_exit);
                             }
                         } else {
                             mLoginHelper.show(LoginHelper.Reason.Unauthorized);
                         }
                         break;
                     case R.id.menu_history:
-                        start(HistoryActivity.create(getActivity()), R.anim.slide_in_left, R.anim.zoom_in_exit);
+                        start(HistoryActivity.create(getContext()), R.anim.slide_in_left, R.anim.zoom_in_exit);
                         break;
                     case R.id.menu_setting:
-                        start(SettingActivity.create(getActivity()), R.anim.slide_in_left, R.anim.zoom_in_exit);
+                        start(SettingActivity.create(getContext()), R.anim.slide_in_left, R.anim.zoom_in_exit);
                 }
             }
         };
@@ -222,18 +232,7 @@ public class MainActivity extends ActivityFramework {
         };
         mLoginListener = new LoginHelper.LoginCallback() {
             @Override
-            public void onCancelRequest() {
-                cancelRequest();
-            }
-
-            @Override
-            public void onExecuteRequest(RequestBuilder builder, IRequestCallback<String> callback) {
-                executeRequest(builder, callback);
-            }
-
-            @Override
             public void onSuccess() {
-                mLoginHelper.hide();
                 checkUser();
             }
         };
@@ -243,7 +242,8 @@ public class MainActivity extends ActivityFramework {
         if (mFullUser.getUserImg().equals("avatar") || !ImageConnectionHelper.shouldLoadImage()) {
             OfflineImageLoaderHelper.loadImage(menu_user_avatar, OfflineImageLoaderHelper.OfflineImage.Avatar);
         } else {
-            ImageLoaderHelper.loadImage(menu_user_avatar, mFullUser.getUserImg());
+            ImageLoaderHelper
+                    .loadImage(menu_user_avatar, mFullUser.getUserImg(), R.drawable.image_loading, R.drawable.image_idle);
         }
     }
 
@@ -275,12 +275,13 @@ public class MainActivity extends ActivityFramework {
     protected void onDestroy() {
         AcFunRead.getInstance().unregisterConnectionReceiver();
         writeLastPosition();
+        mLoginHelper.destroy();
         super.onDestroy();
     }
 
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
-        start(SearchActivity.create(getActivity()));
+        start(SearchActivity.create(getContext()));
 
         return false;
     }

@@ -1,9 +1,7 @@
 package tv.acfun.read.bases.fragments;
 
-import android.content.DialogInterface;
-import android.content.Intent;
+import android.app.Activity;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,11 +13,9 @@ import android.webkit.WebViewClient;
 import com.harreke.easyapp.configs.ImageExecutorConfig;
 import com.harreke.easyapp.frameworks.bases.fragment.FragmentFramework;
 import com.harreke.easyapp.frameworks.webs.WebFramework;
-import com.harreke.easyapp.helpers.DialogHelper;
 import com.harreke.easyapp.helpers.ImageLoaderHelper;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.tools.GsonUtil;
-import com.harreke.easyapp.tools.StringUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -27,16 +23,15 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Matcher;
 
 import tv.acfun.read.R;
 import tv.acfun.read.bases.activities.ComicActivity;
-import tv.acfun.read.bases.activities.ContentActivity;
 import tv.acfun.read.bases.activities.ProfileActivity;
 import tv.acfun.read.bases.application.AcFunRead;
 import tv.acfun.read.beans.ArticlePage;
 import tv.acfun.read.beans.Content;
 import tv.acfun.read.helpers.ImageConnectionHelper;
+import tv.acfun.read.listeners.OnContentListener;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/25
@@ -54,10 +49,8 @@ public class ContentFragment extends FragmentFramework {
     private boolean mFirstRefresh = true;
     private Handler mHandler;
     private List<String> mImageList;
-    private DialogInterface.OnClickListener mOnRedirectClickListener;
+    private OnContentListener mOnContentListener = null;
     private int mPagePosition;
-    private DialogHelper mRedirectHelper;
-    private int mRedirectId;
 
     public static ContentFragment create(Content content, int pagePosition, ArticlePage articlePage) {
         ContentFragment fragment = new ContentFragment();
@@ -94,11 +87,6 @@ public class ContentFragment extends FragmentFramework {
         mContentWebHelper.setJavaScriptEnabled(true);
         mContentWebHelper.addJavascriptInterface(new JsInterface(), "content");
         mContentWebHelper.setWebViewClient(mClient);
-
-        mRedirectHelper = new DialogHelper(getActivity());
-        mRedirectHelper.setPositiveButton(R.string.app_ok);
-        mRedirectHelper.setNegativeButton(R.string.app_cancel);
-        mRedirectHelper.setOnClickListener(mOnRedirectClickListener);
     }
 
     @Override
@@ -120,7 +108,9 @@ public class ContentFragment extends FragmentFramework {
                         }
                         break;
                     case CONTENT_A:
-                        parseHref((String) msg.obj);
+                        if (mOnContentListener != null) {
+                            mOnContentListener.onLinkClick((String) msg.obj);
+                        }
                         break;
                     case CONTENT_HEADER:
                         start(ProfileActivity.create(getActivity(), mContent.getUser().getUserId()));
@@ -151,16 +141,6 @@ public class ContentFragment extends FragmentFramework {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 return false;
-            }
-        };
-        mOnRedirectClickListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mRedirectHelper.hide();
-                switch (which) {
-                    case DialogInterface.BUTTON_POSITIVE:
-                        start(ContentActivity.create(getActivity(), mRedirectId));
-                }
             }
         };
     }
@@ -233,9 +213,15 @@ public class ContentFragment extends FragmentFramework {
     }
 
     @Override
-    public void onDestroyView() {
-        mRedirectHelper.hide();
-        super.onDestroyView();
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mOnContentListener = (OnContentListener) activity;
+    }
+
+    @Override
+    public void onDetach() {
+        mOnContentListener = null;
+        super.onDetach();
     }
 
     @Override
@@ -246,29 +232,6 @@ public class ContentFragment extends FragmentFramework {
             mFirstRefresh = false;
         } else {
             refreshWeb();
-        }
-    }
-
-    private void parseHref(String href) {
-        Matcher matcher;
-        Intent intent;
-
-        matcher = StringUtil.getMatcher("/a/ac([0-9]+)", href);
-        if (matcher.find()) {
-            mRedirectId = Integer.valueOf(matcher.group(1));
-            mRedirectHelper.setTitle(getString(R.string.content_redirect_ac, mRedirectId));
-            mRedirectHelper.show();
-        }
-
-        matcher = StringUtil.getMatcher("/a/aa([0-9]+)", href);
-        if (matcher.find()) {
-            showToast(getString(R.string.content_redirect_aa, matcher.group(1)));
-        }
-
-        matcher = StringUtil.getMatcher("http://[\\S\\s]+?", href);
-        if (matcher.find()) {
-            intent = new Intent(Intent.ACTION_VIEW, Uri.parse(href));
-            start(intent);
         }
     }
 

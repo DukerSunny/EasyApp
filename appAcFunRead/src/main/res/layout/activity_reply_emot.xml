@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridView
-    android:id="@+id/emot_grid"
+<android.support.v7.widget.RecyclerView
+    android:id="@+id/emot_recycler"
     style="@style/mm"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:horizontalSpacing="8dp"
-    android:numColumns="5"
-    android:padding="8dp"
-    android:verticalSpacing="8dp"/>
+    android:padding="8dp"/>

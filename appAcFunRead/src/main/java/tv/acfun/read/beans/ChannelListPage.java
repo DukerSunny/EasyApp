@@ -7,18 +7,8 @@ import java.util.ArrayList;
  */
 public class ChannelListPage {
     private ArrayList<Content> list;
-    private int pageSize;
-    private int totalCount;
 
     public ArrayList<Content> getList() {
         return list;
-    }
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public int getTotalCount() {
-        return totalCount;
     }
 }

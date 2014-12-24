@@ -5,24 +5,28 @@ import android.text.Spanned;
 import com.google.gson.annotations.Expose;
 
 /**
- * 由 Harreke（harreke@live.cn） 创建于 2014/10/04
+ * 由 Harreke（harreke@live.cn） 创建于 2014/09/24
  */
 public class Search {
+    private String avatar;
     private int channelId;
     private int comments;
-    private String conver;
+    private String contentId;
     private String description;
-    private int id;
     @Expose(serialize = false, deserialize = false)
     private Spanned mSpanned;
     private long releaseDate;
-    private String sign;
     private int stows;
+    private String[] tags;
     private String title;
+    private String titleImg;
     private int userId;
-    private String userImg;
     private String username;
     private int views;
+
+    public String getAvatar() {
+        return avatar;
+    }
 
     public int getChannelId() {
         return channelId;
@@ -32,8 +36,8 @@ public class Search {
         return comments;
     }
 
-    public String getConver() {
-        return conver;
+    public String getContentId() {
+        return contentId;
     }
 
     public String getDescription() {
@@ -44,16 +48,8 @@ public class Search {
         return description;
     }
 
-    public int getId() {
-        return id;
-    }
-
     public long getReleaseDate() {
         return releaseDate;
-    }
-
-    public String getSign() {
-        return sign;
     }
 
     public Spanned getSpanned() {
@@ -64,16 +60,20 @@ public class Search {
         return stows;
     }
 
+    public String[] getTags() {
+        return tags;
+    }
+
     public String getTitle() {
         return title;
     }
 
-    public int getUserId() {
-        return userId;
+    public String getTitleImg() {
+        return titleImg;
     }
 
-    public String getUserImg() {
-        return userImg;
+    public int getUserId() {
+        return userId;
     }
 
     public String getUsername() {
@@ -86,7 +86,11 @@ public class Search {
 
     @Override
     public int hashCode() {
-        return id;
+        return contentId.hashCode();
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public void setChannelId(int channelId) {
@@ -97,24 +101,16 @@ public class Search {
         this.comments = comments;
     }
 
-    public void setConver(String conver) {
-        this.conver = conver;
+    public void setContentId(String contentId) {
+        this.contentId = contentId;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public void setReleaseDate(long releaseDate) {
         this.releaseDate = releaseDate;
-    }
-
-    public void setSign(String sign) {
-        this.sign = sign;
     }
 
     public void setSpanned(Spanned spanned) {
@@ -125,16 +121,20 @@ public class Search {
         this.stows = stows;
     }
 
+    public void setTags(String[] tags) {
+        this.tags = tags;
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setTitleImg(String titleImg) {
+        this.titleImg = titleImg;
     }
 
-    public void setUserImg(String userImg) {
-        this.userImg = userImg;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public void setUsername(String username) {

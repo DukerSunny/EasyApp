@@ -1,27 +1,24 @@
 package tv.acfun.read.bases.activities;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v4.view.PagerAdapter;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.astuetz.PagerSlidingTabStrip;
 import com.chiralcode.colorpicker.ColorPicker;
+import com.harreke.easyapp.adapters.fragment.FragmentPageAdapter;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
-import com.harreke.easyapp.helpers.DialogHelper;
-import com.harreke.easyapp.helpers.PopupAbsListHelper;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.tools.StringUtil;
+import com.harreke.easyapp.widgets.rippleeffects.RippleDrawable;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.regex.Matcher;
@@ -30,50 +27,52 @@ import tv.acfun.read.BuildConfig;
 import tv.acfun.read.R;
 import tv.acfun.read.api.API;
 import tv.acfun.read.bases.application.AcFunRead;
-import tv.acfun.read.holders.EmotHolder;
-import tv.acfun.read.holders.SizeSelectHolder;
+import tv.acfun.read.bases.fragments.EmotFragment;
+import tv.acfun.read.listeners.OnEmotClickListener;
 import tv.acfun.read.widgets.UBBEditText;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/10/10
  */
-public class ReplyActivity extends ActivityFramework {
-    private Adapter mAdapter;
-    private DialogInterface.OnClickListener mColorPickerClickListener;
-    private DialogHelper mColorPickerHelper;
+public class ReplyActivity extends ActivityFramework implements OnEmotClickListener {
+    private ColorPicker mColorPicker;
+    private MaterialDialog.FullCallback mColorPickerCallback;
+    private MaterialDialog mColorPickerDialog;
     private int mContentId;
     private int mDefaultColor;
     private int mDefaultSize;
     private int[] mEmotCounts;
-    private AdapterView.OnItemClickListener mEmotItemClickListener;
+    private String[] mEmotIds;
     private String[] mEmotNames;
+    private EmotPageAdapter mEmotPageAdapter;
     private int mFloorIndex;
     private View.OnFocusChangeListener mFocusChangeListener;
     private View.OnClickListener mOnClickListener;
     private UBBEditText.OnSelectionChangeListener mOnSelectionChangeListener;
     private int mQuoteId;
     private IRequestCallback<String> mSendCallback;
-    private SizePickerHelper mSizePickerHelper;
-    private AdapterView.OnItemClickListener mSizePickerItemListener;
-    private int mStyleColor;
-    private int mStyleSize;
-    private ColorPicker picker;
+    private MaterialDialog mSizePickerDialog;
+    private MaterialDialog.FullCallback mSizePickerFullCallback;
+    private MaterialDialog.ListCallback mSizePickerListCallback;
+    //    private SizePickerHelper mSizePickerHelper;
+    private int mTextColor;
+    private int mTextSize;
+    private View reply_emot_off;
+    private View reply_emot_on;
     private UBBEditText reply_input;
     private ViewPager reply_pager;
     private PagerSlidingTabStrip reply_pager_strip;
     private View reply_selectall;
-    private View reply_style_bold;
-    private View reply_style_color;
-    private View reply_style_color_indicator;
-    private View reply_style_color_picker;
-    private View reply_style_emot_off;
-    private View reply_style_emot_on;
-    private View reply_style_italic;
-    private View reply_style_size;
-    private TextView reply_style_size_indicator;
-    private View reply_style_size_picker;
-    private View reply_style_strikethrough;
-    private View reply_style_underline;
+    private View reply_text_bold;
+    private View reply_text_color;
+    private TextView reply_text_color_indicator;
+    private View reply_text_color_picker;
+    //    private View reply_text_italic;
+    private View reply_text_size;
+    private TextView reply_text_size_indicator;
+    private View reply_text_size_picker;
+    private View reply_text_strikethrough;
+    private View reply_text_underline;
     private View reply_unselect;
 
     public static Intent create(Context context, int contentId, int quoteId, int floorIndex) {
@@ -93,33 +92,27 @@ public class ReplyActivity extends ActivityFramework {
         mFloorIndex = intent.getIntExtra("floorIndex", 0);
 
         mEmotNames = getResources().getStringArray(R.array.emot_name);
+        mEmotIds = getResources().getStringArray(R.array.emot_id);
         mEmotCounts = getResources().getIntArray(R.array.emot_count);
     }
 
     @Override
     public void attachCallbacks() {
-        reply_style_bold.setOnClickListener(mOnClickListener);
-        reply_style_italic.setOnClickListener(mOnClickListener);
-        reply_style_underline.setOnClickListener(mOnClickListener);
-        reply_style_strikethrough.setOnClickListener(mOnClickListener);
-        reply_style_color.setOnClickListener(mOnClickListener);
-        reply_style_color_picker.setOnClickListener(mOnClickListener);
-        reply_style_size.setOnClickListener(mOnClickListener);
-        reply_style_size_picker.setOnClickListener(mOnClickListener);
-        reply_style_emot_on.setOnClickListener(mOnClickListener);
-        reply_style_emot_off.setOnClickListener(mOnClickListener);
+        reply_text_bold.setOnClickListener(mOnClickListener);
+        reply_text_underline.setOnClickListener(mOnClickListener);
+        //        reply_text_italic.setOnClickListener(mOnClickListener);
+        reply_text_strikethrough.setOnClickListener(mOnClickListener);
+        reply_text_color.setOnClickListener(mOnClickListener);
+        reply_text_color_picker.setOnClickListener(mOnClickListener);
+        reply_text_size.setOnClickListener(mOnClickListener);
+        reply_text_size_picker.setOnClickListener(mOnClickListener);
+        reply_emot_on.setOnClickListener(mOnClickListener);
+        reply_emot_off.setOnClickListener(mOnClickListener);
         reply_selectall.setOnClickListener(mOnClickListener);
         reply_unselect.setOnClickListener(mOnClickListener);
 
         reply_input.setOnSelectionChangeListener(mOnSelectionChangeListener);
         reply_input.setOnFocusChangeListener(mFocusChangeListener);
-
-        mColorPickerHelper.setPositiveButton(R.string.app_ok);
-        mColorPickerHelper.setNegativeButton(R.string.app_cancel);
-        mColorPickerHelper.setNeutralButton(R.string.app_reset);
-        mColorPickerHelper.setOnClickListener(mColorPickerClickListener);
-
-        mSizePickerHelper.setOnItemClickListener(mSizePickerItemListener);
     }
 
     @Override
@@ -172,20 +165,18 @@ public class ReplyActivity extends ActivityFramework {
 
     @Override
     public void enquiryViews() {
-        View dialog_colorpicker;
-
-        reply_style_bold = findViewById(R.id.reply_style_bold);
-        reply_style_italic = findViewById(R.id.reply_style_italic);
-        reply_style_underline = findViewById(R.id.reply_style_underline);
-        reply_style_strikethrough = findViewById(R.id.reply_style_strikethrough);
-        reply_style_color = findViewById(R.id.reply_style_color);
-        reply_style_color_indicator = findViewById(R.id.reply_style_color_indicator);
-        reply_style_color_picker = findViewById(R.id.reply_style_color_picker);
-        reply_style_size = findViewById(R.id.reply_style_size);
-        reply_style_size_indicator = (TextView) findViewById(R.id.reply_style_size_indicator);
-        reply_style_size_picker = findViewById(R.id.reply_style_size_picker);
-        reply_style_emot_on = findViewById(R.id.reply_style_emot_on);
-        reply_style_emot_off = findViewById(R.id.reply_style_emot_off);
+        reply_text_bold = findViewById(R.id.reply_text_bold);
+        //        reply_text_italic = findViewById(R.id.reply_text_italic);
+        reply_text_underline = findViewById(R.id.reply_text_underline);
+        reply_text_strikethrough = findViewById(R.id.reply_text_strikethrough);
+        reply_text_color = findViewById(R.id.reply_text_color);
+        reply_text_color_indicator = (TextView) findViewById(R.id.reply_text_color_indicator);
+        reply_text_color_picker = findViewById(R.id.reply_text_color_picker);
+        reply_text_size = findViewById(R.id.reply_text_size);
+        reply_text_size_indicator = (TextView) findViewById(R.id.reply_text_size_indicator);
+        reply_text_size_picker = findViewById(R.id.reply_text_size_picker);
+        reply_emot_on = findViewById(R.id.reply_emot_on);
+        reply_emot_off = findViewById(R.id.reply_emot_off);
 
         reply_input = (UBBEditText) findViewById(R.id.reply_input);
         reply_pager = (ViewPager) findViewById(R.id.reply_pager);
@@ -196,27 +187,32 @@ public class ReplyActivity extends ActivityFramework {
         reply_pager_strip.setTextColor(Color.DKGRAY);
         reply_pager_strip.setTextSize((int) getResources().getDimension(R.dimen.Subhead));
 
-        mAdapter = new Adapter();
+        mEmotPageAdapter = new EmotPageAdapter(getSupportFragmentManager());
 
         mDefaultColor = Color.BLACK;
-        mStyleColor = mDefaultColor;
-        dialog_colorpicker = View.inflate(getActivity(), R.layout.dialog_colorpicker, null);
-        picker = (ColorPicker) dialog_colorpicker.findViewById(R.id.picker);
-        picker.setColor(mDefaultColor);
-        mColorPickerHelper = new DialogHelper(getActivity());
-        mColorPickerHelper.setTitle(R.string.reply_pickcolor);
-        mColorPickerHelper.setView(dialog_colorpicker);
+        mTextColor = mDefaultColor;
+
+        mColorPickerDialog =
+                new MaterialDialog.Builder(this).title(R.string.reply_pickcolor).customView(R.layout.dialog_colorpicker)
+                        .positiveText(R.string.app_ok).negativeText(R.string.app_cancel).neutralText(R.string.app_reset)
+                        .callback(mColorPickerCallback).build();
+        mColorPicker = (ColorPicker) mColorPickerDialog.getCustomView().findViewById(R.id.colorpicker);
+        mColorPicker.setColor(mDefaultColor);
 
         mDefaultSize = 16;
-        mStyleSize = mDefaultSize;
-        mSizePickerHelper = new SizePickerHelper(getActivity(), reply_style_size_picker);
-        mSizePickerHelper.add(0, 10);
-        mSizePickerHelper.add(1, 12);
-        mSizePickerHelper.add(2, 16);
-        mSizePickerHelper.add(3, 18);
-        mSizePickerHelper.add(4, 24);
-        mSizePickerHelper.add(5, 32);
-        mSizePickerHelper.add(6, 48);
+        mTextSize = mDefaultSize;
+
+        mSizePickerDialog = new MaterialDialog.Builder(this).title(R.string.reply_picksize).items(R.array.reply_text_size).
+                neutralText(R.string.app_reset).negativeText(R.string.app_cancel).callback(mSizePickerFullCallback)
+                .itemsCallback(mSizePickerListCallback).build();
+
+        RippleDrawable.attach(reply_text_bold, RippleDrawable.RIPPLE_STYLE_DARK_SQUARE);
+        RippleDrawable.attach(reply_text_underline, RippleDrawable.RIPPLE_STYLE_DARK_SQUARE);
+        RippleDrawable.attach(reply_text_strikethrough, RippleDrawable.RIPPLE_STYLE_DARK_SQUARE);
+        RippleDrawable.attach(reply_text_color, RippleDrawable.RIPPLE_STYLE_DARK_SQUARE);
+        RippleDrawable.attach(reply_text_size, RippleDrawable.RIPPLE_STYLE_DARK_SQUARE);
+        RippleDrawable.attach(reply_emot_on, RippleDrawable.RIPPLE_STYLE_DARK_SQUARE);
+        RippleDrawable.attach(reply_emot_off, RippleDrawable.RIPPLE_STYLE_LIGHT_SQUARE);
     }
 
     @Override
@@ -225,37 +221,37 @@ public class ReplyActivity extends ActivityFramework {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
-                    case R.id.reply_style_bold:
+                    case R.id.reply_text_bold:
                         reply_input.toggleBold();
                         break;
-                    case R.id.reply_style_italic:
-                        reply_input.toggleItalic();
-                        break;
-                    case R.id.reply_style_underline:
+                    //                    case R.id.reply_text_italic:
+                    //                        reply_input.toggleItalic();
+                    //                        break;
+                    case R.id.reply_text_underline:
                         reply_input.toggleUnderline();
                         break;
-                    case R.id.reply_style_strikethrough:
+                    case R.id.reply_text_strikethrough:
                         reply_input.toggleStrikethrough();
                         break;
-                    case R.id.reply_style_color:
-                        reply_input.setColor(mStyleColor);
+                    case R.id.reply_text_color:
+                        reply_input.setColor(mTextColor);
                         break;
-                    case R.id.reply_style_color_picker:
-                        mColorPickerHelper.show();
+                    case R.id.reply_text_color_picker:
+                        mColorPickerDialog.show();
                         break;
-                    case R.id.reply_style_size:
-                        reply_input.setSize(mStyleSize);
+                    case R.id.reply_text_size:
+                        reply_input.setSize(mTextSize);
                         break;
-                    case R.id.reply_style_size_picker:
-                        mSizePickerHelper.show();
+                    case R.id.reply_text_size_picker:
+                        mSizePickerDialog.show();
                         break;
-                    case R.id.reply_style_emot_on:
-                        hideEmot();
-                        showSoftInputMethod();
-                        break;
-                    case R.id.reply_style_emot_off:
+                    case R.id.reply_emot_on:
                         showEmot();
                         hideSoftInputMethod();
+                        break;
+                    case R.id.reply_emot_off:
+                        hideEmot();
+                        showSoftInputMethod();
                         break;
                     case R.id.reply_selectall:
                         selectAll();
@@ -265,36 +261,39 @@ public class ReplyActivity extends ActivityFramework {
                 }
             }
         };
-        mColorPickerClickListener = new DialogInterface.OnClickListener() {
+        mColorPickerCallback = new MaterialDialog.FullCallback() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case DialogInterface.BUTTON_POSITIVE:
-                        mColorPickerHelper.hide();
-                        mStyleColor = picker.getColor();
-                        reply_style_color_indicator.setBackgroundColor(mStyleColor);
-                        break;
-                    case DialogInterface.BUTTON_NEUTRAL:
-                        picker.setColor(mDefaultColor);
-                        reply_style_color_indicator.setBackgroundColor(mDefaultColor);
-                        break;
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        mColorPickerHelper.hide();
-                }
+            public void onNegative(MaterialDialog materialDialog) {
+            }
+
+            @Override
+            public void onNeutral(MaterialDialog materialDialog) {
+                resetTextColor();
+            }
+
+            @Override
+            public void onPositive(MaterialDialog materialDialog) {
+                setTextColor(mColorPicker.getColor());
             }
         };
-        mSizePickerItemListener = new AdapterView.OnItemClickListener() {
+        mSizePickerFullCallback = new MaterialDialog.FullCallback() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mSizePickerHelper.hide();
-                mStyleSize = mSizePickerHelper.getItem(position);
-                reply_style_size_indicator.setText(String.valueOf(mStyleSize));
+            public void onNegative(MaterialDialog materialDialog) {
+            }
+
+            @Override
+            public void onNeutral(MaterialDialog materialDialog) {
+                resetTextSize();
+            }
+
+            @Override
+            public void onPositive(MaterialDialog materialDialog) {
             }
         };
-        mEmotItemClickListener = new AdapterView.OnItemClickListener() {
+        mSizePickerListCallback = new MaterialDialog.ListCallback() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                reply_input.insertEmot(mEmotNames[(Integer) parent.getTag()], position);
+            public void onSelection(MaterialDialog materialDialog, View view, int i, CharSequence item) {
+                setTextSize(Integer.valueOf(item.toString()));
             }
         };
         mFocusChangeListener = new View.OnFocusChangeListener() {
@@ -335,10 +334,10 @@ public class ReplyActivity extends ActivityFramework {
     }
 
     private void hideEmot() {
-        reply_pager_strip.setVisibility(View.VISIBLE);
+        reply_pager_strip.setVisibility(View.GONE);
         reply_pager.setVisibility(View.GONE);
-        reply_style_emot_on.setVisibility(View.GONE);
-        reply_style_emot_off.setVisibility(View.VISIBLE);
+        reply_emot_on.setVisibility(View.VISIBLE);
+        reply_emot_off.setVisibility(View.GONE);
     }
 
     private void hideSoftInputMethod() {
@@ -347,9 +346,14 @@ public class ReplyActivity extends ActivityFramework {
 
     @Override
     protected void onDestroy() {
-        mColorPickerHelper.hide();
-        mSizePickerHelper.hide();
+        mColorPickerDialog.dismiss();
+        mSizePickerDialog.dismiss();
         super.onDestroy();
+    }
+
+    @Override
+    public void onEmotClick(String emotName, String emotId, int emotPosition) {
+        reply_input.insertEmot(emotId, emotPosition);
     }
 
     @Override
@@ -378,6 +382,14 @@ public class ReplyActivity extends ActivityFramework {
         reply_input.setUBBText(AcFunRead.getInstance().readString("replyText", ""));
     }
 
+    private void resetTextColor() {
+        setTextColor(mDefaultColor);
+    }
+
+    private void resetTextSize() {
+        setTextSize(mDefaultSize);
+    }
+
     private void selectAll() {
         if (reply_input.getText().length() > 0) {
             reply_input.selectAllWithAction();
@@ -390,11 +402,22 @@ public class ReplyActivity extends ActivityFramework {
         setContentView(R.layout.activity_reply);
     }
 
+    private void setTextColor(int textColor) {
+        mTextColor = textColor;
+        mColorPicker.setColor(mTextColor);
+        reply_text_color_indicator.setTextColor(mTextColor);
+    }
+
+    private void setTextSize(int textSize) {
+        mTextSize = textSize;
+        reply_text_size_indicator.setText(String.valueOf(mTextSize));
+    }
+
     private void showEmot() {
         reply_pager_strip.setVisibility(View.VISIBLE);
         reply_pager.setVisibility(View.VISIBLE);
-        reply_style_emot_on.setVisibility(View.VISIBLE);
-        reply_style_emot_off.setVisibility(View.GONE);
+        reply_emot_off.setVisibility(View.VISIBLE);
+        reply_emot_on.setVisibility(View.GONE);
     }
 
     private void showSelectAll() {
@@ -413,14 +436,13 @@ public class ReplyActivity extends ActivityFramework {
 
     @Override
     public void startAction() {
-        reply_pager.setAdapter(mAdapter);
+        reply_pager.setAdapter(mEmotPageAdapter);
         reply_pager_strip.setViewPager(reply_pager);
     }
 
-    private class Adapter extends PagerAdapter {
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView((GridView) object);
+    private class EmotPageAdapter extends FragmentPageAdapter {
+        public EmotPageAdapter(FragmentManager fm) {
+            super(fm);
         }
 
         @Override
@@ -429,80 +451,29 @@ public class ReplyActivity extends ActivityFramework {
         }
 
         @Override
+        public Fragment getItem(int position) {
+            return EmotFragment.create(mEmotNames[position], mEmotIds[position], mEmotCounts[position]);
+        }
+
+        @Override
         public CharSequence getPageTitle(int position) {
             return mEmotNames[position];
         }
-
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            GridView gridView = (GridView) View.inflate(getActivity(), R.layout.activity_reply_emot, null);
-
-            gridView.setTag(position);
-            gridView.setOnItemClickListener(mEmotItemClickListener);
-            gridView.setAdapter(new EmotListAdapter(position));
-            container.addView(gridView);
-
-            return gridView;
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object object) {
-            return view == object;
-        }
     }
 
-    private class EmotListAdapter extends BaseAdapter {
-        private int mIndex;
-
-        private EmotListAdapter(int index) {
-            mIndex = index;
-        }
-
-        @Override
-        public int getCount() {
-            return mEmotCounts[mIndex];
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return position;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            EmotHolder holder;
-
-            if (convertView == null) {
-                convertView = View.inflate(getActivity(), R.layout.item_emot, null);
-                holder = new EmotHolder(convertView);
-                convertView.setTag(holder);
-            } else {
-                holder = (EmotHolder) convertView.getTag();
-            }
-            holder.setItem(position, mEmotNames[mIndex]);
-
-            return convertView;
-        }
-    }
-
-    private class SizePickerHelper extends PopupAbsListHelper<Integer, SizeSelectHolder> {
-        public SizePickerHelper(Context context, View anchor) {
-            super(context, anchor);
-        }
-
-        @Override
-        public SizeSelectHolder createHolder(View convertView) {
-            return new SizeSelectHolder(convertView);
-        }
-
-        @Override
-        public View createView() {
-            return View.inflate(getActivity(), R.layout.item_sizeselect, null);
-        }
-    }
+    //    private class SizePickerHelper extends PopupAbsListHelper<Integer, SizeSelectHolder> {
+    //        public SizePickerHelper(Context context, View anchor) {
+    //            super(context, anchor);
+    //        }
+    //
+    //        @Override
+    //        public SizeSelectHolder createHolder(View convertView) {
+    //            return new SizeSelectHolder(convertView);
+    //        }
+    //
+    //        @Override
+    //        public View createView() {
+    //            return View.inflate(getActivity(), R.layout.item_sizeselect, null);
+    //        }
+    //    }
 }

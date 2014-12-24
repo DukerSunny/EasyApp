@@ -6,23 +6,10 @@
         layout="@layout/widget_toolbar"/>
 
     <FrameLayout
-        style="@style/mm"
-        xmlns:android="http://schemas.android.com/apk/res/android">
+        style="@style/mm">
 
-        <ListView
-            android:id="@+id/contribution_list"
-            style="@style/mm"
-            android:divider="@color/Transparent"
-            android:dividerHeight="8dp"/>
-
-        <ImageView
-            android:id="@+id/contribution_refresh"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="16dp"
-            android:background="@color/Primary"
-            android:src="@drawable/image_refresh_inverse"/>
+        <include
+            layout="@layout/widget_recycler_pullable"/>
 
         <include
             layout="@layout/widget_toolbar_shadow"/>

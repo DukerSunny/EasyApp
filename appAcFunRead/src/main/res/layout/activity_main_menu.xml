@@ -112,17 +112,16 @@
         android:id="@+id/menu_favourite"
         style="@style/mw.h"
         android:gravity="center_vertical"
-        android:padding="8dp">
+        android:padding="16dp">
 
         <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:src="@drawable/image_favourite"/>
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:gravity="center_vertical"
+            style="@style/mw"
+            android:layout_marginLeft="16dp"
             android:text="@string/menu_favourite"
             android:textAppearance="@style/Title"/>
 
@@ -132,17 +131,16 @@
         android:id="@+id/menu_history"
         style="@style/mw.h"
         android:gravity="center_vertical"
-        android:padding="8dp">
+        android:padding="16dp">
 
         <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:src="@drawable/image_history"/>
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:gravity="center_vertical"
+            style="@style/mw"
+            android:layout_marginLeft="16dp"
             android:text="@string/menu_history"
             android:textAppearance="@style/Title"/>
 
@@ -157,18 +155,17 @@
         <LinearLayout
             android:id="@+id/menu_setting"
             style="@style/mww.h"
-            android:padding="8dp">
+            android:gravity="center_vertical"
+            android:padding="16dp">
 
             <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:src="@drawable/image_setting"/>
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginLeft="8dp"
-                android:gravity="center_vertical"
+                style="@style/mw"
+                android:layout_marginLeft="16dp"
                 android:text="@string/menu_setting"
                 android:textAppearance="@style/Subhead"/>
 

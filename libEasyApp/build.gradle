@@ -5,7 +5,6 @@ android {
     buildToolsVersion '21.1.1'
 
     defaultConfig {
-        applicationId "com.harreke.easyapp"
         minSdkVersion 9
         targetSdkVersion 21
         versionCode 1
@@ -13,7 +12,6 @@ android {
     }
     buildTypes {
         release {
-            runProguard false
         }
     }
 }
@@ -24,14 +22,14 @@ dependencies {
     compile 'com.google.code.gson:gson:+'
     compile 'com.github.johnpersano:supertoasts:1.3.4:@aar'
     compile 'com.daimajia.swipelayout:library:1.1.7@aar'
-    compile 'com.melnykov:floatingactionbutton:1.0.9'
-    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
-    compile 'com.afollestad:material-dialogs:0.4.5'
-    compile 'com.nispok:snackbar:2.5.3'
+    compile 'com.melnykov:floatingactionbutton:+'
+    compile 'com.astuetz:pagerslidingtabstrip:+'
+    compile 'com.afollestad:material-dialogs:0.4.6'
+    compile 'com.nispok:snackbar:+'
 
-    compile 'com.android.support:appcompat-v7:+'
-    compile 'com.android.support:recyclerview-v7:+'
-    compile 'com.android.support:cardview-v7:+'
-    compile 'com.android.support:palette-v7:+'
-    compile 'com.android.support:support-v4:+'
+    compile 'com.android.support:appcompat-v7:21.+'
+    compile 'com.android.support:recyclerview-v7:21.+'
+    compile 'com.android.support:cardview-v7:21.+'
+    compile 'com.android.support:palette-v7:21.+'
+    compile 'com.android.support:support-v4:21.+'
 }

@@ -13,29 +13,71 @@
         android:background="?attr/colorPrimary"
         android:orientation="horizontal">
 
-        <TextView
+        <LinearLayout
             android:id="@+id/search_sort"
-            style="@style/mmw"
-            android:gravity="center"
-            android:text="@string/search_sort"
-            android:textColor="@color/White"
-            android:textSize="@dimen/Subhead"/>
+            style="@style/mmw.v"
+            android:gravity="center">
 
-        <TextView
+            <TextView
+                style="@style/mw"
+                android:gravity="center"
+                android:text="@string/search_sort"
+                android:textColor="@color/White"
+                android:textSize="@dimen/Subhead"/>
+
+            <TextView
+                android:id="@+id/search_sort_indicator"
+                style="@style/ww"
+                android:layout_marginTop="4dp"
+                android:text="@string/search_sort_indicator"
+                android:textColor="@color/White"
+                android:textSize="@dimen/Caption"/>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/search_range"
-            style="@style/mmw"
-            android:gravity="center"
-            android:text="@string/search_range"
-            android:textColor="@color/White"
-            android:textSize="@dimen/Subhead"/>
+            style="@style/mmw.v"
+            android:gravity="center">
 
-        <TextView
+            <TextView
+                style="@style/mw"
+                android:gravity="center"
+                android:text="@string/search_range"
+                android:textColor="@color/White"
+                android:textSize="@dimen/Subhead"/>
+
+            <TextView
+                android:id="@+id/search_range_indicator"
+                style="@style/ww"
+                android:layout_marginTop="4dp"
+                android:text="@string/search_range_indicator"
+                android:textColor="@color/White"
+                android:textSize="@dimen/Caption"/>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/search_target"
-            style="@style/mmw"
-            android:gravity="center"
-            android:text="@string/search_target"
-            android:textColor="@color/White"
-            android:textSize="@dimen/Subhead"/>
+            style="@style/mmw.v"
+            android:gravity="center">
+
+            <TextView
+                style="@style/mw"
+                android:gravity="center"
+                android:text="@string/search_target"
+                android:textColor="@color/White"
+                android:textSize="@dimen/Subhead"/>
+
+            <TextView
+                android:id="@+id/search_target_indicator"
+                style="@style/ww"
+                android:layout_marginTop="4dp"
+                android:text="@string/search_target_indicator"
+                android:textColor="@color/White"
+                android:textSize="@dimen/Caption"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 

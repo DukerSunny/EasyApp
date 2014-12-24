@@ -25,6 +25,9 @@
             style="@style/mm"/>
 
         <include
+            layout="@layout/widget_empty"/>
+
+        <include
             layout="@layout/widget_toolbar_shadow"/>
 
         <com.melnykov.fab.FloatingActionButton

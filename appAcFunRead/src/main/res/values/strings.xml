@@ -22,11 +22,11 @@
     <string name="about_info">Ac阅读是专门设计用于浏览AcFun网站文章区的客户端，以简洁、易用为主，同时拥有强大的评论功能。\n\n该客户端为个人作品，专门为优化使用体验和研究开发技术而制作。</string>
     <string name="about_author">by Harreke</string>
     <string name="about_thanks">特别感谢</string>
-    <string name="about_list">创意指导：辰音奈奈\n美工素材：南墙亚男</string>
+    <string name="about_list">创意指导：辰音奈奈</string>
 
     <string name="channel_misc">综合</string>
     <string name="channel_work_emotion">工作\n情感</string>
-    <string name="channel_dramaculture">动漫文化</string>
+    <string name="channel_dramaculture">动漫\n文化</string>
     <string name="channel_comic_novel">漫画\n轻小说</string>
 
     <string name="channel_search">输入AC号或关键字</string>
@@ -67,6 +67,8 @@
     <string name="content_info">/ %1$s条评论 / %2$s人围观</string>
     <string name="content_title">标题</string>
 
+    <string name="content_redirect">检测到链接%s</string>
+    <string name="content_redirect_jump">跳转</string>
     <string name="content_redirect_ac">该链接指向投稿 ac%s，确认跳转？</string>
     <string name="content_redirect_aa">该链接指向合辑 ac%s，请使用视频客户端浏览</string>
 
@@ -123,21 +125,26 @@
     <string name="reply_input">输入评论内容</string>
 
     <string name="reply_pickcolor">选择颜色</string>
+    <string name="reply_picksize">选择字号</string>
 
     <string name="search_sort">结果排序</string>
+    <string name="search_sort_indicator">相关度</string>
     <string name="search_range">搜索范围</string>
+    <string name="search_range_indicator">所有分区</string>
     <string name="search_target">搜索项目</string>
+    <string name="search_target_indicator">标题和标签</string>
 
     <string name="search_tooshort">关键字过短，请重新输入！</string>
 
     <string name="setting_about">关于</string>
     <string name="setting_autoloadimage">移动网络加载图片</string>
     <string name="setting_maxquotecount">评论最大楼层</string>
-    <string name="setting_maxquotecount_toosmall">楼层不能为负！</string>
+    <string name="setting_maxquotecount_toosmall">楼层过低！</string>
     <string name="setting_maxquotecount_toobig">楼层过高可能影响性能！</string>
     <string name="setting_misc">综合</string>
     <string name="setting_other">其他</string>
-    <string name="setting_restoredefault">恢复默认</string>
+    <string name="setting_restoredefault">恢复默认设置</string>
+    <string name="setting_restoredefault_ask">确认恢复默认设置？</string>
     <string name="setting_textfont">界面字体</string>
     <string name="setting_textfont_default">系统默认字体</string>
     <string name="setting_textsize">评论默认字号</string>
@@ -175,5 +182,6 @@
 
     <string name="user_contributes">%s的投稿</string>
     <string name="user_chats">与%s交流</string>
+    <string name="app_splash">简约 潮流 创意</string>
 
 </resources>

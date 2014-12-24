@@ -1,13 +1,18 @@
 package com.harreke.easyapp.frameworks.bases.application;
 
 import android.app.Application;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.harreke.easyapp.R;
 import com.harreke.easyapp.configs.ImageExecutorConfig;
+import com.harreke.easyapp.helpers.ConnectionHelper;
 import com.harreke.easyapp.tools.FileUtil;
 
 import java.io.File;
@@ -44,11 +49,17 @@ public class ApplicationFramework extends Application {
     public static String StorageDir;
     private static final String TAG = "ApplicationFramework";
     private boolean mAssetsEnabled = false;
+    private BroadcastReceiver mConnectionReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ConnectionHelper.checkConnection(context);
+            connectionChange();
+        }
+    };
     private boolean mMiscsEnabled = false;
     private boolean mTempsEnabled = false;
 
-    protected void configImageExecutor() {
-        ImageExecutorConfig.config(this, R.drawable.image_loading, R.drawable.image_idle);
+    protected void connectionChange() {
     }
 
     /**
@@ -172,7 +183,7 @@ public class ApplicationFramework extends Application {
         mTempsEnabled = createCacheDir(DIR_TEMPS);
         mMiscsEnabled = createCacheDir(DIR_MISCS);
 
-        configImageExecutor();
+        ImageExecutorConfig.config(this);
     }
 
     public final boolean readBoolean(String key, boolean defaultVaule) {
@@ -205,6 +216,18 @@ public class ApplicationFramework extends Application {
      */
     public final String readString(String key, String defaultValue) {
         return getPreference().getString(key, defaultValue);
+    }
+
+    public final void registerConnectionReceiver() {
+        ConnectionHelper.checkConnection(this);
+        registerReceiver(mConnectionReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+
+    public final void unregisterConnectionReceiver() {
+        if (mConnectionReceiver != null) {
+            unregisterReceiver(mConnectionReceiver);
+            mConnectionReceiver = null;
+        }
     }
 
     public final void writeBoolean(String key, boolean value) {

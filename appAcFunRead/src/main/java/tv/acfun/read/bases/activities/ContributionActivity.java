@@ -2,28 +2,30 @@ package tv.acfun.read.bases.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
-import com.harreke.easyapp.frameworks.lists.abslistview.AbsListFramework;
-import com.harreke.easyapp.frameworks.lists.abslistview.FooterLoadStatus;
+import com.harreke.easyapp.frameworks.recyclerview.RecyclerFramework;
+import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
 import com.umeng.analytics.MobclickAgent;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import tv.acfun.read.BuildConfig;
 import tv.acfun.read.R;
 import tv.acfun.read.api.API;
 import tv.acfun.read.beans.Content;
-import tv.acfun.read.holders.ContributionHolder;
+import tv.acfun.read.holders.ChannelUnspecificHolder;
 import tv.acfun.read.parsers.ChannelListParser;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/23
  */
 public class ContributionActivity extends ActivityFramework {
-    private Helper mContributionListHelper;
+    private ContributionRecyclerHelper mContributionRecyclerHelper;
     private int mUserId;
     private String mUsername;
 
@@ -54,13 +56,9 @@ public class ContributionActivity extends ActivityFramework {
 
     @Override
     public void enquiryViews() {
-        View footer_loadmore = View.inflate(getActivity(), R.layout.footer_loadmore, null);
-
-        mContributionListHelper = new Helper(this, R.id.contribution_list);
-        mContributionListHelper.setFloating(findViewById(R.id.contribution_refresh));
-        mContributionListHelper.addFooterView(footer_loadmore);
-        mContributionListHelper.setLoadMore(new FooterLoadStatus(footer_loadmore));
-        mContributionListHelper.bindAdapter();
+        mContributionRecyclerHelper = new ContributionRecyclerHelper(this);
+        mContributionRecyclerHelper.setHasFixedSize(true);
+        mContributionRecyclerHelper.attachAdapter();
     }
 
     @Override
@@ -70,11 +68,6 @@ public class ContributionActivity extends ActivityFramework {
     @Override
     public void onBackPressed() {
         exit(R.anim.zoom_in_enter, R.anim.slide_out_left);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     @Override
@@ -100,54 +93,38 @@ public class ContributionActivity extends ActivityFramework {
 
     @Override
     public void startAction() {
-        mContributionListHelper.from(API.getContribution(mUserId, 20, mContributionListHelper.getCurrentPage()));
+        mContributionRecyclerHelper.from(API.getContribution(mUserId, 20, mContributionRecyclerHelper.getCurrentPage()));
     }
 
-    private class Helper extends AbsListFramework<Content, ContributionHolder> {
-        public Helper(IFramework framework, int listId) {
-            super(framework, listId);
+    private class ContributionRecyclerHelper extends RecyclerFramework<Content> {
+        public ContributionRecyclerHelper(IFramework framework) {
+            super(framework);
         }
 
         @Override
-        public ContributionHolder createHolder(View convertView) {
-            return new ContributionHolder(convertView);
+        protected RecyclerHolder<Content> createHolder(View itemView, int viewType) {
+            return new ChannelUnspecificHolder(itemView);
         }
 
         @Override
-        public View createView() {
-            return View.inflate(getActivity(), R.layout.item_contribution, null);
-        }
-
-        @Override
-        public void onAction() {
-            startAction();
+        protected View createView(LayoutInflater inflater, ViewGroup parent, int viewType) {
+            return inflater.inflate(R.layout.item_channel_unspecific, parent, false);
         }
 
         @Override
         public void onItemClick(int position, Content content) {
-            if (content != null) {
-                start(ContentActivity.create(getActivity(), content.getContentId()));
-            } else {
-                start(SearchActivity.create(getActivity()));
-            }
+            start(ContentActivity.create(getContext(), content.getContentId()));
         }
 
         @Override
-        public ArrayList<Content> onParse(String json) {
+        public List<Content> onParse(String json) {
             ChannelListParser listParser = ChannelListParser.parse(json);
 
             if (listParser != null) {
-                setTotalPage(listParser.getTotalPage());
-
                 return listParser.getItemList();
             } else {
                 return null;
             }
-        }
-
-        @Override
-        public int parseItemId(Content content) {
-            return content.getContentId();
         }
     }
 }

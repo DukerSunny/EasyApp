@@ -2,17 +2,17 @@
 <LinearLayout
     style="@style/mw.h"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:padding="8dp">
+    android:padding="16dp">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/mail_avatar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:src="@drawable/image_avatar"/>
 
     <LinearLayout
         style="@style/mw.v"
-        android:layout_marginLeft="8dp">
+        android:layout_marginLeft="16dp">
 
         <LinearLayout
             style="@style/mw.h"
@@ -21,9 +21,9 @@
             <TextView
                 android:id="@+id/mail_user"
                 style="@style/mww"
-                android:lines="1"
-                android:textColor="@color/User"
-                android:textSize="20dp"/>
+                android:singleLine="true"
+                android:textAppearance="@style/Subhead"
+                android:textColor="@color/User"/>
 
             <TextView
                 android:id="@+id/mail_new"
@@ -32,7 +32,7 @@
                 android:padding="2dp"
                 android:text="@string/mail_new"
                 android:textColor="@color/White"
-                android:textSize="12dp"
+                android:textSize="@dimen/Caption"
                 android:visibility="gone"/>
 
         </LinearLayout>
@@ -40,7 +40,7 @@
         <TextView
             android:id="@+id/mail_last"
             style="@style/mw"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:lines="2"
             android:textAppearance="@style/Caption"/>
 

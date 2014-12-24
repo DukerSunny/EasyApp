@@ -7,17 +7,16 @@ import android.view.ViewGroup;
 
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.fragment.FragmentFramework;
-import com.harreke.easyapp.frameworks.lists.recyclerview.RecyclerFramework;
-import com.harreke.easyapp.holders.recycerview.RecyclerHolder;
+import com.harreke.easyapp.frameworks.recyclerview.RecyclerFramework;
+import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
 
 import java.util.ArrayList;
 
 import tv.acfun.read.R;
 import tv.acfun.read.api.API;
 import tv.acfun.read.bases.activities.ContentActivity;
-import tv.acfun.read.bases.activities.SearchActivity;
 import tv.acfun.read.beans.Content;
-import tv.acfun.read.holders.ChannelHolder;
+import tv.acfun.read.holders.ChannelSpecificHolder;
 import tv.acfun.read.parsers.ChannelListParser;
 
 /**
@@ -74,26 +73,17 @@ public class ChannelFragment extends FragmentFramework {
 
         @Override
         public RecyclerHolder<Content> createHolder(View convertView, int viewType) {
-            return new ChannelHolder(convertView);
+            return new ChannelSpecificHolder(convertView);
         }
 
         @Override
-        public View createView(ViewGroup parent, int viewType) {
-            return LayoutInflater.from(getActivity()).inflate(R.layout.item_channel, parent, false);
-        }
-
-        @Override
-        protected void onRequestAction() {
-            startAction();
+        public View createView(LayoutInflater inflater, ViewGroup parent, int viewType) {
+            return inflater.inflate(R.layout.item_channel_specific, parent, false);
         }
 
         @Override
         public void onItemClick(int position, Content content) {
-            if (content != null) {
-                start(ContentActivity.create(getActivity(), content.getContentId()));
-            } else {
-                start(SearchActivity.create(getActivity()));
-            }
+            start(ContentActivity.create(getActivity(), content.getContentId()));
         }
 
         @Override

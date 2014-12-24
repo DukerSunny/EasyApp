@@ -2,6 +2,7 @@ package com.harreke.easyapp.frameworks.bases.activity;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
@@ -59,7 +60,7 @@ public abstract class ActivityFramework extends ActionBarActivity
 
         item.setIcon(imageId);
 
-        if (Build.VERSION.SDK_INT > 10) {
+        if (Build.VERSION.SDK_INT > 11) {
             item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
     }
@@ -69,7 +70,7 @@ public abstract class ActivityFramework extends ActionBarActivity
     public void addToolbarViewItem(int id, int titleId, View view) {
         MenuItem item;
 
-        if (Build.VERSION.SDK_INT > 10) {
+        if (Build.VERSION.SDK_INT >= 11) {
             item = mMenu.add(0, id, id, titleId);
             item.setActionView(view);
             item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -78,7 +79,7 @@ public abstract class ActivityFramework extends ActionBarActivity
         }
     }
 
-    protected void bindToolbar(int toolbarSolidId, int toolbarShadowId) {
+    protected void attachToolbar(int toolbarSolidId, int toolbarShadowId) {
         mToolbar = (Toolbar) findViewById(toolbarSolidId);
         mToolbarShadow = findViewById(toolbarShadowId);
         if (mToolbar != null) {
@@ -150,13 +151,18 @@ public abstract class ActivityFramework extends ActionBarActivity
         overridePendingTransition(animIn, animOut);
     }
 
+    @Override
+    public Activity getActivity() {
+        return this;
+    }
+
     /**
      * 获得当前Activity
      *
      * @return 当前Activity
      */
     @Override
-    public Activity getActivity() {
+    public Context getContext() {
         return this;
     }
 
@@ -240,7 +246,7 @@ public abstract class ActivityFramework extends ActionBarActivity
         configActivity();
         initToast();
         setLayout();
-        bindToolbar(R.id.toolbar_solid, R.id.toolbar_shadow);
+        attachToolbar(R.id.toolbar_solid, R.id.toolbar_shadow);
         acquireArguments(getIntent());
         establishCallbacks();
         enquiryViews();
@@ -282,6 +288,18 @@ public abstract class ActivityFramework extends ActionBarActivity
 
     protected void onToolbarNavigationClick() {
         onBackPressed();
+    }
+
+    public void setToolbarSubTitle(int titleId) {
+        if (mToolbar != null) {
+            mToolbar.setSubtitle(titleId);
+        }
+    }
+
+    public void setToolbarSubTitle(String title) {
+        if (mToolbar != null) {
+            mToolbar.setSubtitle(title);
+        }
     }
 
     @Override
@@ -346,11 +364,11 @@ public abstract class ActivityFramework extends ActionBarActivity
     public void showToast(String text, boolean progress) {
         mToast.dismiss();
         mToast.setText(text);
-//        if (progress) {
-//            mToast.setIcon(R.drawable.anim_progress_radiant, SuperToast.IconPosition.LEFT);
-//        } else {
-            mToast.setIcon(R.drawable.shape_transparent, SuperToast.IconPosition.LEFT);
-//        }
+        //        if (progress) {
+        //            mToast.setIcon(R.drawable.anim_progress_radiant, SuperToast.IconPosition.LEFT);
+        //        } else {
+        mToast.setIcon(R.drawable.shape_transparent, SuperToast.IconPosition.LEFT);
+        //        }
         mToast.show();
     }
 

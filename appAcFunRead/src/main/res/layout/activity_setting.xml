@@ -1,139 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     style="@style/mm.v"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
 
-    <LinearLayout
-        style="@style/mm.v"
-        android:padding="8dp">
+    <include
+        layout="@layout/widget_toolbar"/>
 
-        <TextView
-            style="@style/ww"
-            android:padding="8dp"
-            android:text="@string/setting_misc"
-            android:textAppearance="@style/Caption"/>
+    <FrameLayout
+        style="@style/mm">
 
         <LinearLayout
-            style="@style/mw.v">
+            style="@style/mm.v"
+            android:padding="8dp">
 
-            <android.support.v7.widget.SwitchCompat
-                android:id="@+id/setting_autoloadimage"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:padding="8dp"
-                android:text="@string/setting_autoloadimage"
-                android:textAppearance="@style/Subhead"/>
+            <TextView
+                style="@style/ww"
+                android:padding="16dp"
+                android:text="@string/setting_misc"
+                android:textAppearance="@style/Caption"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="@color/White"
-                android:orientation="horizontal">
+            <android.support.v7.widget.CardView
+                style="@style/mw">
 
-                <TextView
-                    style="@style/mmw"
-                    android:gravity="center_vertical"
-                    android:padding="8dp"
-                    android:text="@string/setting_maxquotecount"
-                    android:textAppearance="@style/Subhead"/>
+                <LinearLayout
+                    style="@style/mw.v">
 
-                <EditText
-                    android:id="@+id/setting_maxquotecount"
-                    android:layout_width="48dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="8dp"
-                    android:inputType="number"
-                    android:maxLength="2"
-                    android:textAppearance="@style/Caption"/>
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/setting_autoloadimage"
+                        android:layout_width="match_parent"
+                        android:layout_height="64dp"
+                        android:gravity="center_vertical"
+                        android:padding="16dp"
+                        android:text="@string/setting_autoloadimage"
+                        android:textAppearance="@style/Subhead"/>
 
-                <ImageView
-                    android:id="@+id/setting_maxquotecount_ok"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:padding="8dp"
-                    android:src="@drawable/image_ok"
-                    android:visibility="gone"/>
+                    <include
+                        layout="@layout/widget_divider_horizontal"/>
 
-            </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/setting_maxquotecount"
+                        android:layout_width="match_parent"
+                        android:layout_height="64dp"
+                        android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="@color/White"
-                android:orientation="horizontal">
+                        <TextView
+                            style="@style/mmw"
+                            android:gravity="center_vertical"
+                            android:padding="16dp"
+                            android:text="@string/setting_maxquotecount"
+                            android:textAppearance="@style/Subhead"/>
 
-                <TextView
-                    style="@style/mmw"
-                    android:gravity="center_vertical"
-                    android:padding="8dp"
-                    android:text="@string/setting_textsize"
-                    android:textAppearance="@style/Subhead"/>
+                        <EditText
+                            android:id="@+id/setting_maxquotecount_edittext"
+                            android:layout_width="48dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="8dp"
+                            android:inputType="number"
+                            android:maxLength="2"
+                            android:textAppearance="@style/Body1"/>
 
-                <Spinner
-                    android:id="@+id/setting_textsize"
-                    android:layout_width="64dp"
-                    android:layout_height="match_parent"
-                    android:entries="@array/comment_text_size"
-                    android:padding="8dp"/>
+                        <ImageView
+                            android:id="@+id/setting_maxquotecount_ok"
+                            android:layout_width="64dp"
+                            android:layout_height="64dp"
+                            android:padding="16dp"
+                            android:src="@drawable/image_ok"
+                            android:visibility="gone"/>
 
-            </LinearLayout>
+                    </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="@color/White"
-                android:orientation="horizontal"
-                android:visibility="gone">
+                    <include
+                        layout="@layout/widget_divider_horizontal"/>
 
-                <TextView
-                    style="@style/mmw"
-                    android:gravity="center_vertical"
-                    android:padding="8dp"
-                    android:text="@string/setting_textfont"
-                    android:textAppearance="@style/Subhead"/>
+                    <LinearLayout
+                        android:id="@+id/setting_textsize"
+                        android:layout_width="match_parent"
+                        android:layout_height="64dp"
+                        android:orientation="horizontal">
 
-                <Spinner
-                    android:id="@+id/setting_textfont"
-                    android:layout_width="180dp"
-                    android:layout_height="match_parent"
-                    android:padding="8dp"/>
+                        <TextView
+                            style="@style/mmw"
+                            android:gravity="center_vertical"
+                            android:padding="16dp"
+                            android:text="@string/setting_textsize"
+                            android:textAppearance="@style/Subhead"/>
 
-            </LinearLayout>
+                        <Spinner
+                            android:id="@+id/setting_textsize_spinner"
+                            android:layout_width="64dp"
+                            android:layout_height="match_parent"
+                            android:entries="@array/comment_text_size"
+                            android:padding="16dp"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="@color/White"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <TextView
+                            style="@style/mmw"
+                            android:gravity="center_vertical"
+                            android:padding="8dp"
+                            android:text="@string/setting_textfont"
+                            android:textAppearance="@style/Subhead"/>
+
+                        <Spinner
+                            android:id="@+id/setting_textfont"
+                            android:layout_width="180dp"
+                            android:layout_height="match_parent"
+                            android:padding="8dp"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <TextView
+                style="@style/ww"
+                android:padding="16dp"
+                android:text="@string/setting_other"
+                android:textAppearance="@style/Caption"/>
+
+            <android.support.v7.widget.CardView
+                style="@style/mw">
+
+                <LinearLayout
+                    style="@style/mw.v">
+
+                    <TextView
+                        android:id="@+id/setting_restoredefault"
+                        android:layout_width="match_parent"
+                        android:layout_height="64dp"
+                        android:gravity="center_vertical"
+                        android:padding="16dp"
+                        android:text="@string/setting_restoredefault"
+                        android:textAppearance="@style/Subhead"/>
+
+                    <include
+                        layout="@layout/widget_divider_horizontal"/>
+
+                    <TextView
+                        android:id="@+id/setting_about"
+                        android:layout_width="match_parent"
+                        android:layout_height="64dp"
+                        android:gravity="center_vertical"
+                        android:padding="16dp"
+                        android:text="@string/setting_about"
+                        android:textAppearance="@style/Subhead"/>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
 
         </LinearLayout>
 
-        <TextView
-            style="@style/ww"
-            android:layout_marginTop="8dp"
-            android:padding="8dp"
-            android:text="@string/setting_other"
-            android:textAppearance="@style/Caption"/>
+        <include
+            layout="@layout/widget_toolbar_shadow"/>
 
-
-        <LinearLayout
-            style="@style/mw.v">
-
-            <TextView
-                android:id="@+id/setting_restoredefault"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:padding="8dp"
-                android:text="@string/setting_restoredefault"
-                android:textAppearance="@style/Subhead"/>
-
-            <TextView
-                android:id="@+id/setting_about"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:padding="8dp"
-                android:text="@string/setting_about"
-                android:textAppearance="@style/Subhead"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
+    </FrameLayout>
 
 </LinearLayout>

@@ -5,8 +5,9 @@ import android.graphics.Color;
 import android.view.View;
 import android.widget.TextView;
 
-import com.harreke.easyapp.holders.recycerview.RecyclerHolder;
-import com.harreke.easyapp.widgets.RippleDrawable;
+import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
+import com.harreke.easyapp.widgets.rippleeffects.RippleDrawable;
+import com.harreke.easyapp.widgets.rippleeffects.RippleOnClickListener;
 
 import tv.acfun.read.R;
 import tv.acfun.read.beans.Content;
@@ -20,13 +21,18 @@ public class RecommendHolder extends RecyclerHolder<Content> {
     private TextView recommend_number;
     private TextView recommend_title;
 
-    public RecommendHolder(View convertView) {
-        super(convertView);
-        RippleDrawable.attach(convertView);
-        recommend_number = (TextView) convertView.findViewById(R.id.recommend_number);
-        recommend_channel = (TextView) convertView.findViewById(R.id.recommend_channel);
-        recommend_title = (TextView) convertView.findViewById(R.id.recommend_title);
-        recommend_description = (TextView) convertView.findViewById(R.id.recommend_description);
+    public RecommendHolder(View itemView) {
+        super(itemView);
+        recommend_number = (TextView) itemView.findViewById(R.id.recommend_number);
+        recommend_channel = (TextView) itemView.findViewById(R.id.recommend_channel);
+        recommend_title = (TextView) itemView.findViewById(R.id.recommend_title);
+        recommend_description = (TextView) itemView.findViewById(R.id.recommend_description);
+        RippleDrawable.attach(itemView);
+    }
+
+    @Override
+    public void setOnClickListener(View.OnClickListener onClickListener) {
+        RippleOnClickListener.attach(itemView, onClickListener);
     }
 
     @Override

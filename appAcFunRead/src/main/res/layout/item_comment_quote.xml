@@ -3,7 +3,7 @@
     android:id="@+id/comment_quote"
     style="@style/mw.v"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/Ivory"
+    android:background="@drawable/shape_quote"
     android:padding="16dp">
 
     <TextView

@@ -36,6 +36,6 @@ public class Conversion extends Comment {
     }
 
     public void parse(UBBEncoder encoder, OnTagClickListener tagClickListener) {
-        mSpanned = encoder.encode(StringUtil.cleanHtmlSymbols(getContent()), tagClickListener);
+        mSpanned = encoder.encode(StringUtil.escapeHtmlSymbols(getContent()), tagClickListener);
     }
 }

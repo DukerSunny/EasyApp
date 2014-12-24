@@ -17,11 +17,12 @@ public class ImageLoaderHelper {
         return ImageExecutorConfig.create(imageUrl, callback);
     }
 
-    public static IRequestExecutor loadImage(ImageView image, String imageUrl, IRequestCallback<ImageView> callback) {
-        return ImageExecutorConfig.create(image, imageUrl, callback);
+    public static IRequestExecutor loadImage(ImageView imageView, String imageUrl, int loadingImageId, int retryImageId,
+            IRequestCallback<ImageView> callback) {
+        return ImageExecutorConfig.create(imageView, imageUrl, loadingImageId, retryImageId, callback);
     }
 
-    public static IRequestExecutor loadImage(ImageView image, String imageUrl) {
-        return loadImage(image, imageUrl, null);
+    public static IRequestExecutor loadImage(ImageView imageView, String imageUrl, int loadingImageId, int retryImageId) {
+        return loadImage(imageView, imageUrl, loadingImageId, retryImageId, null);
     }
 }

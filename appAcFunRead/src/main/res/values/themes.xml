@@ -15,4 +15,8 @@
         <item name="android:textColor">@color/White</item>
     </style>
 
+    <style name="Theme.AcFunRead.Splash" parent="Theme.EasyApp">
+        <item name="android:windowBackground">@color/Primary</item>
+    </style>
+
 </resources>

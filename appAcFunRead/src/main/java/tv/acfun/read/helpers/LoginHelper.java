@@ -1,7 +1,5 @@
 package tv.acfun.read.helpers;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -9,9 +7,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.harreke.easyapp.helpers.DialogHelper;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.requests.IRequestCallback;
-import com.harreke.easyapp.requests.RequestBuilder;
 import com.harreke.easyapp.widgets.CircularProgressDrawable;
 
 import tv.acfun.read.R;
@@ -25,7 +23,7 @@ import tv.acfun.read.parsers.TokenParser;
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/10/17
  */
-public class LoginHelper extends DialogHelper implements DialogInterface.OnClickListener {
+public class LoginHelper implements MaterialDialog.Callback {
     private EditText login_account;
     private TextView login_error;
     private TextView login_message;
@@ -39,8 +37,11 @@ public class LoginHelper extends DialogHelper implements DialogInterface.OnClick
             AcFunRead.getInstance().writeBoolean("rememberAccount", isChecked);
         }
     };
+    private IFramework mFramework;
     private FullUser mFullUser = null;
     private LoginCallback mLoginCallback;
+    private MaterialDialog mLoginDialog;
+    private CircularProgressDrawable mProgressDrawable;
     private Token mToken = null;
     private IRequestCallback<String> mFullUserCallback = new IRequestCallback<String>() {
         @Override
@@ -60,7 +61,10 @@ public class LoginHelper extends DialogHelper implements DialogInterface.OnClick
                 acFunRead = AcFunRead.getInstance();
                 acFunRead.writeFullUser(parser.getFullUser());
                 acFunRead.writeToken(mToken);
-                mLoginCallback.onSuccess();
+                if (mLoginCallback != null) {
+                    hide();
+                    mLoginCallback.onSuccess();
+                }
             } else {
                 showError(R.string.login_timeout);
                 mToken = null;
@@ -80,7 +84,7 @@ public class LoginHelper extends DialogHelper implements DialogInterface.OnClick
             if (parser != null && parser.getData() != null) {
                 if (parser.isSuccess()) {
                     mToken = parser.getData();
-                    mLoginCallback.onExecuteRequest(API.getFullUser(mToken.getUserId()), mFullUserCallback);
+                    mFramework.executeRequest(API.getFullUser(mToken.getUserId()), mFullUserCallback);
                 }
             } else {
                 showError(R.string.login_denied);
@@ -88,34 +92,28 @@ public class LoginHelper extends DialogHelper implements DialogInterface.OnClick
         }
     };
 
-    public LoginHelper(Context context, LoginCallback loginCallback) {
-        super(context);
+    public LoginHelper(IFramework framework) {
         View view;
 
-        if (loginCallback == null) {
-            throw new IllegalArgumentException("LoginCallback must not be null!");
-        }
-        mLoginCallback = loginCallback;
-        view = View.inflate(context, R.layout.dialog_login, null);
+        mFramework = framework;
+        mLoginDialog = new MaterialDialog.Builder(mFramework.getContext()).callback(this).title(R.string.login_required)
+                .positiveText(R.string.app_ok).negativeText(R.string.app_cancel).customView(R.layout.dialog_login)
+                .autoDismiss(false).build();
+        view = mLoginDialog.getCustomView();
+        mLoginDialog.setCancelable(false);
         login_account = (EditText) view.findViewById(R.id.login_account);
         login_password = (EditText) view.findViewById(R.id.login_password);
         login_remember = (CheckBox) view.findViewById(R.id.login_remember);
         login_status = view.findViewById(R.id.login_status);
         login_progress = (ImageView) view.findViewById(R.id.login_progress);
         login_message = (TextView) view.findViewById(R.id.login_message);
-        login_error = (TextView) view.findViewById(R.id.login_message);
+        login_error = (TextView) view.findViewById(R.id.login_error);
 
         mProgressDrawable = new CircularProgressDrawable();
         login_progress.setImageDrawable(mProgressDrawable);
         login_remember.setOnCheckedChangeListener(mCheckedChangeListener);
 
-        setTitle(R.string.login_required);
-        setView(view);
-        setPositiveButton(R.string.app_ok);
-        setNegativeButton(R.string.app_cancel);
-        setOnClickListener(this);
-
-        reset();
+        doUpdate();
     }
 
     private void access() {
@@ -148,7 +146,22 @@ public class LoginHelper extends DialogHelper implements DialogInterface.OnClick
             acFunRead.writeString("account", null);
         }
         showProgress();
-        mLoginCallback.onExecuteRequest(API.getToken(account, password), mTokenCallback);
+        mFramework.executeRequest(API.getToken(account, password), mTokenCallback);
+    }
+
+    public void destroy() {
+        mLoginDialog.dismiss();
+        mFramework = null;
+    }
+
+    public void doUpdate() {
+        AcFunRead acFunRead = AcFunRead.getInstance();
+        String account = acFunRead.readString("account", "");
+
+        login_account.setText(account);
+        login_account.setSelection(account.length());
+        login_password.setText("");
+        login_remember.setChecked(acFunRead.readBoolean("rememberAccount", false));
     }
 
     /**
@@ -169,14 +182,11 @@ public class LoginHelper extends DialogHelper implements DialogInterface.OnClick
         return mToken;
     }
 
-    @Override
     public void hide() {
-        super.hide();
+        mLoginDialog.hide();
         mProgressDrawable.setProgress(0);
         login_status.setVisibility(View.GONE);
     }
-
-    private CircularProgressDrawable mProgressDrawable;
 
     /**
      * 检查用户身份
@@ -191,33 +201,32 @@ public class LoginHelper extends DialogHelper implements DialogInterface.OnClick
         return !(mFullUser == null || mToken == null) && !mToken.isExpired();
     }
 
-    @Override
-    public void onClick(DialogInterface dialog, int which) {
-        if (which == DialogInterface.BUTTON_POSITIVE) {
-            access();
-        } else {
-            mLoginCallback.onCancelRequest();
-            hide();
-        }
+    public boolean isShowing() {
+        return mLoginDialog.isShowing();
     }
 
-    public void reset() {
-        AcFunRead acFunRead = AcFunRead.getInstance();
-        String account = acFunRead.readString("account", "");
+    @Override
+    public void onNegative(MaterialDialog materialDialog) {
+        mFramework.cancelRequest();
+        hide();
+    }
 
-        login_account.setText(account);
-        login_account.setSelection(account.length());
-        login_password.setText("");
-        login_remember.setChecked(acFunRead.readBoolean("rememberAccount", false));
+    @Override
+    public void onPositive(MaterialDialog materialDialog) {
+        access();
+    }
+
+    public void setLoginCallback(LoginCallback loginCallback) {
+        mLoginCallback = loginCallback;
     }
 
     public void show(Reason reason) {
         if (reason == Reason.Unauthorized) {
-            setTitle(R.string.login_unauthorized);
+            mLoginDialog.setTitle(R.string.login_unauthorized);
         } else {
-            setTitle(R.string.login_expired);
+            mLoginDialog.setTitle(R.string.login_expired);
         }
-        show();
+        mLoginDialog.show();
     }
 
     private void showError(int errorId) {
@@ -275,10 +284,6 @@ public class LoginHelper extends DialogHelper implements DialogInterface.OnClick
     }
 
     public interface LoginCallback {
-        public void onCancelRequest();
-
-        public void onExecuteRequest(RequestBuilder builder, IRequestCallback<String> callback);
-
         public void onSuccess();
     }
 }

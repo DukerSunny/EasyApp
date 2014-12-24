@@ -60,16 +60,7 @@
         <activity
             android:name=".bases.activities.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait">
-
-            <intent-filter>
-
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-
-            </intent-filter>
-
-        </activity>
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".bases.activities.ProfileActivity"
@@ -98,13 +89,28 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"/>
 
+        <activity
+            android:name=".bases.activities.SplashActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AcFunRead.Splash">
+
+            <intent-filter>
+
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+
+            </intent-filter>
+
+        </activity>
+
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="{{UMENG_APPKEY}}"/>
+            android:value="546f246ffd98c59462000352"/>
 
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="{{UMENG_CHANNEL}}"/>
+            android:value="${UMENG_CHANNEL_VALUE}"/>
 
         <service
             android:name="com.umeng.update.net.DownloadingService"

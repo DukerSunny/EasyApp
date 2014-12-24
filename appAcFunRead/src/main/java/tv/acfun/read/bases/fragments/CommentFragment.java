@@ -10,13 +10,11 @@ import android.view.ViewGroup;
 
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.fragment.FragmentFramework;
-import com.harreke.easyapp.frameworks.lists.recyclerview.RecyclerFramework;
-import com.harreke.easyapp.holders.recycerview.RecyclerHolder;
+import com.harreke.easyapp.frameworks.recyclerview.RecyclerFramework;
+import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
 import com.harreke.easyapp.listeners.OnTagClickListener;
-import com.nispok.snackbar.Snackbar;
-import com.nispok.snackbar.listeners.ActionClickListener;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import tv.acfun.read.R;
 import tv.acfun.read.api.API;
@@ -36,7 +34,6 @@ import tv.acfun.read.parsers.CommentListParser;
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/26
  */
 public class CommentFragment extends FragmentFramework {
-    private ActionClickListener mActionClickListener;
     private CommentListHelper mCommentListHelper;
     private int mContentId;
     private int mMaxQuoteCount;
@@ -46,8 +43,6 @@ public class CommentFragment extends FragmentFramework {
     private View.OnClickListener mOnQuoteExpandClickListener;
     private OnTagClickListener mOnTagClickListener;
     private int mPageNo;
-    private int mPosition = 0;
-    private Snackbar mSnackbar;
     private int mTextSize;
 
     public static CommentFragment create(int contentId, int pageNo) {
@@ -74,7 +69,6 @@ public class CommentFragment extends FragmentFramework {
 
     @Override
     public void attachCallbacks() {
-        mSnackbar.actionListener(mActionClickListener);
     }
 
     @Override
@@ -83,8 +77,6 @@ public class CommentFragment extends FragmentFramework {
         mCommentListHelper.setCanLoad(false);
         mCommentListHelper.setHasFixedSize(false);
         mCommentListHelper.attachAdapter();
-
-        mSnackbar = Snackbar.with(getActivity()).actionLabel(R.string.comment_reply);
     }
 
     @Override
@@ -101,13 +93,16 @@ public class CommentFragment extends FragmentFramework {
         mOnTagClickListener = new OnTagClickListener() {
             @Override
             public void onTagClick(String tag, String link) {
-                if ("img".equals(tag)) {
-                    start(ComicActivity.create(getActivity(), link));
-                } else if ("ac".equals(tag)) {
-                    start(ContentActivity.create(getActivity(), Integer.valueOf(link)));
-                } else if ("at".equals(tag)) {
-                    start(ProfileActivity.create(getActivity(), link));
-                    getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                switch (tag) {
+                    case "img":
+                        start(ComicActivity.create(getActivity(), link));
+                        break;
+                    case "ac":
+                        start(ContentActivity.create(getActivity(), Integer.valueOf(link)));
+                        break;
+                    case "at":
+                        start(ProfileActivity.create(getActivity(), link));
+                        getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                 }
             }
         };
@@ -155,7 +150,7 @@ public class CommentFragment extends FragmentFramework {
 
     @Override
     public void startAction() {
-        mCommentListHelper.from(API.getContentComment(mContentId, 50, mPageNo), true);
+        mCommentListHelper.from(API.getContentComment(mContentId, 50, mPageNo));
     }
 
     private class CommentListHelper extends RecyclerFramework<FullConversion> {
@@ -170,8 +165,8 @@ public class CommentFragment extends FragmentFramework {
         }
 
         @Override
-        protected View createView(ViewGroup parent, int viewType) {
-            return LayoutInflater.from(getActivity()).inflate(R.layout.item_comment, parent, false);
+        protected View createView(LayoutInflater inflater, ViewGroup parent, int viewType) {
+            return inflater.inflate(R.layout.item_fullconversion, parent, false);
         }
 
         @Override
@@ -192,7 +187,7 @@ public class CommentFragment extends FragmentFramework {
         }
 
         @Override
-        public ArrayList<FullConversion> onParse(String json) {
+        public List<FullConversion> onParse(String json) {
             CommentListParser parser = CommentListParser.parse(json, mMaxQuoteCount, 0, mOnTagClickListener);
 
             if (parser != null) {
@@ -202,11 +197,6 @@ public class CommentFragment extends FragmentFramework {
             } else {
                 return null;
             }
-        }
-
-        @Override
-        public void onRequestAction() {
-            startAction();
         }
     }
 }

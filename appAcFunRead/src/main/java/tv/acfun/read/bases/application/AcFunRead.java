@@ -1,8 +1,6 @@
 package tv.acfun.read.bases.application;
 
-import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
-import android.net.ConnectivityManager;
 
 import com.google.gson.reflect.TypeToken;
 import com.harreke.easyapp.frameworks.bases.application.ApplicationFramework;
@@ -14,12 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tv.acfun.read.R;
-import tv.acfun.read.bases.receivers.ConnectionReceiver;
 import tv.acfun.read.beans.Content;
 import tv.acfun.read.beans.FullUser;
 import tv.acfun.read.beans.Setting;
 import tv.acfun.read.beans.Token;
-import tv.acfun.read.helpers.ImageConnectionHelper;
 import tv.acfun.read.tools.FontFilter;
 
 /**
@@ -28,7 +24,6 @@ import tv.acfun.read.tools.FontFilter;
 public class AcFunRead extends ApplicationFramework {
     public static final String DIR_FONTS = "fonts";
     public static AcFunRead mInstance = null;
-    private ConnectionReceiver mConnectionReceiver = null;
     private boolean mFontsEnabled = false;
 
     public static AcFunRead getInstance() {
@@ -91,7 +86,7 @@ public class AcFunRead extends ApplicationFramework {
 
     private void initFile() {
         File file;
-        String[] emotionNames = getResources().getStringArray(R.array.emot_name);
+        String[] emotionNames = getResources().getStringArray(R.array.emot_id);
         String filename;
         int[] emotionCounts = getResources().getIntArray(R.array.emot_count);
         int i;
@@ -184,21 +179,6 @@ public class AcFunRead extends ApplicationFramework {
 
     public final Token readToken() {
         return GsonUtil.toBean(readString("token", null), Token.class);
-    }
-
-    public final void registerConnectionReceiver() {
-        if (mConnectionReceiver == null) {
-            mConnectionReceiver = new ConnectionReceiver();
-        }
-        ImageConnectionHelper.checkConnection(this);
-        registerReceiver(mConnectionReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-    }
-
-    public final void unregisterConnectionReceiver() {
-        if (mConnectionReceiver != null) {
-            unregisterReceiver(mConnectionReceiver);
-            mConnectionReceiver = null;
-        }
     }
 
     public final void writeFullUser(FullUser fullUser) {

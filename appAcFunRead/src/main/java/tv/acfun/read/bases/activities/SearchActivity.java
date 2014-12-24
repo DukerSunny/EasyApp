@@ -2,22 +2,25 @@ package tv.acfun.read.bases.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.Spinner;
+import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
-import com.harreke.easyapp.frameworks.lists.recyclerview.RecyclerFramework;
-import com.harreke.easyapp.holders.recycerview.RecyclerHolder;
+import com.harreke.easyapp.frameworks.recyclerview.RecyclerFramework;
+import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
 import com.harreke.easyapp.widgets.HackySearchView;
+import com.harreke.easyapp.widgets.rippleeffects.RippleDrawable;
 import com.umeng.analytics.MobclickAgent;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import tv.acfun.read.BuildConfig;
 import tv.acfun.read.R;
@@ -30,19 +33,28 @@ import tv.acfun.read.parsers.SearchListParser;
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/29
  */
 public class SearchActivity extends ActivityFramework implements SearchView.OnQueryTextListener {
-    private int mChannelId;
-    private boolean mFirstSearch = true;
-    private int mOrderBy;
-    private int mOrderId;
+    private API.ChannelId mChannelId = API.ChannelId.all;
+    private API.Field mField = API.Field.title;
+    private View.OnClickListener mOnClickListener;
     private String mQuery;
-    private AdapterView.OnItemSelectedListener mSearchRangeItemClickListener;
+    private String[] mSearchRange;
+    private MaterialDialog mSearchRangeDialog;
+    private MaterialDialog.ListCallback mSearchRangeListCallback;
     private SearchRecyclerHelper mSearchRecyclerHelper;
-    private AdapterView.OnItemSelectedListener mSearchSortResultItemClickListener;
-    private AdapterView.OnItemSelectedListener mSearchTargetItemClickListener;
+    private String[] mSearchSort;
+    private MaterialDialog mSearchSortDialog;
+    private MaterialDialog.ListCallback mSearchSortListCallback;
+    private String[] mSearchTarget;
+    private MaterialDialog mSearchTargetDialog;
+    private MaterialDialog.ListCallback mSearchTargetListCallback;
     private SearchView mSearchView;
-    private Spinner search_range;
-    private Spinner search_sortresult;
-    private Spinner search_target;
+    private API.SortField mSortField = API.SortField.score;
+    private View search_range;
+    private TextView search_range_indicator;
+    private View search_sort;
+    private TextView search_sort_indicator;
+    private View search_target;
+    private TextView search_target_indicator;
 
     public static Intent create(Context context) {
         return new Intent(context, SearchActivity.class);
@@ -50,17 +62,20 @@ public class SearchActivity extends ActivityFramework implements SearchView.OnQu
 
     @Override
     public void acquireArguments(Intent intent) {
+        Resources resource = getResources();
+
         mQuery = null;
-        mChannelId = 110;
-        mOrderBy = 0;
-        mOrderId = 0;
+
+        mSearchSort = resource.getStringArray(R.array.search_sort);
+        mSearchRange = resource.getStringArray(R.array.search_range);
+        mSearchTarget = resource.getStringArray(R.array.search_target);
     }
 
     @Override
     public void attachCallbacks() {
-        //        search_sortresult.setOnItemSelectedListener(mSearchSortResultItemClickListener);
-        //        search_target.setOnItemSelectedListener(mSearchTargetItemClickListener);
-        //        search_range.setOnItemSelectedListener(mSearchRangeItemClickListener);
+        search_sort.setOnClickListener(mOnClickListener);
+        search_range.setOnClickListener(mOnClickListener);
+        search_target.setOnClickListener(mOnClickListener);
     }
 
     @Override
@@ -73,12 +88,15 @@ public class SearchActivity extends ActivityFramework implements SearchView.OnQu
     }
 
     private void doSearch(String input) {
+        getToolBar().requestFocus();
         ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(mSearchView.getWindowToken(), 0);
         if (input.length() > 1) {
             mQuery = input;
             mSearchRecyclerHelper.clear();
             mSearchRecyclerHelper.setCanRefresh(true);
             mSearchRecyclerHelper.setCanLoad(true);
+            mSearchRecyclerHelper.setShowRetryWhenEmptyIdle(true);
+            mSearchRecyclerHelper.setClickableWhenEmptyIdle(true);
             startAction();
         } else {
             showToast(getString(R.string.search_tooshort));
@@ -87,84 +105,79 @@ public class SearchActivity extends ActivityFramework implements SearchView.OnQu
 
     @Override
     public void enquiryViews() {
-        //        search_sortresult = (Spinner) findViewById(R.id.search_sortresult);
-        //        search_target = (Spinner) findViewById(R.id.search_target);
-        //        search_range = (Spinner) findViewById(R.id.search_range);
-        //        search_ptr = (PtrFrameLayout) findViewById(R.id.search_ptr);
+        search_sort = findViewById(R.id.search_sort);
+        search_sort_indicator = (TextView) findViewById(R.id.search_sort_indicator);
+        search_range = findViewById(R.id.search_range);
+        search_range_indicator = (TextView) findViewById(R.id.search_range_indicator);
+        search_target = findViewById(R.id.search_target);
+        search_target_indicator = (TextView) findViewById(R.id.search_target_indicator);
 
         mSearchRecyclerHelper = new SearchRecyclerHelper(this);
-        mSearchRecyclerHelper.showRetryWhenEmptyIdle(false);
+        mSearchRecyclerHelper.setShowRetryWhenEmptyIdle(false);
         mSearchRecyclerHelper.setClickableWhenEmptyIdle(false);
-        mSearchRecyclerHelper.hideEmpty();
         mSearchRecyclerHelper.setCanRefresh(false);
         mSearchRecyclerHelper.setCanLoad(false);
         mSearchRecyclerHelper.attachAdapter();
+        mSearchRecyclerHelper.showEmptyIdle();
+
+        mSearchSortDialog = new MaterialDialog.Builder(this).title(R.string.search_sort).items(mSearchSort)
+                .negativeText(R.string.app_cancel).itemsCallback(mSearchSortListCallback).build();
+        mSearchRangeDialog = new MaterialDialog.Builder(this).title(R.string.search_range).items(mSearchRange)
+                .negativeText(R.string.app_cancel).itemsCallback(mSearchRangeListCallback).build();
+        mSearchTargetDialog = new MaterialDialog.Builder(this).title(R.string.search_target).items(mSearchTarget)
+                .negativeText(R.string.app_cancel).itemsCallback(mSearchTargetListCallback).build();
+
+        RippleDrawable.attach(search_sort, RippleDrawable.RIPPLE_STYLE_LIGHT);
+        RippleDrawable.attach(search_range, RippleDrawable.RIPPLE_STYLE_LIGHT);
+        RippleDrawable.attach(search_target, RippleDrawable.RIPPLE_STYLE_LIGHT);
     }
 
     @Override
     public void establishCallbacks() {
-        mSearchSortResultItemClickListener = new AdapterView.OnItemSelectedListener() {
+        mOnClickListener = new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case 0:
-                        mOrderId = 2;
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.search_sort:
+                        mSearchSortDialog.show();
                         break;
-                    case 1:
-                        mOrderId = 1;
+                    case R.id.search_range:
+                        mSearchRangeDialog.show();
                         break;
-                    case 2:
-                        mOrderId = 4;
+                    case R.id.search_target:
+                        mSearchTargetDialog.show();
                 }
             }
-
+        };
+        mSearchSortListCallback = new MaterialDialog.ListCallback() {
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onSelection(MaterialDialog materialDialog, View view, int i, CharSequence charSequence) {
+                mSortField = API.SortField.getSortFieldByIndex(i);
+                search_sort_indicator.setText(mSearchSort[mSortField.getIndex()]);
             }
         };
-        mSearchTargetItemClickListener = new AdapterView.OnItemSelectedListener() {
+        mSearchRangeListCallback = new MaterialDialog.ListCallback() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case 0:
-                        mOrderBy = 1;
-                        break;
-                    case 1:
-                        mOrderBy = 3;
-                        break;
-                    case 2:
-                        mOrderBy = 2;
-
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onSelection(MaterialDialog materialDialog, View view, int i, CharSequence charSequence) {
+                mChannelId = API.ChannelId.getChannelIdByIndex(i);
+                search_range_indicator.setText(mSearchRange[mChannelId.getIndex()]);
             }
         };
-        mSearchRangeItemClickListener = new AdapterView.OnItemSelectedListener() {
+        mSearchTargetListCallback = new MaterialDialog.ListCallback() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case 0:
-                        mChannelId = 110;
-                        break;
-                    case 1:
-                        mChannelId = 73;
-                        break;
-                    case 2:
-                        mChannelId = 74;
-                        break;
-                    case 3:
-                        mChannelId = 75;
-                        break;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onSelection(MaterialDialog materialDialog, View view, int i, CharSequence charSequence) {
+                mField = API.Field.getFieldByIndex(i);
+                search_target_indicator.setText(mSearchTarget[mField.getIndex()]);
             }
         };
+    }
+
+    @Override
+    protected void onDestroy() {
+        mSearchSortDialog.dismiss();
+        mSearchRangeDialog.dismiss();
+        mSearchTargetDialog.dismiss();
+        super.onDestroy();
     }
 
     @Override
@@ -202,8 +215,10 @@ public class SearchActivity extends ActivityFramework implements SearchView.OnQu
 
     @Override
     public void startAction() {
-        mSearchRecyclerHelper
-                .from(API.getSearch(mQuery, mChannelId, mOrderBy, mOrderId, 20, mSearchRecyclerHelper.getCurrentPage()));
+        if (!TextUtils.isEmpty(mQuery)) {
+            mSearchRecyclerHelper
+                    .from(API.getSearch(mQuery, mChannelId, mSortField, mField, 20, mSearchRecyclerHelper.getCurrentPage()));
+        }
     }
 
     private class SearchRecyclerHelper extends RecyclerFramework<Search> {
@@ -217,26 +232,21 @@ public class SearchActivity extends ActivityFramework implements SearchView.OnQu
         }
 
         @Override
-        protected View createView(ViewGroup parent, int viewType) {
-            return LayoutInflater.from(getActivity()).inflate(R.layout.item_search, parent, false);
-        }
-
-        @Override
-        public void onRequestAction() {
-            startAction();
+        protected View createView(LayoutInflater inflater, ViewGroup parent, int viewType) {
+            return inflater.inflate(R.layout.item_search, parent, false);
         }
 
         @Override
         public void onItemClick(int position, Search search) {
-            start(ContentActivity.create(getActivity(), search.getId()));
+            start(ContentActivity.create(getContext(), Integer.valueOf(search.getContentId().substring(2))));
         }
 
         @Override
-        public ArrayList<Search> onParse(String json) {
+        public List<Search> onParse(String json) {
             SearchListParser parser = SearchListParser.parse(json);
 
             if (parser != null) {
-                return parser.getContents();
+                return parser.getItemList();
             } else {
                 return null;
             }

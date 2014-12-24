@@ -1,0 +1,11 @@
+<resources>
+
+    <string name="app_name">斗鱼TV</string>
+    <string name="app_search">搜索</string>
+    <string name="app_recommend">推荐</string>
+    <string name="app_game">游戏</string>
+    <string name="app_live">直播</string>
+    <string name="app_more">更多</string>
+    <string name="app_exit">再按一次返回键退出</string>
+
+</resources>

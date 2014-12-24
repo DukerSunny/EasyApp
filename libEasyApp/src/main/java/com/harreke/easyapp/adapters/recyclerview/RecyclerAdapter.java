@@ -2,7 +2,7 @@ package com.harreke.easyapp.adapters.recyclerview;
 
 import android.support.v7.widget.RecyclerView;
 
-import com.harreke.easyapp.holders.recycerview.RecyclerHolder;
+import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,6 +17,28 @@ public abstract class RecyclerAdapter<ITEM> extends RecyclerView.Adapter<Recycle
     private boolean mDiscardRepeat = true;
     private HashSet<Integer> mHashSet = new HashSet<Integer>();
     private ArrayList<ITEM> mItemList = new ArrayList<ITEM>();
+
+    /**
+     * 添加一个条目，并通知视图刷新
+     *
+     * @param item
+     *         条目
+     *
+     * @return 是否添加成功
+     *
+     * 注：
+     * 如果设置丢弃重复条目，则会判断该条目是否重复，若重复，则丢弃该条目并导致添加失败
+     */
+    public final boolean addItem(int position, ITEM item) {
+        if (!mDiscardRepeat || mHashSet.add(item.hashCode()) && position >= 0 && position <= mItemList.size()) {
+            mItemList.add(position, item);
+            notifyItemInserted(position);
+
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     /**
      * 添加一个条目，并通知视图刷新

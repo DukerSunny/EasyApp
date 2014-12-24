@@ -17,10 +17,15 @@ public class UniversalImageExecutor implements ImageLoadingListener, IRequestExe
     private IRequestCallback<Bitmap> mBitmapCallback = null;
     private boolean mExecuting = false;
     private IRequestCallback<ImageView> mImageCallback = null;
+    private int mLoadingImageId;
+    private int mRetryImageId;
 
-    public UniversalImageExecutor(ImageView image, String imageUrl, IRequestCallback<ImageView> imageCallback) {
+    public UniversalImageExecutor(ImageView imageView, String imageUrl, int loadingImageId, int retryImageId,
+            IRequestCallback<ImageView> imageCallback) {
         mImageCallback = imageCallback;
-        ImageLoader.getInstance().displayImage(imageUrl, image, this);
+        mLoadingImageId = loadingImageId;
+        mRetryImageId = retryImageId;
+        ImageLoader.getInstance().displayImage(imageUrl, imageView, this);
     }
 
     public UniversalImageExecutor(String imageUrl, IRequestCallback<Bitmap> bitmapCallback) {
@@ -43,6 +48,9 @@ public class UniversalImageExecutor implements ImageLoadingListener, IRequestExe
     @Override
     public void onLoadingCancelled(String imageUri, View view) {
         mExecuting = false;
+        if (view != null) {
+            ((ImageView) view).setImageResource(mRetryImageId);
+        }
         if (mImageCallback != null) {
             mImageCallback.onSuccess(imageUri, (ImageView) view);
             mImageCallback = null;
@@ -67,6 +75,9 @@ public class UniversalImageExecutor implements ImageLoadingListener, IRequestExe
     @Override
     public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
         mExecuting = false;
+        if (view != null) {
+            ((ImageView) view).setImageResource(mRetryImageId);
+        }
         if (mImageCallback != null) {
             mImageCallback.onFailure(imageUri);
             mImageCallback = null;
@@ -79,5 +90,8 @@ public class UniversalImageExecutor implements ImageLoadingListener, IRequestExe
     @Override
     public void onLoadingStarted(String imageUri, View view) {
         mExecuting = true;
+        if (view != null) {
+            ((ImageView) view).setImageResource(mLoadingImageId);
+        }
     }
 }

@@ -3,7 +3,7 @@
 
     <color name="Primary">#00bcd4</color>
     <color name="Primary_Dark">#0097a7</color>
-    <color name="Accent">#ffc107</color>
+    <color name="Accent">#9c27b0</color>
 
     <color name="Selection_1st">#008B8B</color>
     <color name="Selection_2nd">#D2691E</color>
@@ -12,7 +12,7 @@
     <color name="Selection_5th">#DC143C</color>
     <color name="Selection_Lesser">#00008B</color>
 
-    <color name="Channel_Misc">#800000</color>
+    <color name="Channel_Misc">#008b8b</color>
     <color name="Channel_Work_Emotion">#DDA0DD</color>
     <color name="Channel_DramaCulture">#CD853F</color>
     <color name="Channel_Comic_Novel">#808000</color>

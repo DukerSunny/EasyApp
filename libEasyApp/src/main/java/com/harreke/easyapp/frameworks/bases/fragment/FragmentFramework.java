@@ -1,6 +1,7 @@
 package com.harreke.easyapp.frameworks.bases.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,12 +11,9 @@ import android.view.ViewGroup;
 
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.IToolbar;
-import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.helpers.RequestHelper;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
-
-import java.lang.ref.WeakReference;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/07/24
@@ -24,14 +22,14 @@ import java.lang.ref.WeakReference;
  */
 public abstract class FragmentFramework extends Fragment implements IFramework, IToolbar {
     private static final String TAG = "FragmentFramework";
-    private WeakReference<ActivityFramework> mActivityReference;
+    private IFramework mActivityFramework = null;
+    private IToolbar mActivityToolbar = null;
     private int mContentLayoutId;
     private View mContentView;
     private boolean mCreated;
     private RequestHelper mRequest;
 
     public FragmentFramework() {
-        mActivityReference = null;
     }
 
     /**
@@ -56,19 +54,15 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
 
     @Override
     public void addToolbarItem(int id, int titleId, int imageId) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.addToolbarItem(id, titleId, imageId);
+        if (mActivityToolbar != null) {
+            mActivityToolbar.addToolbarItem(id, titleId, imageId);
         }
     }
 
     @Override
     public void addToolbarViewItem(int id, int titleId, View view) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.addToolbarViewItem(id, titleId, view);
+        if (mActivityToolbar != null) {
+            mActivityToolbar.addToolbarViewItem(id, titleId, view);
         }
     }
 
@@ -93,7 +87,7 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
     @Override
     public final void executeRequest(RequestBuilder builder, IRequestCallback<String> callback) {
         builder.print();
-        mRequest.execute(getActivity(), builder, callback);
+        mRequest.execute(getContext(), builder, callback);
     }
 
     @Override
@@ -101,12 +95,9 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
         return mContentView.findViewById(viewId);
     }
 
-    private ActivityFramework getActivityFramework() {
-        if (mActivityReference != null) {
-            return mActivityReference.get();
-        } else {
-            return null;
-        }
+    @Override
+    public Context getContext() {
+        return getActivity();
     }
 
     /**
@@ -124,28 +115,22 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
      */
     @Override
     public final void hideToast() {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.hideToast();
+        if (mActivityFramework != null) {
+            mActivityFramework.hideToast();
         }
     }
 
     @Override
     public void hideToolbar() {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.hideToolbar();
+        if (mActivityToolbar != null) {
+            mActivityToolbar.hideToolbar();
         }
     }
 
     @Override
     public void hideToolbarItem(int id) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.hideToolbarItem(id);
+        if (mActivityToolbar != null) {
+            mActivityToolbar.hideToolbarItem(id);
         }
     }
 
@@ -161,15 +146,14 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
 
     @Override
     public boolean isToolbarShowing() {
-        ActivityFramework activity = getActivityFramework();
-
-        return activity != null && activity.isToolbarShowing();
+        return mActivityToolbar != null && mActivityToolbar.isToolbarShowing();
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mActivityReference = new WeakReference<ActivityFramework>((ActivityFramework) activity);
+        mActivityFramework = (IFramework) activity;
+        mActivityToolbar = (IToolbar) activity;
     }
 
     @Override
@@ -195,8 +179,8 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
 
     @Override
     public void onDetach() {
-        mActivityReference.clear();
-        mActivityReference = null;
+        mActivityFramework = null;
+        mActivityToolbar = null;
         super.onDetach();
     }
 
@@ -217,37 +201,29 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
 
     @Override
     public void setToolbarNavigation() {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.setToolbarNavigation();
+        if (mActivityToolbar != null) {
+            mActivityToolbar.setToolbarNavigation();
         }
     }
 
     @Override
     public void setToolbarNavigation(int imageId) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.setToolbarNavigation(imageId);
+        if (mActivityToolbar != null) {
+            mActivityToolbar.setToolbarNavigation(imageId);
         }
     }
 
     @Override
     public void setToolbarTitle(String text) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.setToolbarTitle(text);
+        if (mActivityToolbar != null) {
+            mActivityToolbar.setToolbarTitle(text);
         }
     }
 
     @Override
     public void setToolbarTitle(int textId) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.setToolbarTitle(textId);
+        if (mActivityToolbar != null) {
+            mActivityToolbar.setToolbarTitle(textId);
         }
     }
 
@@ -283,10 +259,8 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
      */
     @Override
     public final void showToast(String text, boolean progress) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.showToast(text, progress);
+        if (mActivityFramework != null) {
+            mActivityFramework.showToast(text, progress);
         }
     }
 
@@ -305,19 +279,15 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
 
     @Override
     public void showToolbar() {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.showToolbar();
+        if (mActivityToolbar != null) {
+            mActivityToolbar.showToolbar();
         }
     }
 
     @Override
     public void showToolbarItem(int id) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.showToolbarItem(id);
+        if (mActivityToolbar != null) {
+            mActivityToolbar.showToolbarItem(id);
         }
     }
 
@@ -341,28 +311,22 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
      */
     @Override
     public void start(Intent intent, int requestCode, int animIn, int animOut) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.start(intent, requestCode, animIn, animOut);
+        if (mActivityFramework != null) {
+            mActivityFramework.start(intent, requestCode, animIn, animOut);
         }
     }
 
     @Override
     public void start(Intent intent, int animIn, int animOut) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.start(intent, animIn, animOut);
+        if (mActivityFramework != null) {
+            mActivityFramework.start(intent, animIn, animOut);
         }
     }
 
     @Override
     public final void start(Intent intent) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.start(intent);
+        if (mActivityFramework != null) {
+            mActivityFramework.start(intent);
         }
     }
 
@@ -376,10 +340,8 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
      */
     @Override
     public final void start(Intent intent, int requestCode) {
-        ActivityFramework activity = getActivityFramework();
-
-        if (activity != null) {
-            activity.start(intent, requestCode);
+        if (mActivityFramework != null) {
+            mActivityFramework.start(intent, requestCode);
         }
     }
 }

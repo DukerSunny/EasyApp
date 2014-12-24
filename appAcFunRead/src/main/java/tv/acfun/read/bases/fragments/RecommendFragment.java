@@ -7,10 +7,10 @@ import android.view.ViewGroup;
 
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.fragment.FragmentFramework;
-import com.harreke.easyapp.frameworks.lists.recyclerview.RecyclerFramework;
-import com.harreke.easyapp.holders.recycerview.RecyclerHolder;
+import com.harreke.easyapp.frameworks.recyclerview.RecyclerFramework;
+import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import tv.acfun.read.R;
 import tv.acfun.read.api.API;
@@ -36,6 +36,7 @@ public class RecommendFragment extends FragmentFramework {
     @Override
     public void enquiryViews() {
         mRecommendRecyclerHelper = new RecommendRecyclerHelper(this);
+        mRecommendRecyclerHelper.setCanLoad(false);
         mRecommendRecyclerHelper.setHasFixedSize(false);
         mRecommendRecyclerHelper.attachAdapter();
     }
@@ -65,13 +66,8 @@ public class RecommendFragment extends FragmentFramework {
         }
 
         @Override
-        public View createView(ViewGroup parent, int viewType) {
-            return LayoutInflater.from(getActivity()).inflate(R.layout.item_recommend, parent, false);
-        }
-
-        @Override
-        public void onRequestAction() {
-            startAction();
+        public View createView(LayoutInflater inflater, ViewGroup parent, int viewType) {
+            return inflater.inflate(R.layout.item_recommend, parent, false);
         }
 
         @Override
@@ -80,7 +76,7 @@ public class RecommendFragment extends FragmentFramework {
         }
 
         @Override
-        public ArrayList<Content> onParse(String json) {
+        public List<Content> onParse(String json) {
             ChannelListParser parser = ChannelListParser.parse(json);
 
             if (parser != null) {

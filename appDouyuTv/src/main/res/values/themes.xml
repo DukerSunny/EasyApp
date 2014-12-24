@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.DouyuTv" parent="Theme.EasyApp">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="searchViewStyle">@style/Theme.DouyuTv.SearchView</item>
+    </style>
+
+    <style name="Theme.DouyuTv.SearchView" parent="Widget.AppCompat.SearchView">
+        <item name="searchIcon">@drawable/image_toolbar_search</item>
+        <item name="closeIcon">@drawable/image_toolbar_close</item>
+        <item name="android:textColor">@color/White</item>
+    </style>
+
+</resources>

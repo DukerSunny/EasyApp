@@ -17,10 +17,8 @@ import tv.acfun.read.beans.Content;
 public class ChannelListParser {
     private HashMap<String, ChannelListPage> data;
     private ArrayList<Content> mItemList;
-    private int mTotalPage;
     private String msg;
     private int status;
-
 
     public static ChannelListParser parse(String json) {
         ChannelListParser parser = GsonUtil.toBean(json, ChannelListParser.class);
@@ -44,7 +42,6 @@ public class ChannelListParser {
         Content content;
         int i;
 
-        mTotalPage = (page.getTotalCount() - 1) / page.getPageSize() + 1;
         mItemList = page.getList();
         for (i = 0; i < mItemList.size(); i++) {
             content = mItemList.get(i);
@@ -54,9 +51,5 @@ public class ChannelListParser {
 
     public ArrayList<Content> getItemList() {
         return mItemList;
-    }
-
-    public int getTotalPage() {
-        return mTotalPage;
     }
 }

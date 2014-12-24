@@ -13,9 +13,10 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
-import com.harreke.easyapp.helpers.DialogHelper;
-import com.harreke.easyapp.widgets.ChildTabView;
+import com.harreke.easyapp.widgets.rippleeffects.RippleDrawable;
+import com.harreke.easyapp.widgets.rippleeffects.RippleOnClickListener;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
@@ -33,21 +34,26 @@ public class SettingActivity extends ActivityFramework {
     private boolean mBlock = false;
     private ArrayAdapter<String> mFontAdapter;
     private List<String> mFontPathList;
-    private DialogHelper mMaxQuoteDialog;
+    private MaterialDialog.SimpleCallback mMaxQuoteCallback;
+    private MaterialDialog mMaxQuoteDialog;
     private CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener;
     private View.OnClickListener mOnClickListener;
     private DialogInterface.OnClickListener mOnMaxQuoteClickListener;
     private AdapterView.OnItemSelectedListener mOnTextFontItemSelectListener;
     private AdapterView.OnItemSelectedListener mOnTextSizeItemSelectListener;
     private View.OnTouchListener mOnTouchListener;
+    private MaterialDialog.SimpleCallback mRestoreDefaultCallback;
+    private MaterialDialog mRestoreDefaultDialog;
     private Setting mSetting;
     private View setting_about;
     private SwitchCompat setting_autoloadimage;
-    private EditText setting_maxquotecount;
+    private View setting_maxquotecount;
+    private EditText setting_maxquotecount_edittext;
     private View setting_maxquotecount_ok;
     private View setting_restoredefault;
     private Spinner setting_textfont;
-    private Spinner setting_textsize;
+    private View setting_textsize;
+    private Spinner setting_textsize_spinner;
 
     public static Intent create(Context context) {
         return new Intent(context, SettingActivity.class);
@@ -63,12 +69,12 @@ public class SettingActivity extends ActivityFramework {
     @Override
     public void attachCallbacks() {
         setting_autoloadimage.setOnCheckedChangeListener(mOnCheckedChangeListener);
-        setting_maxquotecount.setOnTouchListener(mOnTouchListener);
-        setting_maxquotecount_ok.setOnClickListener(mOnClickListener);
-        setting_textsize.setOnItemSelectedListener(mOnTextSizeItemSelectListener);
+        setting_maxquotecount_edittext.setOnTouchListener(mOnTouchListener);
+        RippleOnClickListener.attach(setting_maxquotecount_ok, mOnClickListener);
+        setting_textsize_spinner.setOnItemSelectedListener(mOnTextSizeItemSelectListener);
         setting_textfont.setOnItemSelectedListener(mOnTextFontItemSelectListener);
-        setting_restoredefault.setOnClickListener(mOnClickListener);
-        setting_about.setOnClickListener(mOnClickListener);
+        RippleOnClickListener.attach(setting_restoredefault, mOnClickListener);
+        RippleOnClickListener.attach(setting_about, mOnClickListener);
     }
 
     @Override
@@ -80,18 +86,28 @@ public class SettingActivity extends ActivityFramework {
     @Override
     public void enquiryViews() {
         setting_autoloadimage = (SwitchCompat) findViewById(R.id.setting_autoloadimage);
-        setting_maxquotecount = (EditText) findViewById(R.id.setting_maxquotecount);
+        setting_maxquotecount = findViewById(R.id.setting_maxquotecount);
+        setting_maxquotecount_edittext = (EditText) findViewById(R.id.setting_maxquotecount_edittext);
         setting_maxquotecount_ok = findViewById(R.id.setting_maxquotecount_ok);
-        setting_textsize = (Spinner) findViewById(R.id.setting_textsize);
+        setting_textsize = findViewById(R.id.setting_textsize);
+        setting_textsize_spinner = (Spinner) findViewById(R.id.setting_textsize_spinner);
         setting_textfont = (Spinner) findViewById(R.id.setting_textfont);
         setting_restoredefault = findViewById(R.id.setting_restoredefault);
         setting_about = findViewById(R.id.setting_about);
 
-        mMaxQuoteDialog = new DialogHelper(this);
-        mMaxQuoteDialog.setTitle(R.string.setting_maxquotecount_toobig);
-        mMaxQuoteDialog.setPositiveButton(R.string.app_ok);
-        mMaxQuoteDialog.setNegativeButton(R.string.app_cancel);
-        mMaxQuoteDialog.setOnClickListener(mOnMaxQuoteClickListener);
+        mMaxQuoteDialog =
+                new MaterialDialog.Builder(this).title(R.string.setting_maxquotecount_toobig).positiveText(R.string.app_ok)
+                        .negativeText(R.string.app_cancel).callback(mMaxQuoteCallback).build();
+        mRestoreDefaultDialog =
+                new MaterialDialog.Builder(this).title(R.string.setting_restoredefault_ask).positiveText(R.string.app_ok)
+                        .negativeText(R.string.app_cancel).callback(mRestoreDefaultCallback).build();
+
+        RippleDrawable.attach(setting_autoloadimage);
+        RippleDrawable.attach(setting_maxquotecount);
+        RippleDrawable.attach(setting_maxquotecount_ok, RippleDrawable.RIPPLE_STYLE_DARK_SQUARE);
+        RippleDrawable.attach(setting_textsize);
+        RippleDrawable.attach(setting_restoredefault);
+        RippleDrawable.attach(setting_about);
     }
 
     @Override
@@ -104,11 +120,10 @@ public class SettingActivity extends ActivityFramework {
                         setMaxQuoteCount();
                         break;
                     case R.id.setting_restoredefault:
-                        restoreDefault();
+                        mRestoreDefaultDialog.show();
                         break;
                     case R.id.setting_about:
-                        start(AboutActivity.create(getActivity()));
-                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                        start(AboutActivity.create(getContext()), R.anim.slide_in_left, R.anim.slide_out_right);
                 }
             }
         };
@@ -124,15 +139,12 @@ public class SettingActivity extends ActivityFramework {
                 }
             }
         };
-        mOnMaxQuoteClickListener = new DialogInterface.OnClickListener() {
+        mMaxQuoteCallback = new MaterialDialog.SimpleCallback() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mMaxQuoteDialog.hide();
+            public void onPositive(MaterialDialog materialDialog) {
                 hideMaxQuoteOk();
-                if (which == DialogInterface.BUTTON_POSITIVE) {
-                    mSetting.setMaxQuoteCount(Integer.valueOf(setting_maxquotecount.getText().toString()));
-                    writeSetting();
-                }
+                mSetting.setMaxQuoteCount(Integer.valueOf(setting_maxquotecount_edittext.getText().toString()));
+                writeSetting();
             }
         };
         mOnTouchListener = new View.OnTouchListener() {
@@ -149,7 +161,7 @@ public class SettingActivity extends ActivityFramework {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (!mBlock) {
-                    mSetting.setDefaultTextSize(Integer.valueOf((String) setting_textsize.getSelectedItem()));
+                    mSetting.setDefaultTextSize(Integer.valueOf((String) setting_textsize_spinner.getSelectedItem()));
                     writeSetting();
                 }
             }
@@ -170,17 +182,29 @@ public class SettingActivity extends ActivityFramework {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         };
+        mRestoreDefaultCallback = new MaterialDialog.SimpleCallback() {
+            @Override
+            public void onPositive(MaterialDialog materialDialog) {
+                restoreDefault();
+            }
+        };
     }
 
     private void hideMaxQuoteOk() {
         setting_maxquotecount_ok.setVisibility(View.GONE);
         ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
-                .hideSoftInputFromWindow(setting_maxquotecount.getWindowToken(), 0);
+                .hideSoftInputFromWindow(setting_maxquotecount_edittext.getWindowToken(), 0);
     }
 
     @Override
     public void onBackPressed() {
         exit(R.anim.zoom_in_enter, R.anim.slide_out_left);
+    }
+
+    @Override
+    protected void onDestroy() {
+        mRestoreDefaultDialog.dismiss();
+        super.onDestroy();
     }
 
     @Override
@@ -231,7 +255,7 @@ public class SettingActivity extends ActivityFramework {
     }
 
     private void setMaxQuoteCount() {
-        int maxQuoteCount = Integer.valueOf(setting_maxquotecount.getText().toString());
+        int maxQuoteCount = Integer.valueOf(setting_maxquotecount_edittext.getText().toString());
 
         if (maxQuoteCount < 0) {
             showToast(R.string.setting_maxquotecount_toosmall);
@@ -239,7 +263,7 @@ public class SettingActivity extends ActivityFramework {
             mMaxQuoteDialog.show();
         } else {
             hideMaxQuoteOk();
-            mSetting.setMaxQuoteCount(Integer.valueOf(setting_maxquotecount.getText().toString()));
+            mSetting.setMaxQuoteCount(Integer.valueOf(setting_maxquotecount_edittext.getText().toString()));
             writeSetting();
         }
     }
@@ -252,8 +276,8 @@ public class SettingActivity extends ActivityFramework {
     public void startAction() {
         mBlock = true;
         setting_autoloadimage.setChecked(mSetting.isAutoLoadImage());
-        setting_maxquotecount.setText(String.valueOf(mSetting.getMaxQuoteCount()));
-        setting_textsize.setSelection((mSetting.getDefaultTextSize() - 12) / 2);
+        setting_maxquotecount_edittext.setText(String.valueOf(mSetting.getMaxQuoteCount()));
+        setting_textsize_spinner.setSelection((mSetting.getDefaultTextSize() - 12) / 2);
         setting_textfont.setAdapter(mFontAdapter);
         setting_textfont.setSelection(0);
         mBlock = false;

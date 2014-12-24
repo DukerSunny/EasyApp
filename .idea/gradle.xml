@@ -3,9 +3,9 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <option name="distributionType" value="WRAPPED" />
+        <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="I:/" />
+        <option name="gradleHome" value="D:\Android\Android Studio\gradle\gradle-2.2.1" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
@@ -14,6 +14,7 @@
             <option value="$PROJECT_DIR$/libColorPicker" />
             <option value="$PROJECT_DIR$/libEasyApp" />
             <option value="$PROJECT_DIR$/libPhotoView" />
+            <option value="$PROJECT_DIR$/libRecyclerViewStickyHeaders" />
           </set>
         </option>
       </GradleProjectSettings>

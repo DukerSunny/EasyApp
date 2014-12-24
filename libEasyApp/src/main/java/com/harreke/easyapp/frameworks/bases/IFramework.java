@@ -1,6 +1,7 @@
 package com.harreke.easyapp.frameworks.bases;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,12 +65,14 @@ public interface IFramework {
 
     public View findViewById(int viewId);
 
-    /**
-     * 获得当前Activity
-     *
-     * @return 当前Activity
-     */
     public Activity getActivity();
+
+    /**
+     * 获得当前Activity的Context
+     *
+     * @return 当前Activity的Context
+     */
+    public Context getContext();
 
     /**
      * 获得框架

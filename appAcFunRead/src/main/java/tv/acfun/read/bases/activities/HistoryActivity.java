@@ -1,19 +1,18 @@
 package tv.acfun.read.bases.activities;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.daimajia.swipe.SwipeLayout;
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
-import com.harreke.easyapp.frameworks.lists.recyclerview.RecyclerFramework;
-import com.harreke.easyapp.helpers.DialogHelper;
-import com.harreke.easyapp.holders.recycerview.RecyclerHolder;
+import com.harreke.easyapp.frameworks.recyclerview.RecyclerFramework;
+import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.List;
@@ -22,16 +21,16 @@ import tv.acfun.read.BuildConfig;
 import tv.acfun.read.R;
 import tv.acfun.read.bases.application.AcFunRead;
 import tv.acfun.read.beans.Content;
-import tv.acfun.read.holders.HistoryHolder;
+import tv.acfun.read.holders.ChannelUnspecificRemovableHolder;
 import tv.acfun.read.parsers.ChannelListParser;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/09/23
  */
 public class HistoryActivity extends ActivityFramework {
-    private DialogHelper mClearDialog;
+    private MaterialDialog.SimpleCallback mClearCallback;
+    private MaterialDialog mClearDialog;
     private HistoryRecyclerHelper mHistoryRecyclerHelper;
-    private DialogInterface.OnClickListener mOnClearDialogClickListener;
     private View.OnClickListener mOnRemoveClickListener;
     private SwipeLayout mOpenSwipeLayout = null;
     private SwipeLayout.SwipeListener mSwipeListener;
@@ -61,11 +60,8 @@ public class HistoryActivity extends ActivityFramework {
         mHistoryRecyclerHelper.setHasFixedSize(true);
         mHistoryRecyclerHelper.attachAdapter();
 
-        mClearDialog = new DialogHelper(this);
-        mClearDialog.setTitle(R.string.history_clear);
-        mClearDialog.setPositiveButton(R.string.app_ok);
-        mClearDialog.setNegativeButton(R.string.app_cancel);
-        mClearDialog.setOnClickListener(mOnClearDialogClickListener);
+        mClearDialog = new MaterialDialog.Builder(this).title(R.string.history_clear).positiveText(R.string.app_ok)
+                .negativeText(R.string.app_cancel).callback(mClearCallback).build();
     }
 
     @Override
@@ -83,14 +79,11 @@ public class HistoryActivity extends ActivityFramework {
                 AcFunRead.getInstance().writeHistory(mHistoryRecyclerHelper.getItemList());
             }
         };
-        mOnClearDialogClickListener = new DialogInterface.OnClickListener() {
+        mClearCallback = new MaterialDialog.SimpleCallback() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mClearDialog.hide();
-                if (which == DialogInterface.BUTTON_POSITIVE) {
-                    AcFunRead.getInstance().writeHistory(null);
-                    mHistoryRecyclerHelper.clear();
-                }
+            public void onPositive(MaterialDialog materialDialog) {
+                AcFunRead.getInstance().writeHistory(null);
+                mHistoryRecyclerHelper.clear();
             }
         };
         mSwipeListener = new SwipeLayout.SwipeListener() {
@@ -134,7 +127,7 @@ public class HistoryActivity extends ActivityFramework {
 
     @Override
     protected void onDestroy() {
-        mClearDialog.hide();
+        mClearDialog.dismiss();
         super.onDestroy();
     }
 
@@ -169,8 +162,9 @@ public class HistoryActivity extends ActivityFramework {
 
         if (historyList == null) {
             showToast(R.string.app_cannotread_cache);
+        } else {
+            mHistoryRecyclerHelper.from(historyList);
         }
-        mHistoryRecyclerHelper.from(historyList, true);
     }
 
     @Override
@@ -189,7 +183,7 @@ public class HistoryActivity extends ActivityFramework {
 
         @Override
         public RecyclerHolder<Content> createHolder(View convertView, int viewType) {
-            HistoryHolder holder = new HistoryHolder(convertView);
+            ChannelUnspecificRemovableHolder holder = new ChannelUnspecificRemovableHolder(convertView);
 
             holder.setOnRemoveClickListener(mOnRemoveClickListener);
             holder.addSwipeListener(mSwipeListener);
@@ -198,12 +192,8 @@ public class HistoryActivity extends ActivityFramework {
         }
 
         @Override
-        public View createView(ViewGroup parent, int viewType) {
-            return LayoutInflater.from(getActivity()).inflate(R.layout.item_history, parent, false);
-        }
-
-        @Override
-        public void onRequestAction() {
+        public View createView(LayoutInflater inflater, ViewGroup parent, int viewType) {
+            return inflater.inflate(R.layout.item_channel_unspecific_removable, parent, false);
         }
 
         @Override
@@ -212,7 +202,7 @@ public class HistoryActivity extends ActivityFramework {
                 mOpenSwipeLayout.close();
                 mOpenSwipeLayout = null;
             } else {
-                start(ContentActivity.create(getActivity(), content.getContentId()));
+                start(ContentActivity.create(getContext(), content.getContentId()));
             }
         }
 

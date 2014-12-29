@@ -268,8 +268,8 @@ public class ContentFragment extends FragmentFramework {
     }
 
     @Override
-    public void setLayout() {
-        setContentView(R.layout.fragment_content);
+    public int getLayoutId() {
+        return R.layout.fragment_content;
     }
 
     @Override

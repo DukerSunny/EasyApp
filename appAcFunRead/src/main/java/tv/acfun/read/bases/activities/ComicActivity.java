@@ -46,9 +46,9 @@ public class ComicActivity extends ActivityFramework {
     private ViewPager comic_pager;
     private EditText comic_save_input;
     private Adapter mAdapter;
-    private IRequestCallback<Bitmap> mLoadBitmapCallback;
     private int mContentId;
     private List<String> mImageList;
+    private IRequestCallback<Bitmap> mLoadBitmapCallback;
     private Mode mMode;
     private ViewPager.OnPageChangeListener mOnPageChangeListener;
     private PhotoViewAttacher.OnPhotoTapListener mOnTapListener;
@@ -127,7 +127,8 @@ public class ComicActivity extends ActivityFramework {
         comic_page = (TextView) findViewById(R.id.comic_page);
 
         mSaveDialog = new MaterialDialog.Builder(this).title(R.string.comic_save_input).customView(R.layout.dialog_comic_save)
-                .positiveText(R.string.app_ok).negativeText(R.string.app_cancel).callback(mSaveCallback).autoDismiss(false).build();
+                .positiveText(R.string.app_ok).negativeText(R.string.app_cancel).callback(mSaveCallback).autoDismiss(false)
+                .build();
         mSaveDialog.setCancelable(false);
         comic_save_input = (EditText) mSaveDialog.getCustomView().findViewById(R.id.comic_save_input);
 
@@ -237,6 +238,11 @@ public class ComicActivity extends ActivityFramework {
                         ".jpg");
     }
 
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_comic;
+    }
+
     private boolean imageCached(int position) {
         return ImageExecutorConfig.isImageCacheAvailable(mImageList.get(position));
     }
@@ -294,11 +300,6 @@ public class ComicActivity extends ActivityFramework {
         showToast(getString(resId, mSaveFile.getAbsolutePath()));
         mSavePosition = -1;
         mSaveFile = null;
-    }
-
-    @Override
-    public void setLayout() {
-        setContentView(R.layout.activity_comic);
     }
 
     @Override

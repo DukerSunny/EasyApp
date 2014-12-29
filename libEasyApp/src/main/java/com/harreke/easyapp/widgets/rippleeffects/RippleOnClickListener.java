@@ -14,7 +14,7 @@ public class RippleOnClickListener implements View.OnClickListener {
 
     private RippleOnClickListener(View.OnClickListener onClickListener, int rippleDuration) {
         mOnClickListener = onClickListener;
-        mRippleDelay = (int) (rippleDuration * 1.5f);
+        mRippleDelay = (int) (rippleDuration);
         mHandler = new Handler();
     }
 

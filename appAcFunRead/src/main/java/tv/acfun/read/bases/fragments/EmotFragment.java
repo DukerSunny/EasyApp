@@ -76,8 +76,8 @@ public class EmotFragment extends FragmentFramework {
     }
 
     @Override
-    public void setLayout() {
-        setContentView(R.layout.fragment_emot);
+    public int getLayoutId() {
+        return R.layout.fragment_emot;
     }
 
     @Override

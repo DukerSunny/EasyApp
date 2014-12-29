@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    style="@style/mw.v"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="4dp">
+
+    <com.harreke.easyapp.widgets.RatioImageView
+        android:id="@+id/game_src"
+        style="@style/mw"
+        android:src="@drawable/loading_2x3"
+        app:ratio="0.67"/>
+
+    <TextView
+        android:id="@+id/game_name"
+        style="@style/mw"
+        android:gravity="center"
+        android:singleLine="true"
+        android:textAppearance="@style/Subhead"/>
+
+</LinearLayout>

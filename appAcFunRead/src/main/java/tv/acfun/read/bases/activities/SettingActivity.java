@@ -123,7 +123,7 @@ public class SettingActivity extends ActivityFramework {
                         mRestoreDefaultDialog.show();
                         break;
                     case R.id.setting_about:
-                        start(AboutActivity.create(getContext()), R.anim.slide_in_left, R.anim.slide_out_right);
+                        start(AboutActivity.create(getContext()), Transition.Enter_Left);
                 }
             }
         };
@@ -190,6 +190,11 @@ public class SettingActivity extends ActivityFramework {
         };
     }
 
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_setting;
+    }
+
     private void hideMaxQuoteOk() {
         setting_maxquotecount_ok.setVisibility(View.GONE);
         ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
@@ -198,7 +203,7 @@ public class SettingActivity extends ActivityFramework {
 
     @Override
     public void onBackPressed() {
-        exit(R.anim.zoom_in_enter, R.anim.slide_out_left);
+        exit(Transition.Exit_Left);
     }
 
     @Override
@@ -247,11 +252,6 @@ public class SettingActivity extends ActivityFramework {
         mSetting = new Setting();
         AcFunRead.getInstance().writeSetting(mSetting);
         startAction();
-    }
-
-    @Override
-    public void setLayout() {
-        setContentView(R.layout.activity_setting);
     }
 
     private void setMaxQuoteCount() {

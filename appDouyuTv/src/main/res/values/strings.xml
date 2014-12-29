@@ -6,6 +6,21 @@
     <string name="app_game">游戏</string>
     <string name="app_live">直播</string>
     <string name="app_more">更多</string>
+    <string name="app_room">直播间</string>
     <string name="app_exit">再按一次返回键退出</string>
+
+    <string name="more_weight">鱼丸</string>
+    <string name="more_followed">关注</string>
+    <string name="more_follows">我的关注</string>
+    <string name="more_histories">观看历史</string>
+    <string name="more_recommends">精彩推荐</string>
+    <string name="more_setting">设置选项</string>
+    <string name="more_aboutus">关于我们</string>
+    <string name="more_checkin">签到</string>
+
+    <string name="room_online">在线：%s</string>
+    <string name="room_follow">关注：%s</string>
+    <string name="room_share">分享</string>
+    <string name="room_notice">公告</string>
 
 </resources>

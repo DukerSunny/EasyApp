@@ -32,7 +32,6 @@ public class MainActivity extends ActivityFramework {
 
     @Override
     public void attachCallbacks() {
-
     }
 
     @Override
@@ -54,12 +53,17 @@ public class MainActivity extends ActivityFramework {
     }
 
     @Override
+    public int getLayoutId() {
+        return R.layout.activity_main;
+    }
+
+    @Override
     public void onBackPressed() {
         long exitTime;
 
         exitTime = System.currentTimeMillis();
         if (exitTime - mExitTime <= 3000) {
-            exit(R.anim.none, R.anim.none);
+            exit();
         } else {
             mExitTime = exitTime;
             showToast(getString(R.string.app_exit));
@@ -70,11 +74,6 @@ public class MainActivity extends ActivityFramework {
     protected void onDestroy() {
         DouyuTv.getInstance().unregisterConnectionReceiver();
         super.onDestroy();
-    }
-
-    @Override
-    public void setLayout() {
-        setContentView(R.layout.activity_main);
     }
 
     @Override

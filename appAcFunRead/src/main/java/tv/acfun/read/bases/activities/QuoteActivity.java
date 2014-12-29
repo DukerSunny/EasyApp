@@ -123,14 +123,14 @@ public class QuoteActivity extends ActivityFramework {
                         start(ContentActivity.create(getContext(), Integer.valueOf(link)));
                         break;
                     case "at":
-                        start(ProfileActivity.create(getContext(), link), R.anim.slide_in_left, R.anim.slide_out_right);
+                        start(ProfileActivity.create(getContext(), link), Transition.Enter_Right);
                 }
             }
         };
         mOnAvatarClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                start(ProfileActivity.create(getContext(), (Integer) v.getTag()), R.anim.slide_in_left, R.anim.zoom_in_exit);
+                start(ProfileActivity.create(getContext(), (Integer) v.getTag()), Transition.Enter_Right);
             }
         };
         mLoginCallback = new LoginHelper.LoginCallback() {
@@ -199,8 +199,8 @@ public class QuoteActivity extends ActivityFramework {
     }
 
     @Override
-    public void setLayout() {
-        setContentView(R.layout.activity_quote);
+    public int getLayoutId() {
+        return R.layout.activity_quote;
     }
 
     @Override

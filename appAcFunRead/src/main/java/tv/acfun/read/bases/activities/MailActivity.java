@@ -69,13 +69,13 @@ public class MailActivity extends ActivityFramework {
     }
 
     @Override
-    public void onBackPressed() {
-        exit(R.anim.zoom_in_enter, R.anim.slide_out_left);
+    public int getLayoutId() {
+        return R.layout.activity_mail;
     }
 
     @Override
-    public void setLayout() {
-        setContentView(R.layout.activity_mail);
+    public void onBackPressed() {
+        exit(Transition.Exit_Left);
     }
 
     @Override

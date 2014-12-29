@@ -7,17 +7,17 @@
     <LinearLayout
         android:id="@+id/recommend_title"
         style="@style/mw"
-        android:gravity="center_vertical"
-        android:padding="8dp">
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/recommend_title_text"
             style="@style/mww"
+            android:layout_marginLeft="8dp"
             android:textAppearance="@style/Title"/>
 
         <ImageView
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:background="@drawable/image_more"/>
 
     </LinearLayout>

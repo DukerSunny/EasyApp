@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ public class PullableLayout extends FrameLayout implements ViewGroup.OnHierarchy
     private final static long DURATION_TOAST = 2500;
     private boolean mCanLoad = true;
     private boolean mCanRefresh = true;
+    private boolean mEnabled = true;
     private boolean mFirstMeasure = true;
     private int mHeight = 0;
     private float mLastTouchY = 0f;
@@ -93,8 +95,16 @@ public class PullableLayout extends FrameLayout implements ViewGroup.OnHierarchy
         return mHeight - mLoadIndicatorOffset;
     }
 
+    private float computeLoadYProgress() {
+        return (mLoadIndicatorOffset - mLoadIndicatorHeight) / mLoadIndicatorHeight;
+    }
+
     private float computeRefreshY() {
         return mRefreshIndicatorOffset - mRefreshIndicatorHeight;
+    }
+
+    private float computeRefreshYProgress() {
+        return (mRefreshIndicatorOffset - mRefreshIndicatorHeight) / mRefreshIndicatorHeight;
     }
 
     public boolean isLoading() {
@@ -145,12 +155,17 @@ public class PullableLayout extends FrameLayout implements ViewGroup.OnHierarchy
     @Override
     protected void onFinishInflate() {
         Context context;
+        LayoutParams params;
 
         if (mViewDelegate == null) {
             throw new IllegalArgumentException("Cannot find a pullable view!");
         } else {
             context = getContext();
+
+            params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.gravity = Gravity.CENTER_HORIZONTAL;
             mRefreshIndicator = new PullableIndicator(context);
+            mRefreshIndicator.setLayoutParams(params);
             mRefreshIndicatorAnimator =
                     ViewPropertyAnimator.animate(mRefreshIndicator).setListener(new AnimatorListenerAdapter() {
                         @Override
@@ -162,7 +177,10 @@ public class PullableLayout extends FrameLayout implements ViewGroup.OnHierarchy
                     });
             addView(mRefreshIndicator);
 
+            params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.gravity = Gravity.CENTER_HORIZONTAL;
             mLoadIndicator = new PullableIndicator(context);
+            mLoadIndicator.setLayoutParams(params);
             mLoadIndicatorAnimator = ViewPropertyAnimator.animate(mLoadIndicator).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
@@ -180,7 +198,7 @@ public class PullableLayout extends FrameLayout implements ViewGroup.OnHierarchy
         float touchY;
         float dy;
 
-        if (mOnPullableListener != null) {
+        if (mOnPullableListener != null && mEnabled) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     mLastTouchY = event.getY();
@@ -235,7 +253,7 @@ public class PullableLayout extends FrameLayout implements ViewGroup.OnHierarchy
                     }
                     ViewHelper.setY(mRefreshIndicator, computeRefreshY());
                     if (mRefreshIndicatorOffset > mRefreshIndicatorHeight) {
-                        mRefreshIndicator.setProgress(computeRefreshY() / mRefreshIndicatorHeight);
+                        mRefreshIndicator.setProgress(computeRefreshYProgress());
                     }
 
                     return true;
@@ -249,7 +267,7 @@ public class PullableLayout extends FrameLayout implements ViewGroup.OnHierarchy
                     }
                     ViewHelper.setY(mLoadIndicator, computeLoadY());
                     if (mLoadIndicatorOffset > mLoadIndicatorHeight) {
-                        mLoadIndicator.setProgress(computeLoadY() / mLoadIndicatorHeight);
+                        mLoadIndicator.setProgress(computeLoadYProgress());
                     }
 
                     return true;
@@ -295,6 +313,10 @@ public class PullableLayout extends FrameLayout implements ViewGroup.OnHierarchy
 
     public void setCanRefresh(boolean canRefresh) {
         mCanRefresh = canRefresh;
+    }
+
+    public void setEnabled(boolean enabled) {
+        mEnabled = enabled;
     }
 
     public void setLoadComplete() {

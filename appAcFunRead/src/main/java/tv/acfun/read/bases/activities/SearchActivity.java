@@ -173,6 +173,11 @@ public class SearchActivity extends ActivityFramework implements SearchView.OnQu
     }
 
     @Override
+    public int getLayoutId() {
+        return R.layout.activity_search;
+    }
+
+    @Override
     protected void onDestroy() {
         mSearchSortDialog.dismiss();
         mSearchRangeDialog.dismiss();
@@ -206,11 +211,6 @@ public class SearchActivity extends ActivityFramework implements SearchView.OnQu
         if (!BuildConfig.DEBUG) {
             MobclickAgent.onResume(this);
         }
-    }
-
-    @Override
-    public void setLayout() {
-        setContentView(R.layout.activity_search);
     }
 
     @Override

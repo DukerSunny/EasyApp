@@ -1,16 +1,15 @@
 package air.tv.douyu.android.holders;
 
+import android.os.Handler;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.harreke.easyapp.adapters.viewpager.PageAdapter;
+import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
 import com.harreke.easyapp.helpers.ImageLoaderHelper;
-import com.harreke.easyapp.holders.recycerview.RecyclerHolder;
-import com.harreke.easyapp.widgets.RatioImageView;
 
 import java.util.List;
 
@@ -23,27 +22,52 @@ import me.relex.circleindicator.CircleIndicator;
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/12/18
  */
-public class SlideShowHolder extends RecyclerHolder<Recommend> {
-    private ViewPager.OnPageChangeListener mOnSlideChangeListener = new ViewPager.SimpleOnPageChangeListener() {
+public class SlideShowHolder extends RecyclerHolder<Recommend> implements ViewPager.OnPageChangeListener {
+    private final static int SLIDE_INTERVAL = 5000;
+    private Runnable mSlideRunnable = new Runnable() {
         @Override
-        public void onPageSelected(int position) {
-            slideshow_title.setText(mSlideShowAdapter.getItem(position).getTitle());
+        public void run() {
+            int position = slideshow_pager.getCurrentItem();
+
+            position++;
+            if (position >= mSlideShowAdapter.getCount()) {
+                position = 0;
+            }
+            slideshow_pager.setCurrentItem(position);
+            mHandler.postDelayed(this, SLIDE_INTERVAL);
         }
     };
+    private Handler mHandler = new Handler();
     private View.OnClickListener mOnSlideShowClickListener;
     private SlideShowAdapter mSlideShowAdapter;
     private CircleIndicator slideshow_indicator;
     private ViewPager slideshow_pager;
-    private View slideshow_root;
     private TextView slideshow_title;
 
     public SlideShowHolder(View itemView) {
         super(itemView);
+        ViewGroup.LayoutParams params;
 
-        slideshow_root = itemView.findViewById(R.id.slideshow_root);
         slideshow_pager = (ViewPager) itemView.findViewById(R.id.slideshow_pager);
+        params = slideshow_pager.getLayoutParams();
+        params.width = itemView.getResources().getDisplayMetrics().widthPixels;
+        params.height = (int) (params.width * 9f / 16f);
+        slideshow_pager.setLayoutParams(params);
         slideshow_title = (TextView) itemView.findViewById(R.id.slideshow_title);
         slideshow_indicator = (CircleIndicator) itemView.findViewById(R.id.slideshow_indicator);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        slideshow_title.setText(mSlideShowAdapter.getItem(position).getTitle());
     }
 
     @Override
@@ -51,23 +75,18 @@ public class SlideShowHolder extends RecyclerHolder<Recommend> {
         List<SlideShow> slideShowList;
 
         if (recommend instanceof SlideShowRecommend) {
-            Log.e(null, "slideshow set item");
             slideShowList = ((SlideShowRecommend) recommend).getSlideShowList();
             if (slideShowList != null && slideShowList.size() > 0) {
-                slideshow_root.setVisibility(View.GONE);
-                slideshow_pager.setVisibility(View.VISIBLE);
                 mSlideShowAdapter = new SlideShowAdapter();
                 mSlideShowAdapter.add(slideShowList);
 
-                slideshow_pager.setOnPageChangeListener(mOnSlideChangeListener);
+                slideshow_pager.setOnPageChangeListener(this);
+                slideshow_pager.setOffscreenPageLimit(3);
                 slideshow_pager.setAdapter(mSlideShowAdapter);
                 slideshow_indicator.setViewPager(slideshow_pager);
-            } else {
-                slideshow_root.setVisibility(View.VISIBLE);
-                slideshow_pager.setVisibility(View.GONE);
+                slideshow_indicator.setOnPageChangeListener(this);
+                startSlide();
             }
-        } else {
-            Log.e(null, "not a slideshow item");
         }
     }
 
@@ -79,19 +98,29 @@ public class SlideShowHolder extends RecyclerHolder<Recommend> {
         mOnSlideShowClickListener = onSlideShowClickListener;
     }
 
-    private class SlideShowAdapter extends PageAdapter<SlideShow, RatioImageView> {
+    public void startSlide() {
+        if (mSlideShowAdapter != null && mSlideShowAdapter.getCount() > 1) {
+            stopSlide();
+            mHandler.postDelayed(mSlideRunnable, SLIDE_INTERVAL);
+        }
+    }
+
+    public void stopSlide() {
+        mHandler.removeCallbacks(mSlideRunnable);
+    }
+
+    private class SlideShowAdapter extends PageAdapter<SlideShow, ImageView> {
         @Override
-        protected RatioImageView createPage(ViewGroup container, int position, SlideShow slideShow) {
-            Log.e(null, "createPage" + position + " slideshow=" + slideShow.getTitle());
-            RatioImageView ratioImageView = (RatioImageView) LayoutInflater.from(container.getContext())
-                    .inflate(R.layout.item_slideshow_page, container, false);
+        protected ImageView createView(ViewGroup container, int position, SlideShow slideShow) {
+            ImageView imageView = new ImageView(container.getContext());
 
-            ratioImageView.setTag(slideShow.getId());
-            ratioImageView.setOnClickListener(mOnSlideShowClickListener);
-            ImageLoaderHelper.loadImage(ratioImageView, slideShow.getPic_url(), R.drawable.image_loading_16x9,
-                    R.drawable.image_retry_16x9);
+            imageView.setLayoutParams(
+                    new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            imageView.setTag(slideShow.getId());
+            imageView.setOnClickListener(mOnSlideShowClickListener);
+            ImageLoaderHelper.loadImage(imageView, slideShow.getPic_url(), R.drawable.loading_16x9, R.drawable.retry_16x9);
 
-            return ratioImageView;
+            return imageView;
         }
     }
 }

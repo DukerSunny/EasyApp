@@ -177,8 +177,7 @@ public class MainActivity extends ActivityFramework {
                                 acFunRead.clearLogin();
                                 mLoginHelper.show(LoginHelper.Reason.Expired);
                             } else {
-                                start(ProfileActivity.create(getContext(), mFullUser), R.anim.slide_in_left,
-                                        R.anim.zoom_in_exit);
+                                start(ProfileActivity.create(getContext(), mFullUser), Transition.Enter_Left);
                             }
                         } else {
                             mLoginHelper.show(LoginHelper.Reason.Unauthorized);
@@ -190,7 +189,7 @@ public class MainActivity extends ActivityFramework {
                                 acFunRead.clearLogin();
                                 mLoginHelper.show(LoginHelper.Reason.Expired);
                             } else {
-                                start(MailActivity.create(getContext()), R.anim.slide_in_left, R.anim.zoom_in_exit);
+                                start(MailActivity.create(getContext()), Transition.Enter_Left);
                             }
                         } else {
                             mLoginHelper.show(LoginHelper.Reason.Unauthorized);
@@ -202,17 +201,17 @@ public class MainActivity extends ActivityFramework {
                                 acFunRead.clearLogin();
                                 mLoginHelper.show(LoginHelper.Reason.Expired);
                             } else {
-                                start(FavouriteActivity.create(getContext()), R.anim.slide_in_left, R.anim.zoom_in_exit);
+                                start(FavouriteActivity.create(getContext()), Transition.Enter_Left);
                             }
                         } else {
                             mLoginHelper.show(LoginHelper.Reason.Unauthorized);
                         }
                         break;
                     case R.id.menu_history:
-                        start(HistoryActivity.create(getContext()), R.anim.slide_in_left, R.anim.zoom_in_exit);
+                        start(HistoryActivity.create(getContext()), Transition.Enter_Left);
                         break;
                     case R.id.menu_setting:
-                        start(SettingActivity.create(getContext()), R.anim.slide_in_left, R.anim.zoom_in_exit);
+                        start(SettingActivity.create(getContext()), Transition.Enter_Left);
                 }
             }
         };
@@ -238,6 +237,11 @@ public class MainActivity extends ActivityFramework {
         };
     }
 
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_main;
+    }
+
     private void loadAvatar() {
         if (mFullUser.getUserImg().equals("avatar") || !ImageConnectionHelper.shouldLoadImage()) {
             OfflineImageLoaderHelper.loadImage(menu_user_avatar, OfflineImageLoaderHelper.OfflineImage.Avatar);
@@ -256,7 +260,7 @@ public class MainActivity extends ActivityFramework {
         } else {
             exitTime = System.currentTimeMillis();
             if (exitTime - mExitTime <= 3000) {
-                exit(R.anim.none, R.anim.none);
+                exit();
             } else {
                 mExitTime = exitTime;
                 showToast(getString(R.string.app_exit));
@@ -301,11 +305,6 @@ public class MainActivity extends ActivityFramework {
             MobclickAgent.onResume(this);
         }
         checkUser();
-    }
-
-    @Override
-    public void setLayout() {
-        setContentView(R.layout.activity_main);
     }
 
     @Override

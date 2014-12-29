@@ -13,7 +13,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         app:pstsDividerColor="@color/Transparent"
-        app:pstsIndicatorColor="@color/White"
+        app:pstsIndicatorColor="?attr/colorAccent"
         app:pstsIndicatorHeight="3dp"
         app:pstsShouldExpand="true"/>
 

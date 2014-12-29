@@ -11,6 +11,11 @@
         android:theme="@style/Theme.DouyuTv">
 
         <activity
+            android:name=".bases.activities.LiveActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
+
+        <activity
             android:name=".bases.activities.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait">
@@ -23,6 +28,17 @@
             </intent-filter>
 
         </activity>
+
+        <activity
+            android:name=".bases.activities.RoomActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".bases.activities.SearchActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
 
         <!--<meta-data-->
         <!--android:name="UMENG_APPKEY"-->

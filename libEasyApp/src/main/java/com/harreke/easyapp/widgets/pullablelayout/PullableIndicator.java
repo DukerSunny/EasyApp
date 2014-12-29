@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,13 +21,7 @@ import com.nineoldandroids.view.ViewHelper;
  */
 public class PullableIndicator extends FrameLayout {
     public final static long DURATION_MORPH = 300;
-    private final static int COLLAPSE_DIAMETER = (int) (ApplicationFramework.Density * 72);
     private final static int DRAWABLE_DIAMETER = (int) (ApplicationFramework.Density * 24);
-    private final static int EXPAND_WIDTH = (int) (ApplicationFramework.Density * 144);
-    private PropertyValuesHolder mExpandButtonWidthHolder =
-            PropertyValuesHolder.ofInt("buttonWidth", COLLAPSE_DIAMETER, EXPAND_WIDTH);
-    private PropertyValuesHolder mCollapseButtonWidthHolder =
-            PropertyValuesHolder.ofInt("buttonWidth", EXPAND_WIDTH, COLLAPSE_DIAMETER);
     private PropertyValuesHolder mCollapseButtonColorHolder = PropertyValuesHolder.ofInt("buttonColor", 0, 255);
     private PropertyValuesHolder mCollapseButtonScaleHolder = PropertyValuesHolder.ofFloat("buttonScale", 4f, 1f);
     private PropertyValuesHolder mCollapseProgressAlphaHolder = PropertyValuesHolder.ofFloat("progressAlpha", 0f, 1f);
@@ -43,10 +38,6 @@ public class PullableIndicator extends FrameLayout {
     public PullableIndicator(Context context) {
         super(context);
         LayoutParams params;
-
-        params = new LayoutParams(EXPAND_WIDTH, COLLAPSE_DIAMETER);
-        params.gravity = Gravity.CENTER_HORIZONTAL;
-        setLayoutParams(params);
 
         params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         params.gravity = Gravity.CENTER;

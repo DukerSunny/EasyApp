@@ -1,7 +1,6 @@
 package com.harreke.easyapp.adapters.viewpager;
 
 import android.support.v4.view.PagerAdapter;
-import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -19,7 +18,6 @@ import java.util.List;
  *         页面的类型
  */
 public abstract class PageAdapter<ITEM, VIEW extends View> extends PagerAdapter {
-    protected SparseArray<VIEW> mViewList = new SparseArray<VIEW>();
     private List<ITEM> mItemList = new ArrayList<ITEM>();
 
     public final void add(ITEM item) {
@@ -32,17 +30,13 @@ public abstract class PageAdapter<ITEM, VIEW extends View> extends PagerAdapter 
 
     public final void clear() {
         mItemList.clear();
-        mViewList.clear();
     }
 
-    protected abstract VIEW createPage(ViewGroup container, int position, ITEM item);
+    protected abstract VIEW createView(ViewGroup container, int position, ITEM item);
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        VIEW view = mViewList.get(position);
-
-        container.removeView(view);
-        mViewList.remove(position);
+        container.removeView((View) object);
     }
 
     @Override
@@ -58,16 +52,11 @@ public abstract class PageAdapter<ITEM, VIEW extends View> extends PagerAdapter 
         }
     }
 
-    public final VIEW getView(int position) {
-        return mViewList.get(position);
-    }
-
     @Override
     public View instantiateItem(ViewGroup container, int position) {
-        VIEW view = createPage(container, position, mItemList.get(position));
+        VIEW view = createView(container, position, mItemList.get(position));
 
         container.addView(view);
-        mViewList.put(position, view);
 
         return view;
     }
@@ -75,9 +64,5 @@ public abstract class PageAdapter<ITEM, VIEW extends View> extends PagerAdapter 
     @Override
     public boolean isViewFromObject(View view, Object object) {
         return view == object;
-    }
-
-    public final void refresh() {
-        notifyDataSetChanged();
     }
 }

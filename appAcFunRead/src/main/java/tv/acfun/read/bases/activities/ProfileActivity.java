@@ -202,7 +202,7 @@ public class ProfileActivity extends ActivityFramework {
                     case R.id.profile_user_contributes:
                         if (mSelfProfile) {
                             start(ContributionActivity.create(getContext(), mUserId, getString(R.string.user_refer_mine)),
-                                    R.anim.slide_in_left, R.anim.zoom_in_exit);
+                                    Transition.Enter_Left);
                         } else {
                             start(ContributionActivity.create(getContext(), mUserId, mFullUser.getUsername()));
                         }
@@ -262,9 +262,14 @@ public class ProfileActivity extends ActivityFramework {
     }
 
     @Override
+    public int getLayoutId() {
+        return R.layout.activity_profile;
+    }
+
+    @Override
     public void onBackPressed() {
         if (mSelfProfile) {
-            exit(R.anim.zoom_in_enter, R.anim.slide_out_left);
+            exit(Transition.Exit_Left);
         } else {
             exit();
         }
@@ -290,11 +295,6 @@ public class ProfileActivity extends ActivityFramework {
         if (!BuildConfig.DEBUG) {
             MobclickAgent.onResume(this);
         }
-    }
-
-    @Override
-    public void setLayout() {
-        setContentView(R.layout.activity_profile);
     }
 
     @Override

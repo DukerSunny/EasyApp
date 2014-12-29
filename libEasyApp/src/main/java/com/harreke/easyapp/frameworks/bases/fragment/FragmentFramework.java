@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.IToolbar;
+import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.helpers.RequestHelper;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
@@ -24,7 +25,6 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
     private static final String TAG = "FragmentFramework";
     private IFramework mActivityFramework = null;
     private IToolbar mActivityToolbar = null;
-    private int mContentLayoutId;
     private View mContentView;
     private boolean mCreated;
     private RequestHelper mRequest;
@@ -160,8 +160,8 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
     public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRequest = new RequestHelper();
 
-        setLayout();
-        mContentView = inflater.inflate(mContentLayoutId, container, false);
+        getLayoutId();
+        mContentView = inflater.inflate(getLayoutId(), container, false);
         acquireArguments(getArguments());
         establishCallbacks();
         enquiryViews();
@@ -192,11 +192,6 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
             mCreated = true;
             startAction();
         }
-    }
-
-    @Override
-    public void setContentView(int contentLayoutId) {
-        mContentLayoutId = contentLayoutId;
     }
 
     @Override
@@ -291,6 +286,27 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
         }
     }
 
+    @Override
+    public void start(Intent intent) {
+        if (mActivityFramework != null) {
+            mActivityFramework.start(intent);
+        }
+    }
+
+    @Override
+    public void start(Intent intent, ActivityFramework.Transition transition) {
+        if (mActivityFramework != null) {
+            mActivityFramework.start(intent, transition);
+        }
+    }
+
+    @Override
+    public void start(Intent intent, int requestCode) {
+        if (mActivityFramework != null) {
+            mActivityFramework.start(intent, requestCode);
+        }
+    }
+
     /**
      * 启动Intent
      *
@@ -300,48 +316,15 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
      *         请求代码
      *
      *         如果需要回调，则设置requestCode为正整数；否则设为-1；
-     * @param animIn
-     *         进入动画Id
+     * @param transition
+     *         Intent切换动画
      *
-     *         如果不需要进入动画，则设置为0
-     * @param animOut
-     *         退出动画Id
-     *
-     *         如果不需要退出动画，则设置为0
+     *         {@link com.harreke.easyapp.frameworks.bases.activity.ActivityFramework.Transition}
      */
     @Override
-    public void start(Intent intent, int requestCode, int animIn, int animOut) {
+    public void start(Intent intent, int requestCode, ActivityFramework.Transition transition) {
         if (mActivityFramework != null) {
-            mActivityFramework.start(intent, requestCode, animIn, animOut);
-        }
-    }
-
-    @Override
-    public void start(Intent intent, int animIn, int animOut) {
-        if (mActivityFramework != null) {
-            mActivityFramework.start(intent, animIn, animOut);
-        }
-    }
-
-    @Override
-    public final void start(Intent intent) {
-        if (mActivityFramework != null) {
-            mActivityFramework.start(intent);
-        }
-    }
-
-    /**
-     * 启动带回调的Intent
-     *
-     * @param intent
-     *         目标Intent
-     * @param requestCode
-     *         请求代码
-     */
-    @Override
-    public final void start(Intent intent, int requestCode) {
-        if (mActivityFramework != null) {
-            mActivityFramework.start(intent, requestCode);
+            mActivityFramework.start(intent, requestCode, transition);
         }
     }
 }

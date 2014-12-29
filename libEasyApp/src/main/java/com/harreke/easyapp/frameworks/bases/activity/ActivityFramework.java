@@ -79,7 +79,7 @@ public abstract class ActivityFramework extends ActionBarActivity
         }
     }
 
-    protected void attachToolbar(int toolbarSolidId, int toolbarShadowId) {
+    private void attachToolbar(int toolbarSolidId, int toolbarShadowId) {
         mToolbar = (Toolbar) findViewById(toolbarSolidId);
         mToolbarShadow = findViewById(toolbarShadowId);
         if (mToolbar != null) {
@@ -125,30 +125,18 @@ public abstract class ActivityFramework extends ActionBarActivity
     }
 
     public final void exit() {
-        exit(-1, -1);
+        exit(Transition.Default);
     }
 
     /**
      * 退出Activity
-     *
-     * @param animIn
-     *         进入动画Id
-     *
-     *         设置为-1则使用默认进入动画
-     * @param animOut
-     *         退出动画Id
-     *
-     *         设置为-1则使用默认退出动画
      */
-    public final void exit(int animIn, int animOut) {
+    public final void exit(Transition transition) {
         super.onBackPressed();
-        if (animIn <= 0) {
-            animIn = R.anim.zoom_in_enter;
+
+        if (transition != Transition.Default) {
+            overridePendingTransition(transition.getEnterAnim(), transition.getExitAnim());
         }
-        if (animOut <= 0) {
-            animOut = R.anim.slide_out_right;
-        }
-        overridePendingTransition(animIn, animOut);
     }
 
     @Override
@@ -178,6 +166,14 @@ public abstract class ActivityFramework extends ActionBarActivity
 
     public Toolbar getToolBar() {
         return mToolbar;
+    }
+
+    protected int getToolbarShadowId() {
+        return R.id.toolbar_shadow;
+    }
+
+    protected int getToolbarSolidId() {
+        return R.id.toolbar_solid;
     }
 
     /**
@@ -244,13 +240,7 @@ public abstract class ActivityFramework extends ActionBarActivity
         NetUtil.checkConnection(this);
 
         configActivity();
-        initToast();
-        setLayout();
-        attachToolbar(R.id.toolbar_solid, R.id.toolbar_shadow);
-        acquireArguments(getIntent());
-        establishCallbacks();
-        enquiryViews();
-        attachCallbacks();
+        setContentView(getLayoutId());
     }
 
     @Override
@@ -277,6 +267,18 @@ public abstract class ActivityFramework extends ActionBarActivity
     }
 
     @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+
+        initToast();
+        attachToolbar(getToolbarSolidId(), getToolbarShadowId());
+        acquireArguments(getIntent());
+        establishCallbacks();
+        enquiryViews();
+        attachCallbacks();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
@@ -290,18 +292,6 @@ public abstract class ActivityFramework extends ActionBarActivity
         onBackPressed();
     }
 
-    public void setToolbarSubTitle(int titleId) {
-        if (mToolbar != null) {
-            mToolbar.setSubtitle(titleId);
-        }
-    }
-
-    public void setToolbarSubTitle(String title) {
-        if (mToolbar != null) {
-            mToolbar.setSubtitle(title);
-        }
-    }
-
     @Override
     public void setToolbarNavigation() {
         if (mToolbar != null) {
@@ -313,6 +303,18 @@ public abstract class ActivityFramework extends ActionBarActivity
     public void setToolbarNavigation(int imageId) {
         if (mToolbar != null) {
             mToolbar.setNavigationIcon(imageId);
+        }
+    }
+
+    public void setToolbarSubTitle(int titleId) {
+        if (mToolbar != null) {
+            mToolbar.setSubtitle(titleId);
+        }
+    }
+
+    public void setToolbarSubTitle(String title) {
+        if (mToolbar != null) {
+            mToolbar.setSubtitle(title);
         }
     }
 
@@ -407,6 +409,21 @@ public abstract class ActivityFramework extends ActionBarActivity
         }
     }
 
+    @Override
+    public void start(Intent intent) {
+        start(intent, -1, Transition.Default);
+    }
+
+    @Override
+    public void start(Intent intent, Transition transition) {
+        start(intent, -1, transition);
+    }
+
+    @Override
+    public void start(Intent intent, int requestCode) {
+        start(intent, requestCode, Transition.Default);
+    }
+
     /**
      * 启动Intent
      *
@@ -416,17 +433,13 @@ public abstract class ActivityFramework extends ActionBarActivity
      *         请求代码
      *
      *         如果需要回调，则设置requestCode为正整数；否则设为-1；
-     * @param animIn
-     *         进入动画Id
+     * @param transition
+     *         Intent切换动画
      *
-     *         设置为-1则使用默认进入动画
-     * @param animOut
-     *         退出动画Id
-     *
-     *         设置为-1则使用默认退出动画
+     *         {@link com.harreke.easyapp.frameworks.bases.activity.ActivityFramework.Transition}
      */
     @Override
-    public final void start(Intent intent, int requestCode, int animIn, int animOut) {
+    public void start(Intent intent, int requestCode, Transition transition) {
         if (intent != null) {
             hideToast();
             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -435,25 +448,44 @@ public abstract class ActivityFramework extends ActionBarActivity
             } else {
                 startActivityForResult(intent, requestCode);
             }
-            if (animIn <= 0) {
-                animIn = R.anim.slide_in_right;
+            if (transition != Transition.Default) {
+                overridePendingTransition(transition.getEnterAnim(), transition.getExitAnim());
             }
-            if (animOut <= 0) {
-                animOut = R.anim.zoom_in_exit;
-            }
-            overridePendingTransition(animIn, animOut);
         }
     }
 
-    public final void start(Intent intent, int animIn, int animOut) {
-        start(intent, -1, animIn, animOut);
-    }
+    public enum Transition {
+        /**
+         * 系统默认动画
+         */
+        Default(0, 0),
+        /**
+         * 启动动画
+         */
+        Enter_Left(R.anim.slide_in_left, R.anim.none),
+        Enter_Right(R.anim.slide_in_right, R.anim.none),
+        Enter_Fade(R.anim.fade_in, R.anim.none),
+        /**
+         * 退出动画
+         */
+        Exit_Left(R.anim.none, R.anim.slide_out_left),
+        Exit_Right(R.anim.none, R.anim.slide_out_right),
+        Exit_Fade(R.anim.none, R.anim.fade_out);
 
-    public final void start(Intent intent, int requestCode) {
-        start(intent, requestCode, -1, -1);
-    }
+        private int mEnterAnim;
+        private int mExitAnim;
 
-    public final void start(Intent intent) {
-        start(intent, -1, -1, -1);
+        private Transition(int enterAnim, int exitAnim) {
+            mEnterAnim = enterAnim;
+            mExitAnim = exitAnim;
+        }
+
+        public int getEnterAnim() {
+            return mEnterAnim;
+        }
+
+        public int getExitAnim() {
+            return mExitAnim;
+        }
     }
 }

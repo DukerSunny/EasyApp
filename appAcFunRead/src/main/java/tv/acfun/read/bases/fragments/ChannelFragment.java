@@ -57,8 +57,8 @@ public class ChannelFragment extends FragmentFramework {
     }
 
     @Override
-    public void setLayout() {
-        setContentView(R.layout.fragment_channel);
+    public int getLayoutId() {
+        return R.layout.fragment_channel;
     }
 
     @Override

@@ -48,7 +48,7 @@ public class AboutActivity extends ActivityFramework {
 
     @Override
     public void onBackPressed() {
-        exit(R.anim.zoom_in_enter, R.anim.slide_out_left);
+        exit(Transition.Exit_Left);
     }
 
     @Override
@@ -68,8 +68,8 @@ public class AboutActivity extends ActivityFramework {
     }
 
     @Override
-    public void setLayout() {
-        setContentView(R.layout.activity_about);
+    public int getLayoutId() {
+        return R.layout.activity_about;
     }
 
     @Override

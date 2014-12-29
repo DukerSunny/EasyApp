@@ -66,8 +66,13 @@ public class ContributionActivity extends ActivityFramework {
     }
 
     @Override
+    public int getLayoutId() {
+        return R.layout.activity_contribution;
+    }
+
+    @Override
     public void onBackPressed() {
-        exit(R.anim.zoom_in_enter, R.anim.slide_out_left);
+        exit(Transition.Exit_Left);
     }
 
     @Override
@@ -84,11 +89,6 @@ public class ContributionActivity extends ActivityFramework {
         if (!BuildConfig.DEBUG) {
             MobclickAgent.onResume(this);
         }
-    }
-
-    @Override
-    public void setLayout() {
-        setContentView(R.layout.activity_contribution);
     }
 
     @Override
@@ -113,7 +113,7 @@ public class ContributionActivity extends ActivityFramework {
 
         @Override
         public void onItemClick(int position, Content content) {
-            start(ContentActivity.create(getContext(), content.getContentId()));
+            start(ContentActivity.create(getContext(), content.getContentId()), Transition.Enter_Right);
         }
 
         @Override

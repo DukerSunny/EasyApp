@@ -18,6 +18,10 @@ import com.harreke.easyapp.R;
 public class RatioImageView extends ImageView {
     private float mRatio;
 
+    public RatioImageView(Context context) {
+        this(context, null);
+    }
+
     public RatioImageView(Context context, AttributeSet attrs) {
         this(context, attrs, R.attr.ratioImageViewStyle);
     }

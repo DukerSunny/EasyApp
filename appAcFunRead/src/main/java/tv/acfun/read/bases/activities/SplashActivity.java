@@ -62,12 +62,12 @@ public class SplashActivity extends ActivityFramework {
     }
 
     @Override
-    public void onBackPressed() {
+    public int getLayoutId() {
+        return R.layout.activity_splash;
     }
 
     @Override
-    public void setLayout() {
-        setContentView(R.layout.activity_splash);
+    public void onBackPressed() {
     }
 
     @Override
@@ -93,7 +93,7 @@ public class SplashActivity extends ActivityFramework {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                start(MainActivity.create(getContext()), R.anim.zoom_in_enter, R.anim.zoom_out_exit);
+                start(MainActivity.create(getContext()));
                 finish();
             }
         }, 3500);

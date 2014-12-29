@@ -49,7 +49,7 @@ public class FullRoom extends Room {
 
     @Override
     public int hashCode() {
-        return getRoom_id().hashCode();
+        return getRoom_id();
     }
 
     public void setOwner_avatar(String owner_avatar) {

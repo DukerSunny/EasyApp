@@ -1,22 +1,24 @@
 package air.tv.douyu.android.bases.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.harreke.easyapp.frameworks.bases.IFramework;
+import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.frameworks.bases.fragment.FragmentFramework;
 import com.harreke.easyapp.frameworks.recyclerview.RecyclerFramework;
-import com.harreke.easyapp.holders.recycerview.RecyclerHolder;
+import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
 import com.harreke.easyapp.requests.IRequestCallback;
-import com.harreke.easyapp.tools.GsonUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import air.tv.douyu.android.R;
 import air.tv.douyu.android.api.API;
+import air.tv.douyu.android.bases.activities.LiveActivity;
+import air.tv.douyu.android.bases.activities.RoomActivity;
 import air.tv.douyu.android.beans.Recommend;
 import air.tv.douyu.android.beans.SlideShowRecommend;
 import air.tv.douyu.android.holders.RecommendHolder;
@@ -30,8 +32,12 @@ import air.tv.douyu.android.parsers.SlideShowListParser;
 public class RecommendFragment extends FragmentFramework {
     private View.OnClickListener mOnRoomClickListener;
     private View.OnClickListener mOnSlideShowClickListener;
+    private View.OnClickListener mOnTitleClickListener;
+    private IRequestCallback<String> mRecommendCallback;
+    private List<Recommend> mRecommendList = new ArrayList<Recommend>();
     private RecommendRecyclerHelper mRecommendRecyclerHelper;
     private IRequestCallback<String> mSlideCallback;
+    private SlideShowHolder mSlideShowHolder = null;
 
     public static RecommendFragment create() {
         return new RecommendFragment();
@@ -58,45 +64,88 @@ public class RecommendFragment extends FragmentFramework {
         mOnSlideShowClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                start(RoomActivity.create(getContext(), (Integer) v.getTag()), ActivityFramework.Transition.Enter_Right);
+            }
+        };
+        mOnTitleClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                start(LiveActivity.create(getContext(), (String) v.getTag(R.id.value), (Integer) v.getTag(R.id.key)),
+                        ActivityFramework.Transition.Enter_Right);
             }
         };
         mOnRoomClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showToast("clicked room " + v.getTag());
+                start(RoomActivity.create(getContext(), (Integer) v.getTag()), ActivityFramework.Transition.Enter_Right);
             }
         };
         mSlideCallback = new IRequestCallback<String>() {
             @Override
             public void onFailure(String requestUrl) {
-                Log.e(null, "slide json failure");
+                mRecommendRecyclerHelper.showEmptyFailureIdle();
             }
 
             @Override
             public void onSuccess(String requestUrl, String s) {
                 SlideShowListParser parser = SlideShowListParser.parse(s);
                 SlideShowRecommend slideShowRecommend;
-                Log.e(null, "slide json" + s);
 
                 if (parser != null) {
                     slideShowRecommend = new SlideShowRecommend();
-                    Log.e(null, "slide=" + GsonUtil.toString(parser.getData()));
                     slideShowRecommend.setSlideShowList(parser.getData());
-                    mRecommendRecyclerHelper.addItem(0, slideShowRecommend);
-                    mRecommendRecyclerHelper.scrollToTop();
+                    mRecommendList.clear();
+                    mRecommendList.add(slideShowRecommend);
+                    executeRequest(API.getRecommend(), mRecommendCallback);
+                }
+            }
+        };
+        mRecommendCallback = new IRequestCallback<String>() {
+            @Override
+            public void onFailure(String requestUrl) {
+                mRecommendRecyclerHelper.showEmptyIdle();
+            }
+
+            @Override
+            public void onSuccess(String requestUrl, String json) {
+                RecommendListParser parser = RecommendListParser.parse(json);
+
+                if (parser != null) {
+                    mRecommendList.addAll(parser.getData());
+                    mRecommendRecyclerHelper.from(mRecommendList);
+                } else {
+                    mRecommendRecyclerHelper.showEmptyIdle();
                 }
             }
         };
     }
 
     @Override
-    public void setLayout() {
-        setContentView(R.layout.fragment_recommend);
+    public int getLayoutId() {
+        return R.layout.fragment_recommend;
+    }
+
+    @Override
+    public void onPause() {
+        if (mSlideShowHolder != null) {
+            mSlideShowHolder.stopSlide();
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mSlideShowHolder != null) {
+            mSlideShowHolder.startSlide();
+        }
     }
 
     @Override
     public void startAction() {
-        mRecommendRecyclerHelper.from(API.getRecommend());
+        mRecommendRecyclerHelper.clear();
+        mRecommendRecyclerHelper.showEmptyLoading();
+        executeRequest(API.getSlide(4), mSlideCallback);
     }
 
     private class RecommendRecyclerHelper extends RecyclerFramework<Recommend> {
@@ -109,22 +158,18 @@ public class RecommendFragment extends FragmentFramework {
 
         @Override
         protected RecyclerHolder<Recommend> createHolder(View itemView, int viewType) {
-            SlideShowHolder slideShowHolder;
-
             if (viewType == HEADER) {
-                slideShowHolder = new SlideShowHolder(itemView);
-                slideShowHolder.setOnSlideShowClickListener(mOnSlideShowClickListener);
+                mSlideShowHolder = new SlideShowHolder(itemView);
+                mSlideShowHolder.setOnSlideShowClickListener(mOnSlideShowClickListener);
 
-                return slideShowHolder;
+                return mSlideShowHolder;
             } else {
-                return new RecommendHolder(itemView, mOnRoomClickListener);
+                return new RecommendHolder(itemView, mOnTitleClickListener, mOnRoomClickListener);
             }
         }
 
         @Override
-        protected View createView(ViewGroup parent, int viewType) {
-            LayoutInflater inflater = LayoutInflater.from(getActivity());
-
+        protected View createView(LayoutInflater inflater, ViewGroup parent, int viewType) {
             if (viewType == HEADER) {
                 return inflater.inflate(R.layout.item_slideshow, parent, false);
             } else {
@@ -139,33 +184,11 @@ public class RecommendFragment extends FragmentFramework {
 
         @Override
         public void onItemClick(int position, Recommend recommend) {
-            showToast(
-                    "clicked recommend " + position + " " + recommend.getTitle() + " " + recommend.getClass().getSimpleName());
         }
 
         @Override
         protected List<Recommend> onParse(String json) {
-            RecommendListParser parser = RecommendListParser.parse(json);
-
-            if (parser != null) {
-                return parser.getData();
-            } else {
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostAction(boolean success) {
-            super.onPostAction(success);
-            Log.e(null, "success=" + success);
-            if (success) {
-                executeRequest(API.getSlide(4), mSlideCallback);
-            }
-        }
-
-        @Override
-        protected void onRequestAction() {
-            startAction();
+            return null;
         }
 
         @Override

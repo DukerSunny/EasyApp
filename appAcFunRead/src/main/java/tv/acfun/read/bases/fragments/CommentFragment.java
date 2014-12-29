@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.harreke.easyapp.frameworks.bases.IFramework;
+import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.frameworks.bases.fragment.FragmentFramework;
 import com.harreke.easyapp.frameworks.recyclerview.RecyclerFramework;
 import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
@@ -102,7 +103,6 @@ public class CommentFragment extends FragmentFramework {
                         break;
                     case "at":
                         start(ProfileActivity.create(getActivity(), link));
-                        getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                 }
             }
         };
@@ -111,7 +111,7 @@ public class CommentFragment extends FragmentFramework {
             public void onClick(View v) {
                 FragmentActivity activity = getActivity();
 
-                start(ProfileActivity.create(activity, (Integer) v.getTag()), R.anim.slide_in_left, R.anim.zoom_in_exit);
+                start(ProfileActivity.create(activity, (Integer) v.getTag()), ActivityFramework.Transition.Enter_Right);
             }
         };
         mOnQuoteClickListener = new View.OnClickListener() {
@@ -132,6 +132,11 @@ public class CommentFragment extends FragmentFramework {
     }
 
     @Override
+    public int getLayoutId() {
+        return R.layout.fragment_comment;
+    }
+
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mOnCommentListener = (OnCommentListener) getActivity();
@@ -141,11 +146,6 @@ public class CommentFragment extends FragmentFramework {
     public void onDestroyView() {
         mCommentListHelper.destroy();
         super.onDestroyView();
-    }
-
-    @Override
-    public void setLayout() {
-        setContentView(R.layout.fragment_comment);
     }
 
     @Override

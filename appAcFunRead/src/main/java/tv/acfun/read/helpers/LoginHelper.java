@@ -150,7 +150,7 @@ public class LoginHelper implements MaterialDialog.Callback {
     }
 
     public void destroy() {
-        mLoginDialog.dismiss();
+        hide();
         mFramework = null;
     }
 
@@ -183,7 +183,7 @@ public class LoginHelper implements MaterialDialog.Callback {
     }
 
     public void hide() {
-        mLoginDialog.hide();
+        mLoginDialog.dismiss();
         mProgressDrawable.setProgress(0);
         login_status.setVisibility(View.GONE);
     }

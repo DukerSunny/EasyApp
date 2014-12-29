@@ -4,12 +4,12 @@ package air.tv.douyu.android.beans;
  * 由 Harreke（harreke@live.cn） 创建于 2014/12/18
  */
 public class SlideShow {
-    private String id;
+    private int id;
     private String pic_url;
     private Room room;
     private String title;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -27,10 +27,10 @@ public class SlideShow {
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

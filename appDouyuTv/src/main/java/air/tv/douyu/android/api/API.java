@@ -30,6 +30,10 @@ public class API {
         return new RequestBuilder(RequestBuilder.Method.GET, HOST + "/channel").addQuery(CLIENT_SYS, ANDROID);
     }
 
+    public static RequestBuilder getRoom(int roomId) {
+        return new RequestBuilder(RequestBuilder.Method.GET, HOST + "/room/" + roomId);
+    }
+
     public static RequestBuilder getSlide(int limit) {
         return new RequestBuilder(RequestBuilder.Method.GET, HOST + "/slide/" + limit);
     }

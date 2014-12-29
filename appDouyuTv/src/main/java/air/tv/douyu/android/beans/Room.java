@@ -11,7 +11,7 @@ public class Room {
     private String nickname;
     private int online;
     private int owner_uid;
-    private String room_id;
+    private int room_id;
     private String room_name;
     private String room_src;
     private String show_details;
@@ -52,7 +52,7 @@ public class Room {
         return owner_uid;
     }
 
-    public String getRoom_id() {
+    public int getRoom_id() {
         return room_id;
     }
 
@@ -102,7 +102,7 @@ public class Room {
 
     @Override
     public int hashCode() {
-        return room_id.hashCode();
+        return room_id;
     }
 
     public void setCate_id(int cate_id) {
@@ -133,7 +133,7 @@ public class Room {
         this.owner_uid = owner_uid;
     }
 
-    public void setRoom_id(String room_id) {
+    public void setRoom_id(int room_id) {
         this.room_id = room_id;
     }
 

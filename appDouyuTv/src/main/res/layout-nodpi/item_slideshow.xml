@@ -4,15 +4,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.harreke.easyapp.widgets.RatioImageView
-        android:id="@+id/slideshow_root"
-        style="@style/mw"
-        android:src="@drawable/image_loading_16x9"/>
-
     <com.imbryk.viewPager.LoopViewPager
         android:id="@+id/slideshow_pager"
-        style="@style/mw"
-        android:visibility="gone"/>
+        style="@style/mw"/>
 
     <LinearLayout
         style="@style/mw"
@@ -25,15 +19,16 @@
             android:id="@+id/slideshow_title"
             style="@style/mww"
             android:ellipsize="end"
-            android:lines="1"
+            android:singleLine="true"
             android:textAppearance="@style/Subhead.Inverse"/>
 
         <me.relex.circleindicator.CircleIndicator
             android:id="@+id/slideshow_indicator"
-            style="@style/ww"
+            android:layout_width="wrap_content"
+            android:layout_height="16dp"
             app:ci_drawable="@drawable/shape_circle_white"
-            app:ci_height="20dp"
-            app:ci_width="20dp"/>
+            app:ci_height="8dp"
+            app:ci_width="8dp"/>
 
     </LinearLayout>
 

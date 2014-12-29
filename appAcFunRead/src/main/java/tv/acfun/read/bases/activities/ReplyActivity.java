@@ -398,8 +398,8 @@ public class ReplyActivity extends ActivityFramework implements OnEmotClickListe
     }
 
     @Override
-    public void setLayout() {
-        setContentView(R.layout.activity_reply);
+    public int getLayoutId() {
+        return R.layout.activity_reply;
     }
 
     private void setTextColor(int textColor) {

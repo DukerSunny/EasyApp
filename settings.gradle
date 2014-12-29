@@ -1,5 +1,5 @@
 include ':appAcFunRead'
-//include ':appDouyuTv'
+include ':appDouyuTv'
 include ':libRecyclerViewStickyHeaders'
 include ':libEasyApp'
 include ':libCircleImageView'

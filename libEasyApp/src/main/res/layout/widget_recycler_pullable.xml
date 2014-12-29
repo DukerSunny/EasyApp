@@ -7,8 +7,8 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_solid"
         style="@style/mm"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp"/>
+        android:fadeScrollbars="true"
+        android:scrollbars="vertical"/>
 
     <include
         layout="@layout/widget_empty"/>

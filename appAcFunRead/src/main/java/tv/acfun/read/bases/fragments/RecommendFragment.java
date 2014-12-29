@@ -46,8 +46,8 @@ public class RecommendFragment extends FragmentFramework {
     }
 
     @Override
-    public void setLayout() {
-        setContentView(R.layout.fragment_recommend);
+    public int getLayoutId() {
+        return R.layout.fragment_recommend;
     }
 
     @Override

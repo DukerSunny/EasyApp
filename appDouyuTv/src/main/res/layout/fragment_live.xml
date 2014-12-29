@@ -2,7 +2,7 @@
 <FrameLayout
     style="@style/mm">
 
-    <!--<include-->
-        <!--layout="@layout/widget_recycler_pullable"/>-->
+    <include
+        layout="@layout/widget_recycler_pullable"/>
 
 </FrameLayout>

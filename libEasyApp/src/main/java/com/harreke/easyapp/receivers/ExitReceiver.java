@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.harreke.easyapp.R;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 
 /**
@@ -20,6 +19,6 @@ public class ExitReceiver extends BroadcastReceiver {
         ActivityFramework activity = (ActivityFramework) context;
 
         activity.unregisterReceiver(this);
-        activity.exit(R.anim.none, R.anim.none);
+        activity.exit();
     }
 }

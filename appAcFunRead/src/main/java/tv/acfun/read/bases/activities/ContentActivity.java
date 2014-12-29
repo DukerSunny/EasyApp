@@ -147,7 +147,7 @@ public class ContentActivity extends ActivityFramework implements OnContentListe
         mContentCallback = new IRequestCallback<String>() {
             @Override
             public void onFailure(String requestUrl) {
-                mEmptyHelper.showIdle();
+                mEmptyHelper.showEmptyIdle();
             }
 
             @Override
@@ -207,13 +207,13 @@ public class ContentActivity extends ActivityFramework implements OnContentListe
         mLoginCallback = new LoginHelper.LoginCallback() {
             @Override
             public void onSuccess() {
-                start(CommentActivity.create(getContext(), mContentId));
+                start(CommentActivity.create(getContext(), mContentId), Transition.Enter_Right);
             }
         };
         mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                start(CommentActivity.create(getContext(), mContent.getContentId()));
+                start(CommentActivity.create(getContext(), mContent.getContentId()), Transition.Enter_Right);
             }
         };
         mOnEmptyClickListener = new View.OnClickListener() {
@@ -252,6 +252,11 @@ public class ContentActivity extends ActivityFramework implements OnContentListe
             public void onShown(Snackbar snackbar) {
             }
         };
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_content;
     }
 
     @Override
@@ -312,7 +317,7 @@ public class ContentActivity extends ActivityFramework implements OnContentListe
 
         matcher = StringUtil.getMatcher("/a/ac([0-9]+)", mLink);
         if (matcher.find()) {
-            start(ContentActivity.create(this, Integer.valueOf(matcher.group(1))));
+            start(ContentActivity.create(this, Integer.valueOf(matcher.group(1))), Transition.Enter_Right);
 
             return;
         }
@@ -324,13 +329,8 @@ public class ContentActivity extends ActivityFramework implements OnContentListe
         }
         matcher = StringUtil.getMatcher("http://[\\S\\s]+?", mLink);
         if (matcher.find()) {
-            start(new Intent(Intent.ACTION_VIEW, Uri.parse(mLink)));
+            start(new Intent(Intent.ACTION_VIEW, Uri.parse(mLink)), Transition.Enter_Right);
         }
-    }
-
-    @Override
-    public void setLayout() {
-        setContentView(R.layout.activity_content);
     }
 
     private void showFavouriteAdd() {
@@ -379,7 +379,7 @@ public class ContentActivity extends ActivityFramework implements OnContentListe
         @Override
         protected void onCancelled() {
             mContentParseTask = null;
-            mEmptyHelper.showIdle();
+            mEmptyHelper.showEmptyIdle();
         }
 
         @Override
@@ -390,7 +390,7 @@ public class ContentActivity extends ActivityFramework implements OnContentListe
                 if (AcFunRead.isArticle(mContent.getChannelId())) {
                     mPageList = result.getPageList();
                     if (mPageList.size() == 0) {
-                        mEmptyHelper.showIdle();
+                        mEmptyHelper.showEmptyIdle();
                     } else {
                         mEmptyHelper.hide();
                         if (mPageList.size() == 1) {
@@ -406,11 +406,11 @@ public class ContentActivity extends ActivityFramework implements OnContentListe
                         }
                     }
                 } else {
-                    mEmptyHelper.showIdle();
+                    mEmptyHelper.showEmptyIdle();
                     showToast("该投稿为视频，请使用视频客户端浏览！");
                 }
             } else {
-                mEmptyHelper.showIdle();
+                mEmptyHelper.showEmptyIdle();
             }
         }
     }

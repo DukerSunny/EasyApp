@@ -252,8 +252,6 @@ public class RippleDrawable extends Drawable {
                 mPressed = pressed;
                 invalidateSelf();
             }
-        } else {
-            invalidateSelf();
         }
 
         return changed;

@@ -100,22 +100,25 @@ public class CommentActivity extends ActivityFramework implements OnCommentListe
         mLoginCallback = new LoginHelper.LoginCallback() {
             @Override
             public void onSuccess() {
-                start(ReplyActivity.create(getContext(), mContentId, 0, 0), 0);
+                start(ReplyActivity.create(getContext(), mContentId, 0, 0), Transition.Enter_Right);
             }
         };
         mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mLoginHelper.validateLogin()) {
-                    start(ReplyActivity.create(getContext(), mContentId, 0, 0), 0);
+                    start(ReplyActivity.create(getContext(), mContentId, 0, 0), Transition.Enter_Right);
                 }
             }
         };
         mActionClickListener = new ActionClickListener() {
             @Override
             public void onActionClicked(Snackbar snackbar) {
-                start(ReplyActivity
-                        .create(getContext(), mContentId, mSelectedConversion.getCid(), mSelectedConversion.getCount()));
+                if (mLoginHelper.validateLogin()) {
+                    start(ReplyActivity
+                            .create(getContext(), mContentId, mSelectedConversion.getCid(), mSelectedConversion.getCount()),
+                            Transition.Enter_Right);
+                }
             }
         };
         mEventListener = new EventListener() {
@@ -141,6 +144,11 @@ public class CommentActivity extends ActivityFramework implements OnCommentListe
             public void onShown(Snackbar snackbar) {
             }
         };
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_comment;
     }
 
     @Override
@@ -200,11 +208,6 @@ public class CommentActivity extends ActivityFramework implements OnCommentListe
     public void refreshComment() {
         mAdapter.clear();
         mAdapter.refresh();
-    }
-
-    @Override
-    public void setLayout() {
-        setContentView(R.layout.activity_comment);
     }
 
     @Override

@@ -1,5 +1,331 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     style="@style/mm.v">
 
-</LinearLayout>
+    <LinearLayout
+        style="@style/mw.v"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:padding="8dp">
+
+        <android.support.v7.widget.CardView
+            style="@style/mw">
+
+            <LinearLayout
+                android:id="@+id/more_user_info"
+                style="@style/mw.h"
+                android:gravity="center_vertical"
+                android:paddingBottom="16dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="16dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/more_avatar"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:src="@drawable/avatar"/>
+
+                <LinearLayout
+                    style="@style/mww.h">
+
+                    <LinearLayout
+                        style="@style/mww.v"
+                        android:gravity="center_horizontal">
+
+                        <LinearLayout
+                            style="@style/ww.h"
+                            android:gravity="center_vertical">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:src="@drawable/follows"/>
+
+                            <TextView
+                                style="@style/ww"
+                                android:text="@string/more_weight"
+                                android:textAppearance="@style/Subhead"/>
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/more_user_weight"
+                            style="@style/ww"
+                            android:layout_marginTop="4dp"
+                            android:text="0"
+                            android:textAppearance="@style/Title"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        style="@style/mww.v"
+                        android:gravity="center_horizontal">
+
+                        <LinearLayout
+                            style="@style/ww.h"
+                            android:gravity="center_vertical">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:src="@drawable/follows"/>
+
+                            <TextView
+                                style="@style/ww"
+                                android:text="@string/more_followed"
+                                android:textAppearance="@style/Subhead"/>
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/more_user_followed"
+                            style="@style/ww"
+                            android:layout_marginTop="4dp"
+                            android:text="0"
+                            android:textAppearance="@style/Title"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:src="@drawable/arrow_right_gray"/>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            style="@style/mw"
+            android:layout_marginTop="8dp">
+
+            <LinearLayout
+                style="@style/mw.v">
+
+                <LinearLayout
+                    android:id="@+id/more_follows"
+                    style="@style/mw.h"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="16dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="16dp">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/follows"/>
+
+                    <TextView
+                        style="@style/mww"
+                        android:layout_marginLeft="16dp"
+                        android:text="@string/more_follows"
+                        android:textAppearance="@style/Subhead"/>
+
+                    <TextView
+                        android:id="@+id/more_follow_count"
+                        style="@style/ww"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:background="@drawable/shape_corner_primary"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="4dp"
+                        android:textColor="@color/White"
+                        android:textSize="@dimen/Caption"
+                        android:visibility="gone"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="24dp"
+                        android:src="@drawable/arrow_right_gray"/>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginLeft="56dp"
+                    android:background="@color/Divider"/>
+
+                <LinearLayout
+                    android:id="@+id/more_history"
+                    style="@style/mw.h"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="16dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="16dp">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/histories"/>
+
+                    <TextView
+                        style="@style/mww"
+                        android:layout_marginLeft="16dp"
+                        android:text="@string/more_histories"
+                        android:textAppearance="@style/Subhead"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="24dp"
+                        android:src="@drawable/arrow_right_gray"/>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginLeft="56dp"
+                    android:background="@color/Divider"/>
+
+                <LinearLayout
+                    android:id="@+id/more_recommends"
+                    style="@style/mw.h"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="16dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="16dp">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/recommends"/>
+
+                    <TextView
+                        style="@style/mww"
+                        android:layout_marginLeft="16dp"
+                        android:text="@string/more_recommends"
+                        android:textAppearance="@style/Subhead"/>
+
+                    <TextView
+                        android:id="@+id/more_recommends_count"
+                        style="@style/ww"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:background="@drawable/shape_corner_primary"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="4dp"
+                        android:textColor="@color/White"
+                        android:textSize="@dimen/Caption"
+                        android:visibility="gone"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="24dp"
+                        android:src="@drawable/arrow_right_gray"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+
+        <android.support.v7.widget.CardView
+            style="@style/mw"
+            android:layout_marginTop="8dp">
+
+            <LinearLayout
+                style="@style/mw.v">
+
+                <LinearLayout
+                    android:id="@+id/more_settings"
+                    style="@style/mw.h"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="16dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="16dp">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/settings"/>
+
+                    <TextView
+                        style="@style/mww"
+                        android:layout_marginLeft="16dp"
+                        android:text="@string/more_setting"
+                        android:textAppearance="@style/Subhead"/>
+
+                    <ImageView
+                        android:id="@+id/more_settings_new"
+                        android:layout_width="8dp"
+                        android:layout_height="8dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:src="@drawable/shape_circle_primary"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="24dp"
+                        android:src="@drawable/arrow_right_gray"/>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginLeft="56dp"
+                    android:background="@color/Divider"/>
+
+                <LinearLayout
+                    android:id="@+id/more_aboutus"
+                    style="@style/mw.h"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="16dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="16dp">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/aboutus"/>
+
+                    <TextView
+                        style="@style/mww"
+                        android:layout_marginLeft="16dp"
+                        android:text="@string/more_aboutus"
+                        android:textAppearance="@style/Subhead"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="24dp"
+                        android:src="@drawable/arrow_right_gray"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            style="@style/mw"
+            android:layout_marginTop="16dp"
+            app:cardBackgroundColor="?attr/colorPrimary">
+
+            <TextView
+                android:id="@+id/more_checkin"
+                style="@style/mw"
+                android:gravity="center"
+                android:padding="16dp"
+                android:text="@string/more_checkin"
+                android:textColor="@color/White"
+                android:textSize="@dimen/Subhead"/>
+
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+
+</ScrollView>

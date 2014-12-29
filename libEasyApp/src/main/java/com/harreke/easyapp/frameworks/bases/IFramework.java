@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
 
@@ -82,6 +83,13 @@ public interface IFramework {
     public IFramework getFramework();
 
     /**
+     * 设置内容层布局
+     *
+     * 为内容层填充布局
+     */
+    public int getLayoutId();
+
+    /**
      * 隐藏Toast
      */
     public void hideToast();
@@ -92,21 +100,6 @@ public interface IFramework {
      * @return boolean
      */
     public boolean isRequestExecuting();
-
-    /**
-     * 设置内容层布局
-     *
-     * @param contentLayoutId
-     *         内容层布局Id
-     */
-    public void setContentView(int contentLayoutId);
-
-    /**
-     * 设置内容层布局
-     *
-     * 为内容层填充布局
-     */
-    public void setLayout();
 
     /**
      * 显示Toast
@@ -157,16 +150,12 @@ public interface IFramework {
      *
      * @param intent
      *         目标Intent
-     * @param animIn
-     *         进入动画Id
+     * @param transition
+     *         Intent切换动画
      *
-     *         设置为0则使用默认进入动画
-     * @param animOut
-     *         退出动画Id
-     *
-     *         设置为0则使用默认退出动画
+     *         {@link com.harreke.easyapp.frameworks.bases.activity.ActivityFramework.Transition}
      */
-    public void start(Intent intent, int animIn, int animOut);
+    public void start(Intent intent, ActivityFramework.Transition transition);
 
     /**
      * 启动Intent
@@ -189,16 +178,12 @@ public interface IFramework {
      *         请求代码
      *
      *         如果需要回调，则设置requestCode为正整数；否则设为-1；
-     * @param animIn
-     *         进入动画Id
+     * @param transition
+     *         Intent切换动画
      *
-     *         设置为0则使用默认进入动画
-     * @param animOut
-     *         退出动画Id
-     *
-     *         设置为0则使用默认退出动画
+     *         {@link com.harreke.easyapp.frameworks.bases.activity.ActivityFramework.Transition}
      */
-    public void start(Intent intent, int requestCode, int animIn, int animOut);
+    public void start(Intent intent, int requestCode, ActivityFramework.Transition transition);
 
     /**
      * 开始运作

@@ -6,6 +6,7 @@ import android.os.Message;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,13 +57,11 @@ public abstract class RecyclerFramework<ITEM> implements PullableLayout.OnPullab
             Object tag = v.getTag();
             int position;
 
+            Log.e(null, "on click tag=" + v.getTag());
             if (tag != null && tag instanceof Integer) {
-                position = (Integer) tag;
-            } else {
-                position = mRecyclerView.getChildPosition(v);
+                position = findItem((Integer) tag);
+                onItemClick(position, getItem(position));
             }
-
-            onItemClick(position, getItem(position));
         }
     };
     private ParseTask mParseTask = null;
@@ -381,6 +380,9 @@ public abstract class RecyclerFramework<ITEM> implements PullableLayout.OnPullab
     public void hideEmpty() {
         if (mEmptyHelper != null) {
             mEmptyHelper.hide();
+            if (mPullableLayout != null) {
+                mPullableLayout.setEnabled(true);
+            }
         }
     }
 
@@ -481,9 +483,13 @@ public abstract class RecyclerFramework<ITEM> implements PullableLayout.OnPullab
         }
         if (mEmptyHelper != null) {
             if (isEmpty()) {
-                mEmptyHelper.showIdle();
+                if (success) {
+                    showEmptyIdle();
+                } else {
+                    showEmptyFailureIdle();
+                }
             } else {
-                mEmptyHelper.hide();
+                hideEmpty();
             }
         }
     }
@@ -494,7 +500,7 @@ public abstract class RecyclerFramework<ITEM> implements PullableLayout.OnPullab
     protected void onPreAction() {
         mLastItemAddedCount = 0;
         if (mEmptyHelper != null && isEmpty()) {
-            mEmptyHelper.showLoading();
+            showEmptyLoading();
         }
     }
 
@@ -647,6 +653,7 @@ public abstract class RecyclerFramework<ITEM> implements PullableLayout.OnPullab
 
     protected void setItem(RecyclerHolder<ITEM> holder, ITEM item) {
         holder.setItem(item);
+        holder.itemView.setTag(item.hashCode());
     }
 
     public void setItemAnimator(RecyclerView.ItemAnimator animator) {
@@ -661,21 +668,54 @@ public abstract class RecyclerFramework<ITEM> implements PullableLayout.OnPullab
         mRecyclerView.setLayoutManager(manager);
     }
 
-    public void showEmptyIdle() {
+    public void setShowRetryWhenEmptyIdle(boolean showRetryWhenIdle) {
         if (mEmptyHelper != null) {
-            mEmptyHelper.showIdle();
+            mEmptyHelper.setShowRetryWhenIdle(showRetryWhenIdle);
+        }
+    }
+
+    public void showEmptyFailureIdle() {
+        showEmptyFailureIdle(null);
+    }
+
+    public void showEmptyFailureIdle(String toast) {
+        if (mEmptyHelper != null) {
+            mEmptyHelper.showEmptyFailureIdle();
+            if (mPullableLayout != null) {
+                mPullableLayout.setEnabled(false);
+                if (mAction == ACTION_REFRESH) {
+                    mPullableLayout.setRefreshComplete(toast);
+                } else if (mAction == ACTION_LOAD) {
+                    mPullableLayout.setLoadComplete(toast);
+                }
+            }
+        }
+    }
+
+    public void showEmptyIdle() {
+        showEmptyIdle(null);
+    }
+
+    public void showEmptyIdle(String toast) {
+        if (mEmptyHelper != null) {
+            mEmptyHelper.showEmptyIdle();
+            if (mPullableLayout != null) {
+                mPullableLayout.setEnabled(false);
+                if (mAction == ACTION_REFRESH) {
+                    mPullableLayout.setRefreshComplete(toast);
+                } else if (mAction == ACTION_LOAD) {
+                    mPullableLayout.setLoadComplete(toast);
+                }
+            }
         }
     }
 
     public void showEmptyLoading() {
         if (mEmptyHelper != null) {
             mEmptyHelper.showLoading();
-        }
-    }
-
-    public void setShowRetryWhenEmptyIdle(boolean showRetryWhenIdle) {
-        if (mEmptyHelper != null) {
-            mEmptyHelper.setShowRetryWhenIdle(showRetryWhenIdle);
+            if (mPullableLayout != null) {
+                mPullableLayout.setEnabled(false);
+            }
         }
     }
 

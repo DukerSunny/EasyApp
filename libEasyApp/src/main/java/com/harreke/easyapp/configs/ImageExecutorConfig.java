@@ -7,11 +7,8 @@ import android.widget.ImageView;
 import com.harreke.easyapp.frameworks.bases.application.ApplicationFramework;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.IRequestExecutor;
-import com.harreke.easyapp.requests.universalimageloader.UniversalImageExecutor;
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.harreke.easyapp.requests.ion.IonBitmapExecutor;
+import com.harreke.easyapp.requests.ion.IonImageExecutor;
 
 import java.io.File;
 
@@ -22,19 +19,21 @@ import java.io.File;
  */
 public class ImageExecutorConfig {
     public static void config(Context context) {
-        ImageLoaderConfiguration configuration = new ImageLoaderConfiguration.Builder(context).diskCache(
-                new UnlimitedDiscCache(new File(ApplicationFramework.CacheDir + "/" + ApplicationFramework.DIR_TEMPS)))
-                .defaultDisplayImageOptions(new DisplayImageOptions.Builder().cacheOnDisk(true).build()).build();
-        ImageLoader.getInstance().init(configuration);
+        //        ImageLoaderConfiguration configuration = new ImageLoaderConfiguration.Builder(context).diskCache(
+        //                new UnlimitedDiscCache(new File(ApplicationFramework.CacheDir + "/" + ApplicationFramework.DIR_TEMPS)))
+        //                .defaultDisplayImageOptions(new DisplayImageOptions.Builder().cacheOnDisk(true).build()).build();
+        //        ImageLoader.getInstance().init(configuration);
     }
 
-    public static IRequestExecutor create(ImageView image, String imageUrl, int loadingImageId, int retryImageId,
+    public static IRequestExecutor create(ImageView imageView, String imageUrl, int loadingImageId, int retryImageId,
             IRequestCallback<ImageView> callback) {
-        return new UniversalImageExecutor(image, imageUrl, loadingImageId, retryImageId, callback);
+        //        return new UniversalImageExecutor(image, imageUrl, loadingImageId, retryImageId, callback);
+        return new IonImageExecutor(imageView, imageUrl, loadingImageId, retryImageId, callback);
     }
 
-    public static IRequestExecutor create(String imageUrl, IRequestCallback<Bitmap> callback) {
-        return new UniversalImageExecutor(imageUrl, callback);
+    public static IRequestExecutor create(Context context, String bitmapUrl, IRequestCallback<Bitmap> callback) {
+        //        return new UniversalImageExecutor(imageUrl, callback);
+        return new IonBitmapExecutor(context, bitmapUrl, callback);
     }
 
     public static String getImageCachePathByUrl(String imageUrl) {

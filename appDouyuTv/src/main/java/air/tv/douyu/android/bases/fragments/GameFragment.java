@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.harreke.easyapp.frameworks.bases.IFramework;
-import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.frameworks.bases.fragment.FragmentFramework;
 import com.harreke.easyapp.frameworks.recyclerview.RecyclerFramework;
 import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
@@ -81,8 +80,7 @@ public class GameFragment extends FragmentFramework {
 
         @Override
         public void onItemClick(int position, Game game) {
-            start(LiveActivity.create(getContext(), game.getGame_name(), game.getCate_id()),
-                    ActivityFramework.Transition.Enter_Right);
+            start(LiveActivity.create(getContext(), game.getGame_name(), game.getCate_id()));
         }
 
         @Override

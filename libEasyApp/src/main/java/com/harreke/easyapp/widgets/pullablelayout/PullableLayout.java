@@ -12,7 +12,9 @@ import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
 
+import com.harreke.easyapp.R;
 import com.harreke.easyapp.frameworks.bases.application.ApplicationFramework;
+import com.harreke.easyapp.utils.ResourceUtil;
 import com.harreke.easyapp.widgets.pullablelayout.viewdelegates.IViewDelegate;
 import com.harreke.easyapp.widgets.pullablelayout.viewdelegates.RecyclerViewDelegate;
 import com.harreke.easyapp.widgets.pullablelayout.viewdelegates.ScrollViewDelegate;
@@ -26,61 +28,91 @@ import com.nineoldandroids.view.ViewPropertyAnimator;
  * 由 Harreke（harreke@live.cn） 创建于 2014/12/09
  */
 public class PullableLayout extends FrameLayout implements ViewGroup.OnHierarchyChangeListener {
-    private final static long DURATION_TOAST = 2500;
     private boolean mCanLoad = true;
     private boolean mCanRefresh = true;
-    private boolean mEnabled = true;
+    private View mContentView;
+    private ViewPropertyAnimator mContentViewAnimator;
     private boolean mFirstMeasure = true;
     private int mHeight = 0;
     private float mLastTouchY = 0f;
-    private Runnable mLoadCompleteRunnable = new Runnable() {
-        @Override
-        public void run() {
-            mLoadIndicator.setProgress(0);
-            loadJumpToIdle();
-        }
-    };
-    private Runnable mLoadIndicatorCollapseRunnable = new Runnable() {
-        @Override
-        public void run() {
-            mLoadIndicator.collapse();
-            postDelayed(mLoadCompleteRunnable, PullableIndicator.DURATION_MORPH);
-        }
-    };
+    private ViewPropertyAnimator mLoadAnimator;
     private PullableIndicator mLoadIndicator;
-    private ViewPropertyAnimator mLoadIndicatorAnimator;
     private int mLoadIndicatorHeight = 0;
-    private float mLoadIndicatorOffset = 0f;
-    private int mLoadThreshold = 0;
+    private int mLoadIndicatorThreshold = 0;
+    private float mLoadOffset = 0f;
     private boolean mLoading = false;
     private OnPullableListener mOnPullableListener = null;
-    private Runnable mRefreshCompleteRunnable = new Runnable() {
+    private Animator.AnimatorListener mLoadStartListener = new AnimatorListenerAdapter() {
         @Override
-        public void run() {
-            mRefreshIndicator.setProgress(0);
-            refreshJumpToIdle();
+        public void onAnimationEnd(Animator animation) {
+            if (mOnPullableListener != null) {
+                mOnPullableListener.onPullToLoad();
+            }
         }
     };
-    private Runnable mRefreshIndicatorCollapseRunnable = new Runnable() {
+    private Animator.AnimatorListener mRefreshStartListener = new AnimatorListenerAdapter() {
         @Override
-        public void run() {
-            mRefreshIndicator.collapse();
-            postDelayed(mRefreshCompleteRunnable, PullableIndicator.DURATION_MORPH);
+        public void onAnimationEnd(Animator animation) {
+            if (mOnPullableListener != null) {
+                mOnPullableListener.onPullToRefresh();
+            }
         }
     };
+    private boolean mPullableEnabled = true;
+    private ViewPropertyAnimator mRefreshAnimator;
     private PullableIndicator mRefreshIndicator;
-    private ViewPropertyAnimator mRefreshIndicatorAnimator;
     private int mRefreshIndicatorHeight = 0;
-    private float mRefreshIndicatorOffset = 0f;
-    private int mRefreshThreshold = 0;
+    private int mRefreshIndicatorThreshold = 0;
+    private float mRefreshOffset = 0f;
     private boolean mRefreshing = false;
-    private float mTouchThreshold = ApplicationFramework.Density * 8;
+    private float mTouchThreshold = ApplicationFramework.TouchThreshold;
     private IViewDelegate mViewDelegate = null;
+    private String pullable_indicator_load_failure = null;
+    private String pullable_indicator_load_success = null;
+    private String pullable_indicator_loading = null;
+    private String pullable_indicator_pulltoload = null;
+    private String pullable_indicator_pulltorefresh = null;
+    private String pullable_indicator_refresh_failure = null;
+    private String pullable_indicator_refresh_success = null;
+    private String pullable_indicator_refreshing = null;
+    private String pullable_indicator_releasetoload = null;
+    private String pullable_indicator_releasetorefresh = null;
 
     public PullableLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+        LayoutParams params;
+
+        params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.gravity = Gravity.TOP;
+        mRefreshIndicator = new PullableIndicator(context);
+        mRefreshIndicator.setLayoutParams(params);
+        mRefreshIndicator.setProgress(0f);
+        mRefreshIndicator.setToast(R.string.pullable_indicator_pulltorefresh);
+        addView(mRefreshIndicator, params);
+
+        params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.gravity = Gravity.BOTTOM;
+        mLoadIndicator = new PullableIndicator(context);
+        mLoadIndicator.setLayoutParams(params);
+        mLoadIndicator.setProgress(0f);
+        mLoadIndicator.setToast(R.string.pullable_indicator_pulltoload);
+        addView(mLoadIndicator, params);
 
         setOnHierarchyChangeListener(this);
+
+        pullable_indicator_pulltorefresh = ResourceUtil.getString(context, R.string.pullable_indicator_pulltorefresh);
+        pullable_indicator_pulltoload = ResourceUtil.getString(context, R.string.pullable_indicator_pulltoload);
+        pullable_indicator_releasetorefresh = ResourceUtil.getString(context, R.string.pullable_indicator_releasetorefresh);
+        pullable_indicator_releasetoload = ResourceUtil.getString(context, R.string.pullable_indicator_releasetoload);
+        pullable_indicator_refresh_success = ResourceUtil.getString(context, R.string.pullable_indicator_refresh_success);
+        pullable_indicator_refresh_failure = ResourceUtil.getString(context, R.string.pullable_indicator_refresh_failure);
+        pullable_indicator_load_success = ResourceUtil.getString(context, R.string.pullable_indicator_load_success);
+        pullable_indicator_load_failure = ResourceUtil.getString(context, R.string.pullable_indicator_load_failure);
+        pullable_indicator_refreshing = ResourceUtil.getString(context, R.string.pullable_indicator_refreshing);
+        pullable_indicator_loading = ResourceUtil.getString(context, R.string.pullable_indicator_loading);
+
+        mRefreshAnimator = ViewPropertyAnimator.animate(mRefreshIndicator);
+        mLoadAnimator = ViewPropertyAnimator.animate(mLoadIndicator);
     }
 
     public boolean canLoad() {
@@ -89,22 +121,6 @@ public class PullableLayout extends FrameLayout implements ViewGroup.OnHierarchy
 
     public boolean canRefresh() {
         return mCanRefresh;
-    }
-
-    private float computeLoadY() {
-        return mHeight - mLoadIndicatorOffset;
-    }
-
-    private float computeLoadYProgress() {
-        return (mLoadIndicatorOffset - mLoadIndicatorHeight) / mLoadIndicatorHeight;
-    }
-
-    private float computeRefreshY() {
-        return mRefreshIndicatorOffset - mRefreshIndicatorHeight;
-    }
-
-    private float computeRefreshYProgress() {
-        return (mRefreshIndicatorOffset - mRefreshIndicatorHeight) / mRefreshIndicatorHeight;
     }
 
     public boolean isLoading() {
@@ -123,89 +139,38 @@ public class PullableLayout extends FrameLayout implements ViewGroup.OnHierarchy
         return mViewDelegate.isScrollTop();
     }
 
-    private void loadJumpTo(float offset) {
-        mLoadIndicatorOffset = offset;
-        mLoadIndicatorAnimator.y(computeLoadY()).start();
-    }
-
-    private void loadJumpToIdle() {
-        loadJumpTo(0);
-    }
-
-    private void loadJumpToStart() {
-        loadJumpTo(mLoadIndicatorHeight);
-    }
-
     @Override
     public void onChildViewAdded(View parent, View child) {
         if (child instanceof RecyclerView) {
             mViewDelegate = new RecyclerViewDelegate((RecyclerView) child);
+            mContentView = child;
+            mContentViewAnimator = ViewPropertyAnimator.animate(child);
         } else if (child instanceof WebView) {
             mViewDelegate = new WebViewDelegate((WebView) child);
+            mContentView = child;
+            mContentViewAnimator = ViewPropertyAnimator.animate(child);
         } else if (child instanceof ScrollView) {
             mViewDelegate = new ScrollViewDelegate((ScrollView) child);
+            mContentView = child;
+            mContentViewAnimator = ViewPropertyAnimator.animate(child);
         }
     }
 
     @Override
     public void onChildViewRemoved(View parent, View child) {
-
-    }
-
-    @Override
-    protected void onFinishInflate() {
-        Context context;
-        LayoutParams params;
-
-        if (mViewDelegate == null) {
-            throw new IllegalArgumentException("Cannot find a pullable view!");
-        } else {
-            context = getContext();
-
-            params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.gravity = Gravity.CENTER_HORIZONTAL;
-            mRefreshIndicator = new PullableIndicator(context);
-            mRefreshIndicator.setLayoutParams(params);
-            mRefreshIndicatorAnimator =
-                    ViewPropertyAnimator.animate(mRefreshIndicator).setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            if (mRefreshIndicatorOffset == 0) {
-                                mRefreshing = false;
-                            }
-                        }
-                    });
-            addView(mRefreshIndicator);
-
-            params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.gravity = Gravity.CENTER_HORIZONTAL;
-            mLoadIndicator = new PullableIndicator(context);
-            mLoadIndicator.setLayoutParams(params);
-            mLoadIndicatorAnimator = ViewPropertyAnimator.animate(mLoadIndicator).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    if (mLoadIndicatorOffset == 0) {
-                        mLoading = false;
-                    }
-                }
-            });
-            addView(mLoadIndicator);
-        }
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        float touchY;
         float dy;
 
-        if (mOnPullableListener != null && mEnabled) {
+        if (mOnPullableListener != null && mPullableEnabled) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     mLastTouchY = event.getY();
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    touchY = event.getY();
-                    dy = touchY - mLastTouchY;
+                    dy = event.getY() - mLastTouchY;
 
                     return shouldInterceptForRefresh(dy) || shouldInterceptForLoad(dy);
             }
@@ -219,16 +184,17 @@ public class PullableLayout extends FrameLayout implements ViewGroup.OnHierarchy
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
         mHeight = getMeasuredHeight();
+
         mRefreshIndicatorHeight = mRefreshIndicator.getMeasuredHeight();
-        mRefreshThreshold = mRefreshIndicatorHeight * 2;
         mLoadIndicatorHeight = mLoadIndicator.getMeasuredHeight();
-        mLoadThreshold = mLoadIndicatorHeight * 2;
+
+        mRefreshIndicatorThreshold = (int) (mRefreshIndicatorHeight * 2f);
+        mLoadIndicatorThreshold = (int) (mLoadIndicatorHeight * 2f);
+
         if (mFirstMeasure) {
             mFirstMeasure = false;
-            mRefreshIndicatorOffset = 0f;
-            ViewHelper.setY(mRefreshIndicator, computeRefreshY());
-            mLoadIndicatorOffset = 0f;
-            ViewHelper.setY(mLoadIndicator, computeLoadY());
+            setRefreshOffset(mRefreshOffset);
+            setLoadOffset(mLoadOffset);
         }
     }
 
@@ -244,67 +210,52 @@ public class PullableLayout extends FrameLayout implements ViewGroup.OnHierarchy
                 mLastTouchY = touchY;
 
                 if (isScrollTop()) {
-                    if (mRefreshIndicatorOffset > mRefreshIndicatorHeight) {
-                        dy *= mRefreshIndicatorHeight / mRefreshIndicatorOffset;
+                    if (mRefreshOffset > mRefreshIndicatorHeight) {
+                        dy *= mRefreshIndicatorHeight / mRefreshOffset;
                     }
-                    mRefreshIndicatorOffset += dy;
-                    if (mRefreshIndicatorOffset < 0) {
-                        mRefreshIndicatorOffset = 0;
+                    mRefreshOffset += dy;
+                    if (mRefreshOffset < 0) {
+                        mRefreshOffset = 0;
                     }
-                    ViewHelper.setY(mRefreshIndicator, computeRefreshY());
-                    if (mRefreshIndicatorOffset > mRefreshIndicatorHeight) {
-                        mRefreshIndicator.setProgress(computeRefreshYProgress());
-                    }
+                    setContentOffset(mRefreshOffset);
+                    setRefreshOffset(mRefreshOffset);
 
                     return true;
                 } else if (isScrollBottom()) {
-                    if (mLoadIndicatorOffset > mLoadIndicatorHeight) {
-                        dy *= mLoadIndicatorHeight / mLoadIndicatorOffset;
+                    if (mLoadOffset > mLoadIndicatorHeight) {
+                        dy *= mLoadIndicatorHeight / mLoadOffset;
                     }
-                    mLoadIndicatorOffset -= dy;
-                    if (mLoadIndicatorOffset < 0) {
-                        mLoadIndicatorOffset = 0;
+                    mLoadOffset -= dy;
+                    if (mLoadOffset < 0) {
+                        mLoadOffset = 0;
                     }
-                    ViewHelper.setY(mLoadIndicator, computeLoadY());
-                    if (mLoadIndicatorOffset > mLoadIndicatorHeight) {
-                        mLoadIndicator.setProgress(computeLoadYProgress());
-                    }
+                    setContentOffset(-mLoadOffset);
+                    setLoadOffset(mLoadOffset);
 
                     return true;
                 }
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
-                if (mRefreshIndicatorOffset > 0) {
-                    if (mRefreshIndicatorOffset > mRefreshThreshold) {
+                if (mRefreshOffset > 0) {
+                    if (mRefreshOffset > mRefreshIndicatorThreshold) {
                         setRefreshStart();
                     } else {
-                        refreshJumpToIdle();
+                        setRefreshJumpToIdle(0l);
                     }
 
                     return true;
-                } else if (mLoadIndicatorOffset > 0) {
-                    if (mLoadIndicatorOffset > mLoadThreshold) {
+                } else if (mLoadOffset > 0) {
+                    if (mLoadOffset > mLoadIndicatorThreshold) {
                         setLoadStart();
                     } else {
-                        loadJumpToIdle();
+                        setLoadJumpToIdle(0l);
                     }
+
+                    return true;
                 }
         }
 
         return super.onTouchEvent(event);
-    }
-
-    private void refreshJumpTo(float offset) {
-        mRefreshIndicatorOffset = offset;
-        mRefreshIndicatorAnimator.y(-mRefreshIndicatorHeight + mRefreshIndicatorOffset).start();
-    }
-
-    private void refreshJumpToIdle() {
-        refreshJumpTo(0);
-    }
-
-    private void refreshJumpToStart() {
-        refreshJumpTo(mRefreshIndicatorHeight);
     }
 
     public void setCanLoad(boolean canLoad) {
@@ -315,29 +266,63 @@ public class PullableLayout extends FrameLayout implements ViewGroup.OnHierarchy
         mCanRefresh = canRefresh;
     }
 
-    public void setEnabled(boolean enabled) {
-        mEnabled = enabled;
+    private void setContentOffset(float offset) {
+        ViewHelper.setY(mContentView, offset);
     }
 
-    public void setLoadComplete() {
-        setLoadComplete(null);
-    }
-
-    public void setLoadComplete(String toast) {
-        if (toast == null) {
-            mLoadCompleteRunnable.run();
+    public void setLoadComplete(boolean success) {
+        mLoading = false;
+        if (success) {
+            mLoadIndicator.setToast(pullable_indicator_load_success);
         } else {
-            mLoadIndicator.expand(toast);
-            postDelayed(mLoadIndicatorCollapseRunnable, DURATION_TOAST + PullableIndicator.DURATION_MORPH);
+            mLoadIndicator.setToast(pullable_indicator_load_failure);
+        }
+        mLoadIndicator.setProgress(0f);
+        setLoadJumpToIdle(2500l);
+    }
+
+    private void setLoadJumpTo(float offset, long delay, Animator.AnimatorListener listener) {
+        mLoadOffset = offset;
+        mContentViewAnimator.y(-mLoadOffset).setDuration(300l).setStartDelay(delay).setListener(listener).start();
+        if (offset < mLoadIndicatorHeight) {
+            mLoadAnimator.y(mHeight).setDuration(300l).setStartDelay(delay).start();
+        } else {
+            mLoadAnimator.y(mHeight - mLoadIndicatorHeight).setDuration(300l).setStartDelay(delay).start();
+        }
+    }
+
+    private void setLoadJumpToIdle(long delay) {
+        setLoadJumpTo(0f, delay, null);
+    }
+
+    private void setLoadJumpToStart() {
+        mLoadIndicator.setToast(pullable_indicator_loading);
+        mLoadIndicator.setProgress(-1);
+        setLoadJumpTo(mLoadIndicatorHeight, 0l, mLoadStartListener);
+    }
+
+    private void setLoadOffset(float offset) {
+        if (offset < mLoadIndicatorHeight) {
+            ViewHelper.setY(mLoadIndicator, mHeight - offset);
+        } else {
+            ViewHelper.setY(mLoadIndicator, mHeight);
+        }
+        if (offset > mLoadIndicatorHeight) {
+            mLoadIndicator.setProgress((offset - mLoadIndicatorHeight) / mLoadIndicatorHeight);
+            if (mLoadOffset > mLoadIndicatorThreshold) {
+                mLoadIndicator.setToast(pullable_indicator_releasetoload);
+            } else {
+                mLoadIndicator.setToast(pullable_indicator_pulltoload);
+            }
+        } else {
+            mLoadIndicator.setToast(pullable_indicator_pulltoload);
         }
     }
 
     public void setLoadStart() {
         if (canLoad() && !isLoading()) {
             mLoading = true;
-            mLoadIndicator.setProgress(-1);
-            loadJumpToStart();
-            mOnPullableListener.onPullToLoad();
+            setLoadJumpToStart();
         }
     }
 
@@ -345,38 +330,74 @@ public class PullableLayout extends FrameLayout implements ViewGroup.OnHierarchy
         mOnPullableListener = onPullableListener;
     }
 
-    public void setRefreshComplete(String toast) {
-        if (toast == null) {
-            mRefreshCompleteRunnable.run();
+    public void setPullableEnabled(boolean pullableEnabled) {
+        mPullableEnabled = pullableEnabled;
+    }
+
+    public void setRefreshComplete(boolean success) {
+        mRefreshing = false;
+        if (success) {
+            mRefreshIndicator.setToast(pullable_indicator_refresh_success);
         } else {
-            mRefreshIndicator.expand(toast);
-            postDelayed(mRefreshIndicatorCollapseRunnable, DURATION_TOAST + PullableIndicator.DURATION_MORPH);
+            mRefreshIndicator.setToast(pullable_indicator_refresh_failure);
+        }
+        mRefreshIndicator.setProgress(0);
+        setRefreshJumpToIdle(2500l);
+    }
+
+    private void setRefreshJumpTo(float offset, long delay, Animator.AnimatorListener listener) {
+        mRefreshOffset = offset;
+        mContentViewAnimator.y(mRefreshOffset).setDuration(300l).setStartDelay(delay).setListener(listener).start();
+        if (offset < mRefreshIndicatorHeight) {
+            mRefreshAnimator.y(-mLoadIndicatorHeight).setDuration(300l).setStartDelay(delay).start();
+        } else {
+            mRefreshAnimator.y(0).setDuration(300l).setStartDelay(delay).start();
         }
     }
 
-    public void setRefreshComplete() {
-        mRefreshIndicator.setProgress(0);
-        refreshJumpToIdle();
+    private void setRefreshJumpToIdle(long delay) {
+        setRefreshJumpTo(0f, delay, null);
+    }
+
+    private void setRefreshJumpToStart() {
+        mRefreshIndicator.setToast(pullable_indicator_refreshing);
+        mRefreshIndicator.setProgress(-1);
+        setRefreshJumpTo(mRefreshIndicatorHeight, 0l, mRefreshStartListener);
+    }
+
+    private void setRefreshOffset(float offset) {
+        if (offset < mRefreshIndicatorHeight) {
+            ViewHelper.setY(mRefreshIndicator, -mRefreshIndicatorHeight + offset);
+        } else {
+            ViewHelper.setY(mRefreshIndicator, 0f);
+        }
+        if (offset > mRefreshIndicatorHeight) {
+            mRefreshIndicator.setProgress((offset - mRefreshIndicatorHeight) / mRefreshIndicatorHeight);
+            if (mRefreshOffset > mRefreshIndicatorThreshold) {
+                mRefreshIndicator.setToast(pullable_indicator_releasetorefresh);
+            } else {
+                mRefreshIndicator.setToast(pullable_indicator_pulltorefresh);
+            }
+        } else {
+            mRefreshIndicator.setToast(pullable_indicator_pulltorefresh);
+        }
     }
 
     public void setRefreshStart() {
         if (canRefresh() && !mRefreshing) {
             mRefreshing = true;
-            mRefreshIndicator.setProgress(-1);
-            mRefreshIndicatorAnimator.cancel();
-            refreshJumpToStart();
-            mOnPullableListener.onPullToRefresh();
+            setRefreshJumpToStart();
         }
     }
 
     private boolean shouldInterceptForLoad(float dy) {
         return isScrollBottom() && canLoad() && !isLoading() && !isRefreshing() &&
-                (dy < -mTouchThreshold || dy > mTouchThreshold && mLoadIndicatorOffset > 0);
+                (dy < -mTouchThreshold || dy > mTouchThreshold && mLoadOffset > 0f);
     }
 
     private boolean shouldInterceptForRefresh(float dy) {
         return isScrollTop() && canRefresh() && !isRefreshing() && !isLoading() &&
-                (dy > mTouchThreshold || (dy < -mTouchThreshold && mRefreshIndicatorOffset > 0));
+                (dy > mTouchThreshold || (dy < -mTouchThreshold && mRefreshOffset > 0f));
     }
 
     public interface OnPullableListener {

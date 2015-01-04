@@ -18,7 +18,7 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.helpers.EmptyHelper;
 import com.harreke.easyapp.requests.IRequestCallback;
-import com.harreke.easyapp.tools.StringUtil;
+import com.harreke.easyapp.utils.StringUtil;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.nispok.snackbar.Snackbar;
@@ -139,7 +139,7 @@ public class ContentActivity extends ActivityFramework implements OnContentListe
         mContentCommentsAnimator = ViewPropertyAnimator.animate(content_comments);
 
         mLoginHelper = new LoginHelper(this);
-        mEmptyHelper = new EmptyHelper(findViewById(R.id.empty_root));
+        mEmptyHelper = new EmptyHelper(this);
     }
 
     @Override
@@ -207,13 +207,13 @@ public class ContentActivity extends ActivityFramework implements OnContentListe
         mLoginCallback = new LoginHelper.LoginCallback() {
             @Override
             public void onSuccess() {
-                start(CommentActivity.create(getContext(), mContentId), Transition.Enter_Right);
+                start(CommentActivity.create(getContext(), mContentId), Anim.Enter_Right);
             }
         };
         mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                start(CommentActivity.create(getContext(), mContent.getContentId()), Transition.Enter_Right);
+                start(CommentActivity.create(getContext(), mContent.getContentId()), Anim.Enter_Right);
             }
         };
         mOnEmptyClickListener = new View.OnClickListener() {
@@ -317,7 +317,7 @@ public class ContentActivity extends ActivityFramework implements OnContentListe
 
         matcher = StringUtil.getMatcher("/a/ac([0-9]+)", mLink);
         if (matcher.find()) {
-            start(ContentActivity.create(this, Integer.valueOf(matcher.group(1))), Transition.Enter_Right);
+            start(ContentActivity.create(this, Integer.valueOf(matcher.group(1))), Anim.Enter_Right);
 
             return;
         }
@@ -329,7 +329,7 @@ public class ContentActivity extends ActivityFramework implements OnContentListe
         }
         matcher = StringUtil.getMatcher("http://[\\S\\s]+?", mLink);
         if (matcher.find()) {
-            start(new Intent(Intent.ACTION_VIEW, Uri.parse(mLink)), Transition.Enter_Right);
+            start(new Intent(Intent.ACTION_VIEW, Uri.parse(mLink)), Anim.Enter_Right);
         }
     }
 

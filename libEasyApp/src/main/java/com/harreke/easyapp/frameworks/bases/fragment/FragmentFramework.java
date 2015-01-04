@@ -294,9 +294,9 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
     }
 
     @Override
-    public void start(Intent intent, ActivityFramework.Transition transition) {
+    public void start(Intent intent, ActivityFramework.Anim anim) {
         if (mActivityFramework != null) {
-            mActivityFramework.start(intent, transition);
+            mActivityFramework.start(intent, anim);
         }
     }
 
@@ -316,15 +316,15 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
      *         请求代码
      *
      *         如果需要回调，则设置requestCode为正整数；否则设为-1；
-     * @param transition
+     * @param anim
      *         Intent切换动画
      *
-     *         {@link com.harreke.easyapp.frameworks.bases.activity.ActivityFramework.Transition}
+     *         {@link com.harreke.easyapp.frameworks.bases.activity.ActivityFramework.Anim}
      */
     @Override
-    public void start(Intent intent, int requestCode, ActivityFramework.Transition transition) {
+    public void start(Intent intent, int requestCode, ActivityFramework.Anim anim) {
         if (mActivityFramework != null) {
-            mActivityFramework.start(intent, requestCode, transition);
+            mActivityFramework.start(intent, requestCode, anim);
         }
     }
 }

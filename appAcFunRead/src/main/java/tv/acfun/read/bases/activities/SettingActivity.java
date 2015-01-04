@@ -123,7 +123,7 @@ public class SettingActivity extends ActivityFramework {
                         mRestoreDefaultDialog.show();
                         break;
                     case R.id.setting_about:
-                        start(AboutActivity.create(getContext()), Transition.Enter_Left);
+                        start(AboutActivity.create(getContext()), Anim.Enter_Left);
                 }
             }
         };
@@ -203,7 +203,7 @@ public class SettingActivity extends ActivityFramework {
 
     @Override
     public void onBackPressed() {
-        exit(Transition.Exit_Left);
+        exit(Anim.Exit_Left);
     }
 
     @Override

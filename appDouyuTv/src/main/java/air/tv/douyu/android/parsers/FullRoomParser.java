@@ -1,6 +1,6 @@
 package air.tv.douyu.android.parsers;
 
-import com.harreke.easyapp.tools.GsonUtil;
+import com.harreke.easyapp.utils.GsonUtil;
 
 import air.tv.douyu.android.beans.FullRoom;
 
@@ -12,6 +12,9 @@ public class FullRoomParser {
     private int error;
 
     public static FullRoomParser parse(String json) {
+        if (json != null) {
+            json = json.replace("\"rtmp_multi_bitrate\":[],", "");
+        }
         FullRoomParser parser = GsonUtil.toBean(json, FullRoomParser.class);
 
         if (parser != null && parser.error == 0 && parser.data != null) {

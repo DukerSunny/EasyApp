@@ -2,7 +2,7 @@ package com.harreke.easyapp.requests;
 
 import android.util.Log;
 
-import com.harreke.easyapp.tools.GsonUtil;
+import com.harreke.easyapp.utils.GsonUtil;
 
 import java.util.HashMap;
 import java.util.Iterator;

@@ -20,7 +20,7 @@ import com.harreke.easyapp.configs.ImageExecutorConfig;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.helpers.ImageLoaderHelper;
 import com.harreke.easyapp.requests.IRequestCallback;
-import com.harreke.easyapp.tools.GsonUtil;
+import com.harreke.easyapp.utils.GsonUtil;
 import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;

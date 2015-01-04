@@ -11,6 +11,7 @@ import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.frameworks.recyclerview.RecyclerFramework;
 import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
+import com.harreke.easyapp.widgets.transitions.SwipeToFinishLayout;
 
 import java.util.List;
 
@@ -48,6 +49,11 @@ public class LiveActivity extends ActivityFramework {
     }
 
     @Override
+    protected void configActivity() {
+        attachTransition(new SwipeToFinishLayout(this));
+    }
+
+    @Override
     protected void createMenu() {
         setToolbarTitle(mGameName);
         addToolbarItem(0, R.string.app_search, R.drawable.image_toolbar_search);
@@ -73,13 +79,13 @@ public class LiveActivity extends ActivityFramework {
     }
 
     @Override
-    public void startAction() {
-        mLiveRecyclerHelper.from(API.getLive(mCategoryId, 20, mLiveRecyclerHelper.getCurrentPage()));
+    public void onBackPressed() {
+        exit(Anim.Exit_Right);
     }
 
     @Override
-    public void onBackPressed() {
-        exit(Transition.Exit_Right);
+    public void startAction() {
+        mLiveRecyclerHelper.from(API.getLive(mCategoryId, 20, mLiveRecyclerHelper.getCurrentPage()));
     }
 
     private class LiveRecyclerHelper extends RecyclerFramework<Room> {
@@ -99,7 +105,7 @@ public class LiveActivity extends ActivityFramework {
 
         @Override
         public void onItemClick(int position, Room room) {
-            start(RoomActivity.create(getContext(), room.getRoom_id()), Transition.Enter_Right);
+            start(RoomActivity.create(getContext(), room.getRoom_id()));
         }
 
         @Override

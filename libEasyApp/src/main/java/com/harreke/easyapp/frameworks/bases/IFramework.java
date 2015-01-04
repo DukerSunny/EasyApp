@@ -150,12 +150,12 @@ public interface IFramework {
      *
      * @param intent
      *         目标Intent
-     * @param transition
+     * @param anim
      *         Intent切换动画
      *
-     *         {@link com.harreke.easyapp.frameworks.bases.activity.ActivityFramework.Transition}
+     *         {@link com.harreke.easyapp.frameworks.bases.activity.ActivityFramework.Anim}
      */
-    public void start(Intent intent, ActivityFramework.Transition transition);
+    public void start(Intent intent, ActivityFramework.Anim anim);
 
     /**
      * 启动Intent
@@ -178,12 +178,12 @@ public interface IFramework {
      *         请求代码
      *
      *         如果需要回调，则设置requestCode为正整数；否则设为-1；
-     * @param transition
+     * @param anim
      *         Intent切换动画
      *
-     *         {@link com.harreke.easyapp.frameworks.bases.activity.ActivityFramework.Transition}
+     *         {@link com.harreke.easyapp.frameworks.bases.activity.ActivityFramework.Anim}
      */
-    public void start(Intent intent, int requestCode, ActivityFramework.Transition transition);
+    public void start(Intent intent, int requestCode, ActivityFramework.Anim anim);
 
     /**
      * 开始运作

@@ -12,8 +12,8 @@ import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 
 import com.harreke.easyapp.listeners.OnTagClickListener;
-import com.harreke.easyapp.tools.StringUtil;
-import com.harreke.easyapp.tools.TagClickableSpan;
+import com.harreke.easyapp.utils.StringUtil;
+import com.harreke.easyapp.widgets.TagClickableSpan;
 
 import java.util.LinkedList;
 import java.util.Queue;

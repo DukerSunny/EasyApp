@@ -3,6 +3,7 @@ package air.tv.douyu.android.bases.activities;
 import android.content.Intent;
 
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
+import com.harreke.easyapp.widgets.transitions.SwipeToFinishLayout;
 
 import air.tv.douyu.android.R;
 
@@ -18,6 +19,11 @@ public class SearchActivity extends ActivityFramework {
     @Override
     public void attachCallbacks() {
 
+    }
+
+    @Override
+    protected void configActivity() {
+        attachTransition(new SwipeToFinishLayout(this));
     }
 
     @Override

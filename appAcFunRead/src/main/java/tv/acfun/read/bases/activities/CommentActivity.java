@@ -100,14 +100,14 @@ public class CommentActivity extends ActivityFramework implements OnCommentListe
         mLoginCallback = new LoginHelper.LoginCallback() {
             @Override
             public void onSuccess() {
-                start(ReplyActivity.create(getContext(), mContentId, 0, 0), Transition.Enter_Right);
+                start(ReplyActivity.create(getContext(), mContentId, 0, 0), Anim.Enter_Right);
             }
         };
         mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mLoginHelper.validateLogin()) {
-                    start(ReplyActivity.create(getContext(), mContentId, 0, 0), Transition.Enter_Right);
+                    start(ReplyActivity.create(getContext(), mContentId, 0, 0), Anim.Enter_Right);
                 }
             }
         };
@@ -117,7 +117,7 @@ public class CommentActivity extends ActivityFramework implements OnCommentListe
                 if (mLoginHelper.validateLogin()) {
                     start(ReplyActivity
                             .create(getContext(), mContentId, mSelectedConversion.getCid(), mSelectedConversion.getCount()),
-                            Transition.Enter_Right);
+                            Anim.Enter_Right);
                 }
             }
         };

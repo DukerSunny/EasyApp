@@ -1,6 +1,5 @@
 package com.harreke.easyapp.frameworks.bases.activity;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +23,10 @@ import com.harreke.easyapp.helpers.RequestHelper;
 import com.harreke.easyapp.receivers.ExitReceiver;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
-import com.harreke.easyapp.tools.NetUtil;
+import com.harreke.easyapp.utils.NetUtil;
+import com.harreke.easyapp.widgets.transitions.TransitionLayout;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorListenerAdapter;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/07/24
@@ -34,7 +36,19 @@ import com.harreke.easyapp.tools.NetUtil;
 public abstract class ActivityFramework extends ActionBarActivity
         implements IFramework, IToolbar, Toolbar.OnMenuItemClickListener {
     private static final String TAG = "ActivityFramework";
-    private boolean mCreated = false;
+    private Animator.AnimatorListener mEnterListener = new AnimatorListenerAdapter() {
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            startAction();
+        }
+    };
+    private Animator.AnimatorListener mExitListener = new AnimatorListenerAdapter() {
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            finish();
+            overridePendingTransition(0, 0);
+        }
+    };
     private ExitReceiver mExitReceiver = new ExitReceiver();
     private Menu mMenu;
     private View.OnClickListener mOnNavigationClickListener = new View.OnClickListener() {
@@ -47,13 +61,13 @@ public abstract class ActivityFramework extends ActionBarActivity
     private SuperActivityToast mToast;
     private Toolbar mToolbar;
     private View mToolbarShadow;
+    private TransitionLayout mTransitionLayout = null;
 
     /**
      * 初始化Activity传参数据
      */
     protected abstract void acquireArguments(Intent intent);
 
-    @TargetApi(11)
     @Override
     public void addToolbarItem(int id, int titleId, int imageId) {
         MenuItem item = mMenu.add(0, id, id, titleId);
@@ -65,7 +79,6 @@ public abstract class ActivityFramework extends ActionBarActivity
         }
     }
 
-    @TargetApi(11)
     @Override
     public void addToolbarViewItem(int id, int titleId, View view) {
         MenuItem item;
@@ -90,6 +103,26 @@ public abstract class ActivityFramework extends ActionBarActivity
     }
 
     /**
+     * 配置过渡动画布局
+     *
+     * 只能在configActivity中调用，否则可能导致无效
+     * 过渡动画布局会自动在加载完布局后与Activity绑定，并且会自动在Activity被销毁时销毁
+     *
+     * 注：每个Activity只能配置一个过渡动画
+     *
+     * {@link com.harreke.easyapp.widgets.transitions.TransitionLayout}
+     */
+    public void attachTransition(TransitionLayout transitionLayout) {
+        if (mTransitionLayout == null) {
+            mTransitionLayout = transitionLayout;
+            mTransitionLayout.setEnterCompleteListener(mEnterListener);
+            mTransitionLayout.setExitCompleteListener(mExitListener);
+        } else {
+            throw new IllegalArgumentException("Cannot set transitionLayout twice!");
+        }
+    }
+
+    /**
      * 取消正在执行的Http请求
      */
     @Override
@@ -100,7 +133,7 @@ public abstract class ActivityFramework extends ActionBarActivity
     /**
      * 初始化Activity配置信息
      *
-     * 如设置屏幕样式，屏幕亮度，是否全屏等
+     * 如设置屏幕样式、屏幕亮度、是否全屏、过渡动画等
      */
     protected void configActivity() {
     }
@@ -125,17 +158,16 @@ public abstract class ActivityFramework extends ActionBarActivity
     }
 
     public final void exit() {
-        exit(Transition.Default);
+        exit(Anim.Default);
     }
 
     /**
      * 退出Activity
      */
-    public final void exit(Transition transition) {
-        super.onBackPressed();
-
-        if (transition != Transition.Default) {
-            overridePendingTransition(transition.getEnterAnim(), transition.getExitAnim());
+    public final void exit(Anim anim) {
+        finish();
+        if (anim != Anim.Default) {
+            overridePendingTransition(anim.getEnterAnim(), anim.getExitAnim());
         }
     }
 
@@ -174,6 +206,10 @@ public abstract class ActivityFramework extends ActionBarActivity
 
     protected int getToolbarSolidId() {
         return R.id.toolbar_solid;
+    }
+
+    public TransitionLayout getTransitionLayout() {
+        return mTransitionLayout;
     }
 
     /**
@@ -230,7 +266,11 @@ public abstract class ActivityFramework extends ActionBarActivity
 
     @Override
     public void onBackPressed() {
-        exit();
+        if (mTransitionLayout != null) {
+            startExitTransition(mTransitionLayout);
+        } else {
+            exit();
+        }
     }
 
     @Override
@@ -241,6 +281,12 @@ public abstract class ActivityFramework extends ActionBarActivity
 
         configActivity();
         setContentView(getLayoutId());
+        initToast();
+        attachToolbar(getToolbarSolidId(), getToolbarShadowId());
+        acquireArguments(getIntent());
+        establishCallbacks();
+        enquiryViews();
+        attachCallbacks();
     }
 
     @Override
@@ -257,7 +303,10 @@ public abstract class ActivityFramework extends ActionBarActivity
         unregisterReceiver(mExitReceiver);
         hideToast();
         cancelRequest();
-        mCreated = false;
+        if (mTransitionLayout != null) {
+            mTransitionLayout.destroy();
+            mTransitionLayout = null;
+        }
         super.onDestroy();
     }
 
@@ -270,26 +319,25 @@ public abstract class ActivityFramework extends ActionBarActivity
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
-        initToast();
-        attachToolbar(getToolbarSolidId(), getToolbarShadowId());
-        acquireArguments(getIntent());
-        establishCallbacks();
-        enquiryViews();
-        attachCallbacks();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (!mCreated) {
-            mCreated = true;
+        postCreate();
+        if (mTransitionLayout != null) {
+            mTransitionLayout.setActivity(getActivity());
+            mTransitionLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    startEnterTransition(mTransitionLayout);
+                }
+            });
+        } else {
             startAction();
         }
     }
 
     protected void onToolbarNavigationClick() {
         onBackPressed();
+    }
+
+    protected void postCreate() {
     }
 
     @Override
@@ -411,17 +459,17 @@ public abstract class ActivityFramework extends ActionBarActivity
 
     @Override
     public void start(Intent intent) {
-        start(intent, -1, Transition.Default);
+        start(intent, Anim.None);
     }
 
     @Override
-    public void start(Intent intent, Transition transition) {
-        start(intent, -1, transition);
+    public void start(Intent intent, Anim anim) {
+        start(intent, -1, anim);
     }
 
     @Override
     public void start(Intent intent, int requestCode) {
-        start(intent, requestCode, Transition.Default);
+        start(intent, requestCode, Anim.None);
     }
 
     /**
@@ -433,13 +481,13 @@ public abstract class ActivityFramework extends ActionBarActivity
      *         请求代码
      *
      *         如果需要回调，则设置requestCode为正整数；否则设为-1；
-     * @param transition
+     * @param anim
      *         Intent切换动画
      *
-     *         {@link com.harreke.easyapp.frameworks.bases.activity.ActivityFramework.Transition}
+     *         {@link com.harreke.easyapp.frameworks.bases.activity.ActivityFramework.Anim}
      */
     @Override
-    public void start(Intent intent, int requestCode, Transition transition) {
+    public void start(Intent intent, int requestCode, Anim anim) {
         if (intent != null) {
             hideToast();
             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -448,17 +496,29 @@ public abstract class ActivityFramework extends ActionBarActivity
             } else {
                 startActivityForResult(intent, requestCode);
             }
-            if (transition != Transition.Default) {
-                overridePendingTransition(transition.getEnterAnim(), transition.getExitAnim());
+            if (anim != Anim.Default) {
+                overridePendingTransition(anim.getEnterAnim(), anim.getExitAnim());
             }
         }
     }
 
-    public enum Transition {
+    protected void startEnterTransition(TransitionLayout transitionLayout, Object... params) {
+        transitionLayout.startEnterTransition(TransitionLayout.EnterTransition.Slide_In_Right, params);
+    }
+
+    protected void startExitTransition(TransitionLayout transitionLayout, Object... params) {
+        transitionLayout.startExitTransition(TransitionLayout.ExitTransition.Slide_Out_Right, params);
+    }
+
+    public enum Anim {
         /**
          * 系统默认动画
          */
         Default(0, 0),
+        /**
+         * 无动画
+         */
+        None(0, 0),
         /**
          * 启动动画
          */
@@ -475,7 +535,7 @@ public abstract class ActivityFramework extends ActionBarActivity
         private int mEnterAnim;
         private int mExitAnim;
 
-        private Transition(int enterAnim, int exitAnim) {
+        private Anim(int enterAnim, int exitAnim) {
             mEnterAnim = enterAnim;
             mExitAnim = exitAnim;
         }

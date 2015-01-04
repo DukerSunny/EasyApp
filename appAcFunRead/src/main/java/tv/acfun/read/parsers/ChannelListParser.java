@@ -2,8 +2,8 @@ package tv.acfun.read.parsers;
 
 import android.text.Html;
 
-import com.harreke.easyapp.tools.GsonUtil;
-import com.harreke.easyapp.tools.NetUtil;
+import com.harreke.easyapp.utils.GsonUtil;
+import com.harreke.easyapp.utils.NetUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;

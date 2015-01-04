@@ -17,7 +17,7 @@ import com.chiralcode.colorpicker.ColorPicker;
 import com.harreke.easyapp.adapters.fragment.FragmentPageAdapter;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.requests.IRequestCallback;
-import com.harreke.easyapp.tools.StringUtil;
+import com.harreke.easyapp.utils.StringUtil;
 import com.harreke.easyapp.widgets.rippleeffects.RippleDrawable;
 import com.umeng.analytics.MobclickAgent;
 

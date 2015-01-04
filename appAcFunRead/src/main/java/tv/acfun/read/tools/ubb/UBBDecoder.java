@@ -9,7 +9,7 @@ import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 import android.util.SparseArray;
 
-import com.harreke.easyapp.tools.TagClickableSpan;
+import com.harreke.easyapp.widgets.TagClickableSpan;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/10/15

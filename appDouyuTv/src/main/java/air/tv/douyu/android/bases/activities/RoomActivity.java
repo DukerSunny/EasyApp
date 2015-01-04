@@ -10,8 +10,9 @@ import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.helpers.EmptyHelper;
 import com.harreke.easyapp.helpers.ImageLoaderHelper;
 import com.harreke.easyapp.requests.IRequestCallback;
-import com.harreke.easyapp.tools.StringUtil;
+import com.harreke.easyapp.utils.StringUtil;
 import com.harreke.easyapp.widgets.rippleeffects.RippleDrawable;
+import com.harreke.easyapp.widgets.transitions.SwipeToFinishLayout;
 
 import air.tv.douyu.android.R;
 import air.tv.douyu.android.api.API;
@@ -23,6 +24,8 @@ import air.tv.douyu.android.parsers.FullRoomParser;
  */
 public class RoomActivity extends ActivityFramework {
     private EmptyHelper mEmptyHelper;
+    //    private ImageViewInfo mNewImageViewInfo = null;
+    //    private ImageViewInfo mOldImageViewInfo = null;
     private View.OnClickListener mOnEmptyClickListener;
     private IRequestCallback<String> mRoomCallback;
     private int mRoomId;
@@ -35,11 +38,20 @@ public class RoomActivity extends ActivityFramework {
     private TextView room_nickname;
     private TextView room_online;
     private View room_online_root;
+    private ImageView room_pic;
     private View room_play_root;
     private View room_root;
     private View room_share_root;
     private TextView room_show_details;
-    private ImageView room_src;
+
+    //    public static Intent create(Context context, int roomId, ImageView oldView) {
+    //        Intent intent = new Intent(context, RoomActivity.class);
+    //
+    //        intent.putExtra("roomId", roomId);
+    //        intent.putExtra("oldViewInfo", GsonUtil.toString(new ImageViewInfo(oldView)));
+    //
+    //        return intent;
+    //    }
 
     public static Intent create(Context context, int roomId) {
         Intent intent = new Intent(context, RoomActivity.class);
@@ -52,11 +64,18 @@ public class RoomActivity extends ActivityFramework {
     @Override
     protected void acquireArguments(Intent intent) {
         mRoomId = intent.getIntExtra("roomId", 0);
+
+        //        mOldImageViewInfo = GsonUtil.toBean(intent.getStringExtra("oldViewInfo"), ImageViewInfo.class);
     }
 
     @Override
     public void attachCallbacks() {
         mEmptyHelper.setOnClickListener(mOnEmptyClickListener);
+    }
+
+    @Override
+    protected void configActivity() {
+        attachTransition(new SwipeToFinishLayout(this));
     }
 
     @Override
@@ -67,11 +86,11 @@ public class RoomActivity extends ActivityFramework {
     }
 
     private void doUpdate(FullRoom fullRoom) {
-        ImageLoaderHelper.loadImage(room_avatar, fullRoom.getOwner_avatar(), R.drawable.image_loading, R.drawable.image_idle);
+        ImageLoaderHelper.loadImage(room_avatar, fullRoom.getOwner_avatar(), R.drawable.avatar, R.drawable.avatar);
         room_name.setText(fullRoom.getRoom_name());
         room_nickname.setText(fullRoom.getNickname());
         room_game_name.setText(fullRoom.getGame_name());
-        ImageLoaderHelper.loadImage(room_src, fullRoom.getRoom_src(), R.drawable.loading_16x9, R.drawable.retry_16x9);
+        ImageLoaderHelper.loadImage(room_pic, fullRoom.getRoom_src(), R.drawable.loading_16x9, R.drawable.retry_16x9);
         room_online.setText(getString(R.string.room_online, StringUtil.indentNumber(fullRoom.getOnline())));
         room_follow.setText(getString(R.string.room_follow, StringUtil.indentNumber(fullRoom.getFans())));
         room_show_details.setText(fullRoom.getShow_details());
@@ -85,7 +104,7 @@ public class RoomActivity extends ActivityFramework {
         room_name = (TextView) findViewById(R.id.room_name);
         room_nickname = (TextView) findViewById(R.id.room_nickname);
         room_game_name = (TextView) findViewById(R.id.room_game_name);
-        room_src = (ImageView) findViewById(R.id.room_src);
+        room_pic = (ImageView) findViewById(R.id.room_pic);
         room_play_root = findViewById(R.id.room_play_root);
         room_online_root = findViewById(R.id.room_online_root);
         room_online = (TextView) findViewById(R.id.room_online);
@@ -93,6 +112,8 @@ public class RoomActivity extends ActivityFramework {
         room_follow = (TextView) findViewById(R.id.room_follow);
         room_share_root = findViewById(R.id.room_share_root);
         room_show_details = (TextView) findViewById(R.id.room_show_details);
+
+        //        ImageLoaderHelper.loadImage(room_pic, mOldImageViewInfo.getImageUrl(), R.drawable.loading_16x9, R.drawable.retry_16x9);
 
         mEmptyHelper = new EmptyHelper(this);
 
@@ -108,7 +129,7 @@ public class RoomActivity extends ActivityFramework {
         mRoomCallback = new IRequestCallback<String>() {
             @Override
             public void onFailure(String requestUrl) {
-                mEmptyHelper.showEmptyIdle();
+                mEmptyHelper.showEmptyFailureIdle();
             }
 
             @Override
@@ -116,11 +137,11 @@ public class RoomActivity extends ActivityFramework {
                 FullRoomParser parser = FullRoomParser.parse(json);
 
                 if (parser != null) {
+                    room_play_root.setVisibility(View.VISIBLE);
                     mEmptyHelper.hide();
-                    room_root.setVisibility(View.VISIBLE);
                     doUpdate(parser.getData());
                 } else {
-                    mEmptyHelper.showEmptyIdle();
+                    mEmptyHelper.showEmptyFailureIdle();
                 }
             }
         };
@@ -138,14 +159,24 @@ public class RoomActivity extends ActivityFramework {
     }
 
     @Override
-    public void onBackPressed() {
-        exit(Transition.Exit_Right);
+    protected void postCreate() {
     }
 
     @Override
     public void startAction() {
-        room_root.setVisibility(View.GONE);
         mEmptyHelper.showLoading();
         executeRequest(API.getRoom(mRoomId), mRoomCallback);
     }
+
+    //    @Override
+    //    protected void startEnterTransition(TransitionLayout transitionLayout, Object... params) {
+    //        mNewImageViewInfo = new ImageViewInfo(room_pic);
+    //        transitionLayout.startEnterTransition(TransitionLayout.EnterTransition.Hero_In, mOldImageViewInfo, mNewImageViewInfo);
+    //    }
+    //
+    //    @Override
+    //    protected void startExitTransition(TransitionLayout transitionLayout, Object... params) {
+    //        mNewImageViewInfo = new ImageViewInfo(room_pic);
+    //        transitionLayout.startExitTransition(TransitionLayout.ExitTransition.Hero_Out, mNewImageViewInfo, mOldImageViewInfo);
+    //    }
 }

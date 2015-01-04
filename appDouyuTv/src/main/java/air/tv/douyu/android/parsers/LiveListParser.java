@@ -1,7 +1,7 @@
 package air.tv.douyu.android.parsers;
 
-import com.harreke.easyapp.tools.GsonUtil;
-import com.harreke.easyapp.tools.StringUtil;
+import com.harreke.easyapp.utils.GsonUtil;
+import com.harreke.easyapp.utils.StringUtil;
 
 import java.util.List;
 

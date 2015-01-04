@@ -2,6 +2,7 @@ package air.tv.douyu.android.holders;
 
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import com.harreke.easyapp.adapters.viewpager.PageAdapter;
 import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
 import com.harreke.easyapp.helpers.ImageLoaderHelper;
+import com.nineoldandroids.view.ViewHelper;
 
 import java.util.List;
 
@@ -68,6 +70,8 @@ public class SlideShowHolder extends RecyclerHolder<Recommend> implements ViewPa
     @Override
     public void onPageSelected(int position) {
         slideshow_title.setText(mSlideShowAdapter.getItem(position).getTitle());
+        stopSlide();
+        startSlide();
     }
 
     @Override

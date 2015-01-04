@@ -2,7 +2,7 @@ package tv.acfun.read.parsers;
 
 import android.text.Html;
 
-import com.harreke.easyapp.tools.GsonUtil;
+import com.harreke.easyapp.utils.GsonUtil;
 
 import java.util.List;
 

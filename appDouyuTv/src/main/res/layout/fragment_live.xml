@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
-    style="@style/mm">
+    style="@style/mm"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/Background">
 
     <include
         layout="@layout/widget_recycler_pullable"/>

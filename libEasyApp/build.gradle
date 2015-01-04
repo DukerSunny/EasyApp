@@ -26,6 +26,7 @@ dependencies {
     compile 'com.astuetz:pagerslidingtabstrip:+'
     compile 'com.afollestad:material-dialogs:0.4.6'
     compile 'com.nispok:snackbar:+'
+    compile 'com.koushikdutta.ion:ion:2.+'
 
     compile 'com.android.support:appcompat-v7:+'
     compile 'com.android.support:recyclerview-v7:+'

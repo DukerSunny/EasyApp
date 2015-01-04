@@ -4,8 +4,8 @@ import android.graphics.drawable.Drawable;
 
 import com.google.gson.reflect.TypeToken;
 import com.harreke.easyapp.frameworks.bases.application.ApplicationFramework;
-import com.harreke.easyapp.tools.FileUtil;
-import com.harreke.easyapp.tools.GsonUtil;
+import com.harreke.easyapp.utils.FileUtil;
+import com.harreke.easyapp.utils.GsonUtil;
 
 import java.io.File;
 import java.util.ArrayList;

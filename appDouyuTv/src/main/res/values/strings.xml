@@ -9,6 +9,12 @@
     <string name="app_room">直播间</string>
     <string name="app_exit">再按一次返回键退出</string>
 
+    <string name="login_account">账号</string>
+    <string name="login_password">密码</string>
+    <string name="login_access">登录</string>
+    <string name="login_forgot">忘记密码？</string>
+    <string name="login_other">其他登录方式</string>
+
     <string name="more_weight">鱼丸</string>
     <string name="more_followed">关注</string>
     <string name="more_follows">我的关注</string>

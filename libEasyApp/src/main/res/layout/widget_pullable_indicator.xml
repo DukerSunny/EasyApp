@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    style="@style/mw.h"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:gravity="center"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/pullable_indicator_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginRight="8dp"/>
+
+    <TextView
+        android:id="@+id/pullable_indicator_text"
+        style="@style/ww"
+        android:text="@string/pullable_indicator_pulltorefresh"
+        android:textAppearance="@style/Caption"/>
+
+</LinearLayout>

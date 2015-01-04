@@ -58,6 +58,7 @@
     <color name="Yellow">#ffff00</color>
     <color name="DarkCyan">#008b8b</color>
 
+    <color name="Background">#e2e2e2</color>
     <color name="Divider">#8a000000</color>
 
     <color name="Transparent">#00000000</color>

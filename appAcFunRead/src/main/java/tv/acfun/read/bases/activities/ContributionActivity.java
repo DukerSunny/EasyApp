@@ -72,7 +72,7 @@ public class ContributionActivity extends ActivityFramework {
 
     @Override
     public void onBackPressed() {
-        exit(Transition.Exit_Left);
+        exit(Anim.Exit_Left);
     }
 
     @Override
@@ -113,7 +113,7 @@ public class ContributionActivity extends ActivityFramework {
 
         @Override
         public void onItemClick(int position, Content content) {
-            start(ContentActivity.create(getContext(), content.getContentId()), Transition.Enter_Right);
+            start(ContentActivity.create(getContext(), content.getContentId()), Anim.Enter_Right);
         }
 
         @Override

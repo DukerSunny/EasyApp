@@ -6,11 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.harreke.easyapp.frameworks.bases.IFramework;
-import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.frameworks.bases.fragment.FragmentFramework;
 import com.harreke.easyapp.frameworks.recyclerview.RecyclerFramework;
 import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
 import com.harreke.easyapp.requests.IRequestCallback;
+import com.harreke.easyapp.utils.ViewUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,20 +64,22 @@ public class RecommendFragment extends FragmentFramework {
         mOnSlideShowClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                start(RoomActivity.create(getContext(), (Integer) v.getTag()), ActivityFramework.Transition.Enter_Right);
+                //                start(RoomActivity.create(getContext(), (Integer) v.getTag(), (ImageView) v));
+                start(RoomActivity.create(getContext(), ViewUtil.getIntTag(v)));
             }
         };
         mOnTitleClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                start(LiveActivity.create(getContext(), (String) v.getTag(R.id.value), (Integer) v.getTag(R.id.key)),
-                        ActivityFramework.Transition.Enter_Right);
+                start(LiveActivity.create(getContext(), ViewUtil.getStringTag(v, R.id.value), ViewUtil.getIntTag(v, R.id.key)));
             }
         };
         mOnRoomClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                start(RoomActivity.create(getContext(), (Integer) v.getTag()), ActivityFramework.Transition.Enter_Right);
+                //                start(RoomActivity.create(getContext(), (Integer) v.getTag(), (ImageView) v.findViewById(R.id.room_src)),
+                //                        ActivityFramework.Anim.None);
+                start(RoomActivity.create(getContext(), ViewUtil.getIntTag(v)));
             }
         };
         mSlideCallback = new IRequestCallback<String>() {

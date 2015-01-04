@@ -3,7 +3,7 @@ package tv.acfun.read.beans;
 import android.text.Spanned;
 
 import com.harreke.easyapp.listeners.OnTagClickListener;
-import com.harreke.easyapp.tools.StringUtil;
+import com.harreke.easyapp.utils.StringUtil;
 
 import tv.acfun.read.tools.ubb.UBBEncoder;
 

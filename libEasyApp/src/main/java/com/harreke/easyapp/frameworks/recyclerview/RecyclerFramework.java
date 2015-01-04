@@ -98,7 +98,7 @@ public abstract class RecyclerFramework<ITEM> implements PullableLayout.OnPullab
         }
         empty_root = mFramework.findViewById(R.id.empty_root);
         if (empty_root != null) {
-            mEmptyHelper = new EmptyHelper(empty_root);
+            mEmptyHelper = new EmptyHelper(mFramework);
             mEmptyHelper.setOnClickListener(mOnEmptyClickListener);
         }
     }
@@ -381,7 +381,7 @@ public abstract class RecyclerFramework<ITEM> implements PullableLayout.OnPullab
         if (mEmptyHelper != null) {
             mEmptyHelper.hide();
             if (mPullableLayout != null) {
-                mPullableLayout.setEnabled(true);
+                mPullableLayout.setPullableEnabled(true);
             }
         }
     }
@@ -455,29 +455,17 @@ public abstract class RecyclerFramework<ITEM> implements PullableLayout.OnPullab
     protected void onPostAction(boolean success) {
         if (mPullableLayout != null) {
             if (mAction == ACTION_REFRESH) {
-                if (success) {
-                    if (mLastItemAddedCount > 0) {
-                        scrollToTop();
-                        mPullableLayout.setRefreshComplete();
-                    } else {
-                        mPullableLayout.setRefreshComplete("没有内容");
-                    }
-                } else {
-                    mPullableLayout.setRefreshComplete("刷新失败");
+                if (success && mLastItemAddedCount > 0) {
+                    scrollToTop();
                 }
+                mPullableLayout.setRefreshComplete(success);
             } else if (mAction == ACTION_LOAD) {
-                if (success) {
-                    if (mLastItemAddedCount > 0) {
-                        scrollToLoaded();
-                        mPullableLayout.setLoadComplete();
-                    } else {
-                        mPullableLayout.setLoadComplete("没有更多了");
-                        previousPage();
-                    }
+                if (success && mLastItemAddedCount > 0) {
+                    scrollToLoaded();
                 } else {
-                    mPullableLayout.setLoadComplete("加载失败");
                     previousPage();
                 }
+                mPullableLayout.setLoadComplete(success);
             }
             mAction = ACTION_NONE;
         }
@@ -682,12 +670,12 @@ public abstract class RecyclerFramework<ITEM> implements PullableLayout.OnPullab
         if (mEmptyHelper != null) {
             mEmptyHelper.showEmptyFailureIdle();
             if (mPullableLayout != null) {
-                mPullableLayout.setEnabled(false);
-                if (mAction == ACTION_REFRESH) {
-                    mPullableLayout.setRefreshComplete(toast);
-                } else if (mAction == ACTION_LOAD) {
-                    mPullableLayout.setLoadComplete(toast);
-                }
+                mPullableLayout.setPullableEnabled(false);
+                //                if (mAction == ACTION_REFRESH) {
+                //                    mPullableLayout.setRefreshComplete(toast);
+                //                } else if (mAction == ACTION_LOAD) {
+                //                    mPullableLayout.setLoadComplete(toast);
+                //                }
             }
         }
     }
@@ -700,12 +688,12 @@ public abstract class RecyclerFramework<ITEM> implements PullableLayout.OnPullab
         if (mEmptyHelper != null) {
             mEmptyHelper.showEmptyIdle();
             if (mPullableLayout != null) {
-                mPullableLayout.setEnabled(false);
-                if (mAction == ACTION_REFRESH) {
-                    mPullableLayout.setRefreshComplete(toast);
-                } else if (mAction == ACTION_LOAD) {
-                    mPullableLayout.setLoadComplete(toast);
-                }
+                mPullableLayout.setPullableEnabled(false);
+                //                if (mAction == ACTION_REFRESH) {
+                //                    mPullableLayout.setRefreshComplete(toast);
+                //                } else if (mAction == ACTION_LOAD) {
+                //                    mPullableLayout.setLoadComplete(toast);
+                //                }
             }
         }
     }
@@ -714,7 +702,7 @@ public abstract class RecyclerFramework<ITEM> implements PullableLayout.OnPullab
         if (mEmptyHelper != null) {
             mEmptyHelper.showLoading();
             if (mPullableLayout != null) {
-                mPullableLayout.setEnabled(false);
+                mPullableLayout.setPullableEnabled(false);
             }
         }
     }

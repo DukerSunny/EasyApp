@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     style="@style/mm.v"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/Background">
 
     <include
         layout="@layout/widget_toolbar"/>
@@ -44,6 +45,8 @@
                             <TextView
                                 android:id="@+id/room_name"
                                 style="@style/mww"
+                                android:ellipsize="end"
+                                android:singleLine="true"
                                 android:textAppearance="@style/Title"/>
 
                             <LinearLayout
@@ -99,20 +102,23 @@
                             style="@style/mw">
 
                             <com.harreke.easyapp.widgets.RatioImageView
-                                android:id="@+id/room_src"
+                                android:id="@+id/room_pic"
                                 style="@style/mw"
                                 android:src="@drawable/loading_16x9"/>
 
-                            <View
+                            <FrameLayout
                                 android:id="@+id/room_play_root"
                                 style="@style/mm"
-                                android:background="@color/TransparentBlack"/>
+                                android:background="@color/TransparentBlack"
+                                android:visibility="gone">
 
-                            <ImageView
-                                android:layout_width="72dp"
-                                android:layout_height="72dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/room_play"/>
+                                <ImageView
+                                    android:layout_width="72dp"
+                                    android:layout_height="72dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/room_play"/>
+
+                            </FrameLayout>
 
                         </FrameLayout>
 

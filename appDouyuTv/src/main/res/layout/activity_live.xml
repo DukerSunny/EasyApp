@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    style="@style/mm.v">
+    style="@style/mm.v"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/Background">
 
     <include
         layout="@layout/widget_toolbar"/>

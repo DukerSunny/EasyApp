@@ -6,7 +6,7 @@ import com.harreke.easyapp.requests.RequestBuilder;
  * 由 Harreke（harreke@live.cn） 创建于 2014/12/18
  */
 public class API {
-    public final static String HOST = "http://api.douyutv.com/api/client";
+    public final static String HOST = "http://www.douyutv.com/api/client";
     private final static String ANDROID = "android";
     private final static String CLIENT_SYS = "client_sys";
     private final static String LIMIT = "limit";
@@ -35,6 +35,6 @@ public class API {
     }
 
     public static RequestBuilder getSlide(int limit) {
-        return new RequestBuilder(RequestBuilder.Method.GET, HOST + "/slide/" + limit);
+        return new RequestBuilder(RequestBuilder.Method.GET, HOST + "/slide/" + limit).addQuery(CLIENT_SYS, ANDROID);
     }
 }

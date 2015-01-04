@@ -1,6 +1,6 @@
 package tv.acfun.read.beans;
 
-import com.harreke.easyapp.tools.StringUtil;
+import com.harreke.easyapp.utils.StringUtil;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;

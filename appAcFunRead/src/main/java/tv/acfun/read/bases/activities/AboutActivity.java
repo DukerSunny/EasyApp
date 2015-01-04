@@ -48,7 +48,7 @@ public class AboutActivity extends ActivityFramework {
 
     @Override
     public void onBackPressed() {
-        exit(Transition.Exit_Left);
+        exit(Anim.Exit_Left);
     }
 
     @Override

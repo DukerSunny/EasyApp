@@ -1,5 +1,6 @@
 package com.harreke.easyapp.helpers;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 
@@ -13,8 +14,8 @@ import com.harreke.easyapp.requests.IRequestExecutor;
  * 图片加载助手
  */
 public class ImageLoaderHelper {
-    public static IRequestExecutor loadBitmap(String imageUrl, IRequestCallback<Bitmap> callback) {
-        return ImageExecutorConfig.create(imageUrl, callback);
+    public static IRequestExecutor loadBitmap(Context context, String imageUrl, IRequestCallback<Bitmap> callback) {
+        return ImageExecutorConfig.create(context, imageUrl, callback);
     }
 
     public static IRequestExecutor loadImage(ImageView imageView, String imageUrl, int loadingImageId, int retryImageId,

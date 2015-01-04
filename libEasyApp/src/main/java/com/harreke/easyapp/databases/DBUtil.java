@@ -2,7 +2,7 @@ package com.harreke.easyapp.databases;
 
 import android.database.Cursor;
 
-import com.harreke.easyapp.tools.GsonUtil;
+import com.harreke.easyapp.utils.GsonUtil;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

@@ -1,12 +1,11 @@
 package air.tv.douyu.android.parsers;
 
-import com.harreke.easyapp.tools.GsonUtil;
-import com.harreke.easyapp.tools.StringUtil;
+import com.harreke.easyapp.utils.GsonUtil;
+import com.harreke.easyapp.utils.StringUtil;
 
 import java.util.List;
 
 import air.tv.douyu.android.beans.Recommend;
-import air.tv.douyu.android.beans.SlideShowRecommend;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/12/18

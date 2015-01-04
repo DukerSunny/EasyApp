@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    style="@style/mm.v"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/Background">
+
+    <include
+        layout="@layout/widget_toolbar"/>
+
+    <FrameLayout
+        style="@style/mm">
+
+        <LinearLayout
+            style="@style/mm.v"
+            android:padding="8dp">
+
+            <android.support.v7.widget.CardView
+                style="@style/mw">
+
+                <LinearLayout
+                    style="@style/mw.v">
+
+                    <LinearLayout
+                        style="@style/mw.h"
+                        android:gravity="center_vertical"
+                        android:padding="8dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/user_holo"/>
+
+                        <EditText
+                            android:id="@+id/login_account"
+                            style="@style/mm"
+                            android:layout_marginLeft="8dp"
+                            android:background="@color/Transparent"
+                            android:hint="@string/login_account"
+                            android:textColorHint="@color/Gray"
+                            android:textSize="@dimen/Caption"/>
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_marginLeft="40dp"
+                        android:background="@color/Divider"/>
+
+                    <LinearLayout
+                        style="@style/mw.h"
+                        android:gravity="center_vertical"
+                        android:padding="8dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/user_holo"/>
+
+                        <EditText
+                            android:id="@+id/login_password"
+                            style="@style/mm"
+                            android:layout_marginLeft="8dp"
+                            android:background="@color/Transparent"
+                            android:hint="@string/login_password"
+                            android:inputType="textPassword"
+                            android:textColorHint="@color/Gray"
+                            android:textSize="@dimen/Caption"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/login_access"
+                style="@style/mw"
+                android:layout_marginTop="32dp"
+                app:cardBackgroundColor="?attr/colorPrimary"
+                app:contentPadding="16dp">
+
+                <TextView
+                    style="@style/ww"
+                    android:layout_gravity="center"
+                    android:text="@string/login_access"
+                    android:textColor="@color/White"
+                    android:textSize="@dimen/Caption"/>
+
+            </android.support.v7.widget.CardView>
+
+            <TextView
+                android:id="@+id/login_forgot"
+                style="@style/ww"
+                android:layout_gravity="right"
+                android:layout_marginTop="8dp"
+                android:text="@string/login_forgot"
+                android:textColor="@color/color_darkcyan_blue"
+                android:textSize="@dimen/Caption"/>
+
+            <View
+                style="@style/mmw"/>
+
+            <LinearLayout
+                style="@style/mw.v">
+
+                <FrameLayout
+                    style="@style/mw">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_gravity="center"
+                        android:background="@color/Divider"/>
+
+                    <TextView
+                        style="@style/ww"
+                        android:layout_gravity="center"
+                        android:background="@color/Background"
+                        android:paddingLeft="6dp"
+                        android:paddingRight="6dp"
+                        android:text="@string/login_other"
+                        android:textAppearance="@style/Caption"/>
+
+                </FrameLayout>
+
+                <LinearLayout
+                    style="@style/mw.h"
+                    android:gravity="center"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/shape_circle_primary"/>
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <include
+            layout="@layout/widget_toolbar_shadow"/>
+
+    </FrameLayout>
+
+</LinearLayout>

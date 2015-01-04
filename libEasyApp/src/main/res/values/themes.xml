@@ -5,6 +5,9 @@
         <item name="actionBarTheme">@style/Theme.EasyApp.ActionBar</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
 
+        <item name="android:windowBackground">@color/Transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+
         <item name="childTabViewStyle">@style/Theme.EasyApp.ChildTabView</item>
         <item name="infoViewStyle">@style/Theme.EasyApp.InfoView</item>
         <item name="ratioImageViewStyle">@style/Theme.EasyApp.RatioImageView</item>

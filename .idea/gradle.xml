@@ -9,7 +9,6 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/appAcFunRead" />
             <option value="$PROJECT_DIR$/appDouyuTv" />
             <option value="$PROJECT_DIR$/libCircleImageView" />
             <option value="$PROJECT_DIR$/libColorPicker" />

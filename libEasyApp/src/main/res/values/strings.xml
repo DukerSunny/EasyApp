@@ -10,9 +10,15 @@
     <string name="empty_failure">加载失败</string>
     <string name="empty_retry">，重试</string>
 
-    <string name="loadmore_idle">点击加载下一页</string>
-    <string name="loadmore_loading">数据加载中 …</string>
-    <string name="loadmore_retry">加载错误，点击重试</string>
-    <string name="loadmore_last">没有更多了</string>
+    <string name="pullable_indicator_pulltorefresh">下拉刷新页面</string>
+    <string name="pullable_indicator_releasetorefresh">松开刷新页面</string>
+    <string name="pullable_indicator_refreshing">正在刷新 …</string>
+    <string name="pullable_indicator_refresh_success">刷新成功</string>
+    <string name="pullable_indicator_refresh_failure">刷新成功</string>
+    <string name="pullable_indicator_pulltoload">上拉加载更多</string>
+    <string name="pullable_indicator_releasetoload">松开加载更多</string>
+    <string name="pullable_indicator_loading">正在加载 …</string>
+    <string name="pullable_indicator_load_success">加载成功</string>
+    <string name="pullable_indicator_load_failure">加载失败</string>
 
 </resources>

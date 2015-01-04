@@ -6,7 +6,7 @@ import android.widget.TextView;
 
 import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
 import com.harreke.easyapp.helpers.ImageLoaderHelper;
-import com.harreke.easyapp.tools.StringUtil;
+import com.harreke.easyapp.utils.StringUtil;
 import com.harreke.easyapp.widgets.rippleeffects.RippleDrawable;
 import com.harreke.easyapp.widgets.rippleeffects.RippleOnClickListener;
 

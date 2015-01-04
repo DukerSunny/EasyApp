@@ -123,14 +123,14 @@ public class QuoteActivity extends ActivityFramework {
                         start(ContentActivity.create(getContext(), Integer.valueOf(link)));
                         break;
                     case "at":
-                        start(ProfileActivity.create(getContext(), link), Transition.Enter_Right);
+                        start(ProfileActivity.create(getContext(), link), Anim.Enter_Right);
                 }
             }
         };
         mOnAvatarClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                start(ProfileActivity.create(getContext(), (Integer) v.getTag()), Transition.Enter_Right);
+                start(ProfileActivity.create(getContext(), (Integer) v.getTag()), Anim.Enter_Right);
             }
         };
         mLoginCallback = new LoginHelper.LoginCallback() {

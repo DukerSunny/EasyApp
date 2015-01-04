@@ -11,9 +11,8 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.harreke.easyapp.configs.ImageExecutorConfig;
 import com.harreke.easyapp.helpers.ConnectionHelper;
-import com.harreke.easyapp.tools.FileUtil;
+import com.harreke.easyapp.utils.FileUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -47,6 +46,7 @@ public class ApplicationFramework extends Application {
     public static String CacheDir;
     public static float Density;
     public static String StorageDir;
+    public static float TouchThreshold;
     private static final String TAG = "ApplicationFramework";
     private boolean mAssetsEnabled = false;
     private BroadcastReceiver mConnectionReceiver = new BroadcastReceiver() {
@@ -176,6 +176,7 @@ public class ApplicationFramework extends Application {
         super.onCreate();
 
         Density = getResources().getDisplayMetrics().density;
+        TouchThreshold = Density * 8f;
         CacheDir = getCacheDir().getAbsolutePath();
         StorageDir = Environment.getExternalStorageDirectory().getAbsolutePath();
 
@@ -183,7 +184,7 @@ public class ApplicationFramework extends Application {
         mTempsEnabled = createCacheDir(DIR_TEMPS);
         mMiscsEnabled = createCacheDir(DIR_MISCS);
 
-        ImageExecutorConfig.config(this);
+        //        ImageExecutorConfig.config(this);
     }
 
     public final boolean readBoolean(String key, boolean defaultVaule) {

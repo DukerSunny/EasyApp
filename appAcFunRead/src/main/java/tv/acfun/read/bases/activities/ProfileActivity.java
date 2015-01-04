@@ -10,7 +10,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.helpers.ImageLoaderHelper;
 import com.harreke.easyapp.requests.IRequestCallback;
-import com.harreke.easyapp.tools.GsonUtil;
+import com.harreke.easyapp.utils.GsonUtil;
 import com.harreke.easyapp.widgets.rippleeffects.RippleDrawable;
 import com.harreke.easyapp.widgets.rippleeffects.RippleOnClickListener;
 import com.umeng.analytics.MobclickAgent;
@@ -202,7 +202,7 @@ public class ProfileActivity extends ActivityFramework {
                     case R.id.profile_user_contributes:
                         if (mSelfProfile) {
                             start(ContributionActivity.create(getContext(), mUserId, getString(R.string.user_refer_mine)),
-                                    Transition.Enter_Left);
+                                    Anim.Enter_Left);
                         } else {
                             start(ContributionActivity.create(getContext(), mUserId, mFullUser.getUsername()));
                         }
@@ -269,7 +269,7 @@ public class ProfileActivity extends ActivityFramework {
     @Override
     public void onBackPressed() {
         if (mSelfProfile) {
-            exit(Transition.Exit_Left);
+            exit(Anim.Exit_Left);
         } else {
             exit();
         }

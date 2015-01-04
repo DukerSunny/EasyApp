@@ -111,7 +111,7 @@ public class CommentFragment extends FragmentFramework {
             public void onClick(View v) {
                 FragmentActivity activity = getActivity();
 
-                start(ProfileActivity.create(activity, (Integer) v.getTag()), ActivityFramework.Transition.Enter_Right);
+                start(ProfileActivity.create(activity, (Integer) v.getTag()), ActivityFramework.Anim.Enter_Right);
             }
         };
         mOnQuoteClickListener = new View.OnClickListener() {

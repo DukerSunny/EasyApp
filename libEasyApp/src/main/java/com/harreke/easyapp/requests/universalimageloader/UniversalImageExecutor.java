@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.harreke.easyapp.R;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.IRequestExecutor;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -25,6 +26,7 @@ public class UniversalImageExecutor implements ImageLoadingListener, IRequestExe
         mImageCallback = imageCallback;
         mLoadingImageId = loadingImageId;
         mRetryImageId = retryImageId;
+        imageView.setTag(R.id.imageUrl, imageUrl);
         ImageLoader.getInstance().displayImage(imageUrl, imageView, this);
     }
 
@@ -48,7 +50,7 @@ public class UniversalImageExecutor implements ImageLoadingListener, IRequestExe
     @Override
     public void onLoadingCancelled(String imageUri, View view) {
         mExecuting = false;
-        if (view != null) {
+        if (view != null && mRetryImageId > 0) {
             ((ImageView) view).setImageResource(mRetryImageId);
         }
         if (mImageCallback != null) {
@@ -75,7 +77,7 @@ public class UniversalImageExecutor implements ImageLoadingListener, IRequestExe
     @Override
     public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
         mExecuting = false;
-        if (view != null) {
+        if (view != null && mRetryImageId > 0) {
             ((ImageView) view).setImageResource(mRetryImageId);
         }
         if (mImageCallback != null) {
@@ -90,7 +92,7 @@ public class UniversalImageExecutor implements ImageLoadingListener, IRequestExe
     @Override
     public void onLoadingStarted(String imageUri, View view) {
         mExecuting = true;
-        if (view != null) {
+        if (view != null && mLoadingImageId > 0) {
             ((ImageView) view).setImageResource(mLoadingImageId);
         }
     }

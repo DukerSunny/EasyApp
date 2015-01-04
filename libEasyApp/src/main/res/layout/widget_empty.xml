@@ -4,6 +4,7 @@
     style="@style/mm.h"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_gravity="center"
+    android:background="@color/TransparentWhite"
     android:gravity="center">
 
     <ImageView

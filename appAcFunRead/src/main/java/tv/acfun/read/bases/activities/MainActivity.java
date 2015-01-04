@@ -177,7 +177,7 @@ public class MainActivity extends ActivityFramework {
                                 acFunRead.clearLogin();
                                 mLoginHelper.show(LoginHelper.Reason.Expired);
                             } else {
-                                start(ProfileActivity.create(getContext(), mFullUser), Transition.Enter_Left);
+                                start(ProfileActivity.create(getContext(), mFullUser), Anim.Enter_Left);
                             }
                         } else {
                             mLoginHelper.show(LoginHelper.Reason.Unauthorized);
@@ -189,7 +189,7 @@ public class MainActivity extends ActivityFramework {
                                 acFunRead.clearLogin();
                                 mLoginHelper.show(LoginHelper.Reason.Expired);
                             } else {
-                                start(MailActivity.create(getContext()), Transition.Enter_Left);
+                                start(MailActivity.create(getContext()), Anim.Enter_Left);
                             }
                         } else {
                             mLoginHelper.show(LoginHelper.Reason.Unauthorized);
@@ -201,17 +201,17 @@ public class MainActivity extends ActivityFramework {
                                 acFunRead.clearLogin();
                                 mLoginHelper.show(LoginHelper.Reason.Expired);
                             } else {
-                                start(FavouriteActivity.create(getContext()), Transition.Enter_Left);
+                                start(FavouriteActivity.create(getContext()), Anim.Enter_Left);
                             }
                         } else {
                             mLoginHelper.show(LoginHelper.Reason.Unauthorized);
                         }
                         break;
                     case R.id.menu_history:
-                        start(HistoryActivity.create(getContext()), Transition.Enter_Left);
+                        start(HistoryActivity.create(getContext()), Anim.Enter_Left);
                         break;
                     case R.id.menu_setting:
-                        start(SettingActivity.create(getContext()), Transition.Enter_Left);
+                        start(SettingActivity.create(getContext()), Anim.Enter_Left);
                 }
             }
         };

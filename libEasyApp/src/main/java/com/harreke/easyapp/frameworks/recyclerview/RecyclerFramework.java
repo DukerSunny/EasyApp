@@ -15,6 +15,7 @@ import com.harreke.easyapp.R;
 import com.harreke.easyapp.adapters.recyclerview.RecyclerAdapter;
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.helpers.EmptyHelper;
+import com.harreke.easyapp.parsers.ListParser;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
 import com.harreke.easyapp.widgets.pullablelayout.PullableLayout;
@@ -45,6 +46,7 @@ public abstract class RecyclerFramework<ITEM> implements PullableLayout.OnPullab
         }
     });
     private int mLastItemAddedCount = 0;
+    private ListParser<ITEM> mListParser = null;
     private View.OnClickListener mOnEmptyClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -88,7 +90,7 @@ public abstract class RecyclerFramework<ITEM> implements PullableLayout.OnPullab
         mRecyclerView = (RecyclerView) mFramework.findViewById(getRecyclerViewId());
         setLayoutManager(makeDefaultLayoutManager());
         setItemAnimator(new DefaultItemAnimator());
-        setItemDecoration();
+        setItemDecoration(new DividerItemDecoration(mFramework.getContext(), null));
         setHasFixedSize(true);
         setCanLoad(true);
         setCanRefresh(true);
@@ -99,6 +101,7 @@ public abstract class RecyclerFramework<ITEM> implements PullableLayout.OnPullab
         empty_root = mFramework.findViewById(R.id.empty_root);
         if (empty_root != null) {
             mEmptyHelper = new EmptyHelper(mFramework);
+            mEmptyHelper.showEmptyIdle(false);
             mEmptyHelper.setOnClickListener(mOnEmptyClickListener);
         }
     }
@@ -437,14 +440,26 @@ public abstract class RecyclerFramework<ITEM> implements PullableLayout.OnPullab
     /**
      * 解析从网络加载的json数据，转换成可供操作的列表
      *
-     * 注：该函数运行于背景线程，进行解析时不会阻塞主线程
+     * 注：
+     * 该函数运行于背景线程，进行解析时不会阻塞主线程
+     * 在加载网络数据之前，必须设置一个解析器
      *
      * @param json
      *         json数据
      *
      * @return 可供操作的列表
+     *
+     * @see com.harreke.easyapp.parsers.ListParser
      */
-    protected abstract List<ITEM> onParse(String json);
+    protected List<ITEM> onParse(String json) {
+        if (mListParser == null) {
+            throw new IllegalStateException("Cannot find list parser for network data!");
+        } else {
+            mListParser.parse(json);
+
+            return mListParser.getList();
+        }
+    }
 
     /**
      * 当列表加载完成时触发
@@ -596,6 +611,20 @@ public abstract class RecyclerFramework<ITEM> implements PullableLayout.OnPullab
         mRecyclerView.removeItemDecoration(decoration);
     }
 
+    /**
+     * 替换条目
+     *
+     * @param position
+     *         条目位置
+     * @param item
+     *         新条目对象
+     *
+     * @return 是否替换成功
+     */
+    public final boolean replaceItem(int position, ITEM item) {
+        return mAdapter.replaceItem(position, item);
+    }
+
     private void scrollToLoaded() {
         RecyclerView.LayoutManager manager = mRecyclerView.getLayoutManager();
         View child = manager.getChildAt(manager.getChildCount() - 1);
@@ -648,12 +677,30 @@ public abstract class RecyclerFramework<ITEM> implements PullableLayout.OnPullab
         mRecyclerView.setItemAnimator(animator);
     }
 
-    protected void setItemDecoration() {
-        addItemDecoration(new DividerItemDecoration(mFramework.getContext(), null));
+    public void setItemDecoration(RecyclerView.ItemDecoration... decorations) {
+        int i;
+
+        if (decorations != null) {
+            for (i = 0; i < decorations.length; i++) {
+                addItemDecoration(decorations[i]);
+            }
+        }
     }
 
     public void setLayoutManager(RecyclerView.LayoutManager manager) {
         mRecyclerView.setLayoutManager(manager);
+    }
+
+    /**
+     * 设置网络列表解析器
+     *
+     * @param listParser
+     *         列表解析器
+     *
+     * @see com.harreke.easyapp.parsers.ListParser
+     */
+    public void setListParser(ListParser<ITEM> listParser) {
+        mListParser = listParser;
     }
 
     public void setShowRetryWhenEmptyIdle(boolean showRetryWhenIdle) {

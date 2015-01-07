@@ -13,6 +13,7 @@ import com.koushikdutta.ion.builder.Builders;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/12/31
@@ -24,13 +25,17 @@ public class IonHttpExecutor implements IRequestExecutor, FutureCallback<String>
     private String mRequestUrl = null;
 
     public IonHttpExecutor(Context context, RequestBuilder requestBuilder, IRequestCallback<String> requestCallback) {
-        Builders.Any.B builder = Ion.with(context).load(requestBuilder.getUrl()).setTimeout(15000);
-        HashMap<String, String> header = requestBuilder.getHeader();
-        HashMap<String, String> body = requestBuilder.getBody();
+        Builders.Any.B builder;
+        Map<String, String> header;
+        Map<String, String> body;
         Iterator<String> iterator;
         String key;
 
+        mRequestUrl = requestBuilder.getUrl();
         mRequestCallback = requestCallback;
+        builder = Ion.with(context).load(mRequestUrl).setTimeout(15000);
+        header = requestBuilder.getHeader();
+        body = requestBuilder.getBody();
         iterator = header.keySet().iterator();
         while (iterator.hasNext()) {
             key = iterator.next();

@@ -4,11 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/EasyApp.iml" filepath="$PROJECT_DIR$/EasyApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/appDouyuTv/appDouyuTv.iml" filepath="$PROJECT_DIR$/appDouyuTv/appDouyuTv.iml" />
-      <module fileurl="file://$PROJECT_DIR$/libCircleImageView/libCircleImageView.iml" filepath="$PROJECT_DIR$/libCircleImageView/libCircleImageView.iml" />
-      <module fileurl="file://$PROJECT_DIR$/libColorPicker/libColorPicker.iml" filepath="$PROJECT_DIR$/libColorPicker/libColorPicker.iml" />
       <module fileurl="file://$PROJECT_DIR$/libEasyApp/libEasyApp.iml" filepath="$PROJECT_DIR$/libEasyApp/libEasyApp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/libPhotoView/libPhotoView.iml" filepath="$PROJECT_DIR$/libPhotoView/libPhotoView.iml" />
-      <module fileurl="file://$PROJECT_DIR$/libRecyclerViewStickyHeaders/libRecyclerViewStickyHeaders.iml" filepath="$PROJECT_DIR$/libRecyclerViewStickyHeaders/libRecyclerViewStickyHeaders.iml" />
     </modules>
   </component>
 </project>

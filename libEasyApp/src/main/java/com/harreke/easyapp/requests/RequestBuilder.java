@@ -2,10 +2,12 @@ package com.harreke.easyapp.requests;
 
 import android.util.Log;
 
-import com.harreke.easyapp.utils.GsonUtil;
+import com.alibaba.fastjson.JSON;
+import com.harreke.easyapp.enums.RequestMethod;
 
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/07/24
@@ -15,21 +17,22 @@ import java.util.Iterator;
 public class RequestBuilder {
     private final String TAG = "RequestBuilder";
     private String mBaseUrl;
-    private HashMap<String, String> mBodyMap = new HashMap<String, String>();
-    private HashMap<String, String> mHeaderMap = new HashMap<String, String>();
-    private Method mMethod;
-    private HashMap<String, String> mQueryMap = new HashMap<String, String>();
+    private Map<String, String> mBodyMap = new LinkedHashMap<String, String>();
+    private Map<String, String> mHeaderMap = new LinkedHashMap<String, String>();
+    private RequestMethod mMethod;
+    private Map<String, String> mQueryMap = new LinkedHashMap<String, String>();
 
     /**
      * 构造Http请求
      *
      * @param method
      *         请求方式
-     *         {@link com.harreke.easyapp.requests.RequestBuilder.Method}
      * @param baseUrl
      *         目标Url
+     *
+     * @see com.harreke.easyapp.enums.RequestMethod
      */
-    public RequestBuilder(Method method, String baseUrl) {
+    public RequestBuilder(RequestMethod method, String baseUrl) {
         mMethod = method;
         mBaseUrl = baseUrl;
     }
@@ -82,19 +85,19 @@ public class RequestBuilder {
         return this;
     }
 
-    public final HashMap<String, String> getBody() {
+    public final Map<String, String> getBody() {
         return mBodyMap;
     }
 
-    public final HashMap<String, String> getHeader() {
+    public final Map<String, String> getHeader() {
         return mHeaderMap;
     }
 
-    public final Method getMethod() {
+    public final RequestMethod getMethod() {
         return mMethod;
     }
 
-    public final HashMap<String, String> getQuery() {
+    public final Map<String, String> getQuery() {
         return mQueryMap;
     }
 
@@ -123,13 +126,9 @@ public class RequestBuilder {
                 print = "GET " + getUrl();
                 break;
             case POST:
-                print = "POST " + getUrl() + "\nHeaders:\n" + GsonUtil.toString(mHeaderMap) + "\nBodies:\n" + GsonUtil.toString(mBodyMap);
+                print = "POST " + getUrl() + "\nHeaders:\n" + JSON.toJSONString(mHeaderMap) + "\nBodies:\n" +
+                        JSON.toJSONString(mBodyMap);
         }
         Log.e(TAG, print);
-    }
-
-    public enum Method {
-        GET,
-        POST
     }
 }

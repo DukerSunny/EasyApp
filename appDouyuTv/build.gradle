@@ -23,7 +23,5 @@ android {
 dependencies {
     compile 'me.relex:circleindicator:1.0.0@aar'
 
-    compile project(':libCircleImageView')
     compile project(':libEasyApp')
-    compile project(':libRecyclerViewStickyHeaders')
 }

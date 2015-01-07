@@ -71,8 +71,16 @@ public class EmptyHelper implements View.OnClickListener {
     }
 
     public void hide() {
-        mRootAnimator.cancel();
-        mRootAnimator.alpha(0f).setDuration(300l).setListener(mHideListener).start();
+        hide(true);
+    }
+
+    public void hide(boolean animate) {
+        if (animate) {
+            mRootAnimator.cancel();
+            mRootAnimator.alpha(0f).setDuration(300l).setListener(mHideListener).start();
+        } else {
+            empty_root.setVisibility(View.GONE);
+        }
         mProgressDrawable.setProgress(0);
     }
 
@@ -100,17 +108,29 @@ public class EmptyHelper implements View.OnClickListener {
     }
 
     public void showEmptyFailureIdle() {
-        showIdle(R.string.empty_failure);
+        showEmptyFailureIdle(true);
+    }
+
+    public void showEmptyFailureIdle(boolean animate) {
+        showIdle(R.string.empty_failure, animate);
+    }
+
+    public void showEmptyIdle(boolean animate) {
+        showIdle(R.string.empty_idle, animate);
     }
 
     public void showEmptyIdle() {
-        showIdle(R.string.empty_idle);
+        showEmptyIdle(true);
     }
 
-    private void showIdle(int toastId) {
+    private void showIdle(int toastId, boolean animate) {
         mIdle = true;
-        mRootAnimator.cancel();
-        mRootAnimator.alpha(1f).setDuration(300l).setListener(mShowListener).start();
+        if (animate) {
+            mRootAnimator.cancel();
+            mRootAnimator.alpha(1f).setDuration(300l).setListener(mShowListener).start();
+        } else {
+            empty_root.setVisibility(View.VISIBLE);
+        }
         empty_icon.setImageResource(R.drawable.image_idle);
         mProgressDrawable.setProgress(0);
         empty_text.setText(toastId);
@@ -122,9 +142,17 @@ public class EmptyHelper implements View.OnClickListener {
     }
 
     public void showLoading() {
+        showLoading(true);
+    }
+
+    public void showLoading(boolean animate) {
         mIdle = false;
-        mRootAnimator.cancel();
-        mRootAnimator.alpha(1f).setDuration(300l).setListener(mShowListener).start();
+        if (animate) {
+            mRootAnimator.cancel();
+            mRootAnimator.alpha(1f).setDuration(300l).setListener(mShowListener).start();
+        } else {
+            empty_root.setVisibility(View.VISIBLE);
+        }
         empty_icon.setImageDrawable(mProgressDrawable);
         mProgressDrawable.setProgress(-1);
         empty_text.setText(R.string.empty_loading);

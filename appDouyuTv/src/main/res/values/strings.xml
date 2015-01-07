@@ -7,26 +7,75 @@
     <string name="app_live">直播</string>
     <string name="app_more">更多</string>
     <string name="app_room">直播间</string>
+    <string name="app_login">登录</string>
+    <string name="app_follow">我的关注</string>
+    <string name="app_history">观看历史</string>
+    <string name="app_mission">我的任务</string>
+    <string name="app_advertise">精彩推荐</string>
+    <string name="app_setting">系统设置</string>
+    <string name="app_profile">个人信息</string>
     <string name="app_exit">再按一次返回键退出</string>
+    <string name="app_ok">确认</string>
+    <string name="app_cancel">取消</string>
 
-    <string name="login_account">账号</string>
+    <string name="connection_failure">连接失败，请重试！</string>
+
+    <string name="advertise_download">下载</string>
+    <string name="advertise_downloaded">已下载</string>
+    <string name="advertise_sending">正在与服务器通讯 …</string>
+    <string name="advertise_send_failure">与服务器通讯失败，请重试！</string>
+
+    <string name="login_username">账号</string>
+    <string name="login_username_empty">账号不能为空！</string>
     <string name="login_password">密码</string>
+    <string name="login_password_empty">密码不能为空！</string>
     <string name="login_access">登录</string>
+    <string name="login_access_acting">正在登录 …</string>
+    <string name="login_success">登录成功！</string>
+    <string name="login_failure">登录失败！</string>
     <string name="login_forgot">忘记密码？</string>
     <string name="login_other">其他登录方式</string>
 
+    <string name="logout_sure">确认注销？</string>
+
+    <string name="more_login">点击登录</string>
     <string name="more_weight">鱼丸</string>
-    <string name="more_followed">关注</string>
-    <string name="more_follows">我的关注</string>
-    <string name="more_histories">观看历史</string>
-    <string name="more_recommends">精彩推荐</string>
-    <string name="more_setting">设置选项</string>
-    <string name="more_aboutus">关于我们</string>
+    <string name="more_follow">关注</string>
     <string name="more_checkin">签到</string>
+
+    <string name="profile_weight">鱼丸</string>
+    <string name="profile_follow">关注</string>
+    <string name="profile_mail">邮箱</string>
+    <string name="profile_phone">手机</string>
+    <string name="profile_qq">QQ</string>
+    <string name="profile_logout">注销</string>
 
     <string name="room_online">在线：%s</string>
     <string name="room_follow">关注：%s</string>
     <string name="room_share">分享</string>
     <string name="room_notice">公告</string>
+
+    <string name="search_hint">输入搜索内容</string>
+
+    <string name="setting_system">系统设置</string>
+    <string name="setting_system_auto_load_more">列表自动加载</string>
+    <string name="setting_system_show_empty_category">展示全部分类</string>
+    <string name="setting_system_receive_push">消息推送</string>
+    <string name="setting_system_play_video_under_mobile_network">2G/3G播放视频</string>
+    <string name="setting_system_switch_decode">硬件/软件解码</string>
+    <string name="setting_system_switch_decode_hw">硬件解码</string>
+    <string name="setting_system_switch_decode_sw">软件解码</string>
+    <string name="setting_live">直播设置</string>
+    <string name="setting_live_player_gesture">播放器手势</string>
+    <string name="setting_live_danmaku_opacity">弹幕透明度</string>
+    <string name="setting_live_danmaku_size">弹幕大小</string>
+    <string name="setting_live_danmaku_location">弹幕位置</string>
+    <string name="setting_live_danmaku_location_top">顶部</string>
+    <string name="setting_live_danmaku_location_bottom">底部</string>
+    <string name="setting_live_danmaku_location_fullscreen">全屏</string>
+    <string name="setting_support">服务支持</string>
+    <string name="setting_support_check_update">检查更新</string>
+    <string name="setting_support_feedback">意见反馈</string>
+    <string name="setting_support_about_us">关于我们</string>
 
 </resources>

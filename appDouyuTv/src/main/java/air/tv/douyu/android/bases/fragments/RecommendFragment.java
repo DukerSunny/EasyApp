@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import air.tv.douyu.android.R;
-import air.tv.douyu.android.api.API;
+import air.tv.douyu.android.apis.API;
 import air.tv.douyu.android.bases.activities.LiveActivity;
 import air.tv.douyu.android.bases.activities.RoomActivity;
 import air.tv.douyu.android.beans.Recommend;
@@ -35,9 +35,11 @@ public class RecommendFragment extends FragmentFramework {
     private View.OnClickListener mOnTitleClickListener;
     private IRequestCallback<String> mRecommendCallback;
     private List<Recommend> mRecommendList = new ArrayList<Recommend>();
+    private RecommendListParser mRecommendListParser;
     private RecommendRecyclerHelper mRecommendRecyclerHelper;
     private IRequestCallback<String> mSlideCallback;
     private SlideShowHolder mSlideShowHolder = null;
+    private SlideShowListParser mSlideShowListParser;
 
     public static RecommendFragment create() {
         return new RecommendFragment();
@@ -45,6 +47,8 @@ public class RecommendFragment extends FragmentFramework {
 
     @Override
     protected void acquireArguments(Bundle bundle) {
+        mSlideShowListParser = new SlideShowListParser();
+        mRecommendListParser = new RecommendListParser();
     }
 
     @Override
@@ -56,6 +60,7 @@ public class RecommendFragment extends FragmentFramework {
         mRecommendRecyclerHelper = new RecommendRecyclerHelper(this);
         mRecommendRecyclerHelper.setHasFixedSize(false);
         mRecommendRecyclerHelper.setCanLoad(false);
+        mRecommendRecyclerHelper.setListParser(new RecommendListParser());
         mRecommendRecyclerHelper.attachAdapter();
     }
 
@@ -89,13 +94,13 @@ public class RecommendFragment extends FragmentFramework {
             }
 
             @Override
-            public void onSuccess(String requestUrl, String s) {
-                SlideShowListParser parser = SlideShowListParser.parse(s);
+            public void onSuccess(String requestUrl, String result) {
                 SlideShowRecommend slideShowRecommend;
 
-                if (parser != null) {
+                mSlideShowListParser.parse(result);
+                if (mSlideShowListParser.getList() != null) {
                     slideShowRecommend = new SlideShowRecommend();
-                    slideShowRecommend.setSlideShowList(parser.getData());
+                    slideShowRecommend.setSlideShowList(mSlideShowListParser.getList());
                     mRecommendList.clear();
                     mRecommendList.add(slideShowRecommend);
                     executeRequest(API.getRecommend(), mRecommendCallback);
@@ -109,14 +114,13 @@ public class RecommendFragment extends FragmentFramework {
             }
 
             @Override
-            public void onSuccess(String requestUrl, String json) {
-                RecommendListParser parser = RecommendListParser.parse(json);
-
-                if (parser != null) {
-                    mRecommendList.addAll(parser.getData());
+            public void onSuccess(String requestUrl, String resule) {
+                mRecommendListParser.parse(resule);
+                if (mRecommendListParser.getList() != null) {
+                    mRecommendList.addAll(mRecommendListParser.getList());
                     mRecommendRecyclerHelper.from(mRecommendList);
                 } else {
-                    mRecommendRecyclerHelper.showEmptyIdle();
+                    mRecommendRecyclerHelper.showEmptyFailureIdle();
                 }
             }
         };
@@ -186,15 +190,6 @@ public class RecommendFragment extends FragmentFramework {
 
         @Override
         public void onItemClick(int position, Recommend recommend) {
-        }
-
-        @Override
-        protected List<Recommend> onParse(String json) {
-            return null;
-        }
-
-        @Override
-        protected void setItemDecoration() {
         }
     }
 }

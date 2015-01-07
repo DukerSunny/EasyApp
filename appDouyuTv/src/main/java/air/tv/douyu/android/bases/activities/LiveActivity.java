@@ -13,13 +13,11 @@ import com.harreke.easyapp.frameworks.recyclerview.RecyclerFramework;
 import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
 import com.harreke.easyapp.widgets.transitions.SwipeToFinishLayout;
 
-import java.util.List;
-
 import air.tv.douyu.android.R;
-import air.tv.douyu.android.api.API;
+import air.tv.douyu.android.apis.API;
 import air.tv.douyu.android.beans.Room;
 import air.tv.douyu.android.holders.RoomHolder;
-import air.tv.douyu.android.parsers.LiveListParser;
+import air.tv.douyu.android.parsers.RoomListParser;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/12/18
@@ -65,6 +63,7 @@ public class LiveActivity extends ActivityFramework {
         mLiveRecyclerHelper = new LiveRecyclerHelper(this);
         mLiveRecyclerHelper.setHasFixedSize(true);
         mLiveRecyclerHelper.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        mLiveRecyclerHelper.setListParser(new RoomListParser());
         mLiveRecyclerHelper.attachAdapter();
     }
 
@@ -76,11 +75,6 @@ public class LiveActivity extends ActivityFramework {
     @Override
     public int getLayoutId() {
         return R.layout.activity_live;
-    }
-
-    @Override
-    public void onBackPressed() {
-        exit(Anim.Exit_Right);
     }
 
     @Override
@@ -106,21 +100,6 @@ public class LiveActivity extends ActivityFramework {
         @Override
         public void onItemClick(int position, Room room) {
             start(RoomActivity.create(getContext(), room.getRoom_id()));
-        }
-
-        @Override
-        protected List<Room> onParse(String json) {
-            LiveListParser parser = LiveListParser.parse(json);
-
-            if (parser != null) {
-                return parser.getData();
-            } else {
-                return null;
-            }
-        }
-
-        @Override
-        protected void setItemDecoration() {
         }
     }
 }

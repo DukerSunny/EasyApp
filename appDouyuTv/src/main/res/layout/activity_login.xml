@@ -3,7 +3,7 @@
     style="@style/mm.v"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/Background">
+    android:background="@color/background">
 
     <include
         layout="@layout/widget_toolbar"/>
@@ -24,49 +24,57 @@
                     <LinearLayout
                         style="@style/mw.h"
                         android:gravity="center_vertical"
-                        android:padding="8dp">
+                        android:paddingBottom="16dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="16dp">
 
                         <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/user_holo"/>
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/username"/>
 
                         <EditText
-                            android:id="@+id/login_account"
+                            android:id="@+id/login_username"
                             style="@style/mm"
-                            android:layout_marginLeft="8dp"
-                            android:background="@color/Transparent"
-                            android:hint="@string/login_account"
-                            android:textColorHint="@color/Gray"
-                            android:textSize="@dimen/Caption"/>
+                            android:layout_marginLeft="16dp"
+                            android:background="@color/transparent"
+                            android:hint="@string/login_username"
+                            android:singleLine="true"
+                            android:textColorHint="@color/gray"
+                            android:textSize="@dimen/Body1"/>
 
                     </LinearLayout>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1px"
-                        android:layout_marginLeft="40dp"
-                        android:background="@color/Divider"/>
+                        android:layout_marginLeft="56dp"
+                        android:background="@color/divider"/>
 
                     <LinearLayout
                         style="@style/mw.h"
                         android:gravity="center_vertical"
-                        android:padding="8dp">
+                        android:paddingBottom="16dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="16dp">
 
                         <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/user_holo"/>
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/password"/>
 
                         <EditText
                             android:id="@+id/login_password"
                             style="@style/mm"
-                            android:layout_marginLeft="8dp"
-                            android:background="@color/Transparent"
+                            android:layout_marginLeft="16dp"
+                            android:background="@color/transparent"
                             android:hint="@string/login_password"
                             android:inputType="textPassword"
-                            android:textColorHint="@color/Gray"
-                            android:textSize="@dimen/Caption"/>
+                            android:singleLine="true"
+                            android:textColorHint="@color/gray"
+                            android:textSize="@dimen/Body1"/>
 
                     </LinearLayout>
 
@@ -75,18 +83,18 @@
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
-                android:id="@+id/login_access"
                 style="@style/mw"
                 android:layout_marginTop="32dp"
-                app:cardBackgroundColor="?attr/colorPrimary"
-                app:contentPadding="16dp">
+                app:cardBackgroundColor="?attr/colorPrimary">
 
                 <TextView
-                    style="@style/ww"
-                    android:layout_gravity="center"
+                    android:id="@+id/login_access"
+                    style="@style/mw"
+                    android:gravity="center"
+                    android:padding="16dp"
                     android:text="@string/login_access"
-                    android:textColor="@color/White"
-                    android:textSize="@dimen/Caption"/>
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/Body1"/>
 
             </android.support.v7.widget.CardView>
 
@@ -96,8 +104,8 @@
                 android:layout_gravity="right"
                 android:layout_marginTop="8dp"
                 android:text="@string/login_forgot"
-                android:textColor="@color/color_darkcyan_blue"
-                android:textSize="@dimen/Caption"/>
+                android:textColor="@color/selector_login_forgot"
+                android:textSize="@dimen/Body1"/>
 
             <View
                 style="@style/mmw"/>
@@ -112,12 +120,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="1px"
                         android:layout_gravity="center"
-                        android:background="@color/Divider"/>
+                        android:background="@color/divider"/>
 
                     <TextView
                         style="@style/ww"
                         android:layout_gravity="center"
-                        android:background="@color/Background"
+                        android:background="@color/background"
                         android:paddingLeft="6dp"
                         android:paddingRight="6dp"
                         android:text="@string/login_other"
@@ -131,10 +139,10 @@
                     android:padding="8dp">
 
                     <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/shape_circle_primary"/>
-
+                        android:id="@+id/login_other"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/login_other"/>
 
                 </LinearLayout>
 

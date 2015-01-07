@@ -3,7 +3,7 @@
     style="@style/mm.v"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/Background">
+    android:background="@color/background">
 
     <include
         layout="@layout/widget_toolbar"/>
@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        app:pstsDividerColor="@color/Transparent"
+        app:pstsDividerColor="@color/transparent"
         app:pstsIndicatorColor="?attr/colorAccent"
         app:pstsIndicatorHeight="3dp"
         app:pstsShouldExpand="true"

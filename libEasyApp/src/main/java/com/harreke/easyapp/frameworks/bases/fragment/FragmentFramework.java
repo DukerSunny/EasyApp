@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,8 +27,7 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
     private IFramework mActivityFramework = null;
     private IToolbar mActivityToolbar = null;
     private View mContentView;
-    private boolean mCreated;
-    private RequestHelper mRequest;
+    private RequestHelper mRequest = new RequestHelper();
 
     public FragmentFramework() {
     }
@@ -158,9 +158,6 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
 
     @Override
     public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mRequest = new RequestHelper();
-
-        getLayoutId();
         mContentView = inflater.inflate(getLayoutId(), container, false);
         acquireArguments(getArguments());
         establishCallbacks();
@@ -173,7 +170,6 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
     @Override
     public void onDestroyView() {
         cancelRequest();
-        mCreated = false;
         super.onDestroyView();
     }
 
@@ -185,13 +181,12 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        postCreate();
+        startAction();
+    }
 
-        if (!mCreated) {
-            mCreated = true;
-            startAction();
-        }
+    protected void postCreate() {
     }
 
     @Override

@@ -266,6 +266,6 @@ public class ApplicationFramework extends Application {
         SharedPreferences.Editor editor = getPreference().edit();
 
         editor.putString(key, value);
-        editor.apply();
+        editor.commit();
     }
 }

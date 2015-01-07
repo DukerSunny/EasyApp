@@ -11,6 +11,10 @@ public abstract class RecyclerHolder<ITEM> extends RecyclerView.ViewHolder {
         super(itemView);
     }
 
+    protected View findViewById(int viewId) {
+        return itemView.findViewById(viewId);
+    }
+
     public abstract void setItem(ITEM item);
 
     public void setOnClickListener(View.OnClickListener onClickListener) {

@@ -11,10 +11,8 @@ import com.harreke.easyapp.frameworks.bases.fragment.FragmentFramework;
 import com.harreke.easyapp.frameworks.recyclerview.RecyclerFramework;
 import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
 
-import java.util.List;
-
 import air.tv.douyu.android.R;
-import air.tv.douyu.android.api.API;
+import air.tv.douyu.android.apis.API;
 import air.tv.douyu.android.bases.activities.LiveActivity;
 import air.tv.douyu.android.beans.Game;
 import air.tv.douyu.android.holders.GameHolder;
@@ -45,6 +43,7 @@ public class GameFragment extends FragmentFramework {
         mGameRecyclerHelper.setLayoutManager(new GridLayoutManager(getContext(), 3));
         mGameRecyclerHelper.setHasFixedSize(true);
         mGameRecyclerHelper.setCanLoad(false);
+        mGameRecyclerHelper.setListParser(new GameListParser());
         mGameRecyclerHelper.attachAdapter();
     }
 
@@ -81,21 +80,6 @@ public class GameFragment extends FragmentFramework {
         @Override
         public void onItemClick(int position, Game game) {
             start(LiveActivity.create(getContext(), game.getGame_name(), game.getCate_id()));
-        }
-
-        @Override
-        protected List<Game> onParse(String json) {
-            GameListParser parser = GameListParser.parse(json);
-
-            if (parser != null) {
-                return parser.getData();
-            } else {
-                return null;
-            }
-        }
-
-        @Override
-        protected void setItemDecoration() {
         }
     }
 }

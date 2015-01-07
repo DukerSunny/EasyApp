@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.harreke.easyapp.enums.RippleStyle;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.helpers.EmptyHelper;
 import com.harreke.easyapp.helpers.ImageLoaderHelper;
@@ -15,7 +16,7 @@ import com.harreke.easyapp.widgets.rippleeffects.RippleDrawable;
 import com.harreke.easyapp.widgets.transitions.SwipeToFinishLayout;
 
 import air.tv.douyu.android.R;
-import air.tv.douyu.android.api.API;
+import air.tv.douyu.android.apis.API;
 import air.tv.douyu.android.beans.FullRoom;
 import air.tv.douyu.android.parsers.FullRoomParser;
 
@@ -24,6 +25,7 @@ import air.tv.douyu.android.parsers.FullRoomParser;
  */
 public class RoomActivity extends ActivityFramework {
     private EmptyHelper mEmptyHelper;
+    private FullRoomParser mFullRoomParser;
     //    private ImageViewInfo mNewImageViewInfo = null;
     //    private ImageViewInfo mOldImageViewInfo = null;
     private View.OnClickListener mOnEmptyClickListener;
@@ -42,7 +44,6 @@ public class RoomActivity extends ActivityFramework {
     private View room_play_root;
     private View room_root;
     private View room_share_root;
-    private TextView room_show_details;
 
     //    public static Intent create(Context context, int roomId, ImageView oldView) {
     //        Intent intent = new Intent(context, RoomActivity.class);
@@ -52,6 +53,7 @@ public class RoomActivity extends ActivityFramework {
     //
     //        return intent;
     //    }
+    private TextView room_show_details;
 
     public static Intent create(Context context, int roomId) {
         Intent intent = new Intent(context, RoomActivity.class);
@@ -65,6 +67,7 @@ public class RoomActivity extends ActivityFramework {
     protected void acquireArguments(Intent intent) {
         mRoomId = intent.getIntExtra("roomId", 0);
 
+        mFullRoomParser = new FullRoomParser();
         //        mOldImageViewInfo = GsonUtil.toBean(intent.getStringExtra("oldViewInfo"), ImageViewInfo.class);
     }
 
@@ -116,9 +119,10 @@ public class RoomActivity extends ActivityFramework {
         //        ImageLoaderHelper.loadImage(room_pic, mOldImageViewInfo.getImageUrl(), R.drawable.loading_16x9, R.drawable.retry_16x9);
 
         mEmptyHelper = new EmptyHelper(this);
+        mEmptyHelper.showLoading(false);
 
         RippleDrawable.attach(room_info);
-        RippleDrawable.attach(room_play_root, RippleDrawable.RIPPLE_STYLE_LIGHT);
+        RippleDrawable.attach(room_play_root, RippleStyle.Light);
         RippleDrawable.attach(room_online_root);
         RippleDrawable.attach(room_follow_root);
         RippleDrawable.attach(room_share_root);
@@ -134,12 +138,11 @@ public class RoomActivity extends ActivityFramework {
 
             @Override
             public void onSuccess(String requestUrl, String json) {
-                FullRoomParser parser = FullRoomParser.parse(json);
-
-                if (parser != null) {
+                mFullRoomParser.parse(json);
+                if (mFullRoomParser.getObject() != null) {
                     room_play_root.setVisibility(View.VISIBLE);
                     mEmptyHelper.hide();
-                    doUpdate(parser.getData());
+                    doUpdate(mFullRoomParser.getObject());
                 } else {
                     mEmptyHelper.showEmptyFailureIdle();
                 }
@@ -156,10 +159,6 @@ public class RoomActivity extends ActivityFramework {
     @Override
     public int getLayoutId() {
         return R.layout.activity_room;
-    }
-
-    @Override
-    protected void postCreate() {
     }
 
     @Override

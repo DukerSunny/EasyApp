@@ -15,6 +15,7 @@ import android.os.Build;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.harreke.easyapp.enums.RippleStyle;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ObjectAnimator;
@@ -28,11 +29,6 @@ import com.nineoldandroids.animation.ValueAnimator;
  * 模仿Material风格涟漪效果的Drawable
  */
 public class RippleDrawable extends Drawable {
-    public final static int RIPPLE_STYLE_DARK = 0;
-    public final static int RIPPLE_STYLE_DARK_SQUARE = 2;
-    public final static int RIPPLE_STYLE_LIGHT = 1;
-    public final static int RIPPLE_STYLE_LIGHT_SQUARE = 3;
-    private final static int RIPPLE_DURATION = 300;
     private final static int RIPPLE_HOTPOT_ALPHA = 32;
     private float mBaseHotpotAlpha = RIPPLE_HOTPOT_ALPHA;
     private final static int RIPPLE_PRESSED_ALPHA = 24;
@@ -61,7 +57,7 @@ public class RippleDrawable extends Drawable {
     private int mMaxRadius = 0;
     private boolean mPressed = false;
     private Paint mPressedPaint;
-    private int mRippleDuration;
+    private long mRippleDuration;
     private Animator.AnimatorListener mRippleListener = new AnimatorListenerAdapter() {
         @Override
         public void onAnimationEnd(Animator animation) {
@@ -77,7 +73,7 @@ public class RippleDrawable extends Drawable {
     };
     private Drawable mViewBackground = null;
 
-    private RippleDrawable(View view, int rippleStyle, int rippleDuration) {
+    private RippleDrawable(View view, RippleStyle rippleStyle, long rippleDuration) {
         int baseColor = Color.BLACK;
 
         mRippleDuration = rippleDuration;
@@ -102,16 +98,16 @@ public class RippleDrawable extends Drawable {
             mViewBackground = new ColorDrawable(Color.TRANSPARENT);
         }
         switch (rippleStyle) {
-            case RIPPLE_STYLE_LIGHT_SQUARE:
+            case Light_Square:
                 mSquare = true;
-            case RIPPLE_STYLE_LIGHT:
+            case Light:
                 baseColor = Color.WHITE;
                 mBaseHotpotAlpha = 128 + RIPPLE_HOTPOT_ALPHA;
                 mBasePressedAlpha = 128 + RIPPLE_PRESSED_ALPHA;
                 break;
-            case RIPPLE_STYLE_DARK_SQUARE:
+            case Dark_Square:
                 mSquare = true;
-            case RIPPLE_STYLE_DARK:
+            case Dark:
                 baseColor = Color.BLACK;
                 mBaseHotpotAlpha = RIPPLE_HOTPOT_ALPHA;
                 mBasePressedAlpha = RIPPLE_PRESSED_ALPHA;
@@ -136,22 +132,15 @@ public class RippleDrawable extends Drawable {
      *         需要添加效果的视图
      * @param rippleStyle
      *         涟漪效果风格
-     *
-     *         {@link #RIPPLE_STYLE_DARK}
-     *         暗色矩形风格
-     *         {@link #RIPPLE_STYLE_DARK_SQUARE}
-     *         暗色正方形风格
-     *         {@link #RIPPLE_STYLE_LIGHT}
-     *         亮色矩形风格
-     *         {@link #RIPPLE_STYLE_LIGHT_SQUARE}
-     *         亮色正方形风格
      * @param rippleDuration
      *         涟漪时间
      *
      *         以毫秒为单位
+     *
+     * @see com.harreke.easyapp.enums.RippleStyle
      */
     @TargetApi(16)
-    public static void attach(View view, int rippleStyle, int rippleDuration) {
+    public static void attach(View view, RippleStyle rippleStyle, long rippleDuration) {
         new RippleDrawable(view, rippleStyle, rippleDuration);
     }
 
@@ -163,17 +152,10 @@ public class RippleDrawable extends Drawable {
      * @param rippleStyle
      *         涟漪效果风格
      *
-     *         {@link #RIPPLE_STYLE_DARK}
-     *         暗色矩形风格
-     *         {@link #RIPPLE_STYLE_DARK_SQUARE}
-     *         暗色正方形风格
-     *         {@link #RIPPLE_STYLE_LIGHT}
-     *         亮色矩形风格
-     *         {@link #RIPPLE_STYLE_LIGHT_SQUARE}
-     *         亮色正方形风格
+     * @see com.harreke.easyapp.enums.RippleStyle
      */
-    public static void attach(View view, int rippleStyle) {
-        attach(view, rippleStyle, RIPPLE_DURATION);
+    public static void attach(View view, RippleStyle rippleStyle) {
+        attach(view, rippleStyle, 300l);
     }
 
     /**
@@ -185,7 +167,7 @@ public class RippleDrawable extends Drawable {
      *         需要添加效果的视图
      */
     public static void attach(View view) {
-        attach(view, RIPPLE_STYLE_DARK);
+        attach(view, RippleStyle.Dark);
     }
 
     @Override
@@ -208,7 +190,7 @@ public class RippleDrawable extends Drawable {
         return 1;
     }
 
-    public int getRippleDuration() {
+    public long getRippleDuration() {
         return mRippleDuration;
     }
 

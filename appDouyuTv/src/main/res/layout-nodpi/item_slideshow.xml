@@ -11,7 +11,7 @@
     <LinearLayout
         style="@style/mw"
         android:layout_gravity="bottom"
-        android:background="@color/TransparentGray"
+        android:background="@color/transparentGray"
         android:gravity="center_vertical"
         android:padding="8dp">
 

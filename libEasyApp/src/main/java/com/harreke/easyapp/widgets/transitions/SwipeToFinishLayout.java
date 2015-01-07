@@ -29,7 +29,7 @@ public class SwipeToFinishLayout extends TransitionLayout {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mLastTouchX = event.getX();
-                mShouldIntercept = mLastTouchX <= mTouchDownThreshold;
+                mShouldIntercept = (mLastTouchX <= mTouchDownThreshold);
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (mShouldIntercept) {
@@ -54,30 +54,34 @@ public class SwipeToFinishLayout extends TransitionLayout {
         float touchX;
         float dx;
 
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_MOVE:
-                touchX = event.getX();
-                dx = touchX - mLastTouchX;
-                mLastTouchX = touchX;
+        if (mShouldIntercept) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_MOVE:
+                    touchX = event.getX();
+                    dx = touchX - mLastTouchX;
+                    mLastTouchX = touchX;
 
-                mSwipeOffset += dx;
-                if (mSwipeOffset < 0f) {
-                    mSwipeOffset = 0f;
-                } else if (mSwipeOffset > getContentWidth()) {
-                    mSwipeOffset = getContentWidth();
-                }
-                setContentOffsetX(mSwipeOffset);
+                    mSwipeOffset += dx;
+                    if (mSwipeOffset < 0f) {
+                        mSwipeOffset = 0f;
+                    } else if (mSwipeOffset > getContentWidth()) {
+                        mSwipeOffset = getContentWidth();
+                    }
+                    setContentOffsetX(mSwipeOffset);
 
-                return true;
-            case MotionEvent.ACTION_CANCEL:
-            case MotionEvent.ACTION_UP:
-                if (mSwipeOffset > mSwipeThreshold) {
-                    startExitTransition(ExitTransition.Slide_Out_Right);
-                } else {
-                    animateToX(0f, null);
-                }
+                    return true;
+                case MotionEvent.ACTION_CANCEL:
+                case MotionEvent.ACTION_UP:
+                    if (mSwipeOffset > mSwipeThreshold) {
+                        mSwipeOffset = 0;
+                        startExitTransition(ExitTransition.Slide_Out_Right);
+                    } else {
+                        mSwipeOffset = 0;
+                        animateToX(0f, null);
+                    }
 
-                return true;
+                    return true;
+            }
         }
 
         return super.onTouchEvent(event);

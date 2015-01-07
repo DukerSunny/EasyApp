@@ -30,7 +30,7 @@ public class GameHolder extends RecyclerHolder<Game> {
 
     @Override
     public void setItem(Game game) {
-        ImageLoaderHelper.loadImage(game_src, game.getGame_src(), R.drawable.loading_2x3, R.drawable.retry_2x3);
+        ImageLoaderHelper.loadImage(game_src, game.getGame_src(), R.drawable.loading_7x10, R.drawable.retry_7x10);
         game_name.setText(game.getGame_name());
     }
 

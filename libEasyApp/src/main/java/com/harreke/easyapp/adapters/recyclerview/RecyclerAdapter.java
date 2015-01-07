@@ -290,6 +290,40 @@ public abstract class RecyclerAdapter<ITEM> extends RecyclerView.Adapter<Recycle
     }
 
     /**
+     * 替换一个条目，并通知视图刷新
+     *
+     * @param item
+     *         条目
+     *
+     * @return 是否替换成功
+     */
+    public final boolean replaceItem(int position, ITEM item) {
+        if (position >= 0 && position < mItemList.size()) {
+            if (!mDiscardRepeat) {
+                mItemList.set(position, item);
+                notifyItemChanged(position);
+
+                return true;
+            } else {
+                if (mHashSet.contains(item.hashCode())) {
+                    mItemList.set(position, item);
+                    notifyItemChanged(position);
+
+                    return true;
+                } else {
+                    mHashSet.remove(mItemList.get(position).hashCode());
+                    mItemList.set(position, item);
+                    notifyItemChanged(position);
+
+                    return true;
+                }
+            }
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * 排序条目列表
      *
      * @param comparator

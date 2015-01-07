@@ -1,5 +1,6 @@
 package air.tv.douyu.android.bases.activities;
 
+import android.content.Context;
 import android.content.Intent;
 
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
@@ -11,6 +12,10 @@ import air.tv.douyu.android.R;
  * 由 Harreke（harreke@live.cn） 创建于 2014/12/29
  */
 public class SearchActivity extends ActivityFramework {
+    public static Intent create(Context context) {
+        return new Intent(context, SearchActivity.class);
+    }
+
     @Override
     protected void acquireArguments(Intent intent) {
 

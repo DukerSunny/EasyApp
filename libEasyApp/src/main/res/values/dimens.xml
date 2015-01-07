@@ -15,6 +15,10 @@
 
     <dimen name="Subhead">@dimen/abc_text_size_subhead_material</dimen>
 
+    <dimen name="Body1">@dimen/abc_text_size_body_1_material</dimen>
+
+    <dimen name="Body2">@dimen/abc_text_size_body_2_material</dimen>
+
     <dimen name="Caption">@dimen/abc_text_size_caption_material</dimen>
 
 </resources>

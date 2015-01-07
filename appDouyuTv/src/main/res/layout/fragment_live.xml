@@ -2,7 +2,7 @@
 <FrameLayout
     style="@style/mm"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/Background">
+    android:background="@color/background">
 
     <include
         layout="@layout/widget_recycler_pullable"/>

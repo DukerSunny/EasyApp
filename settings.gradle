@@ -1,6 +1,4 @@
+//include ':appAcFunRead'
 include ':appDouyuTv'
-include ':libRecyclerViewStickyHeaders'
 include ':libEasyApp'
-include ':libCircleImageView'
-include ':libPhotoView'
-include ':libColorPicker'
+//include ':libColorPicker'

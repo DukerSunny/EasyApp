@@ -2,8 +2,7 @@
 <ScrollView
     style="@style/mm.v"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/Background">
+    android:background="@color/background">
 
     <LinearLayout
         style="@style/mw.v"
@@ -16,46 +15,53 @@
                 android:id="@+id/more_user_info"
                 style="@style/mw.h"
                 android:gravity="center_vertical"
-                android:paddingBottom="16dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="16dp">
+                android:padding="8dp">
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/more_avatar"
+                    android:id="@+id/more_user_avatar"
                     android:layout_width="72dp"
                     android:layout_height="72dp"
                     android:src="@drawable/avatar"/>
 
+                <TextView
+                    android:id="@+id/more_user_clicktologin"
+                    style="@style/mww"
+                    android:gravity="center"
+                    android:text="@string/more_login"
+                    android:textAppearance="@style/Body1"/>
+
                 <LinearLayout
-                    style="@style/mww.h">
+                    android:id="@+id/more_user_login"
+                    style="@style/mww.h"
+                    android:visibility="gone">
 
                     <LinearLayout
                         style="@style/mww.v"
                         android:gravity="center_horizontal">
 
+                        <TextView
+                            android:id="@+id/more_user_weight"
+                            style="@style/ww"
+                            android:text="0"
+                            android:textAppearance="@style/Subhead"/>
+
                         <LinearLayout
                             style="@style/ww.h"
+                            android:layout_marginTop="4dp"
                             android:gravity="center_vertical">
 
                             <ImageView
                                 android:layout_width="16dp"
                                 android:layout_height="16dp"
-                                android:src="@drawable/follows"/>
+                                android:src="@drawable/weight"/>
 
                             <TextView
                                 style="@style/ww"
+                                android:layout_marginLeft="4dp"
                                 android:text="@string/more_weight"
-                                android:textAppearance="@style/Subhead"/>
+                                android:textAppearance="@style/Body1"/>
 
                         </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/more_user_weight"
-                            style="@style/ww"
-                            android:layout_marginTop="4dp"
-                            android:text="0"
-                            android:textAppearance="@style/Title"/>
 
                     </LinearLayout>
 
@@ -63,8 +69,15 @@
                         style="@style/mww.v"
                         android:gravity="center_horizontal">
 
+                        <TextView
+                            android:id="@+id/more_user_follow"
+                            style="@style/ww"
+                            android:text="0"
+                            android:textAppearance="@style/Subhead"/>
+
                         <LinearLayout
                             style="@style/ww.h"
+                            android:layout_marginTop="4dp"
                             android:gravity="center_vertical">
 
                             <ImageView
@@ -74,26 +87,20 @@
 
                             <TextView
                                 style="@style/ww"
-                                android:text="@string/more_followed"
-                                android:textAppearance="@style/Subhead"/>
+                                android:layout_marginLeft="4dp"
+                                android:text="@string/more_follow"
+                                android:textAppearance="@style/Body1"/>
 
                         </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/more_user_followed"
-                            style="@style/ww"
-                            android:layout_marginTop="4dp"
-                            android:text="0"
-                            android:textAppearance="@style/Title"/>
 
                     </LinearLayout>
 
                 </LinearLayout>
 
                 <ImageView
-                    android:layout_width="wrap_content"
+                    android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/arrow_right_gray"/>
+                    android:src="@drawable/arrow_right"/>
 
             </LinearLayout>
 
@@ -107,7 +114,7 @@
                 style="@style/mw.v">
 
                 <LinearLayout
-                    android:id="@+id/more_follows"
+                    android:id="@+id/more_follow"
                     style="@style/mw.h"
                     android:gravity="center_vertical"
                     android:paddingBottom="16dp"
@@ -123,35 +130,35 @@
                     <TextView
                         style="@style/mww"
                         android:layout_marginLeft="16dp"
-                        android:text="@string/more_follows"
-                        android:textAppearance="@style/Subhead"/>
+                        android:text="@string/app_follow"
+                        android:textAppearance="@style/Body1"/>
 
                     <TextView
                         android:id="@+id/more_follow_count"
                         style="@style/ww"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
                         android:background="@drawable/shape_corner_primary"
                         android:paddingBottom="4dp"
                         android:paddingLeft="8dp"
                         android:paddingRight="8dp"
                         android:paddingTop="4dp"
-                        android:textColor="@color/White"
+                        android:textColor="@color/white"
                         android:textSize="@dimen/Caption"
                         android:visibility="gone"/>
 
                     <ImageView
-                        android:layout_width="wrap_content"
+                        android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/arrow_right_gray"/>
+                        android:src="@drawable/arrow_right"/>
 
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:layout_marginLeft="56dp"
-                    android:background="@color/Divider"/>
+                    android:layout_marginLeft="48dp"
+                    android:background="@color/divider"/>
 
                 <LinearLayout
                     android:id="@+id/more_history"
@@ -170,24 +177,24 @@
                     <TextView
                         style="@style/mww"
                         android:layout_marginLeft="16dp"
-                        android:text="@string/more_histories"
-                        android:textAppearance="@style/Subhead"/>
+                        android:text="@string/app_history"
+                        android:textAppearance="@style/Body1"/>
 
                     <ImageView
-                        android:layout_width="wrap_content"
+                        android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/arrow_right_gray"/>
+                        android:src="@drawable/arrow_right"/>
 
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:layout_marginLeft="56dp"
-                    android:background="@color/Divider"/>
+                    android:layout_marginLeft="48dp"
+                    android:background="@color/divider"/>
 
                 <LinearLayout
-                    android:id="@+id/more_recommends"
+                    android:id="@+id/more_mission"
                     style="@style/mw.h"
                     android:gravity="center_vertical"
                     android:paddingBottom="16dp"
@@ -198,32 +205,18 @@
                     <ImageView
                         android:layout_width="32dp"
                         android:layout_height="32dp"
-                        android:src="@drawable/recommends"/>
+                        android:src="@drawable/missions"/>
 
                     <TextView
                         style="@style/mww"
                         android:layout_marginLeft="16dp"
-                        android:text="@string/more_recommends"
-                        android:textAppearance="@style/Subhead"/>
-
-                    <TextView
-                        android:id="@+id/more_recommends_count"
-                        style="@style/ww"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
-                        android:background="@drawable/shape_corner_primary"
-                        android:paddingBottom="4dp"
-                        android:paddingLeft="8dp"
-                        android:paddingRight="8dp"
-                        android:paddingTop="4dp"
-                        android:textColor="@color/White"
-                        android:textSize="@dimen/Caption"
-                        android:visibility="gone"/>
+                        android:text="@string/app_mission"
+                        android:textAppearance="@style/Body1"/>
 
                     <ImageView
-                        android:layout_width="wrap_content"
+                        android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/arrow_right_gray"/>
+                        android:src="@drawable/arrow_right"/>
 
                 </LinearLayout>
 
@@ -240,7 +233,54 @@
                 style="@style/mw.v">
 
                 <LinearLayout
-                    android:id="@+id/more_settings"
+                    android:id="@+id/more_advertise"
+                    style="@style/mw.h"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="16dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="16dp">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/advertise"/>
+
+                    <TextView
+                        style="@style/mww"
+                        android:layout_marginLeft="16dp"
+                        android:text="@string/app_advertise"
+                        android:textAppearance="@style/Body1"/>
+
+                    <TextView
+                        android:id="@+id/more_advertise_count"
+                        style="@style/ww"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:background="@drawable/shape_corner_primary"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="4dp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/Caption"
+                        android:visibility="gone"/>
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/arrow_right"/>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginLeft="48dp"
+                    android:background="@color/divider"/>
+
+                <LinearLayout
+                    android:id="@+id/more_setting"
                     style="@style/mw.h"
                     android:gravity="center_vertical"
                     android:paddingBottom="16dp"
@@ -256,74 +296,17 @@
                     <TextView
                         style="@style/mww"
                         android:layout_marginLeft="16dp"
-                        android:text="@string/more_setting"
-                        android:textAppearance="@style/Subhead"/>
+                        android:text="@string/app_setting"
+                        android:textAppearance="@style/Body1"/>
 
                     <ImageView
-                        android:id="@+id/more_settings_new"
-                        android:layout_width="8dp"
-                        android:layout_height="8dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
-                        android:src="@drawable/shape_circle_primary"/>
-
-                    <ImageView
-                        android:layout_width="wrap_content"
+                        android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/arrow_right_gray"/>
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_marginLeft="56dp"
-                    android:background="@color/Divider"/>
-
-                <LinearLayout
-                    android:id="@+id/more_aboutus"
-                    style="@style/mw.h"
-                    android:gravity="center_vertical"
-                    android:paddingBottom="16dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:paddingTop="16dp">
-
-                    <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:src="@drawable/aboutus"/>
-
-                    <TextView
-                        style="@style/mww"
-                        android:layout_marginLeft="16dp"
-                        android:text="@string/more_aboutus"
-                        android:textAppearance="@style/Subhead"/>
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="24dp"
-                        android:src="@drawable/arrow_right_gray"/>
+                        android:src="@drawable/arrow_right"/>
 
                 </LinearLayout>
 
             </LinearLayout>
-
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            style="@style/mw"
-            android:layout_marginTop="16dp"
-            app:cardBackgroundColor="?attr/colorPrimary">
-
-            <TextView
-                android:id="@+id/more_checkin"
-                style="@style/mw"
-                android:gravity="center"
-                android:padding="16dp"
-                android:text="@string/more_checkin"
-                android:textColor="@color/White"
-                android:textSize="@dimen/Subhead"/>
 
         </android.support.v7.widget.CardView>
 

@@ -10,11 +10,11 @@ import android.view.View;
 public class RippleOnClickListener implements View.OnClickListener {
     private Handler mHandler;
     private View.OnClickListener mOnClickListener;
-    private int mRippleDelay;
+    private long mRippleDelay;
 
-    private RippleOnClickListener(View.OnClickListener onClickListener, int rippleDuration) {
+    private RippleOnClickListener(View.OnClickListener onClickListener, long rippleDuration) {
         mOnClickListener = onClickListener;
-        mRippleDelay = (int) (rippleDuration);
+        mRippleDelay = rippleDuration;
         mHandler = new Handler();
     }
 

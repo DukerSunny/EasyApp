@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -14,12 +13,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.github.johnpersano.supertoasts.SuperActivityToast;
-import com.github.johnpersano.supertoasts.SuperToast;
 import com.harreke.easyapp.R;
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.IToolbar;
 import com.harreke.easyapp.helpers.RequestHelper;
+import com.harreke.easyapp.helpers.ToastHelper;
 import com.harreke.easyapp.receivers.ExitReceiver;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
@@ -58,7 +56,7 @@ public abstract class ActivityFramework extends ActionBarActivity
         }
     };
     private RequestHelper mRequest = new RequestHelper();
-    private SuperActivityToast mToast;
+    private ToastHelper mToastHelper;
     private Toolbar mToolbar;
     private View mToolbarShadow;
     private TransitionLayout mTransitionLayout = null;
@@ -217,7 +215,7 @@ public abstract class ActivityFramework extends ActionBarActivity
      */
     @Override
     public final void hideToast() {
-        SuperActivityToast.clearSuperActivityToastsForActivity(this);
+        mToastHelper.hide();
     }
 
     @Override
@@ -243,12 +241,7 @@ public abstract class ActivityFramework extends ActionBarActivity
     }
 
     private void initToast() {
-        mToast = new SuperActivityToast(this);
-        mToast.setAnimations(SuperToast.Animations.POPUP);
-        mToast.setDuration(SuperToast.Duration.SHORT);
-        mToast.setBackground(SuperToast.Background.GRAY);
-        mToast.setTextSize(SuperToast.TextSize.MEDIUM);
-        mToast.setTextColor(Color.WHITE);
+        mToastHelper = new ToastHelper(this);
     }
 
     /**
@@ -278,10 +271,13 @@ public abstract class ActivityFramework extends ActionBarActivity
         super.onCreate(savedInstanceState);
         registerReceiver(mExitReceiver, new IntentFilter(getPackageName() + ".EXIT"));
         NetUtil.checkConnection(this);
-
         configActivity();
-        setContentView(getLayoutId());
+        if (mTransitionLayout != null) {
+            mTransitionLayout.setActivity(getActivity());
+        }
         initToast();
+
+        setContentView(getLayoutId());
         attachToolbar(getToolbarSolidId(), getToolbarShadowId());
         acquireArguments(getIntent());
         establishCallbacks();
@@ -301,7 +297,7 @@ public abstract class ActivityFramework extends ActionBarActivity
     @Override
     protected void onDestroy() {
         unregisterReceiver(mExitReceiver);
-        hideToast();
+        mToastHelper.destroy();
         cancelRequest();
         if (mTransitionLayout != null) {
             mTransitionLayout.destroy();
@@ -321,7 +317,6 @@ public abstract class ActivityFramework extends ActionBarActivity
 
         postCreate();
         if (mTransitionLayout != null) {
-            mTransitionLayout.setActivity(getActivity());
             mTransitionLayout.post(new Runnable() {
                 @Override
                 public void run() {
@@ -407,19 +402,12 @@ public abstract class ActivityFramework extends ActionBarActivity
      *
      * @param text
      *         文本
-     * @param progress
+     * @param indeterminate
      *         是否显示进度条
      */
     @Override
-    public void showToast(String text, boolean progress) {
-        mToast.dismiss();
-        mToast.setText(text);
-        //        if (progress) {
-        //            mToast.setIcon(R.drawable.anim_progress_radiant, SuperToast.IconPosition.LEFT);
-        //        } else {
-        mToast.setIcon(R.drawable.shape_transparent, SuperToast.IconPosition.LEFT);
-        //        }
-        mToast.show();
+    public void showToast(String text, boolean indeterminate) {
+        mToastHelper.show(text, indeterminate);
     }
 
     /**
@@ -427,12 +415,12 @@ public abstract class ActivityFramework extends ActionBarActivity
      *
      * @param textId
      *         文本Id
-     * @param progress
+     * @param indeterminate
      *         是否显示进度条
      */
     @Override
-    public final void showToast(int textId, boolean progress) {
-        showToast(getString(textId), progress);
+    public final void showToast(int textId, boolean indeterminate) {
+        showToast(getString(textId), indeterminate);
     }
 
     @Override

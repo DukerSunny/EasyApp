@@ -41,6 +41,14 @@ public class PullableLayout extends FrameLayout implements ViewGroup.OnHierarchy
     private int mLoadIndicatorThreshold = 0;
     private float mLoadOffset = 0f;
     private boolean mLoading = false;
+    private Animator.AnimatorListener mLoadIdleListener = new AnimatorListenerAdapter() {
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            if (mLoadOffset == 0f) {
+                mLoading = false;
+            }
+        }
+    };
     private OnPullableListener mOnPullableListener = null;
     private Animator.AnimatorListener mLoadStartListener = new AnimatorListenerAdapter() {
         @Override
@@ -65,6 +73,14 @@ public class PullableLayout extends FrameLayout implements ViewGroup.OnHierarchy
     private int mRefreshIndicatorThreshold = 0;
     private float mRefreshOffset = 0f;
     private boolean mRefreshing = false;
+    private Animator.AnimatorListener mRefreshIdleListener = new AnimatorListenerAdapter() {
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            if (mRefreshOffset == 0f) {
+                mRefreshing = false;
+            }
+        }
+    };
     private float mTouchThreshold = ApplicationFramework.TouchThreshold;
     private IViewDelegate mViewDelegate = null;
     private String pullable_indicator_load_failure = null;
@@ -271,7 +287,6 @@ public class PullableLayout extends FrameLayout implements ViewGroup.OnHierarchy
     }
 
     public void setLoadComplete(boolean success) {
-        mLoading = false;
         if (success) {
             mLoadIndicator.setToast(pullable_indicator_load_success);
         } else {
@@ -292,7 +307,7 @@ public class PullableLayout extends FrameLayout implements ViewGroup.OnHierarchy
     }
 
     private void setLoadJumpToIdle(long delay) {
-        setLoadJumpTo(0f, delay, null);
+        setLoadJumpTo(0f, delay, mLoadIdleListener);
     }
 
     private void setLoadJumpToStart() {
@@ -305,9 +320,9 @@ public class PullableLayout extends FrameLayout implements ViewGroup.OnHierarchy
         if (offset < mLoadIndicatorHeight) {
             ViewHelper.setY(mLoadIndicator, mHeight - offset);
         } else {
-            ViewHelper.setY(mLoadIndicator, mHeight);
+            ViewHelper.setY(mLoadIndicator, mHeight - mLoadIndicatorHeight);
         }
-        if (offset > mLoadIndicatorHeight) {
+        if (offset >= mLoadIndicatorHeight) {
             mLoadIndicator.setProgress((offset - mLoadIndicatorHeight) / mLoadIndicatorHeight);
             if (mLoadOffset > mLoadIndicatorThreshold) {
                 mLoadIndicator.setToast(pullable_indicator_releasetoload);
@@ -335,7 +350,6 @@ public class PullableLayout extends FrameLayout implements ViewGroup.OnHierarchy
     }
 
     public void setRefreshComplete(boolean success) {
-        mRefreshing = false;
         if (success) {
             mRefreshIndicator.setToast(pullable_indicator_refresh_success);
         } else {
@@ -356,7 +370,7 @@ public class PullableLayout extends FrameLayout implements ViewGroup.OnHierarchy
     }
 
     private void setRefreshJumpToIdle(long delay) {
-        setRefreshJumpTo(0f, delay, null);
+        setRefreshJumpTo(0f, delay, mRefreshIdleListener);
     }
 
     private void setRefreshJumpToStart() {
@@ -371,7 +385,7 @@ public class PullableLayout extends FrameLayout implements ViewGroup.OnHierarchy
         } else {
             ViewHelper.setY(mRefreshIndicator, 0f);
         }
-        if (offset > mRefreshIndicatorHeight) {
+        if (offset >= mRefreshIndicatorHeight) {
             mRefreshIndicator.setProgress((offset - mRefreshIndicatorHeight) / mRefreshIndicatorHeight);
             if (mRefreshOffset > mRefreshIndicatorThreshold) {
                 mRefreshIndicator.setToast(pullable_indicator_releasetorefresh);

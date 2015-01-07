@@ -1,5 +1,7 @@
 package com.harreke.easyapp.utils;
 
+import com.alibaba.fastjson.JSON;
+
 import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -75,7 +77,7 @@ public class DirUtil {
         if (files != null) {
             for (File file : files) {
                 if (file.exists() && !file.isDirectory()) {
-                    object = GsonUtil.toBean(FileUtil.readTxt(file), classOfT);
+                    object = JSON.parseObject(FileUtil.readTxt(file), classOfT);
                     if (object != null) {
                         list.add(object);
                     }
@@ -93,7 +95,7 @@ public class DirUtil {
         if (files != null) {
             for (File file : files) {
                 if (file.exists() && !file.isDirectory()) {
-                    object = GsonUtil.toBean(FileUtil.readTxt(file), type);
+                    object = JSON.parseObject(FileUtil.readTxt(file), type);
                     if (object != null) {
                         list.add(object);
                     }

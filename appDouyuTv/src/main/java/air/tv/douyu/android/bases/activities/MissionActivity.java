@@ -47,7 +47,7 @@ public class MissionActivity extends ActivityFramework {
     @Override
     protected void createMenu() {
         setToolbarTitle(R.string.app_mission);
-        setToolbarNavigation();
+        enableDefaultToolbarNavigation();
     }
 
     @Override

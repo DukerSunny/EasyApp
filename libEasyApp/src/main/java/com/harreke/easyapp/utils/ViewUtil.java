@@ -1,6 +1,7 @@
 package com.harreke.easyapp.utils;
 
 import android.view.View;
+import android.view.ViewGroup;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/12/31
@@ -46,5 +47,19 @@ public class ViewUtil {
     public static String getStringTag(View view, int key) {
         return (view != null && view.getTag(key) != null && view.getTag(key) instanceof String) ? (String) view.getTag(key) :
                 null;
+    }
+
+    public static int findChild(ViewGroup parent, int childId) {
+        int position = -1;
+        int i;
+
+        for (i = 0; i < parent.getChildCount(); i++) {
+            if (parent.getChildAt(i).getId() == childId) {
+                position = i;
+                break;
+            }
+        }
+
+        return position;
     }
 }

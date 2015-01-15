@@ -43,6 +43,31 @@
     <string name="more_follow">关注</string>
     <string name="more_checkin">签到</string>
 
+    <string name="player_definition_hd">超清</string>
+    <string name="player_definition_sd">普清</string>
+    <string name="player_stream">直播列表</string>
+    <string name="player_input">在此输入弹幕 …</string>
+    <string name="player_hot">热词</string>
+    <string name="player_send">发送</string>
+    <string name="player_cancel">取消</string>
+    <string name="player_screen_brightness">屏幕亮度</string>
+    <string name="player_danmaku_opacity">弹幕透明度</string>
+    <string name="player_danmaku_density">弹幕密度</string>
+    <string name="player_danmaku_density_low">较低</string>
+    <string name="player_danmaku_density_middle">中等</string>
+    <string name="player_danmaku_density_high">较高</string>
+    <string name="player_danmaku_density_unlimited">不限</string>
+    <string name="player_danmaku_size">弹幕大小</string>
+    <string name="player_danmaku_size_low">较小</string>
+    <string name="player_danmaku_size_normal">普通</string>
+    <string name="player_danmaku_size_high">较大</string>
+    <string name="player_danmaku_size_huge">巨大</string>
+    <string name="player_screen_ratio">屏幕比例</string>
+    <string name="player_screen_ratio_16x9">16:9</string>
+    <string name="player_screen_ratio_4x3">4:3</string>
+    <string name="player_screen_ratio_auto">自动</string>
+    <string name="player_screen_ratio_fullscreen">全屏</string>
+
     <string name="profile_weight">鱼丸</string>
     <string name="profile_follow">关注</string>
     <string name="profile_mail">邮箱</string>
@@ -54,8 +79,19 @@
     <string name="room_follow">关注：%s</string>
     <string name="room_share">分享</string>
     <string name="room_notice">公告</string>
+    <string name="room_follow_adding">正在添加关注 …</string>
+    <string name="room_follow_add_success">添加关注成功！</string>
+    <string name="room_follow_add_failure">添加关注失败！</string>
+    <string name="room_follow_removing">正在移除关注 …</string>
+    <string name="room_follow_remove_success">移除关注成功！</string>
+    <string name="room_follow_remove_failure">移除关注失败！</string>
 
     <string name="search_hint">输入搜索内容</string>
+    <string name="search_action">搜索</string>
+    <string name="search_empty">搜索内容不能为空！</string>
+    <string name="search_result">搜索结果</string>
+    <string name="search_status_online">已开播</string>
+    <string name="search_status_offline">未开播</string>
 
     <string name="setting_system">系统设置</string>
     <string name="setting_system_auto_load_more">列表自动加载</string>

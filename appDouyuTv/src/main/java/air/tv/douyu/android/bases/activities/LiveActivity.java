@@ -55,7 +55,7 @@ public class LiveActivity extends ActivityFramework {
     protected void createMenu() {
         setToolbarTitle(mGameName);
         addToolbarItem(0, R.string.app_search, R.drawable.image_toolbar_search);
-        setToolbarNavigation();
+        enableDefaultToolbarNavigation();
     }
 
     @Override
@@ -63,6 +63,7 @@ public class LiveActivity extends ActivityFramework {
         mLiveRecyclerHelper = new LiveRecyclerHelper(this);
         mLiveRecyclerHelper.setHasFixedSize(true);
         mLiveRecyclerHelper.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        mLiveRecyclerHelper.setItemDecoration();
         mLiveRecyclerHelper.setListParser(new RoomListParser());
         mLiveRecyclerHelper.attachAdapter();
     }

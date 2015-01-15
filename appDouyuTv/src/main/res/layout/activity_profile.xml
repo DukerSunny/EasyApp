@@ -54,12 +54,12 @@
                         android:textStyle="bold"/>
 
                     <LinearLayout
-                        style="@style/mw.h"
-                        android:layout_marginTop="4dp">
+                        style="@style/mw.h">
 
                         <LinearLayout
                             style="@style/mww.h"
-                            android:gravity="center_vertical">
+                            android:gravity="center_vertical"
+                            android:padding="4dp">
 
                             <TextView
                                 style="@style/ww"
@@ -68,7 +68,7 @@
                                 android:textSize="@dimen/Body1"/>
 
                             <TextView
-                                android:id="@+id/profile_weight"
+                                android:id="@+id/profile_weight_text"
                                 style="@style/ww"
                                 android:layout_marginLeft="4dp"
                                 android:ellipsize="end"
@@ -79,8 +79,10 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:id="@+id/profile_follow"
                             style="@style/mww.h"
-                            android:gravity="center_vertical">
+                            android:gravity="center_vertical"
+                            android:padding="4dp">
 
                             <TextView
                                 style="@style/ww"
@@ -89,7 +91,7 @@
                                 android:textSize="@dimen/Body1"/>
 
                             <TextView
-                                android:id="@+id/profile_follow"
+                                android:id="@+id/profile_follow_text"
                                 style="@style/ww"
                                 android:layout_marginLeft="4dp"
                                 android:ellipsize="end"

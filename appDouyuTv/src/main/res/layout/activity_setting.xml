@@ -23,11 +23,13 @@
                     android:padding="8dp"
                     android:text="@string/setting_system"
                     android:textColor="?attr/colorPrimary"
-                    android:textSize="@dimen/Subhead"/>
+                    android:textSize="@dimen/Headline"/>
 
                 <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/setting_system_auto_load_more"
                     style="@style/mw"
                     android:background="@color/transparent"
+                    android:checked="true"
                     android:gravity="center_vertical"
                     android:paddingBottom="16dp"
                     android:paddingLeft="8dp"
@@ -40,6 +42,7 @@
                     app:track="@drawable/selector_switch_track"/>
 
                 <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/setting_system_show_empty_category"
                     style="@style/mw"
                     android:background="@color/transparent"
                     android:gravity="center_vertical"
@@ -54,8 +57,10 @@
                     app:track="@drawable/selector_switch_track"/>
 
                 <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/setting_system_receive_push"
                     style="@style/mw"
                     android:background="@color/transparent"
+                    android:checked="true"
                     android:gravity="center_vertical"
                     android:paddingBottom="16dp"
                     android:paddingLeft="8dp"
@@ -68,6 +73,7 @@
                     app:track="@drawable/selector_switch_track"/>
 
                 <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/setting_system_play_video_under_mobile_network"
                     style="@style/mw"
                     android:background="@color/transparent"
                     android:gravity="center_vertical"
@@ -82,15 +88,16 @@
                     app:track="@drawable/selector_switch_track"/>
 
                 <LinearLayout
-                    style="@style/mw.v"
-                    android:paddingBottom="16dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:paddingTop="16dp">
+                    style="@style/mw.v">
 
                     <LinearLayout
+                        android:id="@+id/setting_system_switch_decode"
                         style="@style/mw.h"
-                        android:gravity="center_vertical">
+                        android:gravity="center_vertical"
+                        android:paddingBottom="16dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="16dp">
 
                         <TextView
                             style="@style/mww"
@@ -98,14 +105,31 @@
                             android:textColor="@color/darkGray"
                             android:textSize="@dimen/Body1"/>
 
+                        <TextView
+                            android:id="@+id/setting_system_switch_decode_text"
+                            android:layout_width="72dp"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/colorPrimary"
+                            android:gravity="center"
+                            android:paddingBottom="2dp"
+                            android:paddingLeft="4dp"
+                            android:paddingRight="4dp"
+                            android:paddingTop="2dp"
+                            android:text="@string/setting_system_switch_decode_hw"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/Caption"/>
+
                         <ImageView
+                            android:id="@+id/setting_system_switch_decode_switch"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
+                            android:layout_marginLeft="8dp"
                             android:src="@drawable/arrow_down"/>
 
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/setting_system_switch_decode_layout"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
                         android:orientation="horizontal">
@@ -114,8 +138,9 @@
                             style="@style/mmw">
 
                             <RadioButton
-                                android:layout_width="72dp"
-                                android:layout_height="24dp"
+                                android:id="@+id/setting_system_switch_decode_hw"
+                                android:layout_width="80dp"
+                                android:layout_height="32dp"
                                 android:layout_gravity="center"
                                 android:background="@drawable/selector_setting"
                                 android:button="@color/transparent"
@@ -131,8 +156,9 @@
                             style="@style/mmw">
 
                             <RadioButton
-                                android:layout_width="72dp"
-                                android:layout_height="24dp"
+                                android:id="@+id/setting_system_switch_decode_sw"
+                                android:layout_width="80dp"
+                                android:layout_height="32dp"
                                 android:layout_gravity="center"
                                 android:background="@drawable/selector_setting"
                                 android:button="@color/transparent"
@@ -155,11 +181,13 @@
                     android:padding="8dp"
                     android:text="@string/setting_live"
                     android:textColor="?attr/colorPrimary"
-                    android:textSize="@dimen/Subhead"/>
+                    android:textSize="@dimen/Headline"/>
 
                 <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/setting_live_player_gesture"
                     style="@style/mw"
                     android:background="@color/transparent"
+                    android:checked="true"
                     android:gravity="center_vertical"
                     android:paddingBottom="16dp"
                     android:paddingLeft="8dp"
@@ -172,15 +200,16 @@
                     app:track="@drawable/selector_switch_track"/>
 
                 <LinearLayout
-                    style="@style/mw.v"
-                    android:paddingBottom="16dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:paddingTop="16dp">
+                    style="@style/mw.v">
 
                     <LinearLayout
+                        android:id="@+id/setting_live_danmaku_opacity"
                         style="@style/mw.h"
-                        android:gravity="center_vertical">
+                        android:gravity="center_vertical"
+                        android:paddingBottom="16dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="16dp">
 
                         <TextView
                             style="@style/mww"
@@ -188,35 +217,61 @@
                             android:textColor="@color/darkGray"
                             android:textSize="@dimen/Body1"/>
 
+                        <TextView
+                            android:id="@+id/setting_live_danmaku_opacity_text"
+                            android:layout_width="72dp"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/colorPrimary"
+                            android:gravity="center"
+                            android:paddingBottom="2dp"
+                            android:paddingLeft="4dp"
+                            android:paddingRight="4dp"
+                            android:paddingTop="2dp"
+                            android:text="100%"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/Caption"/>
+
                         <ImageView
+                            android:id="@+id/setting_live_danmaku_opacity_switch"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
+                            android:layout_marginLeft="8dp"
                             android:src="@drawable/arrow_down"/>
 
                     </LinearLayout>
 
-                    <SeekBar
-                        style="@style/mw"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_marginTop="8dp"
-                        android:max="100"
-                        android:progress="0"
-                        android:progressDrawable="@drawable/layer_seekbar"
-                        android:thumb="@drawable/shape_seekbar_thumb"/>
+                    <FrameLayout
+                        android:id="@+id/setting_live_danmaku_opacity_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp">
+
+                        <SeekBar
+                            android:id="@+id/setting_live_danmaku_opacity_seekbar"
+                            style="@style/mw"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="8dp"
+                            android:max="217"
+                            android:maxHeight="2dp"
+                            android:progress="217"
+                            android:progressDrawable="@drawable/layer_seekbar_green"
+                            android:thumb="@drawable/shape_seekbar_thumb_green"/>
+
+                    </FrameLayout>
 
                 </LinearLayout>
 
                 <LinearLayout
-                    style="@style/mw.v"
-                    android:paddingBottom="16dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:paddingTop="16dp">
+                    style="@style/mw.v">
 
                     <LinearLayout
+                        android:id="@+id/setting_live_danmaku_size"
                         style="@style/mw.h"
-                        android:gravity="center_vertical">
+                        android:gravity="center_vertical"
+                        android:paddingBottom="16dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="16dp">
 
                         <TextView
                             style="@style/mww"
@@ -224,35 +279,61 @@
                             android:textColor="@color/darkGray"
                             android:textSize="@dimen/Body1"/>
 
+                        <TextView
+                            android:id="@+id/setting_live_danmaku_size_text"
+                            android:layout_width="72dp"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/colorPrimary"
+                            android:gravity="center"
+                            android:paddingBottom="2dp"
+                            android:paddingLeft="4dp"
+                            android:paddingRight="4dp"
+                            android:paddingTop="2dp"
+                            android:text="22"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/Caption"/>
+
                         <ImageView
+                            android:id="@+id/setting_live_danmaku_size_switch"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
+                            android:layout_marginLeft="8dp"
                             android:src="@drawable/arrow_down"/>
 
                     </LinearLayout>
 
-                    <SeekBar
-                        style="@style/mw"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_marginTop="8dp"
-                        android:max="100"
-                        android:progress="0"
-                        android:progressDrawable="@drawable/layer_seekbar"
-                        android:thumb="@drawable/shape_seekbar_thumb"/>
+                    <FrameLayout
+                        android:id="@+id/setting_live_danmaku_size_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp">
+
+                        <SeekBar
+                            android:id="@+id/setting_live_danmaku_size_seekbar"
+                            style="@style/mw"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="8dp"
+                            android:max="3"
+                            android:maxHeight="2dp"
+                            android:progress="1"
+                            android:progressDrawable="@drawable/layer_seekbar_green"
+                            android:thumb="@drawable/shape_seekbar_thumb_green"/>
+
+                    </FrameLayout>
 
                 </LinearLayout>
 
                 <LinearLayout
-                    style="@style/mw.v"
-                    android:paddingBottom="16dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:paddingTop="16dp">
+                    style="@style/mw.v">
 
                     <LinearLayout
+                        android:id="@+id/setting_live_danmaku_location"
                         style="@style/mw.h"
-                        android:gravity="center_vertical">
+                        android:gravity="center_vertical"
+                        android:paddingBottom="16dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="16dp">
 
                         <TextView
                             style="@style/mww"
@@ -260,14 +341,31 @@
                             android:textColor="@color/darkGray"
                             android:textSize="@dimen/Body1"/>
 
+                        <TextView
+                            android:id="@+id/setting_live_danmaku_location_text"
+                            android:layout_width="72dp"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/colorPrimary"
+                            android:gravity="center"
+                            android:paddingBottom="2dp"
+                            android:paddingLeft="4dp"
+                            android:paddingRight="4dp"
+                            android:paddingTop="2dp"
+                            android:text="@string/setting_live_danmaku_location_top"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/Caption"/>
+
                         <ImageView
+                            android:id="@+id/setting_live_danmaku_location_switch"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
+                            android:layout_marginLeft="8dp"
                             android:src="@drawable/arrow_down"/>
 
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/setting_live_danmaku_location_layout"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
                         android:orientation="horizontal">
@@ -276,8 +374,9 @@
                             style="@style/mmw">
 
                             <RadioButton
-                                android:layout_width="72dp"
-                                android:layout_height="24dp"
+                                android:id="@+id/setting_live_danmaku_location_top"
+                                android:layout_width="80dp"
+                                android:layout_height="32dp"
                                 android:layout_gravity="center"
                                 android:background="@drawable/selector_setting"
                                 android:button="@color/transparent"
@@ -293,8 +392,9 @@
                             style="@style/mmw">
 
                             <RadioButton
-                                android:layout_width="72dp"
-                                android:layout_height="24dp"
+                                android:id="@+id/setting_live_danmaku_location_bottom"
+                                android:layout_width="80dp"
+                                android:layout_height="32dp"
                                 android:layout_gravity="center"
                                 android:background="@drawable/selector_setting"
                                 android:button="@color/transparent"
@@ -309,8 +409,9 @@
                             style="@style/mmw">
 
                             <RadioButton
-                                android:layout_width="72dp"
-                                android:layout_height="24dp"
+                                android:id="@+id/setting_live_danmaku_location_fullscreen"
+                                android:layout_width="80dp"
+                                android:layout_height="32dp"
                                 android:layout_gravity="center"
                                 android:background="@drawable/selector_setting"
                                 android:button="@color/transparent"
@@ -333,9 +434,10 @@
                     android:padding="8dp"
                     android:text="@string/setting_support"
                     android:textColor="?attr/colorPrimary"
-                    android:textSize="@dimen/Subhead"/>
+                    android:textSize="@dimen/Headline"/>
 
                 <TextView
+                    android:id="@+id/setting_support_check_update"
                     style="@style/mw"
                     android:gravity="center_vertical"
                     android:paddingBottom="16dp"
@@ -347,6 +449,7 @@
                     android:textSize="@dimen/Body1"/>
 
                 <TextView
+                    android:id="@+id/setting_support_feedback"
                     style="@style/mw"
                     android:gravity="center_vertical"
                     android:paddingBottom="16dp"
@@ -358,6 +461,7 @@
                     android:textSize="@dimen/Body1"/>
 
                 <TextView
+                    android:id="@+id/setting_support_about_us"
                     style="@style/mw"
                     android:gravity="center_vertical"
                     android:paddingBottom="16dp"

@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
+import com.harreke.easyapp.enums.ActivityAnimation;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
 
@@ -153,9 +153,9 @@ public interface IFramework {
      * @param anim
      *         Intent切换动画
      *
-     *         {@link com.harreke.easyapp.frameworks.bases.activity.ActivityFramework.Anim}
+     * @see com.harreke.easyapp.enums.ActivityAnimation
      */
-    public void start(Intent intent, ActivityFramework.Anim anim);
+    public void start(Intent intent, ActivityAnimation anim);
 
     /**
      * 启动Intent
@@ -181,9 +181,9 @@ public interface IFramework {
      * @param anim
      *         Intent切换动画
      *
-     *         {@link com.harreke.easyapp.frameworks.bases.activity.ActivityFramework.Anim}
+     * @see com.harreke.easyapp.enums.ActivityAnimation
      */
-    public void start(Intent intent, int requestCode, ActivityFramework.Anim anim);
+    public void start(Intent intent, int requestCode, ActivityAnimation anim);
 
     /**
      * 开始运作

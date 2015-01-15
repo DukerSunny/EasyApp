@@ -69,7 +69,7 @@ public class LoginActivity extends ActivityFramework {
     @Override
     protected void createMenu() {
         setToolbarTitle(R.string.app_login);
-        setToolbarNavigation();
+        enableDefaultToolbarNavigation();
     }
 
     private void doAccess(String username, String password) {

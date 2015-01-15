@@ -3,6 +3,7 @@ package com.harreke.easyapp.widgets.transitions;
 import android.app.Activity;
 import android.view.MotionEvent;
 
+import com.harreke.easyapp.enums.ExitTransition;
 import com.harreke.easyapp.frameworks.bases.application.ApplicationFramework;
 
 /**

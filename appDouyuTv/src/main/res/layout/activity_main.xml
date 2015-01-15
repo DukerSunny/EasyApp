@@ -17,7 +17,7 @@
         app:pstsIndicatorColor="?attr/colorAccent"
         app:pstsIndicatorHeight="3dp"
         app:pstsShouldExpand="true"
-        app:pstsTabBackground="@drawable/button_transparent_transparentwhite"/>
+        app:pstsTabBackground="@drawable/selector_tab"/>
 
     <FrameLayout
         style="@style/mm">

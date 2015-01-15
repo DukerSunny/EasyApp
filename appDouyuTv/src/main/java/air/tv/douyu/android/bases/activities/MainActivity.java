@@ -5,10 +5,12 @@ import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.view.MenuItem;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.harreke.easyapp.adapters.fragment.FragmentPageAdapter;
 import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
+import com.harreke.easyapp.utils.ResourceUtil;
 
 import air.tv.douyu.android.R;
 import air.tv.douyu.android.bases.application.DouyuTv;
@@ -45,7 +47,7 @@ public class MainActivity extends ActivityFramework {
         main_pager_strip = (PagerSlidingTabStrip) findViewById(R.id.main_pager_strip);
 
         main_pager_strip.setTextColor(Color.WHITE);
-        main_pager_strip.setTextSize((int) getResources().getDimension(R.dimen.Subhead));
+        main_pager_strip.setTextSize((int) ResourceUtil.getDimension(this, R.dimen.Subhead));
     }
 
     @Override
@@ -74,6 +76,13 @@ public class MainActivity extends ActivityFramework {
     protected void onDestroy() {
         DouyuTv.getInstance().unregisterConnectionReceiver();
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
+        start(SearchActivity.create(this));
+
+        return false;
     }
 
     @Override

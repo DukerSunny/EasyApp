@@ -27,7 +27,7 @@ public class ToastHelper {
     };
     private CircularProgressDrawable mProgressDrawable;
     private WeakReference<Activity> mReference;
-    private ViewPropertyAnimator mToastAnimator;
+    private ViewPropertyAnimator mToastAnimator = null;
     private ImageView toast_icon;
     private View toast_root;
     private TextView toast_text;
@@ -46,9 +46,13 @@ public class ToastHelper {
         toast_icon.setImageDrawable(mProgressDrawable);
 
         mToastAnimator = ViewPropertyAnimator.animate(toast_root);
-        ViewHelper.setY(toast_root, decorView.getMeasuredHeight() * 0.75f);
         ViewHelper.setAlpha(toast_root, 0f);
         setProgress(0f);
+    }
+
+    private void cancel() {
+        mToastAnimator.cancel();
+        toast_root.removeCallbacks(mHideRunnable);
     }
 
     public void destroy() {
@@ -68,9 +72,9 @@ public class ToastHelper {
 
     public void hide() {
         if (mReference.get() != null) {
-            mToastAnimator.cancel();
-            mToastAnimator = ViewPropertyAnimator.animate(toast_root);
-            mToastAnimator.y(mReference.get().getWindow().getDecorView().getMeasuredHeight() * 0.75f).alpha(0f).start();
+            cancel();
+            ViewHelper.setY(toast_root, mReference.get().getWindow().getDecorView().getMeasuredHeight() / 2f);
+            mToastAnimator.alpha(0f).start();
         }
     }
 
@@ -83,16 +87,14 @@ public class ToastHelper {
         }
     }
 
-    private void show() {
-        int height;
-
+    private void show(boolean indeterminate) {
         if (mReference.get() != null) {
-            mToastAnimator.cancel();
-            height = mReference.get().getWindow().getDecorView().getMeasuredHeight();
-            ViewHelper.setY(toast_root, height * 0.75f);
-            mToastAnimator = ViewPropertyAnimator.animate(toast_root);
-            mToastAnimator.y(height * 0.5f).alpha(1f).setDuration(300l).start();
-            toast_root.postDelayed(mHideRunnable, 3300l);
+            cancel();
+            ViewHelper.setY(toast_root, mReference.get().getWindow().getDecorView().getMeasuredHeight() / 2f);
+            mToastAnimator.alpha(1f).setDuration(300l).start();
+            if (!indeterminate) {
+                toast_root.postDelayed(mHideRunnable, 3300l);
+            }
         }
     }
 
@@ -107,6 +109,6 @@ public class ToastHelper {
             setProgress(0f);
         }
         toast_text.setText(text);
-        show();
+        show(indeterminate);
     }
 }

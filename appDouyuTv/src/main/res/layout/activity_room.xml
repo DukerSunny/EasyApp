@@ -22,7 +22,6 @@
                     style="@style/mw">
 
                     <LinearLayout
-                        android:id="@+id/room_info"
                         style="@style/mw.h"
                         android:gravity="center_vertical"
                         android:paddingBottom="16dp"
@@ -64,7 +63,9 @@
 
                                     <TextView
                                         android:id="@+id/room_nickname"
-                                        style="@style/mw"/>
+                                        style="@style/mw"
+                                        android:layout_marginLeft="8dp"
+                                        android:textAppearance="@style/Caption"/>
 
                                 </LinearLayout>
 
@@ -79,7 +80,9 @@
 
                                     <TextView
                                         android:id="@+id/room_game_name"
-                                        style="@style/mw"/>
+                                        style="@style/mw"
+                                        android:layout_marginLeft="8dp"
+                                        android:textAppearance="@style/Caption"/>
 
                                 </LinearLayout>
 
@@ -126,7 +129,6 @@
                             style="@style/mw.h">
 
                             <LinearLayout
-                                android:id="@+id/room_online_root"
                                 style="@style/mww.v"
                                 android:gravity="center"
                                 android:paddingBottom="16dp"
@@ -142,7 +144,7 @@
                                 <TextView
                                     android:id="@+id/room_online"
                                     style="@style/ww"
-                                    android:layout_marginTop="4dp"
+                                    android:layout_marginTop="8dp"
                                     android:text="@string/room_online"
                                     android:textAppearance="@style/Caption"/>
 
@@ -164,15 +166,28 @@
                                 android:paddingRight="8dp"
                                 android:paddingTop="8dp">
 
-                                <ImageView
+                                <FrameLayout
                                     android:layout_width="32dp"
-                                    android:layout_height="32dp"
-                                    android:src="@drawable/follows"/>
+                                    android:layout_height="32dp">
+
+                                    <ImageView
+                                        android:id="@+id/room_follow_add"
+                                        style="@style/mm"
+                                        android:src="@drawable/follow_add"
+                                        android:visibility="gone"/>
+
+                                    <ImageView
+                                        android:id="@+id/room_follow_remove"
+                                        style="@style/mm"
+                                        android:src="@drawable/follow"
+                                        android:visibility="gone"/>
+
+                                </FrameLayout>
 
                                 <TextView
-                                    android:id="@+id/room_follow"
+                                    android:id="@+id/room_follow_text"
                                     style="@style/ww"
-                                    android:layout_marginTop="4dp"
+                                    android:layout_marginTop="8dp"
                                     android:text="@string/room_follow"
                                     android:textAppearance="@style/Caption"/>
 
@@ -201,7 +216,7 @@
 
                                 <TextView
                                     style="@style/ww"
-                                    android:layout_marginTop="4dp"
+                                    android:layout_marginTop="8dp"
                                     android:text="@string/room_share"
                                     android:textAppearance="@style/Caption"/>
 
@@ -234,7 +249,7 @@
                             android:id="@+id/room_show_details"
                             style="@style/mw"
                             android:padding="8dp"
-                            android:textAppearance="@style/Caption"/>
+                            android:textAppearance="@style/Body1"/>
 
                     </LinearLayout>
 

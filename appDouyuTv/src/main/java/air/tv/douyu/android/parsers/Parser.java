@@ -10,6 +10,22 @@ import java.util.List;
  * 由 Harreke（harreke@live.cn） 创建于 2015/01/07
  */
 public class Parser {
+    public static boolean parseBoolean(String json) {
+        return parseObject(json, Boolean.class);
+    }
+
+    public static double parseDouble(String json) {
+        return parseObject(json, Double.class);
+    }
+
+    public static float parseFloat(String json) {
+        return parseObject(json, Float.class);
+    }
+
+    public static int parseInt(String json) {
+        return parseObject(json, Integer.class);
+    }
+
     private static JSONObject parseJSONObject(String json) {
         JSONObject object;
         int error;
@@ -29,12 +45,12 @@ public class Parser {
         return null;
     }
 
-    public static <T> List<T> parseList(String json, Class<T> classOfT) {
+    public static <ITEM> List<ITEM> parseList(String json, Class<ITEM> clazz) {
         JSONObject object = parseJSONObject(json);
-        List<T> data;
+        List<ITEM> data;
 
         if (object != null) {
-            data = JSON.parseArray(object.getJSONArray("data").toString(), classOfT);
+            data = JSON.parseArray(object.getJSONArray("data").toString(), clazz);
             if (data != null) {
                 return data;
             }
@@ -43,17 +59,21 @@ public class Parser {
         return null;
     }
 
-    public static <T> T parseObject(String json, Class<T> classOfT) {
+    public static <ITEM> ITEM parseObject(String json, Class<ITEM> clazz) {
         JSONObject object = parseJSONObject(json);
-        T data;
+        ITEM data;
 
         if (object != null) {
-            data = object.getObject("data", classOfT);
+            data = object.getObject("data", clazz);
             if (data != null) {
                 return data;
             }
         }
 
         return null;
+    }
+
+    public static String parseString(String json) {
+        return parseObject(json, String.class);
     }
 }

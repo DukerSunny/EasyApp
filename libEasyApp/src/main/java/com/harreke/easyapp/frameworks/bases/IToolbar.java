@@ -14,7 +14,7 @@ public interface IToolbar {
 
     public void hideToolbarItem(int id);
 
-    public void setToolbarNavigation();
+    public void enableDefaultToolbarNavigation();
 
     public void setToolbarNavigation(int imageId);
 

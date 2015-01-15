@@ -53,7 +53,7 @@ public class StringUtil {
         } else {
             result = String.valueOf(number / 10000f);
 
-            return result.substring(0, result.indexOf(".") + 1) + "万";
+            return result.substring(0, result.indexOf(".") + 2) + "万";
         }
     }
 

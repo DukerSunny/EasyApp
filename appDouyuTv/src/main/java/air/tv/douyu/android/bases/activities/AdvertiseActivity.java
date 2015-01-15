@@ -53,7 +53,7 @@ public class AdvertiseActivity extends ActivityFramework {
     @Override
     protected void createMenu() {
         setToolbarTitle(R.string.app_advertise);
-        setToolbarNavigation();
+        enableDefaultToolbarNavigation();
     }
 
     private void doSend(Advertise advertise) {
@@ -66,6 +66,7 @@ public class AdvertiseActivity extends ActivityFramework {
         mAdvertiseRecyclerHelper = new AdvertiseRecyclerHelper(this);
         mAdvertiseRecyclerHelper.setHasFixedSize(true);
         mAdvertiseRecyclerHelper.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        mAdvertiseRecyclerHelper.setItemDecoration();
         mAdvertiseRecyclerHelper.setListParser(new AdvertiseListParser());
         mAdvertiseRecyclerHelper.attachAdapter();
     }

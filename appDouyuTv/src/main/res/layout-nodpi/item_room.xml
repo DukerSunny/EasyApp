@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView
     style="@style/mw"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_margin="4dp">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
         android:id="@+id/room_root"
@@ -15,24 +14,27 @@
 
         <LinearLayout
             style="@style/mw.v"
-            android:padding="4dp">
+            android:paddingBottom="16dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="8dp">
 
             <LinearLayout
-                style="@style/mw.h"
-                android:layout_marginTop="4dp">
+                style="@style/mw.h">
 
                 <LinearLayout
                     style="@style/mww.h"
                     android:gravity="center_vertical">
 
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
                         android:src="@drawable/user_holo"/>
 
                     <TextView
                         android:id="@+id/room_nickname"
                         style="@style/mw"
+                        android:layout_marginLeft="8dp"
                         android:singleLine="true"
                         android:textAppearance="@style/Caption"/>
 
@@ -44,13 +46,14 @@
                     android:gravity="center_vertical">
 
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
                         android:src="@drawable/online_holo"/>
 
                     <TextView
                         android:id="@+id/room_online"
                         style="@style/ww"
+                        android:layout_marginLeft="8dp"
                         android:singleLine="true"
                         android:textAppearance="@style/Caption"/>
 
@@ -61,10 +64,9 @@
             <TextView
                 android:id="@+id/room_name"
                 style="@style/mw"
-                android:layout_marginBottom="4dp"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="8dp"
                 android:singleLine="true"
-                android:textAppearance="@style/Subhead"/>
+                android:textAppearance="@style/Caption"/>
 
         </LinearLayout>
 

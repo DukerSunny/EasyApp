@@ -16,7 +16,6 @@ import com.harreke.easyapp.widgets.transitions.SwipeToFinishLayout;
 
 import air.tv.douyu.android.R;
 import air.tv.douyu.android.apis.API;
-import air.tv.douyu.android.bases.application.DouyuTv;
 import air.tv.douyu.android.beans.Room;
 import air.tv.douyu.android.holders.RoomHolder;
 import air.tv.douyu.android.parsers.RoomListParser;
@@ -26,7 +25,6 @@ import air.tv.douyu.android.parsers.RoomListParser;
  */
 public class FollowActivity extends ActivityFramework {
     private FollowRecyclerHelper mFollowRecyclerHelper;
-    private String mToken;
 
     public static Intent create(Context context) {
         return new Intent(context, FollowActivity.class);
@@ -34,7 +32,6 @@ public class FollowActivity extends ActivityFramework {
 
     @Override
     protected void acquireArguments(Intent intent) {
-        mToken = DouyuTv.getInstance().readUser().getToken();
     }
 
     @Override
@@ -49,7 +46,7 @@ public class FollowActivity extends ActivityFramework {
     @Override
     protected void createMenu() {
         setToolbarTitle(R.string.app_follow);
-        setToolbarNavigation();
+        enableDefaultToolbarNavigation();
     }
 
     @Override
@@ -57,6 +54,7 @@ public class FollowActivity extends ActivityFramework {
         mFollowRecyclerHelper = new FollowRecyclerHelper(this);
         mFollowRecyclerHelper.setHasFixedSize(true);
         mFollowRecyclerHelper.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        mFollowRecyclerHelper.setItemDecoration();
         mFollowRecyclerHelper.setListParser(new RoomListParser());
         mFollowRecyclerHelper.attachAdapter();
     }
@@ -79,7 +77,7 @@ public class FollowActivity extends ActivityFramework {
 
     @Override
     public void startAction() {
-        mFollowRecyclerHelper.from(API.getFollow(mToken, 20, mFollowRecyclerHelper.getCurrentPage()));
+        mFollowRecyclerHelper.from(API.getFollow(20, mFollowRecyclerHelper.getCurrentPage()));
     }
 
     private class FollowRecyclerHelper extends RecyclerFramework<Room> {

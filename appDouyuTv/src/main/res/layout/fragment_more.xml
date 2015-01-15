@@ -83,7 +83,7 @@
                             <ImageView
                                 android:layout_width="16dp"
                                 android:layout_height="16dp"
-                                android:src="@drawable/follows"/>
+                                android:src="@drawable/follow"/>
 
                             <TextView
                                 style="@style/ww"
@@ -125,7 +125,7 @@
                     <ImageView
                         android:layout_width="32dp"
                         android:layout_height="32dp"
-                        android:src="@drawable/follows"/>
+                        android:src="@drawable/follow"/>
 
                     <TextView
                         style="@style/mww"
@@ -172,7 +172,7 @@
                     <ImageView
                         android:layout_width="32dp"
                         android:layout_height="32dp"
-                        android:src="@drawable/histories"/>
+                        android:src="@drawable/history"/>
 
                     <TextView
                         style="@style/mww"
@@ -205,7 +205,7 @@
                     <ImageView
                         android:layout_width="32dp"
                         android:layout_height="32dp"
-                        android:src="@drawable/missions"/>
+                        android:src="@drawable/mission"/>
 
                     <TextView
                         style="@style/mww"
@@ -291,7 +291,7 @@
                     <ImageView
                         android:layout_width="32dp"
                         android:layout_height="32dp"
-                        android:src="@drawable/settings"/>
+                        android:src="@drawable/setting"/>
 
                     <TextView
                         style="@style/mww"

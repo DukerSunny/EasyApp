@@ -3,11 +3,13 @@
 
     <color name="colorPrimary">#e84e40</color>
     <color name="colorPrimaryDark">#bf360c</color>
-    <color name="colorAccent">#40c4ff</color>
+    <color name="colorAccent">#fbc02d</color>
 
     <color name="advertiseDownload">#ff7108</color>
 
-    <color name="checked">#4bdd95</color>
-    <color name="unchecked">#868686</color>
+    <color name="checked_orange">#ff8c00</color>
+    <color name="checked_transparent_orange">#c0ff8c00</color>
+    <color name="checked_green">#4db6ac</color>
+    <color name="unchecked">#848484</color>
 
 </resources>

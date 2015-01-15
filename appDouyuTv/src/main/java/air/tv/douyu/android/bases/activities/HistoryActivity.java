@@ -16,7 +16,6 @@ import com.harreke.easyapp.widgets.transitions.SwipeToFinishLayout;
 
 import air.tv.douyu.android.R;
 import air.tv.douyu.android.apis.API;
-import air.tv.douyu.android.bases.application.DouyuTv;
 import air.tv.douyu.android.beans.Room;
 import air.tv.douyu.android.holders.RoomHolder;
 import air.tv.douyu.android.parsers.RoomListParser;
@@ -26,7 +25,6 @@ import air.tv.douyu.android.parsers.RoomListParser;
  */
 public class HistoryActivity extends ActivityFramework {
     private HistoryRecyclerHelper mHistoryRecyclerHelper;
-    private String mToken;
 
     public static Intent create(Context context) {
         return new Intent(context, HistoryActivity.class);
@@ -34,7 +32,6 @@ public class HistoryActivity extends ActivityFramework {
 
     @Override
     protected void acquireArguments(Intent intent) {
-        mToken = DouyuTv.getInstance().readUser().getToken();
     }
 
     @Override
@@ -49,7 +46,7 @@ public class HistoryActivity extends ActivityFramework {
     @Override
     protected void createMenu() {
         setToolbarTitle(R.string.app_history);
-        setToolbarNavigation();
+        enableDefaultToolbarNavigation();
     }
 
     @Override
@@ -58,6 +55,7 @@ public class HistoryActivity extends ActivityFramework {
         mHistoryRecyclerHelper.setHasFixedSize(true);
         mHistoryRecyclerHelper.setCanLoad(false);
         mHistoryRecyclerHelper.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        mHistoryRecyclerHelper.setItemDecoration();
         mHistoryRecyclerHelper.setListParser(new RoomListParser());
         mHistoryRecyclerHelper.attachAdapter();
     }
@@ -80,7 +78,7 @@ public class HistoryActivity extends ActivityFramework {
 
     @Override
     public void startAction() {
-        mHistoryRecyclerHelper.from(API.getHistory(mToken));
+        mHistoryRecyclerHelper.from(API.getHistory());
     }
 
     private class HistoryRecyclerHelper extends RecyclerFramework<Room> {

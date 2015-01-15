@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    style="@style/mm"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SurfaceView
+        android:id="@+id/player_video"
+        style="@style/mm"/>
+
+    <SurfaceView
+        android:id="@+id/player_danmaku"
+        style="@style/mm"/>
+
+    <ImageView
+        style="@style/mm"
+        android:scaleType="fitXY"
+        android:src="@drawable/placeholder"/>
+
+    <FrameLayout
+        android:id="@+id/player_control"
+        style="@style/mm"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <LinearLayout
+            android:id="@+id/player_control_top"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@color/transparentGray"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/player_back"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:padding="8dp"
+                android:src="@drawable/image_toolbar_back"/>
+
+            <TextView
+                android:id="@+id/player_title"
+                style="@style/mww"
+                android:layout_marginLeft="8dp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/Headline"/>
+
+            <TextView
+                android:id="@+id/player_definition_hd"
+                style="@style/ww"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/shape_corner_primary"
+                android:paddingBottom="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="8dp"
+                android:text="@string/player_definition_hd"
+                android:textColor="@color/white"
+                android:textSize="@dimen/Subhead"/>
+
+            <TextView
+                android:id="@+id/player_definition_sd"
+                style="@style/ww"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/shape_corner_primary"
+                android:paddingBottom="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="8dp"
+                android:text="@string/player_stream"
+                android:textColor="@color/white"
+                android:textSize="@dimen/Subhead"/>
+
+            <ImageView
+                android:id="@+id/player_setting"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginLeft="8dp"
+                android:padding="8dp"
+                android:src="@drawable/setting"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/player_control_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="112dp"
+            android:layout_gravity="bottom"
+            android:background="@color/transparentGray"
+            android:clickable="true"
+            android:orientation="vertical"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
+
+            <LinearLayout
+                style="@style/mw.h">
+
+                <ImageView
+                    android:id="@+id/player_pause"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:padding="8dp"
+                    android:src="@drawable/player_pause"/>
+
+                <ImageView
+                    android:id="@+id/player_play"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:padding="8dp"
+                    android:src="@drawable/player_play"
+                    android:visibility="gone"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+
+                <ImageView
+                    android:id="@+id/player_danmaku_off"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:padding="8dp"
+                    android:src="@drawable/player_danmaku_off"/>
+
+                <ImageView
+                    android:id="@+id/player_danmaku_on"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:padding="8dp"
+                    android:src="@drawable/player_danmaku_on"
+                    android:visibility="gone"/>
+
+                <ImageView
+                    android:id="@+id/player_lock_on"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:padding="8dp"
+                    android:src="@drawable/player_lock_on"/>
+
+                <ImageView
+                    android:id="@+id/player_lock_off"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:padding="8dp"
+                    android:src="@drawable/player_lock_off"
+                    android:visibility="gone"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/mm.h"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/player_cancel"
+                    style="@style/ww"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/shape_corner_primary"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingTop="8dp"
+                    android:text="@string/player_cancel"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/Subhead"/>
+
+                <EditText
+                    android:id="@+id/player_input"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_corner_white"
+                    android:hint="@string/player_input"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:singleLine="true"
+                    android:textSize="@dimen/Subhead"/>
+
+                <TextView
+                    android:id="@+id/player_hot"
+                    style="@style/ww"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/shape_corner_primary"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingTop="8dp"
+                    android:text="@string/player_hot"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/Subhead"/>
+
+                <TextView
+                    android:id="@+id/player_send"
+                    style="@style/ww"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/shape_corner_darkcyan"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingTop="8dp"
+                    android:text="@string/player_send"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/Subhead"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <include
+            layout="@layout/activity_player_setting"/>
+
+    </FrameLayout>
+
+</FrameLayout>

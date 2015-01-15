@@ -1,5 +1,6 @@
 package air.tv.douyu.android.bases.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.LayoutInflater;
@@ -7,7 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.harreke.easyapp.frameworks.bases.IFramework;
+import com.harreke.easyapp.frameworks.bases.application.ApplicationFramework;
 import com.harreke.easyapp.frameworks.bases.fragment.FragmentFramework;
+import com.harreke.easyapp.frameworks.recyclerview.GridItemDecoration;
+import com.harreke.easyapp.frameworks.recyclerview.LinearItemDecoration;
 import com.harreke.easyapp.frameworks.recyclerview.RecyclerFramework;
 import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
 
@@ -40,9 +44,10 @@ public class GameFragment extends FragmentFramework {
     @Override
     public void enquiryViews() {
         mGameRecyclerHelper = new GameRecyclerHelper(this);
-        mGameRecyclerHelper.setLayoutManager(new GridLayoutManager(getContext(), 3));
         mGameRecyclerHelper.setHasFixedSize(true);
         mGameRecyclerHelper.setCanLoad(false);
+        mGameRecyclerHelper.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        mGameRecyclerHelper.setItemDecoration(new GridItemDecoration(3));
         mGameRecyclerHelper.setListParser(new GameListParser());
         mGameRecyclerHelper.attachAdapter();
     }

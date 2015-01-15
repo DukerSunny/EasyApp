@@ -3,6 +3,7 @@ package com.harreke.easyapp.frameworks.recyclerview;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -90,7 +91,6 @@ public abstract class RecyclerFramework<ITEM> implements PullableLayout.OnPullab
         mRecyclerView = (RecyclerView) mFramework.findViewById(getRecyclerViewId());
         setLayoutManager(makeDefaultLayoutManager());
         setItemAnimator(new DefaultItemAnimator());
-        setItemDecoration(new DividerItemDecoration(mFramework.getContext(), null));
         setHasFixedSize(true);
         setCanLoad(true);
         setCanRefresh(true);
@@ -677,13 +677,11 @@ public abstract class RecyclerFramework<ITEM> implements PullableLayout.OnPullab
         mRecyclerView.setItemAnimator(animator);
     }
 
-    public void setItemDecoration(RecyclerView.ItemDecoration... decorations) {
+    public void setItemDecoration(@NonNull RecyclerView.ItemDecoration... decorations) {
         int i;
 
-        if (decorations != null) {
-            for (i = 0; i < decorations.length; i++) {
-                addItemDecoration(decorations[i]);
-            }
+        for (i = 0; i < decorations.length; i++) {
+            addItemDecoration(decorations[i]);
         }
     }
 

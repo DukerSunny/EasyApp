@@ -14,13 +14,13 @@ public class RoomListParser extends ListParser<Room> {
     @Override
     public void parse(String json) {
         List<Room> list = Parser.parseList(json, Room.class);
-        Room game;
+        Room room;
         int i;
 
         if (list != null) {
             for (i = 0; i < list.size(); i++) {
-                game = list.get(i);
-                game.setRoom_name(StringUtil.escapeHtmlSymbols(game.getRoom_name()));
+                room = list.get(i);
+                room.setRoom_name(StringUtil.escapeHtmlSymbols(room.getRoom_name()));
             }
             setList(list);
         }

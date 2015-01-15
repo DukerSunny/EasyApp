@@ -19,12 +19,17 @@
             style="@style/mm"
             android:background="@color/transparent"
             android:hint="@string/search_hint"
-            android:textAppearance="@style/Subhead"/>
+            android:textColor="@color/white"
+            android:textColorHint="@color/transparentWhite"
+            android:textSize="@dimen/Subhead"/>
 
     </android.support.v7.widget.Toolbar>
 
     <FrameLayout
         style="@style/mm">
+
+        <include
+            layout="@layout/widget_recycler"/>
 
         <include
             layout="@layout/widget_toolbar_shadow"/>

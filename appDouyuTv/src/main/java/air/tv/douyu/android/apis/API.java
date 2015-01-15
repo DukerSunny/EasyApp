@@ -58,9 +58,25 @@ public class API {
                 .addQuery(OSVERSION, Build.VERSION.RELEASE).addQuery(TIME, time).addQuery(USERID, uid).addQuery(SIGN, sign);
     }
 
-    public static RequestBuilder getFollow(String token, int pageSize, int pageNo) {
+    public static RequestBuilder getFollow(int pageSize, int pageNo) {
         return new RequestBuilder(RequestMethod.GET, HOST_API + "/follow").addQuery(COUNT, pageSize)
-                .addQuery(OFFSET, (pageNo - 1) * pageSize).addQuery(TOKEN, token).addQuery(CLIENT_SYS, ANDROID);
+                .addQuery(OFFSET, (pageNo - 1) * pageSize).addQuery(TOKEN, DouyuTv.getInstance().getUser().getToken())
+                .addQuery(CLIENT_SYS, ANDROID);
+    }
+
+    public static RequestBuilder getFollowAdd(int roomId) {
+        return new RequestBuilder(RequestMethod.GET, HOST_API + "/follow/add/" + roomId)
+                .addQuery(TOKEN, DouyuTv.getInstance().getUser().getToken()).addQuery(CLIENT_SYS, ANDROID);
+    }
+
+    public static RequestBuilder getFollowCheck(int roomId) {
+        return new RequestBuilder(RequestMethod.GET, HOST_API + "/follow/check/" + roomId)
+                .addQuery(TOKEN, DouyuTv.getInstance().getUser().getToken()).addQuery(CLIENT_SYS, ANDROID);
+    }
+
+    public static RequestBuilder getFollowRemove(int roomId) {
+        return new RequestBuilder(RequestMethod.GET, HOST_API + "/follow/del/" + roomId)
+                .addQuery(TOKEN, DouyuTv.getInstance().getUser().getToken()).addQuery(CLIENT_SYS, ANDROID);
     }
 
     public static RequestBuilder getForot() {
@@ -72,9 +88,9 @@ public class API {
         return new RequestBuilder(RequestMethod.GET, HOST_API + "/game").addQuery(CLIENT_SYS, ANDROID);
     }
 
-    public static RequestBuilder getHistory(String token) {
-        return new RequestBuilder(RequestMethod.GET, HOST_API + "/history").addQuery(TOKEN, token)
-                .addQuery(CLIENT_SYS, ANDROID);
+    public static RequestBuilder getHistory() {
+        return new RequestBuilder(RequestMethod.GET, HOST_API + "/history")
+                .addQuery(TOKEN, DouyuTv.getInstance().getUser().getToken()).addQuery(CLIENT_SYS, ANDROID);
     }
 
     public static RequestBuilder getLive(int pageSize, int pageNo) {
@@ -98,6 +114,11 @@ public class API {
 
     public static RequestBuilder getRoom(int roomId) {
         return new RequestBuilder(RequestMethod.GET, HOST_API + "/room/" + roomId);
+    }
+
+    public static RequestBuilder getSearch(String query, int liveStatus, int pageSize, int pageNo) {
+        return new RequestBuilder(RequestMethod.GET, HOST_API + "/search/" + query + "/" + liveStatus).addQuery(LIMIT, pageSize)
+                .addQuery(OFFSET, (pageNo - 1) * pageSize).addQuery(CLIENT_SYS, ANDROID);
     }
 
     public static RequestBuilder getSlide(int limit) {

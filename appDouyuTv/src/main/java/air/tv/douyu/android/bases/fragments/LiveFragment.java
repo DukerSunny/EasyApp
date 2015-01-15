@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.fragment.FragmentFramework;
+import com.harreke.easyapp.frameworks.recyclerview.GridItemDecoration;
 import com.harreke.easyapp.frameworks.recyclerview.RecyclerFramework;
 import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
 
@@ -43,13 +44,13 @@ public class LiveFragment extends FragmentFramework {
         mLiveRecyclerHelper = new LiveRecyclerHelper(this);
         mLiveRecyclerHelper.setHasFixedSize(true);
         mLiveRecyclerHelper.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        mLiveRecyclerHelper.setItemDecoration(new GridItemDecoration(2));
         mLiveRecyclerHelper.setListParser(new RoomListParser());
         mLiveRecyclerHelper.attachAdapter();
     }
 
     @Override
     public void establishCallbacks() {
-
     }
 
     @Override

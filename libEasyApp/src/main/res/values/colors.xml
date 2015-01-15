@@ -68,5 +68,6 @@
 
     <color name="background">#e2e2e2</color>
     <color name="divider">#8a000000</color>
+    <color name="mask">#c0000000</color>
 
 </resources>

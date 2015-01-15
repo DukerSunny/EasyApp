@@ -14,7 +14,6 @@ import air.tv.douyu.android.R;
 import air.tv.douyu.android.bases.activities.AdvertiseActivity;
 import air.tv.douyu.android.bases.activities.FollowActivity;
 import air.tv.douyu.android.bases.activities.HistoryActivity;
-import air.tv.douyu.android.bases.activities.LoginActivity;
 import air.tv.douyu.android.bases.activities.MissionActivity;
 import air.tv.douyu.android.bases.activities.ProfileActivity;
 import air.tv.douyu.android.bases.activities.SettingActivity;
@@ -26,7 +25,7 @@ import air.tv.douyu.android.enums.AuthorizeStatus;
  * 由 Harreke（harreke@live.cn） 创建于 2014/12/18
  */
 public class MoreFragment extends FragmentFramework {
-    private AuthorizeStatus mAuthorizeStatus = AuthorizeStatus.Unauthorized;
+    private AuthorizeStatus mLastAuthorizeStatus = AuthorizeStatus.Unauthorized;
     private View.OnClickListener mOnClickListener;
     private View more_advertise;
     private View more_follow;
@@ -115,25 +114,25 @@ public class MoreFragment extends FragmentFramework {
     }
 
     private void onAdvertiseClick() {
-        if (!validateAuthorize()) {
+        if (DouyuTv.getInstance().validateAuthorize(getFramework())) {
             start(AdvertiseActivity.create(getContext()));
         }
     }
 
     private void onFollowClick() {
-        if (!validateAuthorize()) {
+        if (DouyuTv.getInstance().validateAuthorize(getFramework())) {
             start(FollowActivity.create(getContext()));
         }
     }
 
     private void onHistoryClick() {
-        if (!validateAuthorize()) {
+        if (DouyuTv.getInstance().validateAuthorize(getFramework())) {
             start(HistoryActivity.create(getContext()));
         }
     }
 
     private void onMissionClick() {
-        if (!validateAuthorize()) {
+        if (DouyuTv.getInstance().validateAuthorize(getFramework())) {
             start(MissionActivity.create(getContext()));
         }
     }
@@ -150,7 +149,7 @@ public class MoreFragment extends FragmentFramework {
     }
 
     private void onUserInfoClick() {
-        if (!validateAuthorize()) {
+        if (DouyuTv.getInstance().validateAuthorize(getFramework())) {
             start(ProfileActivity.create(getContext()));
         }
     }
@@ -161,10 +160,11 @@ public class MoreFragment extends FragmentFramework {
 
     private void updateUser() {
         DouyuTv douyuTv = DouyuTv.getInstance();
-        User user = douyuTv.readUser();
+        AuthorizeStatus authorizeStatus = douyuTv.validateAuthorize();
+        User user;
 
-        mAuthorizeStatus = douyuTv.validateAuthorize(user);
-        if (mAuthorizeStatus == AuthorizeStatus.Authorized) {
+        if (authorizeStatus == AuthorizeStatus.Authorized) {
+            user = douyuTv.getUser();
             ImageLoaderHelper
                     .loadImage(more_user_avatar, user.getAvatar().getBig(), R.drawable.loading_1x1, R.drawable.retry_1x1);
             more_user_clicktologin.setVisibility(View.GONE);
@@ -178,15 +178,24 @@ public class MoreFragment extends FragmentFramework {
             more_user_weight.setText("0");
             more_user_follow.setText("0");
         }
-    }
-
-    private boolean validateAuthorize() {
-        if (mAuthorizeStatus == AuthorizeStatus.Unauthorized) {
-            start(LoginActivity.create(getContext()));
-
-            return true;
-        } else {
-            return false;
-        }
+        //        Log.e(null, "now authorize=" + authorizeStatus + " last authorize=" + mLastAuthorizeStatus);
+        //        if (authorizeStatus != mLastAuthorizeStatus) {
+        //            mLastAuthorizeStatus = authorizeStatus;
+        //            if (authorizeStatus == AuthorizeStatus.Authorized) {
+        //                user = douyuTv.getUser();
+        //                ImageLoaderHelper
+        //                        .loadImage(more_user_avatar, user.getAvatar().getBig(), R.drawable.loading_1x1, R.drawable.retry_1x1);
+        //                more_user_clicktologin.setVisibility(View.GONE);
+        //                more_user_login.setVisibility(View.VISIBLE);
+        //                more_user_weight.setText(String.valueOf(user.getGold1()));
+        //                more_user_follow.setText(String.valueOf(user.getFollow()));
+        //            } else {
+        //                more_user_avatar.setImageResource(R.drawable.avatar);
+        //                more_user_clicktologin.setVisibility(View.VISIBLE);
+        //                more_user_login.setVisibility(View.GONE);
+        //                more_user_weight.setText("0");
+        //                more_user_follow.setText("0");
+        //            }
+        //        }
     }
 }

@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.harreke.easyapp.enums.EnterTransition;
+import com.harreke.easyapp.enums.ExitTransition;
 import com.harreke.easyapp.utils.ResourceUtil;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
@@ -23,6 +25,7 @@ import com.nineoldandroids.view.ViewPropertyAnimator;
  */
 public abstract class TransitionLayout extends FrameLayout {
     private int[] mColors;
+    private ValueAnimator mContentAnimator;
     private int mContentHeight = 0;
     private float mContentOffsetX = 0f;
     private float mContentOffsetY = 0f;
@@ -51,7 +54,7 @@ public abstract class TransitionLayout extends FrameLayout {
         public void onAnimationEnd(Animator animation) {
             ViewPropertyAnimator heroAnimator = ViewPropertyAnimator.animate(mHeroView);
 
-            heroAnimator.alpha(0f).setDuration(300).setListener(mHeroViewListener).start();
+            heroAnimator.alpha(0f).setDuration(300l).setListener(mHeroViewListener).start();
         }
     };
     private Animator.AnimatorListener mHeroOutListener = new AnimatorListenerAdapter() {
@@ -59,13 +62,19 @@ public abstract class TransitionLayout extends FrameLayout {
         public void onAnimationEnd(Animator animation) {
             ViewPropertyAnimator heroAnimator = ViewPropertyAnimator.animate(mHeroView);
 
-            heroAnimator.alpha(0f).setDuration(300).setListener(mHeroViewListener).start();
+            heroAnimator.alpha(0f).setDuration(300l).setListener(mHeroViewListener).start();
         }
     };
-    private ValueAnimator.AnimatorUpdateListener mOffsetUpdateListener = new ValueAnimator.AnimatorUpdateListener() {
+    private ValueAnimator.AnimatorUpdateListener mOffsetXUpdateListener = new ValueAnimator.AnimatorUpdateListener() {
         @Override
         public void onAnimationUpdate(ValueAnimator animation) {
             setContentOffsetX((Float) animation.getAnimatedValue());
+        }
+    };
+    private ValueAnimator.AnimatorUpdateListener mOffsetYUpdateListener = new ValueAnimator.AnimatorUpdateListener() {
+        @Override
+        public void onAnimationUpdate(ValueAnimator animation) {
+            setContentOffsetY((Float) animation.getAnimatedValue());
         }
     };
     private TypeEvaluator<PointF> mPointFEvaluator = new TypeEvaluator<PointF>() {
@@ -105,24 +114,42 @@ public abstract class TransitionLayout extends FrameLayout {
         heroPositionHolder = PropertyValuesHolder.ofObject("heroPosition", mPointFEvaluator, heroOldPosition, heroNewPosition);
         heroSizeHolder = PropertyValuesHolder.ofObject("heroSize", mPointFEvaluator, heroOldSize, heroNewSize);
         heroAnimator = ValueAnimator.ofPropertyValuesHolder(heroPositionHolder, heroSizeHolder);
-        heroAnimator.setDuration(300);
+        heroAnimator.setDuration(300l);
         heroAnimator.addUpdateListener(mHeroUpdateListener);
 
         return heroAnimator;
     }
 
     protected void animateToX(float targetX, Animator.AnimatorListener listener) {
-        ValueAnimator contentAnimator = ValueAnimator.ofFloat(mContentOffsetX, targetX);
-
-        contentAnimator.setDuration(300);
-        contentAnimator.addUpdateListener(mOffsetUpdateListener);
+        cancel();
+        mContentAnimator = ValueAnimator.ofFloat(mContentOffsetX, targetX);
+        mContentAnimator.setDuration(300l);
+        mContentAnimator.addUpdateListener(mOffsetXUpdateListener);
         if (listener != null) {
-            contentAnimator.addListener(listener);
+            mContentAnimator.addListener(listener);
         }
-        contentAnimator.start();
+        mContentAnimator.start();
+    }
+
+    protected void animateToY(float targetY, Animator.AnimatorListener listener) {
+        cancel();
+        mContentAnimator = ValueAnimator.ofFloat(mContentOffsetY, targetY);
+        mContentAnimator.setDuration(300l);
+        mContentAnimator.addUpdateListener(mOffsetYUpdateListener);
+        if (listener != null) {
+            mContentAnimator.addListener(listener);
+        }
+        mContentAnimator.start();
+    }
+
+    private void cancel() {
+        if (mContentAnimator != null) {
+            mContentAnimator.cancel();
+        }
     }
 
     public void destroy() {
+        cancel();
         mContentView = null;
     }
 
@@ -229,7 +256,7 @@ public abstract class TransitionLayout extends FrameLayout {
      *
      *         {@link com.harreke.easyapp.widgets.transitions.ImageViewInfo}
      */
-    public void startEnterTransition(final EnterTransition enterTransition, Object... params) {
+    public void startEnterTransition(EnterTransition enterTransition, Object... params) {
         mEnterTransition = enterTransition;
         switch (enterTransition) {
             case Slide_In_Left:
@@ -239,6 +266,14 @@ public abstract class TransitionLayout extends FrameLayout {
             case Slide_In_Right:
                 setContentOffsetX(mContentWidth);
                 animateToX(0f, mEnterCompleteListener);
+                break;
+            case Slide_In_Top:
+                setContentOffsetY(-mContentHeight);
+                animateToY(0f, mEnterCompleteListener);
+                break;
+            case Slide_In_Bottom:
+                setContentOffsetY(mContentHeight);
+                animateToY(0f, mEnterCompleteListener);
                 break;
             //            case Hero_In:
             //                try {
@@ -259,6 +294,12 @@ public abstract class TransitionLayout extends FrameLayout {
             case Slide_Out_Right:
                 animateToX(mContentWidth, mExitCompleteListener);
                 break;
+            case Slide_Out_Top:
+                animateToY(-mContentHeight, mExitCompleteListener);
+                break;
+            case Slide_Out_Bottom:
+                animateToY(mContentHeight, mExitCompleteListener);
+                break;
             //            case Hero_Out:
             //                try {
             //                    performHeroOut((ImageViewInfo) params[0], (ImageViewInfo) params[1]);
@@ -267,49 +308,5 @@ public abstract class TransitionLayout extends FrameLayout {
             //                }
             //                break;
         }
-    }
-
-    public enum EnterTransition {
-        None,
-        /**
-         * 从左滑入
-         */
-        Slide_In_Left,
-        /**
-         * 从右滑入
-         */
-        Slide_In_Right,
-        //        Slide_In_Top,
-        //        Slide_In_Bottom,
-        //        /**
-        //         * 将一个ImageView作为焦点，从旧视图变换至新视图
-        //         */
-        //        Hero_In,
-        //        /**
-        //         * 将旧视图以波纹扩散效果变为新视图
-        //         */
-        //        Ripple_In
-    }
-
-    public enum ExitTransition {
-        None,
-        /**
-         * 从左滑出
-         */
-        Slide_Out_Left,
-        /**
-         * 从右滑出
-         */
-        Slide_Out_Right,
-        //        Slide_Out_Top,
-        //        Slide_Out_Bottom,
-        //        /**
-        //         * 将一个ImageView作为焦点，从新视图变换至旧视图
-        //         */
-        //        Hero_Out,
-        //        /**
-        //         * 将新视图以波纹收缩效果变为旧视图
-        //         */
-        //        Ripple_Out
     }
 }

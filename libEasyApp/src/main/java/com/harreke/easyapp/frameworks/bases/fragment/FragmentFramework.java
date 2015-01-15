@@ -10,9 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.harreke.easyapp.enums.ActivityAnimation;
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.IToolbar;
-import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
 import com.harreke.easyapp.helpers.RequestHelper;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
@@ -190,9 +190,9 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
     }
 
     @Override
-    public void setToolbarNavigation() {
+    public void enableDefaultToolbarNavigation() {
         if (mActivityToolbar != null) {
-            mActivityToolbar.setToolbarNavigation();
+            mActivityToolbar.enableDefaultToolbarNavigation();
         }
     }
 
@@ -289,7 +289,7 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
     }
 
     @Override
-    public void start(Intent intent, ActivityFramework.Anim anim) {
+    public void start(Intent intent, ActivityAnimation anim) {
         if (mActivityFramework != null) {
             mActivityFramework.start(intent, anim);
         }
@@ -314,10 +314,10 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
      * @param anim
      *         Intent切换动画
      *
-     *         {@link com.harreke.easyapp.frameworks.bases.activity.ActivityFramework.Anim}
+     * @see com.harreke.easyapp.enums.ActivityAnimation
      */
     @Override
-    public void start(Intent intent, int requestCode, ActivityFramework.Anim anim) {
+    public void start(Intent intent, int requestCode, ActivityAnimation anim) {
         if (mActivityFramework != null) {
             mActivityFramework.start(intent, requestCode, anim);
         }

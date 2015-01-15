@@ -14,6 +14,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.harreke.easyapp.R;
+import com.harreke.easyapp.enums.ActivityAnimation;
+import com.harreke.easyapp.enums.EnterTransition;
+import com.harreke.easyapp.enums.ExitTransition;
 import com.harreke.easyapp.frameworks.bases.IFramework;
 import com.harreke.easyapp.frameworks.bases.IToolbar;
 import com.harreke.easyapp.helpers.RequestHelper;
@@ -156,15 +159,15 @@ public abstract class ActivityFramework extends ActionBarActivity
     }
 
     public final void exit() {
-        exit(Anim.Default);
+        exit(ActivityAnimation.Default);
     }
 
     /**
      * 退出Activity
      */
-    public final void exit(Anim anim) {
+    public final void exit(ActivityAnimation anim) {
         finish();
-        if (anim != Anim.Default) {
+        if (anim != ActivityAnimation.Default) {
             overridePendingTransition(anim.getEnterAnim(), anim.getExitAnim());
         }
     }
@@ -336,7 +339,7 @@ public abstract class ActivityFramework extends ActionBarActivity
     }
 
     @Override
-    public void setToolbarNavigation() {
+    public void enableDefaultToolbarNavigation() {
         if (mToolbar != null) {
             mToolbar.setNavigationIcon(R.drawable.image_toolbar_back);
         }
@@ -447,17 +450,17 @@ public abstract class ActivityFramework extends ActionBarActivity
 
     @Override
     public void start(Intent intent) {
-        start(intent, Anim.None);
+        start(intent, ActivityAnimation.None);
     }
 
     @Override
-    public void start(Intent intent, Anim anim) {
+    public void start(Intent intent, ActivityAnimation anim) {
         start(intent, -1, anim);
     }
 
     @Override
     public void start(Intent intent, int requestCode) {
-        start(intent, requestCode, Anim.None);
+        start(intent, requestCode, ActivityAnimation.None);
     }
 
     /**
@@ -472,10 +475,10 @@ public abstract class ActivityFramework extends ActionBarActivity
      * @param anim
      *         Intent切换动画
      *
-     *         {@link com.harreke.easyapp.frameworks.bases.activity.ActivityFramework.Anim}
+     * @see com.harreke.easyapp.enums.ActivityAnimation
      */
     @Override
-    public void start(Intent intent, int requestCode, Anim anim) {
+    public void start(Intent intent, int requestCode, ActivityAnimation anim) {
         if (intent != null) {
             hideToast();
             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -484,56 +487,17 @@ public abstract class ActivityFramework extends ActionBarActivity
             } else {
                 startActivityForResult(intent, requestCode);
             }
-            if (anim != Anim.Default) {
+            if (anim != ActivityAnimation.Default) {
                 overridePendingTransition(anim.getEnterAnim(), anim.getExitAnim());
             }
         }
     }
 
     protected void startEnterTransition(TransitionLayout transitionLayout, Object... params) {
-        transitionLayout.startEnterTransition(TransitionLayout.EnterTransition.Slide_In_Right, params);
+        transitionLayout.startEnterTransition(EnterTransition.Slide_In_Right, params);
     }
 
     protected void startExitTransition(TransitionLayout transitionLayout, Object... params) {
-        transitionLayout.startExitTransition(TransitionLayout.ExitTransition.Slide_Out_Right, params);
-    }
-
-    public enum Anim {
-        /**
-         * 系统默认动画
-         */
-        Default(0, 0),
-        /**
-         * 无动画
-         */
-        None(0, 0),
-        /**
-         * 启动动画
-         */
-        Enter_Left(R.anim.slide_in_left, R.anim.none),
-        Enter_Right(R.anim.slide_in_right, R.anim.none),
-        Enter_Fade(R.anim.fade_in, R.anim.none),
-        /**
-         * 退出动画
-         */
-        Exit_Left(R.anim.none, R.anim.slide_out_left),
-        Exit_Right(R.anim.none, R.anim.slide_out_right),
-        Exit_Fade(R.anim.none, R.anim.fade_out);
-
-        private int mEnterAnim;
-        private int mExitAnim;
-
-        private Anim(int enterAnim, int exitAnim) {
-            mEnterAnim = enterAnim;
-            mExitAnim = exitAnim;
-        }
-
-        public int getEnterAnim() {
-            return mEnterAnim;
-        }
-
-        public int getExitAnim() {
-            return mExitAnim;
-        }
+        transitionLayout.startExitTransition(ExitTransition.Slide_Out_Right, params);
     }
 }

@@ -8,8 +8,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 
 import com.astuetz.PagerSlidingTabStrip;
-import com.harreke.easyapp.adapters.fragment.FragmentPageAdapter;
-import com.harreke.easyapp.frameworks.activity.ActivityFramework;
+import com.harreke.easyapp.frameworks.viewpager.FragmentPageAdapter;
+import com.harreke.easyapp.frameworks.base.ActivityFramework;
 import com.harreke.easyapp.parsers.ObjectResult;
 import com.harreke.easyapp.parsers.Parser;
 import com.harreke.easyapp.requests.IRequestCallback;

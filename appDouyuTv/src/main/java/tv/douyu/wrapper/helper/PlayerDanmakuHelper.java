@@ -5,7 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.harreke.easyapp.frameworks.application.ApplicationFramework;
+import com.harreke.easyapp.frameworks.base.ApplicationFramework;
 
 import java.util.List;
 import java.util.Timer;

@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.harreke.easyapp.adapters.viewpager.PageAdapter;
+import com.harreke.easyapp.frameworks.viewpager.PageAdapter;
 import com.harreke.easyapp.enums.RippleStyle;
 import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
 import com.harreke.easyapp.helpers.ImageLoaderHelper;

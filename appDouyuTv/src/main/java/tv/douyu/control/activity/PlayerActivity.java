@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.WindowManager;
 
-import com.harreke.easyapp.frameworks.IFramework;
-import com.harreke.easyapp.frameworks.activity.ActivityFramework;
+import com.harreke.easyapp.frameworks.base.IFramework;
+import com.harreke.easyapp.frameworks.base.ActivityFramework;
 import com.harreke.easyapp.parsers.ObjectResult;
 import com.harreke.easyapp.requests.IRequestCallback;
 

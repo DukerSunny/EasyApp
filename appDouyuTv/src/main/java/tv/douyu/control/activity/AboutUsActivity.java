@@ -6,7 +6,7 @@ import android.net.Uri;
 import android.view.View;
 import android.widget.TextView;
 
-import com.harreke.easyapp.frameworks.activity.ActivityFramework;
+import com.harreke.easyapp.frameworks.base.ActivityFramework;
 
 import butterknife.InjectView;
 import butterknife.OnClick;

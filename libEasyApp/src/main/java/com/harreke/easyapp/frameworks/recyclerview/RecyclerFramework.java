@@ -13,8 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.harreke.easyapp.R;
-import com.harreke.easyapp.adapters.recyclerview.RecyclerAdapter;
-import com.harreke.easyapp.frameworks.IFramework;
+import com.harreke.easyapp.frameworks.base.IFramework;
 import com.harreke.easyapp.helpers.EmptyHelper;
 import com.harreke.easyapp.parsers.IListParser;
 import com.harreke.easyapp.parsers.ListResult;

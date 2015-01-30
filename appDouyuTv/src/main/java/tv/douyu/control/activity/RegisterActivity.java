@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.harreke.easyapp.frameworks.activity.ActivityFramework;
+import com.harreke.easyapp.frameworks.base.ActivityFramework;
 import com.harreke.easyapp.widgets.transitions.SwipeToFinishLayout;
 
 import butterknife.InjectView;

@@ -10,14 +10,13 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 
 import com.astuetz.PagerSlidingTabStrip;
-import com.harreke.easyapp.adapters.fragment.FragmentPageAdapter;
-import com.harreke.easyapp.frameworks.activity.ActivityFramework;
+import com.harreke.easyapp.frameworks.viewpager.FragmentPageAdapter;
+import com.harreke.easyapp.frameworks.base.ActivityFramework;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.utils.JsonUtil;
 import com.harreke.easyapp.utils.ResourceUtil;
 
 import tv.douyu.R;
-import tv.douyu.control.application.DouyuTv;
 import tv.douyu.control.fragment.GameFragment;
 import tv.douyu.control.fragment.LiveFragment;
 import tv.douyu.control.fragment.MoreFragment;

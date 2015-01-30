@@ -3,7 +3,7 @@ package tv.douyu.control.activity;
 import android.content.Intent;
 
 import com.harreke.easyapp.enums.ActivityAnimation;
-import com.harreke.easyapp.frameworks.activity.ActivityFramework;
+import com.harreke.easyapp.frameworks.base.ActivityFramework;
 
 import tv.douyu.R;
 

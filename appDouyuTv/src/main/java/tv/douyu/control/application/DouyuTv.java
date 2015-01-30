@@ -3,7 +3,7 @@ package tv.douyu.control.application;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
-import com.harreke.easyapp.frameworks.application.ApplicationFramework;
+import com.harreke.easyapp.frameworks.base.ApplicationFramework;
 import com.harreke.easyapp.utils.JsonUtil;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 package tv.douyu.wrapper.helper;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.harreke.easyapp.frameworks.IFramework;
+import com.harreke.easyapp.frameworks.base.IFramework;
 
 import tv.douyu.R;
 import tv.douyu.control.activity.LoginActivity;

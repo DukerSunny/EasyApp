@@ -4,7 +4,7 @@ import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 
-import com.harreke.easyapp.frameworks.IFramework;
+import com.harreke.easyapp.frameworks.base.IFramework;
 import com.harreke.easyapp.utils.ViewUtil;
 import com.harreke.easyapp.widgets.animators.ToggleViewValueAnimator;
 import com.nineoldandroids.view.ViewHelper;

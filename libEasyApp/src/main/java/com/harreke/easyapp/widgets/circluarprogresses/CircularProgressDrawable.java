@@ -11,7 +11,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 
-import com.harreke.easyapp.frameworks.application.ApplicationFramework;
+import com.harreke.easyapp.frameworks.base.ApplicationFramework;
 import com.harreke.easyapp.utils.ResourceUtil;
 
 /**

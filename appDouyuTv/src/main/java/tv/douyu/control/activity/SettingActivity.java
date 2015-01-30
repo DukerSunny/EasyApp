@@ -11,8 +11,8 @@ import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.harreke.easyapp.frameworks.activity.ActivityFramework;
-import com.harreke.easyapp.frameworks.application.ApplicationFramework;
+import com.harreke.easyapp.frameworks.base.ActivityFramework;
+import com.harreke.easyapp.frameworks.base.ApplicationFramework;
 import com.harreke.easyapp.helpers.CompoundButtonHelper;
 import com.harreke.easyapp.listeners.OnButtonsCheckedChangeListener;
 import com.harreke.easyapp.requests.IRequestCallback;

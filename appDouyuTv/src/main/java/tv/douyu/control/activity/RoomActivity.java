@@ -13,7 +13,7 @@ import com.harreke.easyapp.enums.ActivityAnimation;
 import com.harreke.easyapp.enums.EnterTransition;
 import com.harreke.easyapp.enums.ExitTransition;
 import com.harreke.easyapp.enums.RippleStyle;
-import com.harreke.easyapp.frameworks.activity.ActivityFramework;
+import com.harreke.easyapp.frameworks.base.ActivityFramework;
 import com.harreke.easyapp.helpers.ConnectionHelper;
 import com.harreke.easyapp.helpers.EmptyHelper;
 import com.harreke.easyapp.helpers.ImageLoaderHelper;

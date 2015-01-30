@@ -5,7 +5,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.harreke.easyapp.R;
-import com.harreke.easyapp.frameworks.IFramework;
+import com.harreke.easyapp.frameworks.base.IFramework;
 import com.harreke.easyapp.widgets.circluarprogresses.CircularProgressDrawable;
 import com.harreke.easyapp.widgets.rippleeffects.RippleDrawable;
 import com.harreke.easyapp.widgets.rippleeffects.RippleOnClickListener;

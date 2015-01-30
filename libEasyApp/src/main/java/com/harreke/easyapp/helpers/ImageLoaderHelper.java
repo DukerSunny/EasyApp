@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 
-import com.harreke.easyapp.frameworks.application.ApplicationFramework;
+import com.harreke.easyapp.frameworks.base.ApplicationFramework;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.IRequestExecutor;
 import com.harreke.easyapp.requests.RequestBuilder;

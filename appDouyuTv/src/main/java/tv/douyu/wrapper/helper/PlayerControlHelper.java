@@ -3,7 +3,7 @@ package tv.douyu.wrapper.helper;
 import android.os.Handler;
 import android.view.View;
 
-import com.harreke.easyapp.frameworks.IFramework;
+import com.harreke.easyapp.frameworks.base.IFramework;
 import com.harreke.easyapp.widgets.circluarprogresses.CircularProgressView;
 
 import tv.douyu.R;

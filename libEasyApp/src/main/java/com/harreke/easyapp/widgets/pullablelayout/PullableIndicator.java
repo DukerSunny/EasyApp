@@ -6,7 +6,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.harreke.easyapp.R;
-import com.harreke.easyapp.frameworks.application.ApplicationFramework;
+import com.harreke.easyapp.frameworks.base.ApplicationFramework;
 import com.harreke.easyapp.widgets.circluarprogresses.CircularProgressView;
 
 /**

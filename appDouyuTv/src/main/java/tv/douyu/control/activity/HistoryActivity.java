@@ -8,8 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.harreke.easyapp.frameworks.IFramework;
-import com.harreke.easyapp.frameworks.activity.ActivityFramework;
+import com.harreke.easyapp.frameworks.base.IFramework;
+import com.harreke.easyapp.frameworks.base.ActivityFramework;
 import com.harreke.easyapp.frameworks.recyclerview.GridItemDecoration;
 import com.harreke.easyapp.frameworks.recyclerview.RecyclerFramework;
 import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;

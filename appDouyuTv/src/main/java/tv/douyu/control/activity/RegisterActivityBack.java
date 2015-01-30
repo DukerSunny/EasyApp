@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.harreke.easyapp.enums.RippleStyle;
-import com.harreke.easyapp.frameworks.activity.ActivityFramework;
+import com.harreke.easyapp.frameworks.base.ActivityFramework;
 import com.harreke.easyapp.utils.StringUtil;
 import com.harreke.easyapp.widgets.rippleeffects.RippleDrawable;
 import com.harreke.easyapp.widgets.transitions.SwipeToFinishLayout;

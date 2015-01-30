@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.MotionEvent;
 
 import com.harreke.easyapp.enums.ExitTransition;
-import com.harreke.easyapp.frameworks.application.ApplicationFramework;
+import com.harreke.easyapp.frameworks.base.ApplicationFramework;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/12/29

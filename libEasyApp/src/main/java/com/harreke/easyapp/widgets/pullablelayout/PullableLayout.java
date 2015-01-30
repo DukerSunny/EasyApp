@@ -13,7 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.ScrollView;
 
 import com.harreke.easyapp.R;
-import com.harreke.easyapp.frameworks.application.ApplicationFramework;
+import com.harreke.easyapp.frameworks.base.ApplicationFramework;
 import com.harreke.easyapp.utils.ResourceUtil;
 import com.harreke.easyapp.widgets.pullablelayout.viewdelegates.IViewDelegate;
 import com.harreke.easyapp.widgets.pullablelayout.viewdelegates.RecyclerViewDelegate;

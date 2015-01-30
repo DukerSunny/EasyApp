@@ -8,12 +8,11 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.harreke.easyapp.frameworks.IFramework;
+import com.harreke.easyapp.frameworks.base.IFramework;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import tv.douyu.R;
-import tv.douyu.control.application.DouyuTv;
 import tv.douyu.model.bean.Update;
 
 /**

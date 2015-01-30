@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.harreke.easyapp.frameworks.bases.fragment.FragmentFramework;
+import com.harreke.easyapp.frameworks.fragment.FragmentFramework;
 
 import tv.acfun.read.R;
 import tv.acfun.read.holders.EmotHolder;

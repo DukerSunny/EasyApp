@@ -8,7 +8,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.harreke.easyapp.R;
-import com.harreke.easyapp.frameworks.bases.IFramework;
+import com.harreke.easyapp.frameworks.IFramework;
 import com.harreke.easyapp.widgets.pullablelayout.PullableLayout;
 
 /**

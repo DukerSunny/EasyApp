@@ -1,10 +1,10 @@
 package com.harreke.easyapp.widgets.transitions;
 
-import android.app.Activity;
+import android.content.Context;
 import android.view.MotionEvent;
 
 import com.harreke.easyapp.enums.ExitTransition;
-import com.harreke.easyapp.frameworks.bases.application.ApplicationFramework;
+import com.harreke.easyapp.frameworks.application.ApplicationFramework;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/12/29
@@ -17,8 +17,8 @@ public class SwipeToFinishLayout extends TransitionLayout {
     private float mTouchDownThreshold = ApplicationFramework.Density * 16;
     private float mTouchThreshold = ApplicationFramework.TouchThreshold;
 
-    public SwipeToFinishLayout(Activity activity) {
-        super(activity);
+    public SwipeToFinishLayout(Context context) {
+        super(context);
 
         setClickable(true);
     }

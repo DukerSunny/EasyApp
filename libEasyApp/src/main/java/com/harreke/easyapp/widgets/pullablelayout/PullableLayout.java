@@ -13,7 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.ScrollView;
 
 import com.harreke.easyapp.R;
-import com.harreke.easyapp.frameworks.bases.application.ApplicationFramework;
+import com.harreke.easyapp.frameworks.application.ApplicationFramework;
 import com.harreke.easyapp.utils.ResourceUtil;
 import com.harreke.easyapp.widgets.pullablelayout.viewdelegates.IViewDelegate;
 import com.harreke.easyapp.widgets.pullablelayout.viewdelegates.RecyclerViewDelegate;
@@ -293,7 +293,7 @@ public class PullableLayout extends FrameLayout implements ViewGroup.OnHierarchy
             mLoadIndicator.setToast(pullable_indicator_load_failure);
         }
         mLoadIndicator.setProgress(0f);
-        setLoadJumpToIdle(2500l);
+        setLoadJumpToIdle(1000l);
     }
 
     private void setLoadJumpTo(float offset, long delay, Animator.AnimatorListener listener) {
@@ -356,7 +356,7 @@ public class PullableLayout extends FrameLayout implements ViewGroup.OnHierarchy
             mRefreshIndicator.setToast(pullable_indicator_refresh_failure);
         }
         mRefreshIndicator.setProgress(0);
-        setRefreshJumpToIdle(2500l);
+        setRefreshJumpToIdle(1000l);
     }
 
     private void setRefreshJumpTo(float offset, long delay, Animator.AnimatorListener listener) {

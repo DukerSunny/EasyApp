@@ -1,6 +1,5 @@
 package com.harreke.easyapp.widgets.rippleeffects;
 
-import android.annotation.TargetApi;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
@@ -18,7 +17,6 @@ import android.view.View;
 import com.harreke.easyapp.enums.RippleStyle;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
-import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.animation.PropertyValuesHolder;
 import com.nineoldandroids.animation.TypeEvaluator;
 import com.nineoldandroids.animation.ValueAnimator;
@@ -33,19 +31,22 @@ public class RippleDrawable extends Drawable {
     private float mBaseHotpotAlpha = RIPPLE_HOTPOT_ALPHA;
     private final static int RIPPLE_PRESSED_ALPHA = 24;
     private float mBasePressedAlpha = RIPPLE_PRESSED_ALPHA;
-    private ObjectAnimator mAnimator = null;
-    private Animator.AnimatorListener mFadeListener = new AnimatorListenerAdapter() {
+    private ValueAnimator mAnimator = null;
+    private Animator.AnimatorListener mAnimatorListener = new AnimatorListenerAdapter() {
         @Override
         public void onAnimationEnd(Animator animation) {
             mAnimator = null;
         }
     };
+    private Rect mBounds = new Rect(0, 0, 0, 0);
     private PointF mCenterPoint = new PointF(0f, 0f);
     private TypeEvaluator<PointF> mCoordinateTypeEvaluator = new TypeEvaluator<PointF>() {
         @Override
         public PointF evaluate(float fraction, PointF startValue, PointF endValue) {
             return new PointF(startValue.x + fraction * (endValue.x - startValue.x),
                     startValue.y + fraction * (endValue.y - startValue.y));
+            //            return new PointF(mDownPoint.x + fraction * (endValue.x - mDownPoint.x),
+            //                    mDownPoint.y + fraction * (endValue.y - mDownPoint.y));
         }
     };
     private PointF mDownPoint = new PointF(0f, 0f);
@@ -54,23 +55,28 @@ public class RippleDrawable extends Drawable {
     private Paint mHotpotPaint;
     private PointF mHotpotPoint = new PointF(0f, 0f);
     private float mHotpotRadius = 0;
+    private ValueAnimator.AnimatorUpdateListener mUpdateSlowListener = new ValueAnimator.AnimatorUpdateListener() {
+        @Override
+        public void onAnimationUpdate(ValueAnimator animation) {
+            mHotpotPoint.set((PointF) animation.getAnimatedValue("hotpotCoordinate"));
+            mHotpotRadius = (float) animation.getAnimatedValue("hotpotRadius");
+            invalidateSelf();
+        }
+    };
+    private ValueAnimator.AnimatorUpdateListener mUpdateFastListener = new ValueAnimator.AnimatorUpdateListener() {
+        @Override
+        public void onAnimationUpdate(ValueAnimator animation) {
+            mHotpotPoint.set((PointF) animation.getAnimatedValue("hotpotCoordinate"));
+            mHotpotRadius = (float) animation.getAnimatedValue("hotpotRadius");
+            mHotpotAlpha = (float) animation.getAnimatedValue("hotpotAlpha");
+            invalidateSelf();
+        }
+    };
     private int mMaxRadius = 0;
     private boolean mPressed = false;
     private Paint mPressedPaint;
     private long mRippleDuration;
-    private Animator.AnimatorListener mRippleListener = new AnimatorListenerAdapter() {
-        @Override
-        public void onAnimationEnd(Animator animation) {
-            startHotpotFade();
-        }
-    };
     private boolean mSquare = false;
-    private ValueAnimator.AnimatorUpdateListener mUpdateListener = new ValueAnimator.AnimatorUpdateListener() {
-        @Override
-        public void onAnimationUpdate(ValueAnimator animation) {
-            invalidateSelf();
-        }
-    };
     private Drawable mViewBackground = null;
 
     private RippleDrawable(View view, RippleStyle rippleStyle, long rippleDuration) {
@@ -83,9 +89,9 @@ public class RippleDrawable extends Drawable {
             public boolean onTouch(View v, MotionEvent event) {
                 if (mAnimator == null) {
                     switch (event.getAction()) {
+                        //                        case MotionEvent.ACTION_MOVE:
                         case MotionEvent.ACTION_DOWN:
                             mDownPoint.set(event.getX(), event.getY());
-                            startHotpotRipple();
                             break;
                     }
                 }
@@ -139,7 +145,6 @@ public class RippleDrawable extends Drawable {
      *
      * @see com.harreke.easyapp.enums.RippleStyle
      */
-    @TargetApi(16)
     public static void attach(View view, RippleStyle rippleStyle, long rippleDuration) {
         new RippleDrawable(view, rippleStyle, rippleDuration);
     }
@@ -170,13 +175,24 @@ public class RippleDrawable extends Drawable {
         attach(view, RippleStyle.Dark);
     }
 
+    private void cancel() {
+        if (mAnimator != null) {
+            mAnimator.cancel();
+            mAnimator = null;
+        }
+    }
+
     @Override
     public void draw(Canvas canvas) {
         mViewBackground.draw(canvas);
         if (mEnabled) {
-            if (mPressed && !mSquare) {
+            if (mPressed) {
                 mPressedPaint.setAlpha((int) mBasePressedAlpha);
-                canvas.drawCircle(mCenterPoint.x, mCenterPoint.y, mMaxRadius, mPressedPaint);
+                if (mSquare) {
+                    canvas.drawCircle(mCenterPoint.x, mCenterPoint.y, mMaxRadius, mPressedPaint);
+                } else {
+                    canvas.drawRect(mBounds, mPressedPaint);
+                }
             }
             if (mAnimator != null) {
                 mHotpotPaint.setAlpha((int) mHotpotAlpha);
@@ -201,16 +217,14 @@ public class RippleDrawable extends Drawable {
 
     @Override
     protected void onBoundsChange(Rect bounds) {
-        int width = bounds.width() / 2;
-        int height = bounds.height() / 2;
-
+        mBounds.set(bounds);
         if (mSquare) {
-            mMaxRadius = Math.min(width, height);
+            mMaxRadius = Math.max(mBounds.width() / 2, mBounds.height() / 2);
         } else {
-            mMaxRadius = (int) Math.sqrt(width * width + height * height);
+            mMaxRadius = (int) Math.sqrt(mBounds.width() * mBounds.width() + mBounds.height() * mBounds.height());
         }
-        mViewBackground.setBounds(bounds);
-        mCenterPoint.set(bounds.exactCenterX(), bounds.exactCenterY());
+        mViewBackground.setBounds(mBounds);
+        mCenterPoint.set(mBounds.exactCenterX(), bounds.exactCenterY());
     }
 
     @Override
@@ -234,6 +248,11 @@ public class RippleDrawable extends Drawable {
                 mPressed = pressed;
                 invalidateSelf();
             }
+            if (mPressed) {
+                startHotpotRippleSlow();
+            } else {
+                startHotpotRippleFast();
+            }
         }
 
         return changed;
@@ -247,40 +266,36 @@ public class RippleDrawable extends Drawable {
     public void setColorFilter(ColorFilter cf) {
     }
 
-    private void setHotpotAlpha(float value) {
-        mHotpotAlpha = value;
-    }
-
-    private void setHotpotCoordinate(PointF value) {
-        mHotpotPoint.set(value);
-    }
-
-    private void setHotpotRadius(float value) {
-        mHotpotRadius = value;
-    }
-
-    private void startHotpotFade() {
+    private void startHotpotRippleFast() {
+        PropertyValuesHolder coordinateHolder;
+        PropertyValuesHolder radiusHolder;
         PropertyValuesHolder alphaHolder;
 
-        mHotpotAlpha = mBaseHotpotAlpha;
-        alphaHolder = PropertyValuesHolder.ofFloat("hotpotAlpha", mBaseHotpotAlpha, 0f);
-        mAnimator = ObjectAnimator.ofPropertyValuesHolder(this, alphaHolder).setDuration(mRippleDuration);
-        mAnimator.addListener(mFadeListener);
-        mAnimator.addUpdateListener(mUpdateListener);
+        cancel();
+        coordinateHolder =
+                PropertyValuesHolder.ofObject("hotpotCoordinate", mCoordinateTypeEvaluator, mHotpotPoint, mCenterPoint);
+        radiusHolder = PropertyValuesHolder.ofFloat("hotpotRadius", mHotpotRadius, mMaxRadius);
+        alphaHolder = PropertyValuesHolder.ofFloat("hotpotAlpha", mHotpotAlpha, 0f);
+        mAnimator = ValueAnimator.ofPropertyValuesHolder(coordinateHolder, radiusHolder, alphaHolder);
+        mAnimator.setDuration(mRippleDuration);
+        mAnimator.addListener(mAnimatorListener);
+        mAnimator.addUpdateListener(mUpdateFastListener);
         mAnimator.start();
     }
 
-    private void startHotpotRipple() {
+    private void startHotpotRippleSlow() {
         PropertyValuesHolder coordinateHolder;
         PropertyValuesHolder radiusHolder;
 
+        cancel();
         mHotpotAlpha = mBaseHotpotAlpha;
         coordinateHolder =
                 PropertyValuesHolder.ofObject("hotpotCoordinate", mCoordinateTypeEvaluator, mDownPoint, mCenterPoint);
         radiusHolder = PropertyValuesHolder.ofFloat("hotpotRadius", 0f, mMaxRadius);
-        mAnimator = ObjectAnimator.ofPropertyValuesHolder(this, coordinateHolder, radiusHolder).setDuration(mRippleDuration);
-        mAnimator.addListener(mRippleListener);
-        mAnimator.addUpdateListener(mUpdateListener);
+        mAnimator = ValueAnimator.ofPropertyValuesHolder(coordinateHolder, radiusHolder);
+        mAnimator.setDuration(2000l);
+        mAnimator.addListener(mAnimatorListener);
+        mAnimator.addUpdateListener(mUpdateSlowListener);
         mAnimator.start();
     }
 }

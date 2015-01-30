@@ -1,12 +1,28 @@
 package com.harreke.easyapp.utils;
 
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/12/31
  */
 public class ViewUtil {
+    public static int findChild(ViewGroup parent, int childId) {
+        int position = -1;
+        int i;
+
+        for (i = 0; i < parent.getChildCount(); i++) {
+            if (parent.getChildAt(i).getId() == childId) {
+                position = i;
+                break;
+            }
+        }
+
+        return position;
+    }
+
     public static float getFloatTag(View view) {
         return (view != null && view.getTag() != null && view.getTag() instanceof Float) ? (Float) view.getTag() : 0f;
     }
@@ -49,17 +65,13 @@ public class ViewUtil {
                 null;
     }
 
-    public static int findChild(ViewGroup parent, int childId) {
-        int position = -1;
-        int i;
+    public static void hideInputMethod(Context context, View view) {
+        ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE))
+                .hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 
-        for (i = 0; i < parent.getChildCount(); i++) {
-            if (parent.getChildAt(i).getId() == childId) {
-                position = i;
-                break;
-            }
-        }
-
-        return position;
+    public static void showInputMethod(Context context, View view) {
+        ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE))
+                .showSoftInputFromInputMethod(view.getWindowToken(), 0);
     }
 }

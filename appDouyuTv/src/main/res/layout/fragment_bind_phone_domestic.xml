@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    style="@style/mm.v"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/background"
+    android:padding="8dp">
+
+    <android.support.v7.widget.CardView
+        style="@style/mw">
+
+        <LinearLayout
+            style="@style/mw.v">
+
+            <EditText
+                android:id="@+id/bind_phone_input"
+                style="@style/mw"
+                android:background="@color/transparent"
+                android:hint="@string/bind_phone_input"
+                android:inputType="phone"
+                android:padding="16dp"
+                android:singleLine="true"
+                android:textColorHint="@color/gray"
+                android:textSize="@dimen/Body1"/>
+
+            <include
+                layout="@layout/widget_divider_horizontal"/>
+
+            <LinearLayout
+                style="@style/mw.h"
+                android:gravity="center_vertical">
+
+                <EditText
+                    android:id="@+id/bind_captcha_input"
+                    style="@style/mww"
+                    android:background="@color/transparent"
+                    android:hint="@string/bind_captcha_input"
+                    android:maxLength="4"
+                    android:padding="16dp"
+                    android:singleLine="true"
+                    android:textColorHint="@color/gray"
+                    android:textSize="@dimen/Body1"/>
+
+                <com.harreke.easyapp.widgets.RatioImageView
+                    android:id="@+id/bind_captcha"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:src="@drawable/loading_16x9"
+                    app:ratio="2.5"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <TextView
+        android:id="@+id/bind_phone_domestic_code_hint"
+        style="@style/ww"
+        android:padding="8dp"
+        android:text="@string/bind_phone_domestic_code_hint"/>
+
+    <TextView
+        android:id="@+id/bind_phone_domestic_code_sent"
+        style="@style/ww"
+        android:padding="8dp"
+        android:text="@string/bind_phone_domestic_code_sent"
+        android:visibility="gone"/>
+
+    <android.support.v7.widget.CardView
+        style="@style/mw">
+
+        <LinearLayout
+            style="@style/mw.h"
+            android:gravity="center_vertical">
+
+            <EditText
+                android:id="@+id/bind_phone_code_input"
+                style="@style/mww"
+                android:background="@color/transparent"
+                android:hint="@string/bind_code_input"
+                android:inputType="number"
+                android:maxLength="6"
+                android:padding="16dp"
+                android:singleLine="true"
+                android:textColorHint="@color/gray"
+                android:textSize="@dimen/Body1"/>
+
+            <TextView
+                android:id="@+id/bind_phone_code_via_mail"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/shape_corner_darkcyan"
+                android:gravity="center"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:text="@string/bind_code_via_mail"
+                android:textColor="@color/white"
+                android:textSize="@dimen/Body1"/>
+
+            <TextView
+                android:id="@+id/bind_phone_code_via_mail_retry"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/shape_corner_gray"
+                android:gravity="center"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:text="@string/bind_retry"
+                android:textColor="@color/white"
+                android:textSize="@dimen/Body1"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/bind_phone_code_via_voice"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/shape_corner_primary"
+                android:gravity="center"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:text="@string/bind_code_via_voice"
+                android:textColor="@color/white"
+                android:textSize="@dimen/Body1"/>
+
+            <TextView
+                android:id="@+id/bind_phone_code_via_voice_retry"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/shape_corner_gray"
+                android:gravity="center"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:text="@string/bind_retry"
+                android:textColor="@color/white"
+                android:textSize="@dimen/Body1"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <TextView
+        style="@style/ww"
+        android:padding="8dp"
+        android:text="@string/bind_phone_domestic_code_desc"/>
+
+    <android.support.v7.widget.CardView
+        style="@style/mw"
+        android:layout_marginTop="32dp"
+        app:cardBackgroundColor="?attr/colorPrimary">
+
+        <TextView
+            android:id="@+id/bind_phone_submit"
+            style="@style/mw"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="@string/bind_phone_submit"
+            android:textColor="@color/white"
+            android:textSize="@dimen/Body1"/>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

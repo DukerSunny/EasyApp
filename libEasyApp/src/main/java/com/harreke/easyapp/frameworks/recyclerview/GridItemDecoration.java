@@ -4,7 +4,7 @@ import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.harreke.easyapp.frameworks.bases.application.ApplicationFramework;
+import com.harreke.easyapp.frameworks.application.ApplicationFramework;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/12/02

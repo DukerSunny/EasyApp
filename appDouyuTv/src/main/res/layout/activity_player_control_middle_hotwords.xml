@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:id="@+id/player_control_middle_hotwords"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="192dp"
+    android:layout_height="match_parent"
+    android:background="@color/mask">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_hotwords"
+        style="@style/mm"
+        android:fadeScrollbars="true"
+        android:scrollbars="vertical"/>
+
+</FrameLayout>

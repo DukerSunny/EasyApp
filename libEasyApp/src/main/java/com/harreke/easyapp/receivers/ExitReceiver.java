@@ -4,14 +4,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
+import com.harreke.easyapp.frameworks.activity.ActivityFramework;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/07/24
  *
  * Activity框架的退出广播接收器
  *
- * @see com.harreke.easyapp.frameworks.bases.activity.ActivityFramework
+ * @see com.harreke.easyapp.frameworks.activity.ActivityFramework
  */
 public class ExitReceiver extends BroadcastReceiver {
     @Override

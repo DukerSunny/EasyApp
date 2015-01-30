@@ -15,7 +15,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.astuetz.PagerSlidingTabStrip;
 import com.chiralcode.colorpicker.ColorPicker;
 import com.harreke.easyapp.adapters.fragment.FragmentPageAdapter;
-import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
+import com.harreke.easyapp.bases.activity.ActivityFramework;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.utils.StringUtil;
 import com.harreke.easyapp.widgets.rippleeffects.RippleDrawable;

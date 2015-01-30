@@ -57,6 +57,10 @@ public class StringUtil {
         }
     }
 
+    public static boolean isValidMail(String input) {
+        return StringUtil.getMatcher("\\w+@(\\w+.)+[a-z]{2,3}", input).matches();
+    }
+
     public static int toInt(String input) {
         try {
             return Integer.valueOf(input);

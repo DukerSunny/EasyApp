@@ -2,33 +2,25 @@
 <resources>
 
     <declare-styleable name="app">
-        <attr name="emptyText" format="string"/>
         <attr name="drawable" format="reference"/>
         <attr name="drawableWidth" format="dimension"/>
         <attr name="drawableHeight" format="dimension"/>
-        <attr name="loadingText" format="string"/>
+        <attr name="progress" format="float"/>
         <attr name="progressColor" format="color"/>
         <attr name="ratio" format="float"/>
-        <attr name="retryHint" format="string"/>
-        <attr name="retryHintColor" format="color"/>
-        <attr name="retryText" format="string"/>
-        <attr name="rippleBackgroundColor" format="color"/>
-        <attr name="rippleDuration" format="integer"/>
-        <attr name="showRetryHintWhenEmpty" format="boolean"/>
-        <attr name="text" format="string"/>
 
         <attr name="childTabViewStyle" format="reference"/>
-        <attr name="infoViewStyle" format="reference"/>
+        <attr name="circularProgressViewStyle" format="reference"/>
         <attr name="ratioImageViewStyle" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="CircularProgressView">
+        <attr name="progress"/>
+        <attr name="progressColor"/>
     </declare-styleable>
 
     <declare-styleable name="RatioImageView">
         <attr name="ratio"/>
-    </declare-styleable>
-
-    <declare-styleable name="RippleLayout">
-        <attr name="rippleBackgroundColor"/>
-        <attr name="rippleDuration"/>
     </declare-styleable>
 
     <declare-styleable name="SizableCompoundButton">

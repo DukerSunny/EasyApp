@@ -18,7 +18,6 @@ public class CompoundButtonHelper {
             int position = 0;
             int i;
 
-            Log.e(null, "on checked change listener");
             if (!mBlock) {
                 mBlock = true;
                 for (i = 0; i < mCompoundButtons.length; i++) {
@@ -42,7 +41,6 @@ public class CompoundButtonHelper {
         if (compoundButtons == null || compoundButtons.length == 0) {
             throw new IllegalArgumentException("Compound buttons are null!");
         }
-        Log.e(null, "collect buttons " + compoundButtons.length);
         mCompoundButtons = compoundButtons;
         for (i = 0; i < mCompoundButtons.length; i++) {
             mCompoundButtons[i].setOnCheckedChangeListener(mOnCheckedChangeListener);
@@ -50,8 +48,18 @@ public class CompoundButtonHelper {
     }
 
     public void check(int position) {
+        int i;
+
+        Log.e(null, "check " + position);
         if (position >= 0 && position < mCompoundButtons.length) {
+            mBlock = true;
+            for (i = 0; i < mCompoundButtons.length; i++) {
+                if (position != i) {
+                    mCompoundButtons[i].setChecked(false);
+                }
+            }
             mCompoundButtons[position].setChecked(true);
+            mBlock = false;
         }
     }
 
@@ -68,7 +76,7 @@ public class CompoundButtonHelper {
         }
     }
 
-    public void setOnButtonsCheckedChangeListener(OnButtonsCheckedChangeListener onButtonsCheckedChangeListener) {
+    public void setOnButtonCheckedChangeListener(OnButtonsCheckedChangeListener onButtonsCheckedChangeListener) {
         mOnButtonsCheckedChangeListener = onButtonsCheckedChangeListener;
     }
 }

@@ -12,8 +12,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.harreke.easyapp.frameworks.bases.IFramework;
-import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
+import com.harreke.easyapp.bases.IFramework;
+import com.harreke.easyapp.bases.activity.ActivityFramework;
 import com.harreke.easyapp.frameworks.recyclerview.RecyclerFramework;
 import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
 import com.harreke.easyapp.widgets.HackySearchView;

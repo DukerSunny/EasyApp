@@ -9,7 +9,7 @@
         <item name="android:windowIsTranslucent">true</item>
 
         <item name="childTabViewStyle">@style/Theme.EasyApp.ChildTabView</item>
-        <item name="infoViewStyle">@style/Theme.EasyApp.InfoView</item>
+        <item name="circularProgressViewStyle">@style/Theme.EasyApp.CircularProgressView</item>
         <item name="ratioImageViewStyle">@style/Theme.EasyApp.RatioImageView</item>
     </style>
 
@@ -26,6 +26,7 @@
     <style name="Theme.EasyApp.Fullscreen" parent="Theme.EasyApp">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsTranslucent">false</item>
     </style>
 
     <style name="Theme.EasyApp.ChildTabView">
@@ -33,15 +34,9 @@
         <item name="android:clickable">true</item>
     </style>
 
-    <style name="Theme.EasyApp.InfoView">
-        <item name="loadingText">@string/empty_loading</item>
-        <item name="emptyText">@string/empty_idle</item>
+    <style name="Theme.EasyApp.CircularProgressView">
+        <item name="progress">0</item>
         <item name="progressColor">?attr/colorPrimary</item>
-        <item name="retryHint">@string/empty_retry</item>
-        <item name="retryHintColor">?attr/colorAccent</item>
-        <item name="retryText">@string/empty_failure</item>
-        <item name="showRetryHintWhenEmpty">true</item>
-        <item name="text">@string/empty_loading</item>
     </style>
 
     <style name="Theme.EasyApp.RatioImageView">

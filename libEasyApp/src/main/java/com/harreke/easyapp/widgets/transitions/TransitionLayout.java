@@ -26,15 +26,13 @@ import com.nineoldandroids.view.ViewPropertyAnimator;
 public abstract class TransitionLayout extends FrameLayout {
     private int[] mColors;
     private ValueAnimator mContentAnimator;
-    private int mContentHeight = 0;
-    private float mContentOffsetX = 0f;
-    private float mContentOffsetY = 0f;
+    //    private int mContentHeight = 0;
+    //    private float mContentOffsetX = 0f;
+    //    private float mContentOffsetY = 0f;
     private View mContentView;
-    private int mContentWidth = 0;
+    //    private int mContentWidth = 0;
     private Animator.AnimatorListener mEnterCompleteListener = null;
-    private EnterTransition mEnterTransition = EnterTransition.None;
     private Animator.AnimatorListener mExitCompleteListener = null;
-    private ExitTransition mExitTransition = ExitTransition.None;
     private ValueAnimator.AnimatorUpdateListener mHeroUpdateListener = new ValueAnimator.AnimatorUpdateListener() {
         @Override
         public void onAnimationUpdate(ValueAnimator animation) {
@@ -88,8 +86,9 @@ public abstract class TransitionLayout extends FrameLayout {
     protected TransitionLayout(Context context) {
         super(context);
 
+        setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
         mColors = ResourceUtil.obtainThemeColor(context);
-        setLayoutParams(new ViewGroup.LayoutParams(-1, -1));
     }
 
     private ValueAnimator animateHero(ImageViewInfo oldImageViewInfo, ImageViewInfo newImageViewInfo) {
@@ -122,7 +121,7 @@ public abstract class TransitionLayout extends FrameLayout {
 
     protected void animateToX(float targetX, Animator.AnimatorListener listener) {
         cancel();
-        mContentAnimator = ValueAnimator.ofFloat(mContentOffsetX, targetX);
+        mContentAnimator = ValueAnimator.ofFloat(getContentX(), targetX);
         mContentAnimator.setDuration(300l);
         mContentAnimator.addUpdateListener(mOffsetXUpdateListener);
         if (listener != null) {
@@ -133,7 +132,7 @@ public abstract class TransitionLayout extends FrameLayout {
 
     protected void animateToY(float targetY, Animator.AnimatorListener listener) {
         cancel();
-        mContentAnimator = ValueAnimator.ofFloat(mContentOffsetY, targetY);
+        mContentAnimator = ValueAnimator.ofFloat(getContentY(), targetY);
         mContentAnimator.setDuration(300l);
         mContentAnimator.addUpdateListener(mOffsetYUpdateListener);
         if (listener != null) {
@@ -153,21 +152,37 @@ public abstract class TransitionLayout extends FrameLayout {
         mContentView = null;
     }
 
+    //    protected int getContentHeight() {
+    //        return mContentHeight;
+    //    }
+    //
+    //    protected int getContentWidth() {
+    //        return mContentWidth;
+    //    }
+
     protected int getContentHeight() {
-        return mContentHeight;
+        return mContentView.getMeasuredHeight();
     }
 
     protected int getContentWidth() {
-        return mContentWidth;
+        return mContentView.getMeasuredWidth();
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
-        mContentWidth = getMeasuredWidth();
-        mContentHeight = getMeasuredHeight();
+    protected float getContentX() {
+        return ViewHelper.getX(mContentView);
     }
+
+    protected float getContentY() {
+        return ViewHelper.getY(mContentView);
+    }
+
+    //    @Override
+    //    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    //        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    //
+    //        mContentWidth = getMeasuredWidth();
+    //        mContentHeight = getMeasuredHeight();
+    //    }
 
     private void performHeroIn(ImageViewInfo oldImageViewInfo, ImageViewInfo newImageViewInfo) {
         ViewPropertyAnimator contentAnimator = ViewPropertyAnimator.animate(mContentView);
@@ -200,8 +215,8 @@ public abstract class TransitionLayout extends FrameLayout {
             contentView = decorView.getChildAt(0);
             contentParams = contentView.getLayoutParams();
             decorView.removeView(contentView);
-            addView(contentView);
-            decorView.addView(this, contentParams);
+            addView(contentView, contentParams);
+            decorView.addView(this);
 
             mContentView = contentView;
         } else {
@@ -210,15 +225,15 @@ public abstract class TransitionLayout extends FrameLayout {
     }
 
     protected void setContentOffsetX(float contentOffsetX) {
-        mContentOffsetX = contentOffsetX;
-        ViewHelper.setX(mContentView, mContentOffsetX);
-        setBackgroundColor(Color.argb((int) (192 - 192 * contentOffsetX / mContentWidth), 0, 0, 0));
+        //        mContentOffsetX = contentOffsetX;
+        ViewHelper.setX(mContentView, contentOffsetX);
+        setBackgroundColor(Color.argb((int) (192f - 192f * contentOffsetX / getContentWidth()), 0, 0, 0));
     }
 
     protected void setContentOffsetY(float contentOffsetY) {
-        mContentOffsetY = contentOffsetY;
-        ViewHelper.setY(mContentView, mContentOffsetY);
-        setBackgroundColor(Color.argb((int) (192 - 192 * contentOffsetY / mContentHeight), 0, 0, 0));
+        //        mContentOffsetY = contentOffsetY;
+        ViewHelper.setY(mContentView, contentOffsetY);
+        setBackgroundColor(Color.argb((int) (192f - 192f * contentOffsetY / getContentHeight()), 0, 0, 0));
     }
 
     public void setEnterCompleteListener(Animator.AnimatorListener enterCompleteListener) {
@@ -257,22 +272,21 @@ public abstract class TransitionLayout extends FrameLayout {
      *         {@link com.harreke.easyapp.widgets.transitions.ImageViewInfo}
      */
     public void startEnterTransition(EnterTransition enterTransition, Object... params) {
-        mEnterTransition = enterTransition;
         switch (enterTransition) {
             case Slide_In_Left:
-                setContentOffsetX(-mContentWidth);
+                setContentOffsetX(-getContentWidth());
                 animateToX(0f, mEnterCompleteListener);
                 break;
             case Slide_In_Right:
-                setContentOffsetX(mContentWidth);
+                setContentOffsetX(getContentWidth());
                 animateToX(0f, mEnterCompleteListener);
                 break;
             case Slide_In_Top:
-                setContentOffsetY(-mContentHeight);
+                setContentOffsetY(-getContentHeight());
                 animateToY(0f, mEnterCompleteListener);
                 break;
             case Slide_In_Bottom:
-                setContentOffsetY(mContentHeight);
+                setContentOffsetY(getContentHeight());
                 animateToY(0f, mEnterCompleteListener);
                 break;
             //            case Hero_In:
@@ -286,19 +300,18 @@ public abstract class TransitionLayout extends FrameLayout {
     }
 
     public void startExitTransition(ExitTransition exitTransition, Object... params) {
-        mExitTransition = exitTransition;
         switch (exitTransition) {
             case Slide_Out_Left:
-                animateToX(-mContentWidth, mExitCompleteListener);
+                animateToX(-getContentWidth(), mExitCompleteListener);
                 break;
             case Slide_Out_Right:
-                animateToX(mContentWidth, mExitCompleteListener);
+                animateToX(getContentWidth(), mExitCompleteListener);
                 break;
             case Slide_Out_Top:
-                animateToY(-mContentHeight, mExitCompleteListener);
+                animateToY(-getContentHeight(), mExitCompleteListener);
                 break;
             case Slide_Out_Bottom:
-                animateToY(mContentHeight, mExitCompleteListener);
+                animateToY(getContentHeight(), mExitCompleteListener);
                 break;
             //            case Hero_Out:
             //                try {

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:id="@+id/player_control_middle"
+    style="@style/mmw"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <include
+        layout="@layout/activity_player_control_middle_hotwords"/>
+
+    <include
+        layout="@layout/activity_player_control_middle_yuwan"/>
+
+    <include
+        layout="@layout/activity_player_control_middle_live"/>
+
+</FrameLayout>

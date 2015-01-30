@@ -5,8 +5,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.harreke.easyapp.R;
-import com.harreke.easyapp.frameworks.bases.IFramework;
-import com.harreke.easyapp.widgets.CircularProgressDrawable;
+import com.harreke.easyapp.frameworks.IFramework;
+import com.harreke.easyapp.widgets.circluarprogresses.CircularProgressDrawable;
 import com.harreke.easyapp.widgets.rippleeffects.RippleDrawable;
 import com.harreke.easyapp.widgets.rippleeffects.RippleOnClickListener;
 import com.nineoldandroids.animation.Animator;
@@ -131,8 +131,10 @@ public class EmptyHelper implements View.OnClickListener {
         } else {
             empty_root.setVisibility(View.VISIBLE);
         }
-        empty_icon.setImageResource(R.drawable.image_idle);
-        mProgressDrawable.setProgress(0);
+        if (empty_icon != null) {
+            empty_icon.setImageResource(R.drawable.image_idle);
+        }
+        mProgressDrawable.setProgress(0f);
         empty_text.setText(toastId);
         if (mShowRetryWhenIdle) {
             empty_retry.setVisibility(View.VISIBLE);
@@ -153,8 +155,10 @@ public class EmptyHelper implements View.OnClickListener {
         } else {
             empty_root.setVisibility(View.VISIBLE);
         }
-        empty_icon.setImageDrawable(mProgressDrawable);
-        mProgressDrawable.setProgress(-1);
+        if (empty_icon != null) {
+            empty_icon.setImageDrawable(mProgressDrawable);
+        }
+        mProgressDrawable.setProgress(-1f);
         empty_text.setText(R.string.empty_loading);
         empty_retry.setVisibility(View.GONE);
     }

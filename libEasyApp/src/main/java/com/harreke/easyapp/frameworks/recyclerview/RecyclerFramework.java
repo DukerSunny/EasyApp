@@ -14,9 +14,10 @@ import android.view.ViewGroup;
 
 import com.harreke.easyapp.R;
 import com.harreke.easyapp.adapters.recyclerview.RecyclerAdapter;
-import com.harreke.easyapp.frameworks.bases.IFramework;
+import com.harreke.easyapp.frameworks.IFramework;
 import com.harreke.easyapp.helpers.EmptyHelper;
-import com.harreke.easyapp.parsers.ListParser;
+import com.harreke.easyapp.parsers.IListParser;
+import com.harreke.easyapp.parsers.ListResult;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
 import com.harreke.easyapp.widgets.pullablelayout.PullableLayout;
@@ -35,6 +36,24 @@ public abstract class RecyclerFramework<ITEM> implements PullableLayout.OnPullab
     private int mAction = ACTION_NONE;
     private final static int ACTION_REFRESH = 1;
     private RecyclerAdapter<ITEM> mAdapter;
+    private boolean mAutoLoadMore = false;
+    private RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            RecyclerView.LayoutManager manager;
+            int lastVisibleItem;
+            int totalItemCount;
+
+            if (mAutoLoadMore) {
+                manager = mRecyclerView.getLayoutManager();
+                lastVisibleItem = ((LinearLayoutManager) manager).findLastVisibleItemPosition();
+                totalItemCount = manager.getItemCount();
+                if (lastVisibleItem >= totalItemCount - 5 && dy > 1) {
+                    onPullToRefresh();
+                }
+            }
+        }
+    };
     private Comparator<ITEM> mComparator = null;
     private int mCurrentPage = 1;
     private EmptyHelper mEmptyHelper = null;
@@ -47,7 +66,7 @@ public abstract class RecyclerFramework<ITEM> implements PullableLayout.OnPullab
         }
     });
     private int mLastItemAddedCount = 0;
-    private ListParser<ITEM> mListParser = null;
+    private IListParser<ITEM> mListParser = null;
     private View.OnClickListener mOnEmptyClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -104,6 +123,7 @@ public abstract class RecyclerFramework<ITEM> implements PullableLayout.OnPullab
             mEmptyHelper.showEmptyIdle(false);
             mEmptyHelper.setOnClickListener(mOnEmptyClickListener);
         }
+        mRecyclerView.setOnScrollListener(mOnScrollListener);
     }
 
     public boolean addItem(ITEM item) {
@@ -317,6 +337,10 @@ public abstract class RecyclerFramework<ITEM> implements PullableLayout.OnPullab
         return mAction == ACTION_REFRESH ? 1 : mCurrentPage;
     }
 
+    public IFramework getFramework() {
+        return mFramework;
+    }
+
     /**
      * 获得条目
      *
@@ -449,15 +473,21 @@ public abstract class RecyclerFramework<ITEM> implements PullableLayout.OnPullab
      *
      * @return 可供操作的列表
      *
-     * @see com.harreke.easyapp.parsers.ListParser
+     * @see com.harreke.easyapp.parsers.ListResult
      */
     protected List<ITEM> onParse(String json) {
+        ListResult<ITEM> listResult;
+
         if (mListParser == null) {
             throw new IllegalStateException("Cannot find list parser for network data!");
         } else {
-            mListParser.parse(json);
+            listResult = mListParser.parse(json);
 
-            return mListParser.getList();
+            if (listResult != null) {
+                return listResult.getList();
+            } else {
+                return null;
+            }
         }
     }
 
@@ -636,6 +666,10 @@ public abstract class RecyclerFramework<ITEM> implements PullableLayout.OnPullab
         mRecyclerView.smoothScrollToPosition(0);
     }
 
+    public void setAutoLoadMore(boolean autoLoadMore) {
+        mAutoLoadMore = autoLoadMore;
+    }
+
     public void setCanLoad(boolean enabled) {
         if (mPullableLayout != null) {
             mPullableLayout.setCanLoad(enabled);
@@ -695,9 +729,9 @@ public abstract class RecyclerFramework<ITEM> implements PullableLayout.OnPullab
      * @param listParser
      *         列表解析器
      *
-     * @see com.harreke.easyapp.parsers.ListParser
+     * @see com.harreke.easyapp.parsers.ListResult
      */
-    public void setListParser(ListParser<ITEM> listParser) {
+    public void setListParser(IListParser<ITEM> listParser) {
         mListParser = listParser;
     }
 

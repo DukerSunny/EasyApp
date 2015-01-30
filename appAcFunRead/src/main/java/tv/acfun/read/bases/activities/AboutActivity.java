@@ -6,7 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.widget.TextView;
 
-import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
+import com.harreke.easyapp.bases.activity.ActivityFramework;
 import com.umeng.analytics.MobclickAgent;
 
 import tv.acfun.read.BuildConfig;

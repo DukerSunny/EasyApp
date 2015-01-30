@@ -9,9 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.harreke.easyapp.R;
-import com.harreke.easyapp.widgets.CircularProgressDrawable;
+import com.harreke.easyapp.widgets.animators.AlphaAnimator;
+import com.harreke.easyapp.widgets.circluarprogresses.CircularProgressDrawable;
 import com.nineoldandroids.view.ViewHelper;
-import com.nineoldandroids.view.ViewPropertyAnimator;
 
 import java.lang.ref.WeakReference;
 
@@ -27,7 +27,7 @@ public class ToastHelper {
     };
     private CircularProgressDrawable mProgressDrawable;
     private WeakReference<Activity> mReference;
-    private ViewPropertyAnimator mToastAnimator = null;
+    private ToastAnimator mToastAnimator;
     private ImageView toast_icon;
     private View toast_root;
     private TextView toast_text;
@@ -45,24 +45,17 @@ public class ToastHelper {
         mProgressDrawable = new CircularProgressDrawable(Color.WHITE);
         toast_icon.setImageDrawable(mProgressDrawable);
 
-        mToastAnimator = ViewPropertyAnimator.animate(toast_root);
-        ViewHelper.setAlpha(toast_root, 0f);
-        setProgress(0f);
-    }
+        mToastAnimator = new ToastAnimator(toast_root);
 
-    private void cancel() {
-        mToastAnimator.cancel();
-        toast_root.removeCallbacks(mHideRunnable);
+        hide(false);
     }
 
     public void destroy() {
         mProgressDrawable.setProgress(0f);
-        mToastAnimator.cancel();
         if (mReference.get() != null) {
             ((ViewGroup) mReference.get().getWindow().getDecorView()).removeView(toast_root);
             mReference.clear();
         }
-
         toast_root = null;
         mToastAnimator = null;
         toast_icon = null;
@@ -71,10 +64,13 @@ public class ToastHelper {
     }
 
     public void hide() {
+        hide(true);
+    }
+
+    public void hide(boolean animate) {
         if (mReference.get() != null) {
-            cancel();
-            ViewHelper.setY(toast_root, mReference.get().getWindow().getDecorView().getMeasuredHeight() / 2f);
-            mToastAnimator.alpha(0f).start();
+            updateToast();
+            mToastAnimator.close(animate);
         }
     }
 
@@ -89,9 +85,8 @@ public class ToastHelper {
 
     private void show(boolean indeterminate) {
         if (mReference.get() != null) {
-            cancel();
-            ViewHelper.setY(toast_root, mReference.get().getWindow().getDecorView().getMeasuredHeight() / 2f);
-            mToastAnimator.alpha(1f).setDuration(300l).start();
+            updateToast();
+            mToastAnimator.open(true);
             if (!indeterminate) {
                 toast_root.postDelayed(mHideRunnable, 3300l);
             }
@@ -110,5 +105,25 @@ public class ToastHelper {
         }
         toast_text.setText(text);
         show(indeterminate);
+    }
+
+    private void updateToast() {
+        ViewHelper.setY(toast_root, mReference.get().getWindow().getDecorView().getMeasuredHeight() * 0.75f);
+    }
+
+    private class ToastAnimator extends AlphaAnimator {
+        public ToastAnimator(View view) {
+            super(view);
+        }
+
+        @Override
+        public float getCloseAlpha(View view) {
+            return 0f;
+        }
+
+        @Override
+        public float getOpenAlpha(View view) {
+            return 1f;
+        }
     }
 }

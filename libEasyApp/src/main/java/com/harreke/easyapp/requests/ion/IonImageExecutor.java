@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import com.harreke.easyapp.R;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.IRequestExecutor;
+import com.harreke.easyapp.requests.RequestBuilder;
 import com.koushikdutta.async.future.Future;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -18,6 +19,13 @@ public class IonImageExecutor implements IRequestExecutor, FutureCallback<ImageV
     private IRequestCallback<ImageView> mImageCallback = null;
     private Future<ImageView> mImageFuture = null;
     private String mImageUrl = null;
+
+    public IonImageExecutor(ImageView imageView, RequestBuilder requestBuilder, IRequestCallback<ImageView> imageCallback) {
+        mImageUrl = requestBuilder.getUrl();
+        mImageCallback = imageCallback;
+        requestBuilder.print();
+        mImageFuture = IonBuilder.build(imageView.getContext(), requestBuilder).intoImageView(imageView).setCallback(this);
+    }
 
     public IonImageExecutor(ImageView imageView, String imageUrl, int loadingImageId, int retryImageId,
             IRequestCallback<ImageView> imageCallback) {

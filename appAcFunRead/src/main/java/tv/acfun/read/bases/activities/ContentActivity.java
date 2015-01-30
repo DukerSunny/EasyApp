@@ -15,7 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.astuetz.PagerSlidingTabStrip;
-import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
+import com.harreke.easyapp.bases.activity.ActivityFramework;
 import com.harreke.easyapp.helpers.EmptyHelper;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.utils.StringUtil;

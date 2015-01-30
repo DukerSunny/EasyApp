@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    style="@style/mm"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/background">
+
+    <LinearLayout
+        style="@style/mm.v"
+        android:padding="8dp">
+
+        <TextView
+            style="@style/ww"
+            android:padding="8dp"
+            android:text="@string/bind_foreign_step1"
+            android:textAppearance="@style/Title"/>
+
+        <android.support.v7.widget.CardView
+            style="@style/mw">
+
+            <TextView
+                style="@style/mw"
+                android:padding="16dp"
+                android:text="@string/bind_foreign_step1_desc"
+                android:textSize="@dimen/Subhead"/>
+
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            style="@style/ww"
+            android:padding="8dp"
+            android:text="@string/bind_foreign_step2"
+            android:textAppearance="@style/Title"/>
+
+        <android.support.v7.widget.CardView
+            style="@style/mw">
+
+            <LinearLayout
+                style="@style/mw.v">
+
+                <EditText
+                    android:id="@+id/bind_phone_input"
+                    style="@style/mw"
+                    android:background="@color/transparent"
+                    android:hint="@string/bind_phone_input"
+                    android:inputType="phone"
+                    android:padding="16dp"
+                    android:singleLine="true"
+                    android:textColorHint="@color/gray"
+                    android:textSize="@dimen/Body1"/>
+
+                <include
+                    layout="@layout/widget_divider_horizontal"/>
+
+                <LinearLayout
+                    style="@style/mw.h"
+                    android:gravity="center_vertical">
+
+                    <EditText
+                        android:id="@+id/bind_captcha_input"
+                        style="@style/mww"
+                        android:background="@color/transparent"
+                        android:hint="@string/bind_captcha_input"
+                        android:padding="16dp"
+                        android:singleLine="true"
+                        android:textColorHint="@color/gray"
+                        android:textSize="@dimen/Body1"/>
+
+                    <com.harreke.easyapp.widgets.RatioImageView
+                        android:id="@+id/bind_captcha"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:src="@drawable/loading_16x9"
+                        app:ratio="2.5"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            style="@style/mw"
+            android:layout_marginTop="32dp"
+            app:cardBackgroundColor="?attr/colorPrimary">
+
+            <TextView
+                android:id="@+id/bind_phone_submit"
+                style="@style/mw"
+                android:gravity="center"
+                android:padding="16dp"
+                android:text="@string/bind_phone_submit"
+                android:textColor="@color/white"
+                android:textSize="@dimen/Body1"/>
+
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+
+    <include
+        layout="@layout/widget_toolbar_shadow"/>
+
+</FrameLayout>

@@ -11,6 +11,8 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/appDouyuTv" />
             <option value="$PROJECT_DIR$/libEasyApp" />
+            <option value="$PROJECT_DIR$/libIjkMediaPlayer" />
+            <option value="$PROJECT_DIR$/libSocialSdk" />
           </set>
         </option>
       </GradleProjectSettings>

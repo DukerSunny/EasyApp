@@ -12,11 +12,11 @@
         style="@style/mm">
 
         <ScrollView
-            style="@style/mm.v">
+            style="@style/mm.v"
+            android:padding="8dp">
 
             <LinearLayout
-                style="@style/mm.v"
-                android:padding="8dp">
+                style="@style/mm.v">
 
                 <TextView
                     style="@style/ww"
@@ -70,6 +70,7 @@
                     android:textColor="@color/darkGray"
                     android:textSize="@dimen/Body1"
                     android:thumb="@drawable/selector_switch_thumb"
+                    android:visibility="gone"
                     app:track="@drawable/selector_switch_track"/>
 
                 <android.support.v7.widget.SwitchCompat
@@ -111,10 +112,7 @@
                             android:layout_height="wrap_content"
                             android:background="?attr/colorPrimary"
                             android:gravity="center"
-                            android:paddingBottom="2dp"
-                            android:paddingLeft="4dp"
-                            android:paddingRight="4dp"
-                            android:paddingTop="2dp"
+                            android:padding="4dp"
                             android:text="@string/setting_system_switch_decode_hw"
                             android:textColor="@color/white"
                             android:textSize="@dimen/Caption"/>
@@ -197,6 +195,7 @@
                     android:textColor="@color/darkGray"
                     android:textSize="@dimen/Body1"
                     android:thumb="@drawable/selector_switch_thumb"
+                    android:visibility="gone"
                     app:track="@drawable/selector_switch_track"/>
 
                 <LinearLayout
@@ -223,10 +222,7 @@
                             android:layout_height="wrap_content"
                             android:background="?attr/colorPrimary"
                             android:gravity="center"
-                            android:paddingBottom="2dp"
-                            android:paddingLeft="4dp"
-                            android:paddingRight="4dp"
-                            android:paddingTop="2dp"
+                            android:padding="4dp"
                             android:text="100%"
                             android:textColor="@color/white"
                             android:textSize="@dimen/Caption"/>
@@ -285,10 +281,7 @@
                             android:layout_height="wrap_content"
                             android:background="?attr/colorPrimary"
                             android:gravity="center"
-                            android:paddingBottom="2dp"
-                            android:paddingLeft="4dp"
-                            android:paddingRight="4dp"
-                            android:paddingTop="2dp"
+                            android:padding="4dp"
                             android:text="22"
                             android:textColor="@color/white"
                             android:textSize="@dimen/Caption"/>
@@ -324,7 +317,8 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    style="@style/mw.v">
+                    style="@style/mw.v"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:id="@+id/setting_live_danmaku_location"
@@ -347,10 +341,7 @@
                             android:layout_height="wrap_content"
                             android:background="?attr/colorPrimary"
                             android:gravity="center"
-                            android:paddingBottom="2dp"
-                            android:paddingLeft="4dp"
-                            android:paddingRight="4dp"
-                            android:paddingTop="2dp"
+                            android:padding="4dp"
                             android:text="@string/setting_live_danmaku_location_top"
                             android:textColor="@color/white"
                             android:textSize="@dimen/Caption"/>

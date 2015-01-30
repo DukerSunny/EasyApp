@@ -5,8 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.harreke.easyapp.frameworks.bases.IFramework;
-import com.harreke.easyapp.frameworks.bases.fragment.FragmentFramework;
+import com.harreke.easyapp.bases.IFramework;
+import com.harreke.easyapp.frameworks.fragment.FragmentFramework;
 import com.harreke.easyapp.frameworks.recyclerview.RecyclerFramework;
 import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
 

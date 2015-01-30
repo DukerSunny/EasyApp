@@ -2,7 +2,6 @@ package com.harreke.easyapp.helpers;
 
 import android.content.Context;
 
-import com.harreke.easyapp.configs.RequestExecutorConfig;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.IRequestExecutor;
 import com.harreke.easyapp.requests.RequestBuilder;
@@ -16,6 +15,7 @@ public class RequestHelper {
     public final void cancel() {
         if (mExecutor != null) {
             mExecutor.cancel();
+            mExecutor = null;
         }
     }
 
@@ -32,7 +32,7 @@ public class RequestHelper {
     public final void execute(Context context, RequestBuilder builder, IRequestCallback<String> callback) {
         if (context != null) {
             cancel();
-            mExecutor = RequestExecutorConfig.create(context, builder, callback);
+            mExecutor = HttpLoaderHelper.loadString(context, builder, callback);
         }
     }
 

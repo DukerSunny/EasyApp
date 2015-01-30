@@ -2,12 +2,11 @@ package com.harreke.easyapp.requests;
 
 import android.util.Log;
 
-import com.alibaba.fastjson.JSON;
 import com.harreke.easyapp.enums.RequestMethod;
 
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/07/24
@@ -16,25 +15,23 @@ import java.util.Map;
  */
 public class RequestBuilder {
     private final String TAG = "RequestBuilder";
-    private String mBaseUrl;
-    private Map<String, String> mBodyMap = new LinkedHashMap<String, String>();
-    private Map<String, String> mHeaderMap = new LinkedHashMap<String, String>();
+    private Map<String, String> mBodyMap = new TreeMap<String, String>();
+    private Map<String, String> mHeaderMap = new TreeMap<String, String>();
+    private String mHost;
     private RequestMethod mMethod;
-    private Map<String, String> mQueryMap = new LinkedHashMap<String, String>();
+    private String mPath;
+    private Map<String, String> mQueryMap = new TreeMap<String, String>();
 
     /**
      * 构造Http请求
      *
      * @param method
      *         请求方式
-     * @param baseUrl
-     *         目标Url
      *
      * @see com.harreke.easyapp.enums.RequestMethod
      */
-    public RequestBuilder(RequestMethod method, String baseUrl) {
+    public RequestBuilder(RequestMethod method) {
         mMethod = method;
-        mBaseUrl = baseUrl;
     }
 
     /**
@@ -85,37 +82,83 @@ public class RequestBuilder {
         return this;
     }
 
+    private String buildString(Map<String, String> map) {
+        Iterator<String> iterator = map.keySet().iterator();
+        StringBuilder result = new StringBuilder();
+        String key;
+
+        if (iterator.hasNext()) {
+            key = iterator.next();
+            result.append(key).append("=").append(map.get(key));
+            while (iterator.hasNext()) {
+                key = iterator.next();
+                result.append("&").append(key).append("=").append(map.get(key));
+            }
+        }
+
+        return result.toString();
+    }
+
+    public void clear() {
+        clearHeader();
+        clearQuery();
+        clearBody();
+    }
+
+    public void clearBody() {
+        mBodyMap.clear();
+    }
+
+    public void clearHeader() {
+        mHeaderMap.clear();
+    }
+
+    public void clearQuery() {
+        mQueryMap.clear();
+    }
+
+    public String getBaseUrl() {
+        return mHost + "/" + mPath;
+    }
+
     public final Map<String, String> getBody() {
         return mBodyMap;
+    }
+
+    public final String getBodyString() {
+        return buildString(mBodyMap);
     }
 
     public final Map<String, String> getHeader() {
         return mHeaderMap;
     }
 
+    public final String getHeaderString() {
+        return buildString(mHeaderMap);
+    }
+
+    public String getHost() {
+        return mHost;
+    }
+
     public final RequestMethod getMethod() {
         return mMethod;
+    }
+
+    public String getPath() {
+        return mPath;
     }
 
     public final Map<String, String> getQuery() {
         return mQueryMap;
     }
 
+    public final String getQueryString() {
+        return buildString(mQueryMap);
+    }
+
     public final String getUrl() {
-        Iterator<String> iterator = mQueryMap.keySet().iterator();
-        String url = mBaseUrl;
-        String key;
-
-        if (iterator.hasNext()) {
-            key = iterator.next();
-            url += "?" + key + "=" + mQueryMap.get(key);
-            while (iterator.hasNext()) {
-                key = iterator.next();
-                url += "&" + key + "=" + mQueryMap.get(key);
-            }
-        }
-
-        return url;
+        return getBaseUrl() + "?" + getQueryString();
     }
 
     public final void print() {
@@ -123,12 +166,20 @@ public class RequestBuilder {
 
         switch (mMethod) {
             case GET:
-                print = "GET " + getUrl();
+                print = "GET " + getBaseUrl() + "?" + getQueryString();
                 break;
             case POST:
-                print = "POST " + getUrl() + "\nHeaders:\n" + JSON.toJSONString(mHeaderMap) + "\nBodies:\n" +
-                        JSON.toJSONString(mBodyMap);
+                print = "POST " + getBaseUrl() + "?" + getQueryString() + "\nHeaders:\n" + getHeaderString() + "\nBodies:\n" +
+                        getBodyString();
+                break;
         }
         Log.e(TAG, print);
+    }
+
+    public final RequestBuilder setBaseUrl(String host, String path) {
+        mHost = host;
+        mPath = path;
+
+        return this;
     }
 }

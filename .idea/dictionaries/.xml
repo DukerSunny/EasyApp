@@ -4,16 +4,19 @@
       <w>appkey</w>
       <w>danmaku</w>
       <w>douyu</w>
+      <w>douyutv</w>
       <w>easyapp</w>
       <w>emot</w>
       <w>fullconversion</w>
       <w>harreke</w>
+      <w>hotwords</w>
       <w>pullable</w>
       <w>recycler</w>
       <w>slidable</w>
       <w>snackbar</w>
       <w>struct</w>
       <w>umeng</w>
+      <w>yuwan</w>
     </words>
   </dictionary>
 </component>

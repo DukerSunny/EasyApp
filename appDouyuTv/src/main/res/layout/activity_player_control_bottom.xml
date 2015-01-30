@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/player_control_bottom"
+    style="@style/mw.v"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_gravity="bottom"
+    android:background="@color/transparentGray"
+    android:clickable="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        style="@style/mw.h">
+
+        <ImageView
+            android:id="@+id/player_pause"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="8dp"
+            android:src="@drawable/player_pause"/>
+
+        <ImageView
+            android:id="@+id/player_play"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="8dp"
+            android:src="@drawable/player_play"
+            android:visibility="gone"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <ImageView
+            android:id="@+id/player_danmaku_off"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="8dp"
+            android:src="@drawable/player_danmaku_off"/>
+
+        <ImageView
+            android:id="@+id/player_danmaku_on"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="8dp"
+            android:src="@drawable/player_danmaku_on"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/player_lock_on"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="8dp"
+            android:src="@drawable/player_lock_on"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="center_vertical"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
+
+        <TextView
+            android:id="@+id/player_danmaku_hotwords"
+            style="@style/ww"
+            android:background="@drawable/shape_corner_primary"
+            android:paddingBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp"
+            android:text="@string/player_hotwords"
+            android:textColor="@color/white"
+            android:textSize="@dimen/Subhead"/>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_weight="1">
+
+            <EditText
+                android:id="@+id/player_danmaku_input"
+                style="@style/mm"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/shape_corner_white"
+                android:hint="@string/player_input"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:singleLine="true"
+                android:textSize="@dimen/Subhead"/>
+
+            <ImageView
+                android:id="@+id/player_danmaku_cancel"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginRight="8dp"
+                android:src="@drawable/search_close"/>
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/player_danmaku_send"
+            style="@style/ww"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/shape_corner_darkcyan"
+            android:paddingBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp"
+            android:text="@string/player_send"
+            android:textColor="@color/white"
+            android:textSize="@dimen/Subhead"/>
+
+    </LinearLayout>
+
+</LinearLayout>

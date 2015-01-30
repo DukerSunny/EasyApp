@@ -10,7 +10,7 @@ import android.view.View;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.harreke.easyapp.adapters.fragment.FragmentPageAdapter;
-import com.harreke.easyapp.frameworks.bases.activity.ActivityFramework;
+import com.harreke.easyapp.bases.activity.ActivityFramework;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.nispok.snackbar.Snackbar;

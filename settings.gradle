@@ -1,4 +1,4 @@
-//include ':appAcFunRead'
 include ':appDouyuTv'
 include ':libEasyApp'
-//include ':libColorPicker'
+include ':libIjkMediaPlayer'
+include ':libSocialSdk'

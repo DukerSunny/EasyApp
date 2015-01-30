@@ -118,6 +118,7 @@
                 android:padding="8dp">
 
                 <LinearLayout
+                    android:id="@+id/profile_mail_root"
                     style="@style/mw.h"
                     android:gravity="center_vertical"
                     android:paddingBottom="16dp"
@@ -153,6 +154,7 @@
                     android:background="@color/divider"/>
 
                 <LinearLayout
+                    android:id="@+id/profile_phone_root"
                     style="@style/mw.h"
                     android:gravity="center_vertical"
                     android:paddingBottom="16dp"
@@ -188,6 +190,7 @@
                     android:background="@color/divider"/>
 
                 <LinearLayout
+                    android:id="@+id/profile_qq_root"
                     style="@style/mw.h"
                     android:gravity="center_vertical"
                     android:paddingBottom="16dp"

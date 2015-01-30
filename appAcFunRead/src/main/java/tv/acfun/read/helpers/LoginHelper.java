@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.harreke.easyapp.frameworks.bases.IFramework;
+import com.harreke.easyapp.bases.IFramework;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.widgets.CircularProgressDrawable;
 

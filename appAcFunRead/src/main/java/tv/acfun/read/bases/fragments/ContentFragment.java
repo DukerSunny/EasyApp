@@ -11,7 +11,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.harreke.easyapp.configs.ImageExecutorConfig;
-import com.harreke.easyapp.frameworks.bases.fragment.FragmentFramework;
+import com.harreke.easyapp.frameworks.fragment.FragmentFramework;
 import com.harreke.easyapp.frameworks.webs.WebFramework;
 import com.harreke.easyapp.helpers.ImageLoaderHelper;
 import com.harreke.easyapp.requests.IRequestCallback;

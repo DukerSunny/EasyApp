@@ -3,7 +3,7 @@ package tv.acfun.read.bases.application;
 import android.graphics.drawable.Drawable;
 
 import com.google.gson.reflect.TypeToken;
-import com.harreke.easyapp.frameworks.bases.application.ApplicationFramework;
+import com.harreke.easyapp.frameworks.application.ApplicationFramework;
 import com.harreke.easyapp.utils.FileUtil;
 import com.harreke.easyapp.utils.GsonUtil;
 

@@ -1,11 +1,15 @@
 package tv.douyu.wrapper.helper;
 
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 
 import com.harreke.easyapp.frameworks.base.IFramework;
 import com.harreke.easyapp.widgets.circluarprogresses.CircularProgressView;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
 import tv.douyu.R;
 import tv.douyu.model.bean.Setting;
 
@@ -14,18 +18,6 @@ import tv.douyu.model.bean.Setting;
  */
 public abstract class PlayerControlHelper {
     private boolean mEnabled = false;
-    private View.OnClickListener mOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (mEnabled) {
-                switch (v.getId()) {
-                    case R.id.player_control:
-                        onPlayerControlClick();
-                        break;
-                }
-            }
-        }
-    };
     private Handler mHandler = new Handler();
     private Runnable mHidePlayerControlRunnable = new Runnable() {
         @Override
@@ -39,20 +31,18 @@ public abstract class PlayerControlHelper {
     private PlayerControlSettingHelper mPlayerControlSettingHelper;
     private PlayerControlTopHelper mPlayerControlTopHelper;
     private boolean mShowing = false;
-    private View player_control;
-    private CircularProgressView player_progress;
+    @InjectView(R.id.player_control)
+    View player_control;
+    @InjectView(R.id.player_progress)
+    CircularProgressView player_progress;
 
-    public PlayerControlHelper(IFramework framework, Setting setting) {
-        player_control = framework.findViewById(R.id.player_control);
-        player_progress = (CircularProgressView) framework.findViewById(R.id.player_progress);
-
+    public PlayerControlHelper(IFramework framework, View rootView, Setting setting) {
+        ButterKnife.inject(this, rootView);
         mPlayerControlTopHelper = new PlayerControlTopHelperImpl(player_control);
         mPlayerControlMiddleHelper = new PlayerControlMiddleHelperImpl(framework, player_control);
         mPlayerControlBottomHelper = new PlayerControlBottomHelperImpl(player_control);
         mPlayerControlSettingHelper = new PlayerControlSettingHelperImpl(framework, setting);
         mPlayerControlDefinitionHelper = new PlayerControlDefinitionHelperImpl(player_control);
-
-        player_control.setOnClickListener(mOnClickListener);
     }
 
     public void clearDanmakuInput() {
@@ -103,6 +93,7 @@ public abstract class PlayerControlHelper {
     }
 
     public boolean isShowing() {
+        Log.e(null, "control showing=" + mShowing);
         return mShowing;
     }
 
@@ -110,12 +101,17 @@ public abstract class PlayerControlHelper {
 
     protected abstract void onPlayerBrightnessChange(int value);
 
-    private void onPlayerControlClick() {
-        restartHideCount();
-        if (!mPlayerControlBottomHelper.isLocked()) {
-            toggle();
-        } else {
-            mPlayerControlBottomHelper.toggleLockShow();
+    @OnClick(R.id.player_control)
+    void onPlayerControlClick() {
+        Log.e(null, "player control click, enabled=" + mEnabled);
+        if (mEnabled) {
+            restartHideCount();
+            Log.e(null, "locked=" + mPlayerControlBottomHelper.isLocked());
+            if (!mPlayerControlBottomHelper.isLocked()) {
+                toggle();
+            } else {
+                mPlayerControlBottomHelper.toggleLockShow();
+            }
         }
     }
 
@@ -292,7 +288,6 @@ public abstract class PlayerControlHelper {
         @Override
         protected void onDefinitionChange(String cdn, boolean useHD) {
             mPlayerControlTopHelper.setUseHD(useHD);
-            PlayerControlHelper.this.hide(false);
             onPlayerDefinitionChange(cdn, useHD);
         }
 
@@ -320,11 +315,6 @@ public abstract class PlayerControlHelper {
         @Override
         protected void onYuWanSendClick() {
             onPlayerYuWanSendClick();
-        }
-
-        @Override
-        protected void setInputText(String hotWord) {
-            mPlayerControlBottomHelper.setInputText(hotWord);
         }
     }
 
@@ -371,7 +361,7 @@ public abstract class PlayerControlHelper {
 
         @Override
         protected void onBackClick() {
-            restartHideCount();
+            stopHideCount();
             onPlayerBackClick();
         }
 

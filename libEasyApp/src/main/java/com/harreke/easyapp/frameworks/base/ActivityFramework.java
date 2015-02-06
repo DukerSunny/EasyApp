@@ -15,20 +15,18 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.harreke.easyapp.R;
-import com.harreke.easyapp.enums.ActivityAnimation;
-import com.harreke.easyapp.enums.EnterTransition;
-import com.harreke.easyapp.enums.ExitTransition;
 import com.harreke.easyapp.helpers.ConnectionHelper;
 import com.harreke.easyapp.helpers.RequestHelper;
 import com.harreke.easyapp.helpers.ToastHelper;
+import com.harreke.easyapp.listeners.OnTransitionListener;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
 import com.harreke.easyapp.utils.NetUtil;
 import com.harreke.easyapp.widgets.transitions.TransitionLayout;
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.AnimatorListenerAdapter;
+import com.harreke.easyapp.widgets.transitions.TransitionOptions;
 
 import butterknife.ButterKnife;
 
@@ -52,19 +50,6 @@ public abstract class ActivityFramework extends ActionBarActivity
             ConnectionHelper.checkConnection(context);
         }
     };
-    private Animator.AnimatorListener mEnterListener = new AnimatorListenerAdapter() {
-        @Override
-        public void onAnimationEnd(Animator animation) {
-            startAction();
-        }
-    };
-    private Animator.AnimatorListener mExitListener = new AnimatorListenerAdapter() {
-        @Override
-        public void onAnimationEnd(Animator animation) {
-            finish();
-            overridePendingTransition(0, 0);
-        }
-    };
     private Handler mHandler = new Handler();
     private Menu mMenu;
     private View.OnClickListener mOnNavigationClickListener = new View.OnClickListener() {
@@ -73,11 +58,22 @@ public abstract class ActivityFramework extends ActionBarActivity
             onToolbarNavigationClick();
         }
     };
+    private OnTransitionListener mOnTransitionListener = new OnTransitionListener() {
+        @Override
+        public void onEnter() {
+            startAction();
+        }
+
+        @Override
+        public void onExit() {
+            exit();
+        }
+    };
     private RequestHelper mRequest = new RequestHelper();
     private ToastHelper mToastHelper;
     private Toolbar mToolbar;
-    private View mToolbarShadow;
     private TransitionLayout mTransitionLayout = null;
+    private TransitionOptions mTransitionOptions;
 
     /**
      * 初始化Activity传参数据
@@ -108,9 +104,8 @@ public abstract class ActivityFramework extends ActionBarActivity
         }
     }
 
-    private void attachToolbar(int toolbarSolidId, int toolbarShadowId) {
+    private void attachToolbar(int toolbarSolidId) {
         mToolbar = (Toolbar) findViewById(toolbarSolidId);
-        mToolbarShadow = findViewById(toolbarShadowId);
         if (mToolbar != null) {
             setSupportActionBar(mToolbar);
             mToolbar.setNavigationOnClickListener(mOnNavigationClickListener);
@@ -118,25 +113,19 @@ public abstract class ActivityFramework extends ActionBarActivity
         }
     }
 
-    /**
-     * 配置过渡动画布局
-     *
-     * 只能在configActivity中调用，否则可能导致无效
-     * 过渡动画布局会自动在加载完布局后与Activity绑定，并且会自动在Activity被销毁时销毁
-     *
-     * 注：每个Activity只能配置一个过渡动画
-     *
-     * {@link com.harreke.easyapp.widgets.transitions.TransitionLayout}
-     */
-    public void attachTransition(TransitionLayout transitionLayout) {
-        if (mTransitionLayout == null) {
-            mTransitionLayout = transitionLayout;
-            mTransitionLayout.setEnterCompleteListener(mEnterListener);
-            mTransitionLayout.setExitCompleteListener(mExitListener);
-        } else {
-            throw new IllegalArgumentException("Cannot set transitionLayout twice!");
-        }
+    private void attachTransitionLayout(TransitionLayout transitionLayout) {
+        mTransitionLayout = transitionLayout;
     }
+
+    //    /**
+    //     * 退出Activity
+    //     */
+    //    public final void exit(ActivityAnimation animation) {
+    //        finish();
+    //        if (animation != ActivityAnimation.Default) {
+    //            overridePendingTransition(animation.getEnterAnim(), animation.getExitAnim());
+    //        }
+    //    }
 
     /**
      * 取消正在执行的Http请求
@@ -180,17 +169,9 @@ public abstract class ActivityFramework extends ActionBarActivity
     }
 
     public final void exit() {
-        exit(ActivityAnimation.Default);
-    }
-
-    /**
-     * 退出Activity
-     */
-    public final void exit(ActivityAnimation anim) {
+        setResult(RESULT_OK);
         finish();
-        if (anim != ActivityAnimation.Default) {
-            overridePendingTransition(anim.getEnterAnim(), anim.getExitAnim());
-        }
+        overridePendingTransition(R.anim.none, mTransitionOptions.exitAnimation);
     }
 
     @Override
@@ -222,10 +203,6 @@ public abstract class ActivityFramework extends ActionBarActivity
         return mToolbar;
     }
 
-    protected int getToolbarShadowId() {
-        return R.id.toolbar_shadow;
-    }
-
     protected int getToolbarSolidId() {
         return R.id.toolbar_solid;
     }
@@ -247,9 +224,6 @@ public abstract class ActivityFramework extends ActionBarActivity
         if (mToolbar != null) {
             mToolbar.setVisibility(View.GONE);
         }
-        if (mToolbarShadow != null) {
-            mToolbarShadow.setVisibility(View.GONE);
-        }
     }
 
     @Override
@@ -265,7 +239,7 @@ public abstract class ActivityFramework extends ActionBarActivity
     }
 
     private void initToast() {
-        mToastHelper = new ToastHelper(this);
+        mToastHelper = new ToastHelper(mTransitionLayout);
     }
 
     /**
@@ -281,6 +255,10 @@ public abstract class ActivityFramework extends ActionBarActivity
         return mToolbar != null && mToolbar.getVisibility() == View.VISIBLE;
     }
 
+    protected TransitionLayout makeTransitionLayout() {
+        return new TransitionLayout(this);
+    }
+
     public void onBackPressed(long delay) {
         mHandler.removeCallbacks(mBackPressedRunnable);
         mHandler.postDelayed(mBackPressedRunnable, delay);
@@ -288,11 +266,7 @@ public abstract class ActivityFramework extends ActionBarActivity
 
     @Override
     public void onBackPressed() {
-        if (mTransitionLayout != null) {
-            startExitTransition(mTransitionLayout);
-        } else {
-            exit();
-        }
+        mTransitionLayout.startExitTransition(mTransitionOptions);
     }
 
     @Override
@@ -300,15 +274,15 @@ public abstract class ActivityFramework extends ActionBarActivity
         super.onCreate(savedInstanceState);
         NetUtil.checkConnection(this);
         configActivity();
-        if (mTransitionLayout != null) {
-            mTransitionLayout.setActivity(getActivity());
-        }
+        attachTransitionLayout(makeTransitionLayout());
+        mTransitionLayout.setOnTransitionListener(mOnTransitionListener);
+        super.setContentView(mTransitionLayout);
         initToast();
-
         setContentView(getLayoutId());
         ButterKnife.inject(this);
-        attachToolbar(getToolbarSolidId(), getToolbarShadowId());
+        attachToolbar(getToolbarSolidId());
         acquireArguments(getIntent());
+        mTransitionOptions = TransitionOptions.fromBundle(getIntent().getBundleExtra("transition"));
         establishCallbacks();
         enquiryViews();
         attachCallbacks();
@@ -324,9 +298,10 @@ public abstract class ActivityFramework extends ActionBarActivity
 
     @Override
     protected void onDestroy() {
+        cancelRequest();
         mToastHelper.destroy();
         mHandler.removeCallbacks(mBackPressedRunnable);
-        cancelRequest();
+        mBackPressedRunnable = null;
         if (mTransitionLayout != null) {
             mTransitionLayout.destroy();
             mTransitionLayout = null;
@@ -342,6 +317,7 @@ public abstract class ActivityFramework extends ActionBarActivity
     @Override
     protected void onPause() {
         unregisterConnectionReceiver();
+        Log.e(null, "on pause activity " + getClass().getSimpleName());
         super.onPause();
     }
 
@@ -350,21 +326,13 @@ public abstract class ActivityFramework extends ActionBarActivity
         super.onPostCreate(savedInstanceState);
 
         postCreate();
-        if (mTransitionLayout != null) {
-            mTransitionLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    startEnterTransition(mTransitionLayout);
-                }
-            });
-        } else {
-            startAction();
-        }
+        mTransitionLayout.startEnterTransition(this, mTransitionOptions);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Log.e(null, "on resume activity " + getClass().getSimpleName());
         registerConnectionReceiver();
     }
 
@@ -376,8 +344,22 @@ public abstract class ActivityFramework extends ActionBarActivity
     }
 
     private void registerConnectionReceiver() {
-        ConnectionHelper.checkConnection(this);
         registerReceiver(mConnectionReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+
+    @Override
+    public void setContentView(int layoutId) {
+        mTransitionLayout.setContentView(layoutId);
+    }
+
+    @Override
+    public void setContentView(View view) {
+        mTransitionLayout.setContentView(view);
+    }
+
+    @Override
+    public void setContentView(View view, ViewGroup.LayoutParams params) {
+        mTransitionLayout.setContentView(view, params);
     }
 
     @Override
@@ -466,9 +448,6 @@ public abstract class ActivityFramework extends ActionBarActivity
         if (mToolbar != null) {
             mToolbar.setVisibility(View.VISIBLE);
         }
-        if (mToolbarShadow != null) {
-            mToolbarShadow.setVisibility(View.VISIBLE);
-        }
     }
 
     @Override
@@ -485,17 +464,11 @@ public abstract class ActivityFramework extends ActionBarActivity
 
     @Override
     public void start(Intent intent) {
-        start(intent, ActivityAnimation.None);
+        start(intent, -1);
     }
 
-    @Override
-    public void start(Intent intent, ActivityAnimation anim) {
-        start(intent, -1, anim);
-    }
-
-    @Override
-    public void start(Intent intent, int requestCode) {
-        start(intent, requestCode, ActivityAnimation.None);
+    public void start(Intent intent, TransitionOptions options) {
+        start(intent, -1, options);
     }
 
     /**
@@ -505,34 +478,17 @@ public abstract class ActivityFramework extends ActionBarActivity
      *         目标Intent
      * @param requestCode
      *         请求代码
-     *
-     *         如果需要回调，则设置requestCode为正整数；否则设为-1；
-     * @param anim
-     *         Intent切换动画
-     *
-     * @see com.harreke.easyapp.enums.ActivityAnimation
      */
     @Override
-    public void start(Intent intent, int requestCode, ActivityAnimation anim) {
-        if (intent != null) {
-            hideToast();
-            if (requestCode < 0) {
-                startActivity(intent);
-            } else {
-                startActivityForResult(intent, requestCode);
-            }
-            if (anim != ActivityAnimation.Default) {
-                overridePendingTransition(anim.getEnterAnim(), anim.getExitAnim());
-            }
-        }
+    public void start(Intent intent, int requestCode) {
+        start(intent, requestCode, TransitionOptions.makeCustomTransition(R.anim.slide_in_right, R.anim.slide_out_right));
     }
 
-    protected void startEnterTransition(TransitionLayout transitionLayout, Object... params) {
-        transitionLayout.startEnterTransition(EnterTransition.Slide_In_Right, params);
-    }
-
-    protected void startExitTransition(TransitionLayout transitionLayout, Object... params) {
-        transitionLayout.startExitTransition(ExitTransition.Slide_Out_Right, params);
+    public void start(Intent intent, int requestCode, TransitionOptions options) {
+        hideToast();
+        intent.putExtra("transition", options.toBundle());
+        startActivityForResult(intent, requestCode);
+        overridePendingTransition(options.enterAnimation, R.anim.none);
     }
 
     private void unregisterConnectionReceiver() {

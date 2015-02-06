@@ -37,7 +37,7 @@ public class UpdateHelper extends MaterialDialog.ButtonCallback {
         mFramework = framework;
         rootView = LayoutInflater.from(framework.getContext()).inflate(R.layout.dialog_update, null, false);
         builder = new MaterialDialog.Builder(framework.getContext()).title(R.string.setting_support_check_update_available)
-                .customView(rootView, false).positiveText(R.string.app_ok);
+                .customView(rootView, true).positiveText(R.string.app_ok);
         if (!mForceUpdate) {
             builder.negativeText(R.string.app_cancel);
         }

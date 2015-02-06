@@ -46,11 +46,6 @@ public class AdvertiseActivity extends ActivityFramework {
     }
 
     @Override
-    protected void configActivity() {
-        attachTransition(new SwipeToFinishLayout(this));
-    }
-
-    @Override
     protected void createMenu() {
         setToolbarTitle(R.string.app_advertise);
         enableDefaultToolbarNavigation();

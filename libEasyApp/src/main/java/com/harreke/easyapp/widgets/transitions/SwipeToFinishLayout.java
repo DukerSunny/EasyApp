@@ -1,15 +1,25 @@
 package com.harreke.easyapp.widgets.transitions;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.view.MotionEvent;
 
-import com.harreke.easyapp.enums.ExitTransition;
 import com.harreke.easyapp.frameworks.base.ApplicationFramework;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorListenerAdapter;
+import com.nineoldandroids.animation.ValueAnimator;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/12/29
  */
 public class SwipeToFinishLayout extends TransitionLayout {
+    private Animator.AnimatorListener mExitListener = new AnimatorListenerAdapter() {
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            onExit();
+        }
+    };
     private float mLastTouchX = 0f;
     private boolean mShouldIntercept = false;
     private float mSwipeOffset = 0f;
@@ -21,6 +31,11 @@ public class SwipeToFinishLayout extends TransitionLayout {
         super(context);
 
         setClickable(true);
+    }
+
+    @Override
+    public void onAnimationUpdate(ValueAnimator animation) {
+        setBackgroundColor(Color.argb((int) (192f - 192f * animation.getAnimatedFraction()), 0, 0, 0));
     }
 
     @Override
@@ -51,7 +66,7 @@ public class SwipeToFinishLayout extends TransitionLayout {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean onTouchEvent(@NonNull MotionEvent event) {
         float touchX;
         float dx;
 
@@ -68,17 +83,17 @@ public class SwipeToFinishLayout extends TransitionLayout {
                     } else if (mSwipeOffset > getContentWidth()) {
                         mSwipeOffset = getContentWidth();
                     }
-                    setContentOffsetX(mSwipeOffset);
+                    setContentX(mSwipeOffset);
 
                     return true;
                 case MotionEvent.ACTION_CANCEL:
                 case MotionEvent.ACTION_UP:
                     if (mSwipeOffset > mSwipeThreshold) {
                         mSwipeOffset = 0;
-                        startExitTransition(ExitTransition.Slide_Out_Right);
+                        getContentAnimator().x(getContentWidth()).listener(mExitListener).start(true);
                     } else {
                         mSwipeOffset = 0;
-                        animateToX(0f, null);
+                        getContentAnimator().x(0f).start(true);
                     }
 
                     return true;
@@ -86,5 +101,11 @@ public class SwipeToFinishLayout extends TransitionLayout {
         }
 
         return super.onTouchEvent(event);
+    }
+
+    @Override
+    protected void setContentX(float contentX) {
+        super.setContentX(contentX);
+        setBackgroundColor(Color.argb((int) (192f - 192f * contentX / getContentWidth()), 0, 0, 0));
     }
 }

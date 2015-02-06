@@ -34,11 +34,6 @@ public class ForgotActivity extends ActivityFramework {
     }
 
     @Override
-    protected void configActivity() {
-        attachTransition(new SwipeToFinishLayout(this));
-    }
-
-    @Override
     protected void createMenu() {
         setToolbarTitle(R.string.app_forgot);
         enableDefaultToolbarNavigation();

@@ -7,22 +7,9 @@
     <include
         layout="@layout/widget_toolbar"/>
 
-    <FrameLayout
-        style="@style/mm">
-
-        <LinearLayout
-            style="@style/mm.v"
-            android:padding="8dp">
-
-            <WebView
-                android:id="@+id/forgot_web"
-                style="@style/mm"/>
-
-        </LinearLayout>
-
-        <include
-            layout="@layout/widget_toolbar_shadow"/>
-
-    </FrameLayout>
+    <WebView
+        android:id="@+id/forgot_web"
+        style="@style/mm"
+        android:padding="8dp"/>
 
 </LinearLayout>

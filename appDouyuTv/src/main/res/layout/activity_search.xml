@@ -9,7 +9,6 @@
         style="@style/mw"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:elevation="0dp"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:minHeight="?attr/actionBarSize"
@@ -29,24 +28,16 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <FrameLayout
-        style="@style/mm">
+    <include
+        layout="@layout/widget_recycler"/>
 
-        <include
-            layout="@layout/widget_recycler"/>
-
-        <TextView
-            android:id="@+id/search_clear"
-            style="@style/ww"
-            android:layout_gravity="top|right"
-            android:padding="16dp"
-            android:text="@string/search_clear"
-            android:textColor="@color/selector_login_forgot"
-            android:textSize="@dimen/Body1"/>
-
-        <include
-            layout="@layout/widget_toolbar_shadow"/>
-
-    </FrameLayout>
+    <TextView
+        android:id="@+id/search_clear"
+        style="@style/ww"
+        android:layout_gravity="top|right"
+        android:padding="16dp"
+        android:text="@string/search_clear"
+        android:textColor="@color/selector_login_forgot"
+        android:textSize="@dimen/Body1"/>
 
 </LinearLayout>

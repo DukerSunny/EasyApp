@@ -11,7 +11,7 @@
         android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.DouyuTv">
+        android:theme="@style/Theme.DouyuTv.Translucent">
 
         <activity
             android:name=".control.activity.AboutUsActivity"
@@ -89,7 +89,8 @@
             android:name=".control.activity.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.DouyuTv"/>
 
         <activity
             android:name=".control.activity.MissionActivity"

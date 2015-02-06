@@ -2,8 +2,8 @@ package tv.douyu.control.activity;
 
 import android.content.Intent;
 
-import com.harreke.easyapp.enums.ActivityAnimation;
 import com.harreke.easyapp.frameworks.base.ActivityFramework;
+import com.harreke.easyapp.widgets.transitions.TransitionOptions;
 
 import tv.douyu.R;
 
@@ -44,7 +44,7 @@ public class SplashActivity extends ActivityFramework {
     @Override
     public void startAction() {
         //        start(PlayerActivity.create(this, 47227));
-        start(MainActivity.create(this));
-        exit(ActivityAnimation.None);
+        start(MainActivity.create(this), TransitionOptions.makeCustomTransition(R.anim.none, R.anim.none));
+        exit();
     }
 }

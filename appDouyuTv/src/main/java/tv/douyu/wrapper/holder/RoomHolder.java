@@ -9,7 +9,6 @@ import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
 import com.harreke.easyapp.helpers.ImageLoaderHelper;
 import com.harreke.easyapp.utils.StringUtil;
 import com.harreke.easyapp.widgets.rippleeffects.RippleDrawable;
-import com.harreke.easyapp.widgets.rippleeffects.RippleOnClickListener;
 
 import tv.douyu.R;
 import tv.douyu.model.bean.Room;
@@ -39,7 +38,8 @@ public class RoomHolder extends RecyclerHolder<Room> {
     @Override
     public void setItem(Room room) {
         ImageLoaderHelper.loadImage(room_src, room.getRoom_src(), R.drawable.loading_16x9, R.drawable.retry_16x9);
-        room_ripple.setTag(room.hashCode());
+        room_src.setTag(R.id.hashCode, room.hashCode());
+        room_src.setTag(R.id.imageUrl, room.getRoom_src());
         room_name.setText(room.getRoom_name());
         nickname.setText(room.getNickname());
         online.setText(StringUtil.indentNumber(room.getOnline()));
@@ -47,6 +47,6 @@ public class RoomHolder extends RecyclerHolder<Room> {
 
     @Override
     public void setOnClickListener(View.OnClickListener onClickListener) {
-        RippleOnClickListener.attach(room_ripple, onClickListener);
+        room_src.setOnClickListener(onClickListener);
     }
 }

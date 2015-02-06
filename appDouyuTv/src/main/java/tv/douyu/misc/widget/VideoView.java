@@ -10,12 +10,12 @@ import android.view.ViewGroup;
 
 import java.io.IOException;
 
-import tv.douyu.model.enumeration.ScreenRatio;
-import tv.douyu.callback.OnMediaListener;
-import tv.douyu.misc.players.MediaStatus;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 import tv.danmaku.ijk.media.player.option.AvFourCC;
+import tv.douyu.callback.OnMediaListener;
+import tv.douyu.misc.players.MediaStatus;
+import tv.douyu.model.enumeration.ScreenRatio;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2015/01/20
@@ -80,6 +80,7 @@ public class VideoView extends SurfaceView
         mSurfaceHeight = 0;
         mPrepared = false;
         if (mMediaPlayer != null) {
+            mMediaPlayer.stop();
             mMediaPlayer.release();
             mMediaPlayer = null;
         }

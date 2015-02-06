@@ -1,88 +1,77 @@
 package com.harreke.easyapp.widgets.animators;
 
 import android.view.View;
-import android.view.ViewGroup;
-
-import com.nineoldandroids.animation.ValueAnimator;
-import com.nineoldandroids.view.ViewHelper;
 
 /**
- * 由 Harreke（harreke@live.cn） 创建于 2015/01/24
+ * 由 Harreke（harreke@live.cn） 创建于 2015/01/31
  */
-public class RotateToExpandAnimator extends ControllerLayoutAnimator {
-    private int mLayoutMaxHeight;
+public class RotateToExpandAnimator {
+    public ToggleViewValueAnimator mControllerAnimator;
+    public ToggleViewValueAnimator mLayoutAnimator;
+    private boolean mToggledOn = false;
 
-    public RotateToExpandAnimator(View controller, View layout, int layoutMaxHeight) {
-        super(controller, layout);
-        mLayoutMaxHeight = layoutMaxHeight;
+    public RotateToExpandAnimator(View controller, View layout) {
+        mControllerAnimator = ToggleViewValueAnimator.animate(controller);
+        mLayoutAnimator = ToggleViewValueAnimator.animate(layout);
     }
 
-    @Override
-    protected ValueAnimator animateControllerClose(View controller) {
-        return makeControllerRotate(controller, -90f);
+    public RotateToExpandAnimator controllerOffRotation(float rotation) {
+        mControllerAnimator.rotationOff(rotation);
+
+        return this;
     }
 
-    @Override
-    protected ValueAnimator animateControllerOpen(View controller) {
-        return makeControllerRotate(controller, 0f);
+    public RotateToExpandAnimator controllerOnRotation(float rotation) {
+        mControllerAnimator.rotationOn(rotation);
+
+        return this;
     }
 
-    @Override
-    protected ValueAnimator animateLayoutClose(View layout) {
-        return makeLayoutExpand(layout, 0);
+    public boolean isToggledOn() {
+        return mToggledOn;
     }
 
-    @Override
-    protected ValueAnimator animateLayoutOpen(View layout) {
-        return makeLayoutExpand(layout, mLayoutMaxHeight);
+    public RotateToExpandAnimator layoutOffHeight(int height) {
+        mLayoutAnimator.heightOff(height);
+
+        return this;
     }
 
-    private ValueAnimator makeControllerRotate(View controller, float degree) {
-        return ValueAnimator.ofFloat(ViewHelper.getRotation(controller), degree).setDuration(300l);
+    public RotateToExpandAnimator layoutOffWidth(int width) {
+        mLayoutAnimator.widthOff(width);
+
+        return this;
     }
 
-    private ValueAnimator makeLayoutExpand(View layout, int height) {
-        return ValueAnimator.ofInt(layout.getMeasuredHeight(), height);
+    public RotateToExpandAnimator layoutOnHeight(int height) {
+        mLayoutAnimator.heightOn(height);
+
+        return this;
     }
 
-    @Override
-    protected void setControllerClose(View controller) {
-        setControllerRotation(controller, -90f);
+    public RotateToExpandAnimator layoutOnWidth(int width) {
+        mLayoutAnimator.widthOn(width);
+
+        return this;
     }
 
-    @Override
-    protected void setControllerOpen(View controller) {
-        setControllerRotation(controller, 0f);
+    public void toggle(boolean animate) {
+        if (isToggledOn()) {
+            toggleOff(animate);
+        } else {
+            toggleOn(animate);
+        }
     }
 
-    private void setControllerRotation(View controller, float degree) {
-        ViewHelper.setRotation(controller, degree);
+    public void toggleOff(boolean animate) {
+        mToggledOn = false;
+        mControllerAnimator.toggleOff(animate);
+        mLayoutAnimator.toggleOff(animate);
     }
 
-    @Override
-    protected void setLayoutClose(View layout) {
-        setLayoutHeight(layout, 0);
-    }
-
-    private void setLayoutHeight(View layout, int height) {
-        ViewGroup.LayoutParams params = layout.getLayoutParams();
-
-        params.height = height;
-        layout.setLayoutParams(params);
-    }
-
-    @Override
-    protected void setLayoutOpen(View layout) {
-        setLayoutHeight(layout, mLayoutMaxHeight);
-    }
-
-    @Override
-    protected void controllerAnimationUpdate(View controller, ValueAnimator controllerAnimation) {
-        setControllerRotation(controller, (float) controllerAnimation.getAnimatedValue());
-    }
-
-    @Override
-    protected void layoutAnimationUpdate(View layout, ValueAnimator layoutAnimation) {
-        setLayoutHeight(layout, (int) layoutAnimation.getAnimatedValue());
+    public void toggleOn(boolean animate) {
+        mToggledOn = true;
+        mControllerAnimator.toggleOn(animate);
+        mLayoutAnimator.toggleOn(animate);
     }
 }

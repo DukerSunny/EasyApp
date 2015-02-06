@@ -3,6 +3,7 @@
 
     <item name="key" type="id"/>
     <item name="value" type="id"/>
+    <item name="hashCode" type="id"/>
     <item name="imageUrl" type="id"/>
 
 </resources>

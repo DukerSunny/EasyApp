@@ -4,7 +4,6 @@
     style="@style/mw"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:elevation="0dp"
     android:minHeight="?attr/actionBarSize"
     app:popupTheme="?attr/actionBarPopupTheme"
     app:theme="?attr/actionBarTheme"/>

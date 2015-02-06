@@ -2,16 +2,12 @@ package tv.douyu.control.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.harreke.easyapp.enums.ActivityAnimation;
-import com.harreke.easyapp.enums.EnterTransition;
-import com.harreke.easyapp.enums.ExitTransition;
 import com.harreke.easyapp.enums.RippleStyle;
 import com.harreke.easyapp.frameworks.base.ActivityFramework;
 import com.harreke.easyapp.helpers.ConnectionHelper;
@@ -21,12 +17,11 @@ import com.harreke.easyapp.helpers.ViewSwitchHelper;
 import com.harreke.easyapp.parsers.ObjectResult;
 import com.harreke.easyapp.parsers.Parser;
 import com.harreke.easyapp.requests.IRequestCallback;
-import com.harreke.easyapp.utils.JsonUtil;
 import com.harreke.easyapp.utils.StringUtil;
+import com.harreke.easyapp.widgets.animators.ViewValueAnimator;
 import com.harreke.easyapp.widgets.rippleeffects.RippleDrawable;
 import com.harreke.easyapp.widgets.rippleeffects.RippleOnClickListener;
-import com.harreke.easyapp.widgets.transitions.SwipeToFinishLayout;
-import com.harreke.easyapp.widgets.transitions.TransitionLayout;
+import com.nineoldandroids.view.ViewHelper;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
@@ -62,8 +57,6 @@ public class RoomActivity extends ActivityFramework {
     private FullRoom mFullRoom = null;
     private FullRoomParser mFullRoomParser;
     private View.OnClickListener mOnClickListener;
-    //    private ImageViewInfo mNewImageViewInfo = null;
-    //    private ImageViewInfo mOldImageViewInfo = null;
     private View.OnClickListener mOnEmptyClickListener;
     private MaterialDialog.ButtonCallback mPlayCallback;
     private MaterialDialog mPlayDialog;
@@ -80,17 +73,11 @@ public class RoomActivity extends ActivityFramework {
     private TextView room_online;
     private ImageView room_pic;
     private View room_share_root;
-    //    public static Intent create(Context context, int roomId, ImageView oldView) {
-    //        Intent intent = new Intent(context, RoomActivity.class);
-    //
-    //        intent.putExtra("roomId", roomId);
-    //        intent.putExtra("oldViewInfo", GsonUtil.toString(new ImageViewInfo(oldView)));
-    //
-    //        return intent;
-    //    }
     private TextView room_show_details;
     @InjectView(R.id.room_play_root)
     View room_play_root;
+    @InjectView(R.id.room_root)
+    View room_root;
 
     public static Intent create(Context context, int roomId) {
         Intent intent = new Intent(context, RoomActivity.class);
@@ -107,7 +94,6 @@ public class RoomActivity extends ActivityFramework {
         mFullRoomParser = new FullRoomParser();
 
         initShare();
-        //        mOldImageViewInfo = GsonUtil.toBean(intent.getStringExtra("oldViewInfo"), ImageViewInfo.class);
     }
 
     private void addFollow() {
@@ -120,7 +106,7 @@ public class RoomActivity extends ActivityFramework {
 
     @Override
     public void attachCallbacks() {
-        mEmptyHelper.setOnClickListener(mOnEmptyClickListener);
+        //        mEmptyHelper.setOnClickListener(mOnEmptyClickListener);
 
         RippleOnClickListener.attach(room_follow_root, mOnClickListener);
         //        RippleOnClickListener.attach(room_share_root, mOnClickListener);
@@ -133,10 +119,10 @@ public class RoomActivity extends ActivityFramework {
         }
     }
 
-    @Override
-    protected void configActivity() {
-        attachTransition(new SwipeToFinishLayout(this));
-    }
+    //    @Override
+    //    protected void configActivity() {
+    //        attachTransition(new SwipeToFinishLayout(this));
+    //    }
 
     @Override
     protected void createMenu() {
@@ -166,13 +152,16 @@ public class RoomActivity extends ActivityFramework {
                 .positiveText(R.string.app_ok).negativeText(R.string.app_cancel).callback(mPlayCallback).build();
 
         mAuthorizeHelper = new AuthorizeHelper(this, 0);
-        mEmptyHelper = new EmptyHelper(this);
-        mEmptyHelper.showLoading(false);
+        //        mEmptyHelper = new EmptyHelper(this);
+        //        mEmptyHelper.showLoading(false);
         mFollowSwitcher = new ViewSwitchHelper(room_follow_add, room_follow_remove);
 
         RippleDrawable.attach(room_play_root, RippleStyle.Light);
         RippleDrawable.attach(room_follow_root, RippleStyle.Dark_Square);
         RippleDrawable.attach(room_share_root, RippleStyle.Dark_Square);
+
+        room_root.setVisibility(View.INVISIBLE);
+        ViewHelper.setAlpha(room_root, 0f);
     }
 
     @Override
@@ -180,7 +169,7 @@ public class RoomActivity extends ActivityFramework {
         mRoomCallback = new IRequestCallback<String>() {
             @Override
             public void onFailure(String requestUrl) {
-                mEmptyHelper.showEmptyFailureIdle();
+                //                mEmptyHelper.showEmptyFailureIdle();
             }
 
             @Override
@@ -191,14 +180,14 @@ public class RoomActivity extends ActivityFramework {
                     mFullRoom = objectResult.getObject();
                     if (mFullRoom != null) {
                         room_play_root.setVisibility(View.VISIBLE);
-                        mEmptyHelper.hide();
+                        //                        mEmptyHelper.hide();
                         updateRoom(mFullRoom);
                         checkFollow();
                     } else {
-                        mEmptyHelper.showEmptyFailureIdle();
+                        //                        mEmptyHelper.showEmptyFailureIdle();
                     }
                 } else {
-                    mEmptyHelper.showEmptyFailureIdle();
+                    //                    mEmptyHelper.showEmptyFailureIdle();
                 }
             }
         };
@@ -223,7 +212,6 @@ public class RoomActivity extends ActivityFramework {
         mFollowAddCallback = new IRequestCallback<String>() {
             @Override
             public void onFailure(String requestUrl) {
-                Log.e(null, "add failure");
                 showToast(R.string.room_follow_add_failure);
                 mFollowSwitcher.switchToView(room_follow_add);
             }
@@ -232,9 +220,6 @@ public class RoomActivity extends ActivityFramework {
             public void onSuccess(String requestUrl, String result) {
                 ObjectResult<String> objectResult = Parser.parseString(result, "error", "data", "data");
 
-                Log.e(null, "add " + result);
-                Log.e(null, "add " + JsonUtil.toString(objectResult));
-                Log.e(null, "object flat=" + objectResult.getFlag() + " object=" + objectResult.getObject() + " message=" + objectResult.getMessage());
                 if (objectResult != null && objectResult.getObject() != null && objectResult.getObject().equals("关注成功")) {
                     showToast(R.string.room_follow_add_success);
                 } else {
@@ -246,7 +231,6 @@ public class RoomActivity extends ActivityFramework {
         mFollowRemoveCallback = new IRequestCallback<String>() {
             @Override
             public void onFailure(String requestUrl) {
-                Log.e(null, "remove failure");
                 showToast(R.string.room_follow_remove_failure);
                 mFollowSwitcher.switchToView(room_follow_remove);
             }
@@ -255,8 +239,6 @@ public class RoomActivity extends ActivityFramework {
             public void onSuccess(String requestUrl, String result) {
                 ObjectResult<String> objectResult = Parser.parseString(result, "error", "data", "data");
 
-                Log.e(null, "remove " + result);
-                Log.e(null, "remove " + JsonUtil.toString(objectResult));
                 if (objectResult != null && objectResult.getObject() != null && objectResult.getObject().equals("取消关注成功")) {
                     showToast(R.string.room_follow_remove_success);
                 } else {
@@ -364,10 +346,8 @@ public class RoomActivity extends ActivityFramework {
     void onShareClick() {
         String shareUrl;
 
-        Log.e(null, "on share click");
         if (mFullRoom != null) {
             shareUrl = "http://www.douyu.tv" + mFullRoom.getUrl();
-            Log.e(null, "share url=" + shareUrl);
             mController.setShareContent(
                     shareUrl + "   我正在  " + mFullRoom.getRoom_name() + "  的房间观看直播  / 主播" + mFullRoom.getNickname() +
                             ", 欢迎大家前来围观 / 来自#斗鱼#游戏直播!");
@@ -382,7 +362,7 @@ public class RoomActivity extends ActivityFramework {
     }
 
     private void openVideo() {
-        start(PlayerActivity.create(getContext(), mRoomId), ActivityAnimation.Default);
+        start(PlayerActivity.create(getContext(), mRoomId));
     }
 
     private void removeFollow() {
@@ -395,19 +375,21 @@ public class RoomActivity extends ActivityFramework {
 
     @Override
     public void startAction() {
-        mEmptyHelper.showLoading();
+        room_root.setVisibility(View.VISIBLE);
+        ViewValueAnimator.animate(room_root).alpha(1f).start(true);
+        //        mEmptyHelper.showLoading();
         executeRequest(API.getRoom(mRoomId), mRoomCallback);
     }
 
-    @Override
-    protected void startEnterTransition(TransitionLayout transitionLayout, Object... params) {
-        transitionLayout.startEnterTransition(EnterTransition.Slide_In_Bottom);
-    }
-
-    @Override
-    protected void startExitTransition(TransitionLayout transitionLayout, Object... params) {
-        transitionLayout.startExitTransition(ExitTransition.Slide_Out_Bottom);
-    }
+    //    @Override
+    //    protected void startEnterTransition(TransitionLayout transitionLayout, Object... params) {
+    //        transitionLayout.startEnterTransition(EnterTransition.Slide_In_Bottom);
+    //    }
+    //
+    //    @Override
+    //    protected void startExitTransition(TransitionLayout transitionLayout, Object... params) {
+    //        transitionLayout.startExitTransition(ExitTransition.Slide_Out_Bottom);
+    //    }
 
     private void updateRoom(FullRoom fullRoom) {
         ImageLoaderHelper.loadImage(room_avatar, fullRoom.getOwner_avatar(), R.drawable.avatar, R.drawable.avatar);

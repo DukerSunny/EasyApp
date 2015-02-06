@@ -7,84 +7,79 @@
     <include
         layout="@layout/widget_toolbar"/>
 
-    <FrameLayout
+    <ScrollView
+        android:id="@+id/room_root"
         style="@style/mm">
 
-        <ScrollView
-            android:id="@+id/room_root"
-            style="@style/mm">
+        <LinearLayout
+            style="@style/mm.v"
+            android:padding="8dp">
 
-            <LinearLayout
-                style="@style/mm.v"
-                android:padding="8dp">
+            <android.support.v7.widget.CardView
+                style="@style/mw">
 
-                <android.support.v7.widget.CardView
-                    style="@style/mw">
+                <LinearLayout
+                    style="@style/mw.h"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="16dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="16dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/room_avatar"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/avatar"/>
 
                     <LinearLayout
-                        style="@style/mw.h"
-                        android:gravity="center_vertical"
-                        android:paddingBottom="16dp"
-                        android:paddingLeft="8dp"
-                        android:paddingRight="8dp"
-                        android:paddingTop="16dp">
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginLeft="16dp"
+                        android:orientation="vertical">
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/room_avatar"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:src="@drawable/avatar"/>
+                        <TextView
+                            android:id="@+id/room_name"
+                            style="@style/mww"
+                            android:ellipsize="end"
+                            android:singleLine="true"
+                            android:textAppearance="@style/Title"/>
 
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="48dp"
-                            android:layout_marginLeft="16dp"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/room_name"
-                                style="@style/mww"
-                                android:ellipsize="end"
-                                android:singleLine="true"
-                                android:textAppearance="@style/Title"/>
+                            style="@style/mww.h"
+                            android:gravity="bottom">
 
                             <LinearLayout
                                 style="@style/mww.h"
-                                android:gravity="bottom">
+                                android:gravity="center_vertical">
 
-                                <LinearLayout
-                                    style="@style/mww.h"
-                                    android:gravity="center_vertical">
+                                <ImageView
+                                    android:layout_width="16dp"
+                                    android:layout_height="16dp"
+                                    android:src="@drawable/room_user"/>
 
-                                    <ImageView
-                                        android:layout_width="16dp"
-                                        android:layout_height="16dp"
-                                        android:src="@drawable/room_user"/>
+                                <TextView
+                                    android:id="@+id/room_nickname"
+                                    style="@style/mw"
+                                    android:layout_marginLeft="8dp"
+                                    android:textAppearance="@style/Caption"/>
 
-                                    <TextView
-                                        android:id="@+id/room_nickname"
-                                        style="@style/mw"
-                                        android:layout_marginLeft="8dp"
-                                        android:textAppearance="@style/Caption"/>
+                            </LinearLayout>
 
-                                </LinearLayout>
+                            <LinearLayout
+                                style="@style/ww.h"
+                                android:gravity="center_vertical">
 
-                                <LinearLayout
-                                    style="@style/ww.h"
-                                    android:gravity="center_vertical">
+                                <ImageView
+                                    android:layout_width="16dp"
+                                    android:layout_height="16dp"
+                                    android:src="@drawable/room_game"/>
 
-                                    <ImageView
-                                        android:layout_width="16dp"
-                                        android:layout_height="16dp"
-                                        android:src="@drawable/room_game"/>
-
-                                    <TextView
-                                        android:id="@+id/room_game_name"
-                                        style="@style/mw"
-                                        android:layout_marginLeft="8dp"
-                                        android:textAppearance="@style/Caption"/>
-
-                                </LinearLayout>
+                                <TextView
+                                    android:id="@+id/room_game_name"
+                                    style="@style/mw"
+                                    android:layout_marginLeft="8dp"
+                                    android:textAppearance="@style/Caption"/>
 
                             </LinearLayout>
 
@@ -92,180 +87,177 @@
 
                     </LinearLayout>
 
-                </android.support.v7.widget.CardView>
+                </LinearLayout>
 
-                <android.support.v7.widget.CardView
-                    style="@style/mw"
-                    android:layout_marginTop="8dp">
+            </android.support.v7.widget.CardView>
 
-                    <LinearLayout
-                        style="@style/mw.v">
+            <android.support.v7.widget.CardView
+                style="@style/mw"
+                android:layout_marginTop="8dp">
+
+                <LinearLayout
+                    style="@style/mw.v">
+
+                    <FrameLayout
+                        style="@style/mw">
+
+                        <com.harreke.easyapp.widgets.RatioImageView
+                            android:id="@+id/room_pic"
+                            style="@style/mw"
+                            android:src="@drawable/loading_16x9"/>
 
                         <FrameLayout
-                            style="@style/mw">
+                            android:id="@+id/room_play_root"
+                            style="@style/mm"
+                            android:background="@color/transparentBlack"
+                            android:visibility="gone">
 
-                            <com.harreke.easyapp.widgets.RatioImageView
-                                android:id="@+id/room_pic"
-                                style="@style/mw"
-                                android:src="@drawable/loading_16x9"/>
-
-                            <FrameLayout
-                                android:id="@+id/room_play_root"
-                                style="@style/mm"
-                                android:background="@color/transparentBlack"
-                                android:visibility="gone">
-
-                                <ImageView
-                                    android:layout_width="72dp"
-                                    android:layout_height="72dp"
-                                    android:layout_gravity="center"
-                                    android:src="@drawable/room_play"/>
-
-                            </FrameLayout>
+                            <ImageView
+                                android:layout_width="72dp"
+                                android:layout_height="72dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/room_play"/>
 
                         </FrameLayout>
 
+                    </FrameLayout>
+
+                    <LinearLayout
+                        style="@style/mw.h">
+
                         <LinearLayout
-                            style="@style/mw.h">
+                            style="@style/mww.v"
+                            android:gravity="center"
+                            android:paddingBottom="16dp"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:paddingTop="8dp">
 
-                            <LinearLayout
-                                style="@style/mww.v"
-                                android:gravity="center"
-                                android:paddingBottom="16dp"
-                                android:paddingLeft="8dp"
-                                android:paddingRight="8dp"
-                                android:paddingTop="8dp">
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:src="@drawable/online"/>
+
+                            <TextView
+                                android:id="@+id/room_online"
+                                style="@style/ww"
+                                android:layout_marginTop="8dp"
+                                android:text="@string/room_online"
+                                android:textAppearance="@style/Caption"/>
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="1px"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="16dp"
+                            android:layout_marginTop="8dp"
+                            android:background="@color/divider"/>
+
+                        <LinearLayout
+                            android:id="@+id/room_follow_root"
+                            style="@style/mww.v"
+                            android:gravity="center"
+                            android:paddingBottom="16dp"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:paddingTop="8dp">
+
+                            <FrameLayout
+                                android:layout_width="32dp"
+                                android:layout_height="32dp">
 
                                 <ImageView
-                                    android:layout_width="32dp"
-                                    android:layout_height="32dp"
-                                    android:src="@drawable/online"/>
-
-                                <TextView
-                                    android:id="@+id/room_online"
-                                    style="@style/ww"
-                                    android:layout_marginTop="8dp"
-                                    android:text="@string/room_online"
-                                    android:textAppearance="@style/Caption"/>
-
-                            </LinearLayout>
-
-                            <View
-                                android:layout_width="1px"
-                                android:layout_height="match_parent"
-                                android:layout_marginBottom="16dp"
-                                android:layout_marginTop="8dp"
-                                android:background="@color/divider"/>
-
-                            <LinearLayout
-                                android:id="@+id/room_follow_root"
-                                style="@style/mww.v"
-                                android:gravity="center"
-                                android:paddingBottom="16dp"
-                                android:paddingLeft="8dp"
-                                android:paddingRight="8dp"
-                                android:paddingTop="8dp">
-
-                                <FrameLayout
-                                    android:layout_width="32dp"
-                                    android:layout_height="32dp">
-
-                                    <ImageView
-                                        android:id="@+id/room_follow_add"
-                                        style="@style/mm"
-                                        android:src="@drawable/follow_add"
-                                        android:visibility="gone"/>
-
-                                    <ImageView
-                                        android:id="@+id/room_follow_remove"
-                                        style="@style/mm"
-                                        android:src="@drawable/follow"
-                                        android:visibility="gone"/>
-
-                                </FrameLayout>
-
-                                <TextView
-                                    android:id="@+id/room_follow_text"
-                                    style="@style/ww"
-                                    android:layout_marginTop="8dp"
-                                    android:text="@string/room_follow"
-                                    android:textAppearance="@style/Caption"/>
-
-                            </LinearLayout>
-
-                            <View
-                                android:layout_width="1px"
-                                android:layout_height="match_parent"
-                                android:layout_marginBottom="16dp"
-                                android:layout_marginTop="8dp"
-                                android:background="@color/divider"/>
-
-                            <LinearLayout
-                                android:id="@+id/room_share_root"
-                                style="@style/mww.v"
-                                android:gravity="center"
-                                android:paddingBottom="16dp"
-                                android:paddingLeft="8dp"
-                                android:paddingRight="8dp"
-                                android:paddingTop="8dp">
+                                    android:id="@+id/room_follow_add"
+                                    style="@style/mm"
+                                    android:src="@drawable/follow_add"
+                                    android:visibility="gone"/>
 
                                 <ImageView
-                                    android:layout_width="32dp"
-                                    android:layout_height="32dp"
-                                    android:src="@drawable/share"/>
+                                    android:id="@+id/room_follow_remove"
+                                    style="@style/mm"
+                                    android:src="@drawable/follow"
+                                    android:visibility="gone"/>
 
-                                <TextView
-                                    style="@style/ww"
-                                    android:layout_marginTop="8dp"
-                                    android:text="@string/room_share"
-                                    android:textAppearance="@style/Caption"/>
+                            </FrameLayout>
 
-                            </LinearLayout>
+                            <TextView
+                                android:id="@+id/room_follow_text"
+                                style="@style/ww"
+                                android:layout_marginTop="8dp"
+                                android:text="@string/room_follow"
+                                android:textAppearance="@style/Caption"/>
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="1px"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="16dp"
+                            android:layout_marginTop="8dp"
+                            android:background="@color/divider"/>
+
+                        <LinearLayout
+                            android:id="@+id/room_share_root"
+                            style="@style/mww.v"
+                            android:gravity="center"
+                            android:paddingBottom="16dp"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:paddingTop="8dp">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:src="@drawable/share"/>
+
+                            <TextView
+                                style="@style/ww"
+                                android:layout_marginTop="8dp"
+                                android:text="@string/room_share"
+                                android:textAppearance="@style/Caption"/>
 
                         </LinearLayout>
 
                     </LinearLayout>
 
-                </android.support.v7.widget.CardView>
+                </LinearLayout>
 
-                <android.support.v7.widget.CardView
-                    style="@style/mw"
-                    android:layout_marginTop="8dp">
+            </android.support.v7.widget.CardView>
 
-                    <LinearLayout
-                        style="@style/mw.v">
+            <android.support.v7.widget.CardView
+                style="@style/mw"
+                android:layout_marginTop="8dp">
 
-                        <TextView
-                            style="@style/mw"
-                            android:gravity="center"
-                            android:padding="8dp"
-                            android:text="@string/room_notice"
-                            android:textAppearance="@style/Subhead"/>
+                <LinearLayout
+                    style="@style/mw.v">
 
-                        <include
-                            layout="@layout/widget_divider_horizontal"/>
+                    <TextView
+                        style="@style/mw"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:text="@string/room_notice"
+                        android:textAppearance="@style/Subhead"/>
 
-                        <TextView
-                            android:id="@+id/room_show_details"
-                            style="@style/mw"
-                            android:padding="8dp"
-                            android:textAppearance="@style/Body1"/>
+                    <include
+                        layout="@layout/widget_divider_horizontal"/>
 
-                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/room_show_details"
+                        style="@style/mw"
+                        android:padding="8dp"
+                        android:textAppearance="@style/Body1"/>
 
-                </android.support.v7.widget.CardView>
+                </LinearLayout>
 
-            </LinearLayout>
+            </android.support.v7.widget.CardView>
 
-        </ScrollView>
+        </LinearLayout>
 
-        <include
-            layout="@layout/widget_empty"
-            android:visibility="gone"/>
+    </ScrollView>
 
-        <include
-            layout="@layout/widget_toolbar_shadow"/>
-
-    </FrameLayout>
+    <!--<include-->
+    <!--layout="@layout/widget_empty"-->
+    <!--android:visibility="gone"/>-->
 
 </LinearLayout>

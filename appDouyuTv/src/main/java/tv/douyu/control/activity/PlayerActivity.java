@@ -3,13 +3,15 @@ package tv.douyu.control.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 
-import com.harreke.easyapp.frameworks.base.IFramework;
 import com.harreke.easyapp.frameworks.base.ActivityFramework;
+import com.harreke.easyapp.frameworks.base.IFramework;
 import com.harreke.easyapp.parsers.ObjectResult;
 import com.harreke.easyapp.requests.IRequestCallback;
 
+import butterknife.InjectView;
 import master.flame.danmaku.danmaku.model.android.DanmakuGlobalConfig;
 import master.flame.danmaku.ui.widget.DanmakuSurfaceView;
 import tv.douyu.R;
@@ -46,8 +48,12 @@ public class PlayerActivity extends ActivityFramework {
     private int mRoomId;
     private Setting mSetting;
     private boolean mUseHD = false;
-    private DanmakuSurfaceView player_danmaku;
-    private VideoView player_video;
+    @InjectView(R.id.player_control)
+    View player_control;
+    @InjectView(R.id.player_danmaku)
+    DanmakuSurfaceView player_danmaku;
+    @InjectView(R.id.player_video)
+    VideoView player_video;
 
     public static Intent create(Context context, int roomId) {
         Intent intent = new Intent(context, PlayerActivity.class);
@@ -94,15 +100,12 @@ public class PlayerActivity extends ActivityFramework {
 
     @Override
     public void enquiryViews() {
-        player_video = (VideoView) findViewById(R.id.player_video);
-        player_danmaku = (DanmakuSurfaceView) findViewById(R.id.player_danmaku);
-
         player_video.setZOrderOnTop(false);
         player_video.setZOrderMediaOverlay(false);
         player_danmaku.setZOrderOnTop(false);
         player_danmaku.setZOrderMediaOverlay(true);
 
-        mPlayerControlHelper = new PlayerControlHelperImpl(this, mSetting);
+        mPlayerControlHelper = new PlayerControlHelperImpl(this, player_control, mSetting);
 
         player_video.setUseHW(mSetting.getSwitchDecode() == SwitchDecode.HW);
         setDanmakuDensity(mSetting.getDanmakuDensity().getDensity());
@@ -272,13 +275,14 @@ public class PlayerActivity extends ActivityFramework {
     }
 
     private class PlayerControlHelperImpl extends PlayerControlHelper {
-        public PlayerControlHelperImpl(IFramework framework, Setting setting) {
-            super(framework, setting);
+        public PlayerControlHelperImpl(IFramework framework, View rootView, Setting setting) {
+            super(framework, rootView, setting);
         }
 
         @Override
         public void onPlayerBackClick() {
-            onBackPressed();
+            destroy();
+            PlayerActivity.super.onBackPressed();
         }
 
         @Override

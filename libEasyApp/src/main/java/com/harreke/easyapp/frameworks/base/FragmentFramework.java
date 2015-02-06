@@ -6,14 +6,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.harreke.easyapp.enums.ActivityAnimation;
+import com.harreke.easyapp.R;
 import com.harreke.easyapp.helpers.RequestHelper;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
+import com.harreke.easyapp.widgets.transitions.TransitionOptions;
 
 import butterknife.ButterKnife;
 
@@ -24,7 +26,6 @@ import butterknife.ButterKnife;
  */
 public abstract class FragmentFramework extends Fragment implements IFramework, IToolbar {
     private static final String TAG = "FragmentFramework";
-    private IFramework mActivityFramework = null;
     private IToolbar mActivityToolbar = null;
     private View mContentView;
     private RequestHelper mRequest = new RequestHelper();
@@ -102,6 +103,10 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
         return mContentView.findViewById(viewId);
     }
 
+    protected ActivityFramework getActivityFramework() {
+        return (ActivityFramework) getActivity();
+    }
+
     @Override
     public Context getContext() {
         return getActivity();
@@ -122,8 +127,10 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
      */
     @Override
     public final void hideToast() {
-        if (mActivityFramework != null) {
-            mActivityFramework.hideToast();
+        ActivityFramework framework = getActivityFramework();
+
+        if (framework != null) {
+            framework.hideToast();
         }
     }
 
@@ -159,7 +166,6 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mActivityFramework = (IFramework) activity;
         mActivityToolbar = (IToolbar) activity;
     }
 
@@ -183,9 +189,20 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
 
     @Override
     public void onDetach() {
-        mActivityFramework = null;
         mActivityToolbar = null;
         super.onDetach();
+    }
+
+    @Override
+    public void onPause() {
+        Log.e(null, "on pause fragment " + getClass().getSimpleName());
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e(null, "on resume fragment " + getClass().getSimpleName());
     }
 
     @Override
@@ -250,9 +267,7 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
      */
     @Override
     public final void showToast(String text, boolean progress) {
-        if (mActivityFramework != null) {
-            mActivityFramework.showToast(text, progress);
-        }
+        getActivityFramework().showToast(text, progress);
     }
 
     /**
@@ -275,6 +290,11 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
         }
     }
 
+    //    @Override
+    //    public void start(Intent intent, ActivityAnimation anim) {
+    //        start(intent, -1, anim);
+    //    }
+
     @Override
     public void showToolbarItem(int id) {
         if (mActivityToolbar != null) {
@@ -282,19 +302,14 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
         }
     }
 
+
     @Override
     public void start(Intent intent) {
-        start(intent, ActivityAnimation.None);
+        start(intent, -1);
     }
 
-    @Override
-    public void start(Intent intent, ActivityAnimation anim) {
-        start(intent, -1, anim);
-    }
-
-    @Override
-    public void start(Intent intent, int requestCode) {
-        start(intent, requestCode, ActivityAnimation.None);
+    public void start(Intent intent, TransitionOptions options) {
+        start(intent, -1, options);
     }
 
     /**
@@ -304,25 +319,20 @@ public abstract class FragmentFramework extends Fragment implements IFramework, 
      *         目标Intent
      * @param requestCode
      *         请求代码
-     *
-     *         如果需要回调，则设置requestCode为正整数；否则设为-1；
-     * @param anim
-     *         Intent切换动画
-     *
-     * @see com.harreke.easyapp.enums.ActivityAnimation
      */
     @Override
-    public void start(Intent intent, int requestCode, ActivityAnimation anim) {
-        if (mActivityFramework != null && intent != null) {
-            hideToast();
-            if (requestCode < 0) {
-                startActivity(intent);
-            } else {
-                startActivityForResult(intent, requestCode);
-            }
-            if (anim != ActivityAnimation.Default) {
-                mActivityFramework.getActivity().overridePendingTransition(anim.getEnterAnim(), anim.getExitAnim());
-            }
+    public void start(Intent intent, int requestCode) {
+        start(intent, requestCode, TransitionOptions.makeCustomTransition(R.anim.slide_in_right, R.anim.slide_out_right));
+    }
+
+    public void start(Intent intent, int requestCode, TransitionOptions options) {
+        ActivityFramework framework = getActivityFramework();
+
+        if (framework != null) {
+            framework.hideToast();
+            intent.putExtra("transition", options.toBundle());
+            startActivityForResult(intent, requestCode);
+            framework.overridePendingTransition(options.enterAnimation, R.anim.none);
         }
     }
 }

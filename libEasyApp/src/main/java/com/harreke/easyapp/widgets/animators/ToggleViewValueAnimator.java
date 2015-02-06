@@ -1,8 +1,10 @@
 package com.harreke.easyapp.widgets.animators;
 
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.harreke.easyapp.utils.JsonUtil;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.PropertyValuesHolder;
@@ -20,28 +22,31 @@ import java.util.Map;
 public final class ToggleViewValueAnimator implements ValueAnimator.AnimatorUpdateListener {
     private final static long DURATION = 300l;
     private long mDuration = DURATION;
+    private static boolean mDebug = false;
     private ValueAnimator mAnimator = null;
-    private Map<String, Object> mOffHolderMap = new HashMap<>();
-    private Animator.AnimatorListener mOffListener = null;
-    private int mOffVisibility = View.VISIBLE;
-    private Animator.AnimatorListener mInnerOffListener = new AnimatorListenerAdapter() {
+    private Animator.AnimatorListener mListener = null;
+    private Map<String, Object> mMap = null;
+    private Map<String, Object> mMapOff = new HashMap<>();
+    private Map<String, Object> mMapOn = new HashMap<>();
+    private Animator.AnimatorListener mOuterListener = null;
+    private Animator.AnimatorListener mOuterOffListener = null;
+    private Animator.AnimatorListener mOuterOnListener = null;
+    private boolean mToggledOn = true;
+    private View mView;
+    private int mVisibilityOff = View.VISIBLE;
+    private Animator.AnimatorListener mOffListener = new AnimatorListenerAdapter() {
         @Override
         public final void onAnimationEnd(Animator animation) {
-            mView.setVisibility(mOffVisibility);
+            mView.setVisibility(mVisibilityOff);
         }
     };
-    private Map<String, Object> mOnHolderMap = new HashMap<>();
-    private Animator.AnimatorListener mOnListener = null;
-    private int mOnVisibility = View.VISIBLE;
-    private Animator.AnimatorListener mInnerOnListener = new AnimatorListenerAdapter() {
+    private int mVisibilityOn = View.VISIBLE;
+    private Animator.AnimatorListener mOnListener = new AnimatorListenerAdapter() {
         @Override
         public final void onAnimationStart(Animator animation) {
-            mView.setVisibility(mOnVisibility);
+            mView.setVisibility(mVisibilityOn);
         }
     };
-    private boolean mToggledOn = false;
-    private ValueAnimator.AnimatorUpdateListener mUpdateListener = null;
-    private View mView;
 
     private ToggleViewValueAnimator(View view) {
         mView = view;
@@ -52,33 +57,26 @@ public final class ToggleViewValueAnimator implements ValueAnimator.AnimatorUpda
     }
 
     public final ToggleViewValueAnimator alphaOff(float alpha) {
-        mOffHolderMap.put("alpha", alpha);
+        mMapOff.put("alpha", alpha);
 
         return this;
     }
 
     public final ToggleViewValueAnimator alphaOn(float alpha) {
-        mOnHolderMap.put("alpha", alpha);
+        mMapOn.put("alpha", alpha);
 
         return this;
     }
 
-    private ToggleViewValueAnimator animate(Map<String, Object> holderMap, Animator.AnimatorListener innerListener,
-            Animator.AnimatorListener outerListener, long duration) {
-        cancel();
-        mAnimator = ValueAnimator.ofPropertyValuesHolder(makePropertyValeHolders(holderMap));
-        mAnimator.setDuration(duration);
+    private void animate() {
+        mAnimator = makeAnimator();
+        mAnimator.setDuration(mDuration);
         mAnimator.addUpdateListener(this);
-        if (mUpdateListener != null) {
-            mAnimator.addUpdateListener(mUpdateListener);
-        }
-        mAnimator.addListener(innerListener);
-        if (outerListener != null) {
-            mAnimator.addListener(outerListener);
+        mAnimator.addListener(mListener);
+        if (mOuterListener != null) {
+            mAnimator.addListener(mOuterListener);
         }
         mAnimator.start();
-
-        return this;
     }
 
     public final void cancel() {
@@ -89,8 +87,20 @@ public final class ToggleViewValueAnimator implements ValueAnimator.AnimatorUpda
     }
 
     public final void clear() {
-        mOnHolderMap.clear();
-        mOffHolderMap.clear();
+        mMapOn.clear();
+        mMapOff.clear();
+    }
+
+    public ToggleViewValueAnimator debug(boolean debug) {
+        mDebug = debug;
+
+        return this;
+    }
+
+    public final ToggleViewValueAnimator duration(long duration) {
+        mDuration = duration;
+
+        return this;
     }
 
     private float getAlpha() {
@@ -125,14 +135,30 @@ public final class ToggleViewValueAnimator implements ValueAnimator.AnimatorUpda
         return ViewHelper.getY(mView);
     }
 
+    public final float getYOff() {
+        if (mMapOff.containsKey("y")) {
+            return (float) mMapOff.get("y");
+        } else {
+            return 0f;
+        }
+    }
+
+    public final float getYOn() {
+        if (mMapOn.containsKey("y")) {
+            return (float) mMapOn.get("y");
+        } else {
+            return 0f;
+        }
+    }
+
     public final ToggleViewValueAnimator heightOff(int height) {
-        mOffHolderMap.put("height", height);
+        mMapOff.put("height", height);
 
         return this;
     }
 
     public final ToggleViewValueAnimator heightOn(int height) {
-        mOnHolderMap.put("height", height);
+        mMapOn.put("height", height);
 
         return this;
     }
@@ -141,144 +167,201 @@ public final class ToggleViewValueAnimator implements ValueAnimator.AnimatorUpda
         return mToggledOn;
     }
 
-    private PropertyValuesHolder[] makePropertyValeHolders(Map<String, Object> holderMap) {
+    public ToggleViewValueAnimator listenerOff(Animator.AnimatorListener offListener) {
+        mOuterOffListener = offListener;
+
+        return this;
+    }
+
+    public ToggleViewValueAnimator listenerOn(Animator.AnimatorListener onListener) {
+        mOuterOffListener = onListener;
+
+        return this;
+    }
+
+    private ValueAnimator makeAnimator() {
         List<PropertyValuesHolder> holderList = new ArrayList<>();
 
-        if (holderMap.containsKey("alpha")) {
-            holderList.add(PropertyValuesHolder.ofFloat("alpha", getAlpha(), (Float) holderMap.get("alpha")));
+        if (mMap.containsKey("alpha")) {
+            holderList.add(PropertyValuesHolder.ofFloat("alpha", getAlpha(), (float) mMap.get("alpha")));
         }
-        if (holderMap.containsKey("width")) {
-            holderList.add(PropertyValuesHolder.ofFloat("width", getWidth(), (Integer) holderMap.get("width")));
+        if (mMap.containsKey("width")) {
+            holderList.add(PropertyValuesHolder.ofInt("width", getWidth(), (int) mMap.get("width")));
         }
-        if (holderMap.containsKey("height")) {
-            holderList.add(PropertyValuesHolder.ofFloat("height", getHeight(), (Integer) holderMap.get("height")));
+        if (mMap.containsKey("height")) {
+            holderList.add(PropertyValuesHolder.ofInt("height", getHeight(), (int) mMap.get("height")));
         }
-        if (holderMap.containsKey("rotation")) {
-            holderList.add(PropertyValuesHolder.ofFloat("rotation", getRotation(), (Float) holderMap.get("rotation")));
+        if (mMap.containsKey("rotation")) {
+            holderList.add(PropertyValuesHolder.ofFloat("rotation", getRotation(), (float) mMap.get("rotation")));
         }
-        if (holderMap.containsKey("scaleX")) {
-            holderList.add(PropertyValuesHolder.ofFloat("scaleX", getScaleX(), (Float) holderMap.get("scaleX")));
+        if (mMap.containsKey("scaleX")) {
+            holderList.add(PropertyValuesHolder.ofFloat("scaleX", getScaleX(), (float) mMap.get("scaleX")));
         }
-        if (holderMap.containsKey("scaleY")) {
-            holderList.add(PropertyValuesHolder.ofFloat("scaleY", getScaleY(), (Float) holderMap.get("scaleY")));
+        if (mMap.containsKey("scaleY")) {
+            holderList.add(PropertyValuesHolder.ofFloat("scaleY", getScaleY(), (float) mMap.get("scaleY")));
         }
-        if (holderMap.containsKey("x")) {
-            holderList.add(PropertyValuesHolder.ofFloat("x", getX(), (Float) holderMap.get("x")));
+        if (mMap.containsKey("x")) {
+            holderList.add(PropertyValuesHolder.ofFloat("x", getX(), (float) mMap.get("x")));
         }
-        if (holderMap.containsKey("y")) {
-            holderList.add(PropertyValuesHolder.ofFloat("y", getY(), (Float) holderMap.get("y")));
+        if (mMap.containsKey("y")) {
+            holderList.add(PropertyValuesHolder.ofFloat("y", getY(), (float) mMap.get("y")));
         }
 
-        return holderList.toArray(new PropertyValuesHolder[holderList.size()]);
+        return ValueAnimator.ofPropertyValuesHolder(holderList.toArray(new PropertyValuesHolder[holderList.size()]));
     }
 
     @Override
     public final void onAnimationUpdate(ValueAnimator animation) {
-        updateAlpha((Float) animation.getAnimatedValue("alpha"));
-        updateWidth((Integer) animation.getAnimatedValue("width"));
-        updateHeight((Integer) animation.getAnimatedValue("height"));
-        updateRotation((Float) animation.getAnimatedValue("rotation"));
-        updateScaleX((Float) animation.getAnimatedValue("scaleX"));
-        updateScaleY((Float) animation.getAnimatedValue("scaleY"));
-        updateX((Float) animation.getAnimatedValue("x"));
-        updateY((Float) animation.getAnimatedValue("y"));
+        if (mMap.containsKey("alpha")) {
+            setAlpha((float) animation.getAnimatedValue("alpha"));
+        }
+        if (mMap.containsKey("width")) {
+            setWidth((int) animation.getAnimatedValue("width"));
+        }
+        if (mMap.containsKey("height")) {
+            setHeight((int) animation.getAnimatedValue("height"));
+        }
+        if (mMap.containsKey("rotation")) {
+            setRotation((float) animation.getAnimatedValue("rotation"));
+        }
+        if (mMap.containsKey("scaleX")) {
+            setScaleX((float) animation.getAnimatedValue("scaleX"));
+        }
+        if (mMap.containsKey("scaleY")) {
+            setScaleY((float) animation.getAnimatedValue("scaleY"));
+        }
+        if (mMap.containsKey("x")) {
+            setX((float) animation.getAnimatedValue("x"));
+        }
+        if (mMap.containsKey("y")) {
+            setY((float) animation.getAnimatedValue("y"));
+        }
     }
 
     public final ToggleViewValueAnimator rotationOff(float rotation) {
-        mOffHolderMap.put("rotation", rotation);
+        mMapOff.put("rotation", rotation);
 
         return this;
     }
 
     public final ToggleViewValueAnimator rotationOn(float rotation) {
-        mOnHolderMap.put("rotation", rotation);
+        mMapOn.put("rotation", rotation);
 
         return this;
     }
 
     public final ToggleViewValueAnimator scaleXOff(float scaleX) {
-        mOffHolderMap.put("scaleX", scaleX);
+        mMapOff.put("scaleX", scaleX);
 
         return this;
     }
 
     public final ToggleViewValueAnimator scaleXOn(float scaleX) {
-        mOnHolderMap.put("scaleX", scaleX);
+        mMapOn.put("scaleX", scaleX);
 
         return this;
     }
 
     public final ToggleViewValueAnimator scaleYOff(float scaleY) {
-        mOffHolderMap.put("scaleY", scaleY);
+        mMapOff.put("scaleY", scaleY);
 
         return this;
     }
 
     public final ToggleViewValueAnimator scaleYOn(float scaleY) {
-        mOnHolderMap.put("scaleY", scaleY);
+        mMapOn.put("scaleY", scaleY);
 
         return this;
+    }
+
+    private void set() {
+        if (mMap.containsKey("alpha")) {
+            setAlpha((float) mMap.get("alpha"));
+        }
+        if (mMap.containsKey("width")) {
+            setWidth((int) mMap.get("width"));
+        }
+        if (mMap.containsKey("height")) {
+            setHeight((int) mMap.get("height"));
+        }
+        if (mMap.containsKey("rotation")) {
+            setRotation((float) mMap.get("rotation"));
+        }
+        if (mMap.containsKey("scaleX")) {
+            setScaleX((float) mMap.get("scaleX"));
+        }
+        if (mMap.containsKey("scaleY")) {
+            setScaleY((float) mMap.get("scaleY"));
+        }
+        if (mMap.containsKey("x")) {
+            setX((float) mMap.get("x"));
+        }
+        if (mMap.containsKey("y")) {
+            setY((float) mMap.get("y"));
+        }
     }
 
     private void setAlpha(float alpha) {
+        //        if (mDebug) {
+        //            Log.e(null, "set alpha to " + alpha);
+        //        }
         ViewHelper.setAlpha(mView, alpha);
     }
 
-    public final ToggleViewValueAnimator setDuration(long duration) {
-        mDuration = duration;
-
-        return this;
-    }
-
     private void setHeight(int height) {
-        ViewGroup.LayoutParams params = mView.getLayoutParams();
+        ViewGroup.LayoutParams params;
 
+        //        if (mDebug) {
+        //            Log.e(null, "set height to " + height);
+        //        }
+        params = mView.getLayoutParams();
         params.height = height;
         mView.setLayoutParams(params);
     }
 
-    public final ToggleViewValueAnimator setOffListener(Animator.AnimatorListener offListener) {
-        mOffListener = offListener;
-
-        return this;
-    }
-
-    public final ToggleViewValueAnimator setOnListener(Animator.AnimatorListener offListener) {
-        mOnListener = offListener;
-
-        return this;
-    }
-
     private void setRotation(float rotation) {
+        //        if (mDebug) {
+        //            Log.e(null, "set rotation to " + rotation);
+        //        }
         ViewHelper.setRotation(mView, rotation);
     }
 
     private void setScaleX(float scaleX) {
+        //        if (mDebug) {
+        //            Log.e(null, "set scaleX to " + scaleX);
+        //        }
         ViewHelper.setScaleX(mView, scaleX);
     }
 
     private void setScaleY(float scaleY) {
+        //        if (mDebug) {
+        //            Log.e(null, "set scaleY to " + scaleY);
+        //        }
         ViewHelper.setScaleY(mView, scaleY);
     }
 
-    public final ToggleViewValueAnimator setUpdateListener(ValueAnimator.AnimatorUpdateListener updateListener) {
-        mUpdateListener = updateListener;
-
-        return this;
-    }
-
     private void setWidth(int width) {
-        ViewGroup.LayoutParams params = mView.getLayoutParams();
+        ViewGroup.LayoutParams params;
 
+        //        if (mDebug) {
+        //            Log.e(null, "set width to " + width);
+        //        }
+        params = mView.getLayoutParams();
         params.width = width;
         mView.setLayoutParams(params);
     }
 
     private void setX(float x) {
+        //        if (mDebug) {
+        //            Log.e(null, "set x to " + x);
+        //        }
         ViewHelper.setX(mView, x);
     }
 
     private void setY(float y) {
+        //        if (mDebug) {
+        //            Log.e(null, "set y to " + y);
+        //        }
         ViewHelper.setY(mView, y);
     }
 
@@ -294,108 +377,84 @@ public final class ToggleViewValueAnimator implements ValueAnimator.AnimatorUpda
 
     public final ToggleViewValueAnimator toggleOff(boolean animate) {
         mToggledOn = false;
+        if (mDebug) {
+            Log.e(null, "off map=" + JsonUtil.toString(mMapOff));
+        }
+        cancel();
+        mMap = mMapOff;
+        mListener = mOffListener;
+        mOuterListener = mOuterOffListener;
+        if (animate) {
+            animate();
+        } else {
+            set();
+        }
 
-        return animate(mOffHolderMap, mInnerOffListener, mOffListener, animate ? mDuration : 0l);
+        return this;
     }
 
     public final ToggleViewValueAnimator toggleOn(boolean animate) {
         mToggledOn = true;
-
-        return animate(mOnHolderMap, mInnerOnListener, mOnListener, animate ? mDuration : 0l);
-    }
-
-    private void updateAlpha(Float alpha) {
-        if (alpha != null) {
-            setAlpha(alpha);
+        cancel();
+        if (mDebug) {
+            Log.e(null, "on map=" + JsonUtil.toString(mMapOn));
         }
-    }
-
-    private void updateHeight(Integer height) {
-        if (height != null) {
-            setHeight(height);
+        mMap = mMapOn;
+        mListener = mOnListener;
+        mOuterListener = mOuterOnListener;
+        if (animate) {
+            animate();
+        } else {
+            set();
         }
-    }
 
-    private void updateRotation(Float rotation) {
-        if (rotation != null) {
-            setRotation(rotation);
-        }
-    }
-
-    private void updateScaleX(Float scaleX) {
-        if (scaleX != null) {
-            setScaleX(scaleX);
-        }
-    }
-
-    private void updateScaleY(Float scaleY) {
-        if (scaleY != null) {
-            setScaleY(scaleY);
-        }
-    }
-
-    private void updateWidth(Integer width) {
-        if (width != null) {
-            setWidth(width);
-        }
-    }
-
-    private void updateX(Float x) {
-        if (x != null) {
-            setX(x);
-        }
-    }
-
-    private void updateY(Float y) {
-        if (y != null) {
-            setY(y);
-        }
+        return this;
     }
 
     public final ToggleViewValueAnimator visibilityOff(int visibility) {
-        mOffVisibility = visibility;
+        mVisibilityOff = visibility;
 
         return this;
     }
 
     public final ToggleViewValueAnimator visibilityOn(int visibility) {
-        mOnVisibility = visibility;
+        mVisibilityOn = visibility;
 
         return this;
     }
 
     public final ToggleViewValueAnimator widthOff(int width) {
-        mOffHolderMap.put("width", width);
+        mMapOff.put("width", width);
 
         return this;
     }
 
     public final ToggleViewValueAnimator widthOn(int width) {
-        mOnHolderMap.put("width", width);
+        mMapOn.put("width", width);
 
         return this;
     }
 
     public final ToggleViewValueAnimator xOff(float x) {
-        mOffHolderMap.put("x", x);
+        mMapOff.put("x", x);
 
         return this;
     }
 
     public final ToggleViewValueAnimator xOn(float x) {
-        mOnHolderMap.put("x", x);
+        mMapOn.put("x", x);
 
         return this;
     }
 
     public final ToggleViewValueAnimator yOff(float y) {
-        mOffHolderMap.put("y", y);
+        mMapOff.put("y", y);
 
         return this;
     }
 
     public final ToggleViewValueAnimator yOn(float y) {
-        mOnHolderMap.put("y", y);
+        mMapOn.put("y", y);
 
         return this;
     }

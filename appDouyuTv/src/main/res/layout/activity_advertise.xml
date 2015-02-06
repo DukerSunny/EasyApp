@@ -7,15 +7,7 @@
     <include
         layout="@layout/widget_toolbar"/>
 
-    <FrameLayout
-        style="@style/mm">
-
-        <include
-            layout="@layout/widget_recycler_pullable"/>
-
-        <include
-            layout="@layout/widget_toolbar_shadow"/>
-
-    </FrameLayout>
+    <include
+        layout="@layout/widget_recycler_pullable"/>
 
 </LinearLayout>

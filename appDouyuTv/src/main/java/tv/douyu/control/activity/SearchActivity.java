@@ -71,11 +71,6 @@ public class SearchActivity extends ActivityFramework {
     }
 
     @Override
-    protected void configActivity() {
-        attachTransition(new SwipeToFinishLayout(this));
-    }
-
-    @Override
     protected void createMenu() {
         enableDefaultToolbarNavigation();
         addToolbarItem(0, R.string.search_action, R.drawable.image_toolbar_search);

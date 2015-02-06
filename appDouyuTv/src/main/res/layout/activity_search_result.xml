@@ -19,16 +19,8 @@
         app:pstsShouldExpand="true"
         app:pstsTabBackground="@drawable/selector_tab"/>
 
-    <FrameLayout
-        style="@style/mm">
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/search_result_pager"
-            style="@style/mm"/>
-
-        <include
-            layout="@layout/widget_toolbar_shadow"/>
-
-    </FrameLayout>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/search_result_pager"
+        style="@style/mm"/>
 
 </LinearLayout>

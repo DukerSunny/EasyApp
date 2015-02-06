@@ -83,7 +83,7 @@ public class RippleDrawable extends Drawable {
         int baseColor = Color.BLACK;
 
         mRippleDuration = rippleDuration;
-        view.setClickable(true);
+//        view.setClickable(true);
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

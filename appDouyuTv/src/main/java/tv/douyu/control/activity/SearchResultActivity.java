@@ -47,11 +47,6 @@ public class SearchResultActivity extends ActivityFramework implements OnSearchR
     }
 
     @Override
-    protected void configActivity() {
-        attachTransition(new SwipeToFinishLayout(this));
-    }
-
-    @Override
     protected void createMenu() {
         setToolbarTitle(R.string.search_result);
         enableDefaultToolbarNavigation();

@@ -2,12 +2,13 @@
 <LinearLayout
     style="@style/ww.h"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_gravity="center_horizontal"
+    android:layout_gravity="center"
+    android:layout_marginTop="64dp"
     android:background="@drawable/shape_toast"
     android:gravity="center"
     android:padding="16dp">
 
-    <ImageView
+    <com.harreke.easyapp.widgets.circluarprogresses.CircularProgressView
         android:id="@+id/toast_icon"
         android:layout_width="24dp"
         android:layout_height="24dp"/>

@@ -45,11 +45,6 @@ public class BindPhoneActivity extends ActivityFramework implements OnBindPhoneL
     }
 
     @Override
-    protected void configActivity() {
-        attachTransition(new SwipeToFinishLayout(this));
-    }
-
-    @Override
     protected void createMenu() {
         setToolbarTitle(R.string.bind_phone);
         enableDefaultToolbarNavigation();

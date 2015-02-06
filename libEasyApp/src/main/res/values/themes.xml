@@ -5,15 +5,17 @@
         <item name="actionBarTheme">@style/Theme.EasyApp.ActionBar</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
 
-        <item name="android:windowBackground">@color/transparent</item>
-        <item name="android:windowIsTranslucent">true</item>
-
         <item name="childTabViewStyle">@style/Theme.EasyApp.ChildTabView</item>
         <item name="circularProgressViewStyle">@style/Theme.EasyApp.CircularProgressView</item>
         <item name="ratioImageViewStyle">@style/Theme.EasyApp.RatioImageView</item>
     </style>
 
     <style name="Theme.EasyApp" parent="Theme.EasyApp.Base"/>
+
+    <style name="Theme.EasyApp.Translucent" parent="Theme.EasyApp.Base">
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
 
     <style name="Theme.EasyApp.ActionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:background">?attr/colorPrimary</item>

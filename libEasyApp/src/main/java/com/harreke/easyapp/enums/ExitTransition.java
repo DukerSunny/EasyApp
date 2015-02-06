@@ -8,25 +8,25 @@ public enum ExitTransition {
     /**
      * 从左滑出
      */
-    Slide_Out_Left,
+    Slide_Left,
     /**
      * 从右滑出
      */
-    Slide_Out_Right,
+    Slide_Right,
     /**
      * 从上滑出
      */
-    Slide_Out_Top,
+    Slide_Top,
     /**
      * 从下滑出
      */
-    Slide_Out_Bottom
-    //        /**
-    //         * 将一个ImageView作为焦点，从新视图变换至旧视图
-    //         */
-    //        Hero_Out,
-    //        /**
-    //         * 将新视图以波纹收缩效果变为旧视图
-    //         */
-    //        Ripple_Out
+    Slide_Bottom,
+    /**
+     * 将一个视图作为焦点，从新视图变换至旧视图
+     */
+    Hero,
+    /**
+     * 将新视图以波纹收缩效果变为旧视图
+     */
+    Ripple
 }

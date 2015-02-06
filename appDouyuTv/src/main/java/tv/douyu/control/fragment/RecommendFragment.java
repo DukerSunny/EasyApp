@@ -4,29 +4,31 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
-import com.harreke.easyapp.frameworks.base.IFramework;
 import com.harreke.easyapp.frameworks.base.FragmentFramework;
+import com.harreke.easyapp.frameworks.base.IFramework;
 import com.harreke.easyapp.frameworks.recyclerview.RecyclerFramework;
 import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
 import com.harreke.easyapp.parsers.ListResult;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.utils.ViewUtil;
+import com.harreke.easyapp.widgets.transitions.TransitionOptions;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import tv.douyu.R;
+import tv.douyu.control.activity.LiveActivity;
+import tv.douyu.control.activity.RoomActivity;
 import tv.douyu.misc.api.API;
 import tv.douyu.model.bean.Recommend;
 import tv.douyu.model.bean.SlideShow;
 import tv.douyu.model.bean.SlideShowRecommend;
-import tv.douyu.wrapper.holder.RecommendHolder;
-import tv.douyu.wrapper.holder.SlideShowHolder;
 import tv.douyu.model.parser.RecommendListParser;
 import tv.douyu.model.parser.SlideShowListParser;
-import tv.douyu.control.activity.LiveActivity;
-import tv.douyu.control.activity.RoomActivity;
+import tv.douyu.wrapper.holder.RecommendHolder;
+import tv.douyu.wrapper.holder.SlideShowHolder;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/12/18
@@ -78,7 +80,7 @@ public class RecommendFragment extends FragmentFramework {
         mOnTitleClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                start(LiveActivity.create(getContext(), ViewUtil.getStringTag(v, R.id.value), ViewUtil.getIntTag(v, R.id.key)));
+                startTitle(v);
             }
         };
         mOnRoomClickListener = new View.OnClickListener() {
@@ -86,7 +88,8 @@ public class RecommendFragment extends FragmentFramework {
             public void onClick(View v) {
                 //                start(RoomActivity.create(getContext(), (Integer) v.getTag(), (ImageView) v.findViewById(R.id.room_src)),
                 //                        ActivityFramework.Anim.None);
-                start(RoomActivity.create(getContext(), ViewUtil.getIntTag(v)));
+                //                start(RoomActivity.create(getContext(), ViewUtil.getIntTag(v)));
+                startRoom(v);
             }
         };
         mSlideCallback = new IRequestCallback<String>() {
@@ -116,8 +119,8 @@ public class RecommendFragment extends FragmentFramework {
             }
 
             @Override
-            public void onSuccess(String requestUrl, String resule) {
-                ListResult<Recommend> listResult = mRecommendListParser.parse(resule);
+            public void onSuccess(String requestUrl, String result) {
+                ListResult<Recommend> listResult = mRecommendListParser.parse(result);
 
                 if (listResult != null && listResult.getList() != null) {
                     mRecommendList.addAll(listResult.getList());
@@ -155,6 +158,16 @@ public class RecommendFragment extends FragmentFramework {
         mRecommendRecyclerHelper.clear();
         mRecommendRecyclerHelper.showEmptyLoading();
         executeRequest(API.getSlide(4), mSlideCallback);
+    }
+
+    private void startRoom(View v) {
+        start(RoomActivity.create(getContext(), ViewUtil.getIntTag(v, R.id.hashCode)), TransitionOptions
+                .makeSharedImageViewTransition((ImageView) v, ViewUtil.getStringTag(v, R.id.imageUrl), R.id.room_pic));
+    }
+
+    private void startTitle(View v) {
+        start(LiveActivity.create(getContext(), ViewUtil.getStringTag(v, R.id.value), ViewUtil.getIntTag(v, R.id.key)),
+                TransitionOptions.makeSharedViewTransition(v, R.id.toolbar_solid));
     }
 
     private class RecommendRecyclerHelper extends RecyclerFramework<Recommend> {

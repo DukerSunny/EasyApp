@@ -8,50 +8,42 @@
     <include
         layout="@layout/widget_toolbar"/>
 
-    <FrameLayout
-        style="@style/mm">
+    <LinearLayout
+        style="@style/mm.v"
+        android:padding="8dp">
 
-        <LinearLayout
-            style="@style/mm.v"
-            android:padding="8dp">
+        <android.support.v7.widget.CardView
+            style="@style/mw">
 
-            <android.support.v7.widget.CardView
-                style="@style/mw">
-
-                <EditText
-                    android:id="@+id/bind_qq_input"
-                    style="@style/mw"
-                    android:background="@color/transparent"
-                    android:hint="@string/bind_qq_input"
-                    android:inputType="number"
-                    android:padding="16dp"
-                    android:singleLine="true"
-                    android:textColorHint="@color/gray"
-                    android:textSize="@dimen/Body1"/>
-
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
+            <EditText
+                android:id="@+id/bind_qq_input"
                 style="@style/mw"
-                android:layout_marginTop="32dp"
-                app:cardBackgroundColor="?attr/colorPrimary">
+                android:background="@color/transparent"
+                android:hint="@string/bind_qq_input"
+                android:inputType="number"
+                android:padding="16dp"
+                android:singleLine="true"
+                android:textColorHint="@color/gray"
+                android:textSize="@dimen/Body1"/>
 
-                <TextView
-                    android:id="@+id/bind_qq_submit"
-                    style="@style/mw"
-                    android:gravity="center"
-                    android:padding="16dp"
-                    android:text="@string/bind_qq_submit"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/Body1"/>
+        </android.support.v7.widget.CardView>
 
-            </android.support.v7.widget.CardView>
+        <android.support.v7.widget.CardView
+            style="@style/mw"
+            android:layout_marginTop="32dp"
+            app:cardBackgroundColor="?attr/colorPrimary">
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/bind_qq_submit"
+                style="@style/mw"
+                android:gravity="center"
+                android:padding="16dp"
+                android:text="@string/bind_qq_submit"
+                android:textColor="@color/white"
+                android:textSize="@dimen/Body1"/>
 
-        <include
-            layout="@layout/widget_toolbar_shadow"/>
+        </android.support.v7.widget.CardView>
 
-    </FrameLayout>
+    </LinearLayout>
 
 </LinearLayout>

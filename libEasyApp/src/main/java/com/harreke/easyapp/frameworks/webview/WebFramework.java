@@ -1,4 +1,4 @@
-package com.harreke.easyapp.frameworks;
+package com.harreke.easyapp.frameworks.webview;
 
 import android.annotation.TargetApi;
 import android.os.Build;

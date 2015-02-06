@@ -96,7 +96,7 @@
     <orderEntry type="library" exported="" name="appcompat-v7-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="androidasync-2.0.5" level="project" />
     <orderEntry type="library" exported="" name="circleimageview-1.2.1" level="project" />
-    <orderEntry type="library" exported="" name="butterknife-6.0.0" level="project" />
+    <orderEntry type="library" exported="" name="butterknife-6.1.0" level="project" />
     <orderEntry type="library" exported="" name="recyclerview-v7-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="snackbar-2.7.5" level="project" />
     <orderEntry type="library" exported="" name="ion-2.0.5" level="project" />

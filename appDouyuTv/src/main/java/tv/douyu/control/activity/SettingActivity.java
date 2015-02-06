@@ -12,7 +12,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.harreke.easyapp.frameworks.base.ActivityFramework;
-import com.harreke.easyapp.frameworks.base.ApplicationFramework;
 import com.harreke.easyapp.helpers.CompoundButtonHelper;
 import com.harreke.easyapp.listeners.OnButtonsCheckedChangeListener;
 import com.harreke.easyapp.requests.IRequestCallback;
@@ -45,7 +44,6 @@ public class SettingActivity extends ActivityFramework {
     private RotateToExpandAnimator mDanmakuSizeAnimator;
     private OnButtonsCheckedChangeListener mOnButtonsCheckedChangeListener;
     private CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener;
-    private View.OnClickListener mOnClickListener;
     private SeekBar.OnSeekBarChangeListener mOnSeekBarChangeListener;
     private Setting mSetting;
     private RotateToExpandAnimator mSwitchDecodeAnimator;
@@ -102,19 +100,11 @@ public class SettingActivity extends ActivityFramework {
         setting_system_show_empty_category.setOnCheckedChangeListener(mOnCheckedChangeListener);
         setting_system_receive_push.setOnCheckedChangeListener(mOnCheckedChangeListener);
         setting_system_play_video_under_mobile_network.setOnCheckedChangeListener(mOnCheckedChangeListener);
-        setting_system_switch_decode.setOnClickListener(mOnClickListener);
         mSwitchDecoderHelper.setOnButtonCheckedChangeListener(mOnButtonsCheckedChangeListener);
         setting_live_player_gesture.setOnCheckedChangeListener(mOnCheckedChangeListener);
-        setting_live_danmaku_opacity.setOnClickListener(mOnClickListener);
         setting_live_danmaku_opacity_seekbar.setOnSeekBarChangeListener(mOnSeekBarChangeListener);
-        setting_live_danmaku_size.setOnClickListener(mOnClickListener);
         setting_live_danmaku_size_seekbar.setOnSeekBarChangeListener(mOnSeekBarChangeListener);
         mDanmakuLocationHelper.setOnButtonCheckedChangeListener(mOnButtonsCheckedChangeListener);
-    }
-
-    @Override
-    protected void configActivity() {
-        attachTransition(new SwipeToFinishLayout(this));
     }
 
     @Override
@@ -164,16 +154,12 @@ public class SettingActivity extends ActivityFramework {
         mUpdateHelper = new UpdateHelper(getFramework());
 
         mSwitchDecodeAnimator =
-                new RotateToExpandAnimator(setting_system_switch_decode_switch, setting_system_switch_decode_layout,
-                        (int) (ApplicationFramework.Density * 56));
+                new RotateToExpandAnimator(setting_system_switch_decode_switch, setting_system_switch_decode_layout);
         mDanmakuOpacityAnimator =
-                new RotateToExpandAnimator(setting_live_danmaku_opacity_switch, setting_live_danmaku_opacity_layout,
-                        (int) (ApplicationFramework.Density * 48));
-        mDanmakuSizeAnimator = new RotateToExpandAnimator(setting_live_danmaku_size_switch, setting_live_danmaku_size_layout,
-                (int) (ApplicationFramework.Density * 48));
+                new RotateToExpandAnimator(setting_live_danmaku_opacity_switch, setting_live_danmaku_opacity_layout);
+        mDanmakuSizeAnimator = new RotateToExpandAnimator(setting_live_danmaku_size_switch, setting_live_danmaku_size_layout);
         mDanmakuLocationAnimator =
-                new RotateToExpandAnimator(setting_live_danmaku_location_switch, setting_live_danmaku_location_layout,
-                        (int) (ApplicationFramework.Density * 56));
+                new RotateToExpandAnimator(setting_live_danmaku_location_switch, setting_live_danmaku_location_layout);
 
         RippleDrawable.attach(setting_system_auto_load_more);
         RippleDrawable.attach(setting_system_show_empty_category);
@@ -200,10 +186,39 @@ public class SettingActivity extends ActivityFramework {
         setting_live_danmaku_size_seekbar.setProgress(DanmakuSize.indexOf(mSetting.getDanmakuSize()));
         setting_live_danmaku_location_text.setText(mSetting.getDanmakuLocation().getTextId());
         mDanmakuLocationHelper.check(DanmakuLocation.indexOf(mSetting.getDanmakuLocation()));
-        mSwitchDecodeAnimator.close(false);
-        mDanmakuOpacityAnimator.close(false);
-        mDanmakuSizeAnimator.close(false);
-        mDanmakuLocationAnimator.close(false);
+
+        setting_system_switch_decode_layout.post(new Runnable() {
+            @Override
+            public void run() {
+                mSwitchDecodeAnimator.controllerOffRotation(0f).controllerOnRotation(-90f).layoutOffHeight(0)
+                        .layoutOnHeight(setting_system_switch_decode_layout.getMeasuredHeight());
+                mSwitchDecodeAnimator.toggleOff(false);
+            }
+        });
+        setting_live_danmaku_opacity_layout.post(new Runnable() {
+            @Override
+            public void run() {
+                mDanmakuOpacityAnimator.controllerOffRotation(0f).controllerOnRotation(-90f).layoutOffHeight(0)
+                        .layoutOnHeight(setting_live_danmaku_opacity_layout.getMeasuredHeight());
+                mDanmakuOpacityAnimator.toggleOff(false);
+            }
+        });
+        setting_live_danmaku_size_layout.post(new Runnable() {
+            @Override
+            public void run() {
+                mDanmakuSizeAnimator.controllerOffRotation(0f).controllerOnRotation(-90f).layoutOffHeight(0)
+                        .layoutOnHeight(setting_live_danmaku_size_layout.getMeasuredHeight());
+                mDanmakuSizeAnimator.toggleOff(false);
+            }
+        });
+        setting_live_danmaku_location_layout.post(new Runnable() {
+            @Override
+            public void run() {
+                mDanmakuLocationAnimator.controllerOffRotation(0f).controllerOnRotation(-90f).layoutOffHeight(0)
+                        .layoutOnHeight(setting_live_danmaku_location_layout.getMeasuredHeight());
+                mDanmakuLocationAnimator.toggleOff(false);
+            }
+        });
     }
 
     @Override
@@ -287,25 +302,6 @@ public class SettingActivity extends ActivityFramework {
                 writeSetting();
             }
         };
-        mOnClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.setting_system_switch_decode:
-                        toggleSwitchDecode();
-                        break;
-                    case R.id.setting_live_danmaku_opacity:
-                        toggleDanmakuOpacity();
-                        break;
-                    case R.id.setting_live_danmaku_size:
-                        toggleDanmakuSize();
-                        break;
-                    case R.id.setting_live_danmaku_location:
-                        toggleDanmakuLocation();
-                        break;
-                }
-            }
-        };
         mUpdateCallback = new IRequestCallback<String>() {
             @Override
             public void onFailure(String requestUrl) {
@@ -350,6 +346,21 @@ public class SettingActivity extends ActivityFramework {
         }
     }
 
+    @OnClick(R.id.setting_system_switch_decode)
+    void onDanmakuLocationClick() {
+        mDanmakuLocationAnimator.toggle(true);
+    }
+
+    @OnClick(R.id.setting_live_danmaku_opacity)
+    void onDanmakuOpacityClick() {
+        mDanmakuOpacityAnimator.toggle(true);
+    }
+
+    @OnClick(R.id.setting_live_danmaku_size)
+    void onDanmakuSizeClick() {
+        mDanmakuSizeAnimator.toggle(true);
+    }
+
     @Override
     protected void onDestroy() {
         mAuthorizeHelper.destroy();
@@ -371,28 +382,17 @@ public class SettingActivity extends ActivityFramework {
         return false;
     }
 
+    @OnClick(R.id.setting_live_danmaku_location)
+    void onSwitchDecodeClick() {
+        mSwitchDecodeAnimator.toggle(true);
+    }
+
     @Override
     public void startAction() {
     }
 
     private void startFeedBack() {
         start(FeedBackActivity.create(this));
-    }
-
-    private void toggleDanmakuLocation() {
-        mDanmakuLocationAnimator.toggleOpen();
-    }
-
-    private void toggleDanmakuOpacity() {
-        mDanmakuOpacityAnimator.toggleOpen();
-    }
-
-    private void toggleDanmakuSize() {
-        mDanmakuSizeAnimator.toggleOpen();
-    }
-
-    private void toggleSwitchDecode() {
-        mSwitchDecodeAnimator.toggleOpen();
     }
 
     private void writeSetting() {

@@ -8,6 +8,8 @@ import com.harreke.easyapp.helpers.ViewSwitchHelper;
 import com.harreke.easyapp.widgets.animators.ToggleViewValueAnimator;
 import com.harreke.easyapp.widgets.rippleeffects.RippleDrawable;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import tv.douyu.R;
 
 /**
@@ -21,32 +23,31 @@ public abstract class PlayerControlBottomHelper implements View.OnClickListener,
     private boolean mLocked = false;
     private boolean mPlayShowing = false;
     private ViewSwitchHelper mPlaySwitchHelper;
-    private View mRootView;
-    private View player_control_bottom;
-    private View player_danmaku_cancel;
-    private View player_danmaku_hotwords;
-    private EditText player_danmaku_input;
-    private View player_danmaku_off;
-    private View player_danmaku_on;
-    private View player_danmaku_send;
-    private View player_lock_off;
-    private View player_lock_on;
-    private View player_pause;
-    private View player_play;
+    @InjectView(R.id.player_control_bottom)
+    View player_control_bottom;
+    @InjectView(R.id.player_danmaku_cancel)
+    View player_danmaku_cancel;
+    @InjectView(R.id.player_danmaku_hotwords)
+    View player_danmaku_hotwords;
+    @InjectView(R.id.player_danmaku_input)
+    EditText player_danmaku_input;
+    @InjectView(R.id.player_danmaku_off)
+    View player_danmaku_off;
+    @InjectView(R.id.player_danmaku_on)
+    View player_danmaku_on;
+    @InjectView(R.id.player_danmaku_send)
+    View player_danmaku_send;
+    @InjectView(R.id.player_lock_off)
+    View player_lock_off;
+    @InjectView(R.id.player_lock_on)
+    View player_lock_on;
+    @InjectView(R.id.player_pause)
+    View player_pause;
+    @InjectView(R.id.player_play)
+    View player_play;
 
     public PlayerControlBottomHelper(View rootView) {
-        mRootView = rootView;
-        player_control_bottom = mRootView.findViewById(R.id.player_control_bottom);
-        player_play = mRootView.findViewById(R.id.player_play);
-        player_pause = mRootView.findViewById(R.id.player_pause);
-        player_lock_on = mRootView.findViewById(R.id.player_lock_on);
-        player_lock_off = mRootView.findViewById(R.id.player_lock_off);
-        player_danmaku_on = mRootView.findViewById(R.id.player_danmaku_on);
-        player_danmaku_off = mRootView.findViewById(R.id.player_danmaku_off);
-        player_danmaku_cancel = mRootView.findViewById(R.id.player_danmaku_cancel);
-        player_danmaku_input = (EditText) mRootView.findViewById(R.id.player_danmaku_input);
-        player_danmaku_hotwords = mRootView.findViewById(R.id.player_danmaku_hotwords);
-        player_danmaku_send = mRootView.findViewById(R.id.player_danmaku_send);
+        ButterKnife.inject(this, rootView);
 
         mBottomAnimator = ToggleViewValueAnimator.animate(player_control_bottom);
         mPlaySwitchHelper = new ViewSwitchHelper(player_play, player_pause);
@@ -75,12 +76,12 @@ public abstract class PlayerControlBottomHelper implements View.OnClickListener,
         player_danmaku_send.setOnClickListener(this);
         player_danmaku_input.setOnFocusChangeListener(this);
 
-        mRootView.post(new Runnable() {
+        player_control_bottom.post(new Runnable() {
             @Override
             public void run() {
-                mBottomAnimator.yOff(mRootView.getMeasuredHeight())
-                        .yOn(mRootView.getMeasuredHeight() - player_control_bottom.getMeasuredHeight()).alphaOff(0f).alphaOn(1f)
-                        .visibilityOff(View.GONE).visibilityOn(View.VISIBLE);
+                mBottomAnimator.yOff(player_control_bottom.getBottom())
+                        .yOn(player_control_bottom.getBottom() - player_control_bottom.getMeasuredHeight()).alphaOff(0f)
+                        .alphaOn(1f).visibilityOff(View.GONE).visibilityOn(View.VISIBLE).debug(true);
                 hide(false);
             }
         });
@@ -194,7 +195,7 @@ public abstract class PlayerControlBottomHelper implements View.OnClickListener,
 
     protected abstract void onPlayClick();
 
-    public void setInputText(String text) {
+    private void setInputText(String text) {
         player_danmaku_input.setText(text);
         player_danmaku_input.setSelection(text.length());
     }

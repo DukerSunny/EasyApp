@@ -3,13 +3,11 @@ package com.harreke.easyapp.requests.ion;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.harreke.easyapp.R;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.IRequestExecutor;
 import com.harreke.easyapp.requests.RequestBuilder;
 import com.koushikdutta.async.future.Future;
 import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.Ion;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/12/31
@@ -24,16 +22,14 @@ public class IonImageExecutor implements IRequestExecutor, FutureCallback<ImageV
         mImageUrl = requestBuilder.getUrl();
         mImageCallback = imageCallback;
         requestBuilder.print();
-        mImageFuture = IonBuilder.build(imageView.getContext(), requestBuilder).intoImageView(imageView).setCallback(this);
+        mImageFuture = IonBuilder.build(imageView, requestBuilder).setCallback(this);
     }
 
     public IonImageExecutor(ImageView imageView, String imageUrl, int loadingImageId, int retryImageId,
             IRequestCallback<ImageView> imageCallback) {
         mImageUrl = imageUrl;
         mImageCallback = imageCallback;
-        mImageFuture =
-                Ion.with(imageView).placeholder(loadingImageId).error(retryImageId).animateIn(R.anim.fade_in).smartSize(true)
-                        .deepZoom().load(mImageUrl).setCallback(this);
+        mImageFuture = IonBuilder.build(imageView, mImageUrl, loadingImageId, retryImageId).setCallback(this);
     }
 
     @Override

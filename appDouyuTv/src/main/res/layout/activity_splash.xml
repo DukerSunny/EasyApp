@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ImageView
     style="@style/mm.v"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="?attr/colorPrimary">
-
-</LinearLayout>
+    android:scaleType="fitXY"
+    android:src="@drawable/splash"/>

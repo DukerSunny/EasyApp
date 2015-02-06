@@ -3,6 +3,7 @@ package com.harreke.easyapp.helpers;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/11/20
@@ -12,6 +13,7 @@ public class ConnectionHelper {
     public static boolean wifiConnected = false;
 
     public static void checkConnection(Context context) {
+        Log.e(null, "check connection ");
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo mobileInfo = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
         NetworkInfo wifiInfo = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);

@@ -73,6 +73,7 @@ public abstract class PlayerControlDefinitionHelper implements OnButtonsCheckedC
 
     @Override
     public void onButtonCheck(CompoundButton compoundButton, int position) {
+        hide(false);
         switch (position) {
             case 0:
                 onDefinitionChange("ws", false);

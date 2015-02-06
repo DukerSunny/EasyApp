@@ -1,9 +1,14 @@
 package com.harreke.easyapp.utils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.RectF;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/12/31
@@ -21,6 +26,19 @@ public class ViewUtil {
         }
 
         return position;
+    }
+
+    public static byte[] getBitmapBytes(View view) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        Bitmap bitmap;
+
+        view.setDrawingCacheEnabled(true);
+        view.buildDrawingCache();
+        bitmap = view.getDrawingCache();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+        view.setDrawingCacheEnabled(false);
+
+        return outputStream.toByteArray();
     }
 
     public static float getFloatTag(View view) {
@@ -54,6 +72,20 @@ public class ViewUtil {
 
     public static Object getObjectTag(View view, int key) {
         return (view != null && view.getTag(key) != null) ? view.getTag(key) : null;
+    }
+
+    public static RectF getRect(View view) {
+        int[] position = new int[2];
+        RectF rect = new RectF();
+
+        view.getLocationOnScreen(position);
+        rect.left = position[0];
+        rect.top = position[1];
+        rect.right = rect.left + view.getMeasuredWidth();
+        rect.bottom = rect.top + view.getMeasuredHeight();
+        Log.e(null, "view x=" + rect.left + " y=" + rect.top + " width=" + rect.width() + " height=" + rect.height());
+
+        return rect;
     }
 
     public static String getStringTag(View view) {

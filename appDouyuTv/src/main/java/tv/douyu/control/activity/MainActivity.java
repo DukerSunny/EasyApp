@@ -10,13 +10,15 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 
 import com.astuetz.PagerSlidingTabStrip;
-import com.harreke.easyapp.frameworks.viewpager.FragmentPageAdapter;
 import com.harreke.easyapp.frameworks.base.ActivityFramework;
+import com.harreke.easyapp.frameworks.viewpager.FragmentPageAdapter;
+import com.harreke.easyapp.helpers.ConnectionHelper;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.utils.JsonUtil;
 import com.harreke.easyapp.utils.ResourceUtil;
 
 import tv.douyu.R;
+import tv.douyu.control.application.DouyuTv;
 import tv.douyu.control.fragment.GameFragment;
 import tv.douyu.control.fragment.LiveFragment;
 import tv.douyu.control.fragment.MoreFragment;
@@ -34,7 +36,6 @@ public class MainActivity extends ActivityFramework {
     private UpdateHelper mUpdateHelper;
     private ViewPager main_pager;
     private PagerSlidingTabStrip main_pager_strip;
-    private String mVersion;
 
     public static Intent create(Context context) {
         return new Intent(context, MainActivity.class);
@@ -42,6 +43,7 @@ public class MainActivity extends ActivityFramework {
 
     @Override
     protected void acquireArguments(Intent intent) {
+        ConnectionHelper.checkConnection(this);
     }
 
     @Override
@@ -75,8 +77,8 @@ public class MainActivity extends ActivityFramework {
             public void onSuccess(String requestUrl, String result) {
                 Update update = JsonUtil.toObject(result, Update.class);
 
-                if (update != null && !TextUtils.isEmpty(mVersion) && !TextUtils.isEmpty(update.getVersion()) &&
-                        !mVersion.equals(update.getVersion())) {
+                if (update != null && !TextUtils.isEmpty(DouyuTv.Version) && !TextUtils.isEmpty(update.getVersion()) &&
+                        !DouyuTv.Version.equals(update.getVersion())) {
                     mUpdateHelper.show(update);
                 }
             }

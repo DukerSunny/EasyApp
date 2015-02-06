@@ -7,116 +7,108 @@
     <include
         layout="@layout/widget_toolbar"/>
 
-    <FrameLayout
-        style="@style/mm">
+    <LinearLayout
+        style="@style/mm.v"
+        android:padding="8dp">
 
-        <LinearLayout
-            style="@style/mm.v"
-            android:padding="8dp">
+        <ImageView
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/ic_launcher"/>
 
-            <ImageView
-                android:layout_width="96dp"
-                android:layout_height="96dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp"
-                android:src="@drawable/ic_launcher"/>
+        <TextView
+            style="@style/mw"
+            android:layout_marginTop="8dp"
+            android:gravity="center_horizontal"
+            android:text="@string/app_name"
+            android:textAppearance="@style/Title"/>
 
-            <TextView
-                style="@style/mw"
-                android:layout_marginTop="8dp"
-                android:gravity="center_horizontal"
-                android:text="@string/app_name"
-                android:textAppearance="@style/Title"/>
+        <TextView
+            android:id="@+id/aboutus_version"
+            style="@style/mw"
+            android:layout_marginTop="8dp"
+            android:gravity="center_horizontal"
+            android:textAppearance="@style/Body1"/>
 
-            <TextView
-                android:id="@+id/aboutus_version"
-                style="@style/mw"
-                android:layout_marginTop="8dp"
-                android:gravity="center_horizontal"
-                android:textAppearance="@style/Body1"/>
+        <android.support.v7.widget.CardView
+            style="@style/mw"
+            android:layout_margin="8dp">
 
-            <android.support.v7.widget.CardView
-                style="@style/mw"
-                android:layout_margin="8dp">
+            <LinearLayout
+                style="@style/mw.v">
 
                 <LinearLayout
-                    style="@style/mw.v">
+                    android:id="@+id/aboutus_website"
+                    style="@style/mw.h"
+                    android:gravity="center"
+                    android:padding="16dp">
 
-                    <LinearLayout
-                        android:id="@+id/aboutus_website"
-                        style="@style/mw.h"
-                        android:gravity="center"
-                        android:padding="16dp">
+                    <TextView
+                        style="@style/ww"
+                        android:text="@string/aboutus_website"
+                        android:textAppearance="@style/Subhead"/>
 
-                        <TextView
-                            style="@style/ww"
-                            android:text="@string/aboutus_website"
-                            android:textAppearance="@style/Subhead"/>
-
-                        <TextView
-                            android:id="@+id/aboutus_website_url"
-                            style="@style/ww"
-                            android:layout_marginLeft="8dp"
-                            android:text="@string/aboutus_website_url"
-                            android:textColor="@color/selector_login_forgot"/>
-
-                    </LinearLayout>
-
-                    <include
-                        layout="@layout/widget_divider_horizontal"/>
-
-                    <LinearLayout
-                        android:id="@+id/aboutus_sina"
-                        style="@style/mw.h"
-                        android:gravity="center"
-                        android:padding="16dp">
-
-                        <TextView
-                            style="@style/ww"
-                            android:text="@string/aboutus_sina"
-                            android:textAppearance="@style/Subhead"/>
-
-                        <TextView
-                            android:id="@+id/aboutus_sina_url"
-                            style="@style/ww"
-                            android:layout_marginLeft="8dp"
-                            android:text="@string/aboutus_sina_url"
-                            android:textColor="@color/selector_login_forgot"/>
-
-                    </LinearLayout>
-
-                    <include
-                        layout="@layout/widget_divider_horizontal"/>
-
-                    <LinearLayout
-                        android:id="@+id/aboutus_tencent"
-                        style="@style/mw.h"
-                        android:gravity="center"
-                        android:padding="16dp">
-
-                        <TextView
-                            style="@style/ww"
-                            android:text="@string/aboutus_tencent"
-                            android:textAppearance="@style/Subhead"/>
-
-                        <TextView
-                            android:id="@+id/aboutus_tencent_url"
-                            style="@style/ww"
-                            android:layout_marginLeft="8dp"
-                            android:text="@string/aboutus_tencent_url"
-                            android:textColor="@color/selector_login_forgot"/>
-
-                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/aboutus_website_url"
+                        style="@style/ww"
+                        android:layout_marginLeft="8dp"
+                        android:text="@string/aboutus_website_url"
+                        android:textColor="@color/selector_login_forgot"/>
 
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+                <include
+                    layout="@layout/widget_divider_horizontal"/>
 
-        </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/aboutus_sina"
+                    style="@style/mw.h"
+                    android:gravity="center"
+                    android:padding="16dp">
 
-        <include
-            layout="@layout/widget_toolbar_shadow"/>
+                    <TextView
+                        style="@style/ww"
+                        android:text="@string/aboutus_sina"
+                        android:textAppearance="@style/Subhead"/>
 
-    </FrameLayout>
+                    <TextView
+                        android:id="@+id/aboutus_sina_url"
+                        style="@style/ww"
+                        android:layout_marginLeft="8dp"
+                        android:text="@string/aboutus_sina_url"
+                        android:textColor="@color/selector_login_forgot"/>
+
+                </LinearLayout>
+
+                <include
+                    layout="@layout/widget_divider_horizontal"/>
+
+                <LinearLayout
+                    android:id="@+id/aboutus_tencent"
+                    style="@style/mw.h"
+                    android:gravity="center"
+                    android:padding="16dp">
+
+                    <TextView
+                        style="@style/ww"
+                        android:text="@string/aboutus_tencent"
+                        android:textAppearance="@style/Subhead"/>
+
+                    <TextView
+                        android:id="@+id/aboutus_tencent_url"
+                        style="@style/ww"
+                        android:layout_marginLeft="8dp"
+                        android:text="@string/aboutus_tencent_url"
+                        android:textColor="@color/selector_login_forgot"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:id="@+id/player_yuwan_send_root"
+    android:id="@+id/player_yuwan_root"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="64dp"
@@ -10,7 +10,7 @@
     android:orientation="horizontal">
 
     <LinearLayout
-        android:id="@+id/player_yuwan_send_icon"
+        android:id="@+id/player_yuwan_icon"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:gravity="center"

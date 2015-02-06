@@ -60,11 +60,6 @@ public class LoginActivity extends ActivityFramework {
     }
 
     @Override
-    protected void configActivity() {
-        attachTransition(new SwipeToFinishLayout(this));
-    }
-
-    @Override
     protected void createMenu() {
         setToolbarTitle(R.string.app_login);
         enableDefaultToolbarNavigation();

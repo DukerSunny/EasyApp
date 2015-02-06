@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.harreke.easyapp.enums.ActivityAnimation;
 import com.harreke.easyapp.requests.IRequestCallback;
 import com.harreke.easyapp.requests.RequestBuilder;
 
@@ -145,17 +144,17 @@ public interface IFramework {
      */
     public void start(Intent intent);
 
-    /**
-     * 启动Intent
-     *
-     * @param intent
-     *         目标Intent
-     * @param anim
-     *         Intent切换动画
-     *
-     * @see com.harreke.easyapp.enums.ActivityAnimation
-     */
-    public void start(Intent intent, ActivityAnimation anim);
+    //    /**
+    //     * 启动Intent
+    //     *
+    //     * @param intent
+    //     *         目标Intent
+    //     * @param anim
+    //     *         Intent切换动画
+    //     *
+    //     * @see com.harreke.easyapp.enums.ActivityAnimation
+    //     */
+    //    public void start(Intent intent, ActivityAnimation anim);
 
     /**
      * 启动Intent
@@ -169,21 +168,21 @@ public interface IFramework {
      */
     public void start(Intent intent, int requestCode);
 
-    /**
-     * 启动Intent
-     *
-     * @param intent
-     *         目标Intent
-     * @param requestCode
-     *         请求代码
-     *
-     *         如果需要回调，则设置requestCode为正整数；否则设为-1；
-     * @param anim
-     *         Intent切换动画
-     *
-     * @see com.harreke.easyapp.enums.ActivityAnimation
-     */
-    public void start(Intent intent, int requestCode, ActivityAnimation anim);
+    //    /**
+    //     * 启动Intent
+    //     *
+    //     * @param intent
+    //     *         目标Intent
+    //     * @param requestCode
+    //     *         请求代码
+    //     *
+    //     *         如果需要回调，则设置requestCode为正整数；否则设为-1；
+    //     * @param anim
+    //     *         Intent切换动画
+    //     *
+    //     * @see com.harreke.easyapp.enums.ActivityAnimation
+    //     */
+    //    public void start(Intent intent, int requestCode, ActivityAnimation anim);
 
     /**
      * 开始运作

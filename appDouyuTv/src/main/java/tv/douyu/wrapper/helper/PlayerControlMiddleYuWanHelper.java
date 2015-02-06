@@ -6,47 +6,44 @@ import com.harreke.easyapp.enums.RippleStyle;
 import com.harreke.easyapp.helpers.ViewSwitchHelper;
 import com.harreke.easyapp.widgets.animators.ToggleViewValueAnimator;
 import com.harreke.easyapp.widgets.rippleeffects.RippleDrawable;
-import com.harreke.easyapp.widgets.rippleeffects.RippleOnClickListener;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
 import tv.douyu.R;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2015/01/25
  */
-public abstract class PlayerControlMiddleYuWanHelper implements View.OnClickListener {
-    private View mRootView;
+public abstract class PlayerControlMiddleYuWanHelper {
     private ViewSwitchHelper mSwitchHelper;
     private ToggleViewValueAnimator mYuWanAlphaAnimator;
     private ToggleViewValueAnimator mYuWanSlideAnimator;
-    private View player_yuwan_send;
-    private View player_yuwan_send_icon;
-    private View player_yuwan_send_root;
-    private View player_yuwan_sending;
+    @InjectView(R.id.player_yuwan_icon)
+    View player_yuwan_icon;
+    @InjectView(R.id.player_yuwan_root)
+    View player_yuwan_root;
+    @InjectView(R.id.player_yuwan_send)
+    View player_yuwan_send;
+    @InjectView(R.id.player_yuwan_sending)
+    View player_yuwan_sending;
 
     public PlayerControlMiddleYuWanHelper(View rootView) {
-        mRootView = rootView;
-        player_yuwan_send_root = mRootView.findViewById(R.id.player_yuwan_send_root);
-        player_yuwan_send = mRootView.findViewById(R.id.player_yuwan_send);
-        player_yuwan_send_icon = mRootView.findViewById(R.id.player_yuwan_send_icon);
-        player_yuwan_sending = mRootView.findViewById(R.id.player_yuwan_sending);
-
-        mYuWanSlideAnimator = ToggleViewValueAnimator.animate(player_yuwan_send_root);
-        mYuWanAlphaAnimator = ToggleViewValueAnimator.animate(player_yuwan_send_root);
+        ButterKnife.inject(this, rootView);
+        mYuWanSlideAnimator = ToggleViewValueAnimator.animate(player_yuwan_root);
+        mYuWanAlphaAnimator = ToggleViewValueAnimator.animate(player_yuwan_root);
         mSwitchHelper = new ViewSwitchHelper(player_yuwan_send, player_yuwan_sending);
 
-        RippleDrawable.attach(player_yuwan_send_root, RippleStyle.Light);
+        RippleDrawable.attach(player_yuwan_root, RippleStyle.Light);
         RippleDrawable.attach(player_yuwan_send, RippleStyle.Light);
 
-        RippleOnClickListener.attach(player_yuwan_send_root, this);
-        RippleOnClickListener.attach(player_yuwan_send, this);
-
-        mRootView.post(new Runnable() {
+        player_yuwan_root.post(new Runnable() {
             @Override
             public void run() {
-                mYuWanSlideAnimator.xOff(mRootView.getMeasuredWidth() - player_yuwan_send_icon.getMeasuredWidth())
-                        .xOn(mRootView.getMeasuredWidth() - player_yuwan_send_root.getMeasuredWidth());
-                mYuWanAlphaAnimator.xOff(mRootView.getMeasuredWidth())
-                        .xOn(mRootView.getMeasuredWidth() - player_yuwan_send_icon.getMeasuredWidth()).alphaOff(0f).alphaOn(1f);
+                mYuWanSlideAnimator.xOff(player_yuwan_root.getRight() - player_yuwan_icon.getMeasuredWidth())
+                        .xOn(player_yuwan_root.getRight() - player_yuwan_root.getMeasuredWidth());
+                mYuWanAlphaAnimator.xOff(player_yuwan_root.getRight())
+                        .xOn(player_yuwan_root.getRight() - player_yuwan_icon.getMeasuredWidth()).alphaOff(0f).alphaOn(1f);
                 close(false);
             }
         });
@@ -64,18 +61,7 @@ public abstract class PlayerControlMiddleYuWanHelper implements View.OnClickList
         return mYuWanAlphaAnimator.isToggledOn();
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.player_yuwan_send_root:
-                toggleOpen();
-                break;
-            case R.id.player_yuwan_send:
-                onSendClick();
-                break;
-        }
-    }
-
+    @OnClick(R.id.player_yuwan_send)
     protected abstract void onSendClick();
 
     public void open(boolean animate) {
@@ -94,6 +80,7 @@ public abstract class PlayerControlMiddleYuWanHelper implements View.OnClickList
         mSwitchHelper.switchToView(player_yuwan_sending);
     }
 
+    @OnClick(R.id.player_yuwan_root)
     public void toggleOpen() {
         mYuWanSlideAnimator.toggle(true);
     }

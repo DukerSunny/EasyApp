@@ -19,28 +19,8 @@ public class IonHttpExecutor implements IRequestExecutor, FutureCallback<String>
     private String mRequestUrl = null;
 
     public IonHttpExecutor(Context context, RequestBuilder requestBuilder, IRequestCallback<String> requestCallback) {
-        //        Builders.Any.B builder;
-        //        Map<String, String> header;
-        //        Map<String, String> body;
-        //        Iterator<String> iterator;
-        //        String key;
-
         mRequestUrl = requestBuilder.getUrl();
         mRequestCallback = requestCallback;
-        //        builder = Ion.with(context).load(requestBuilder.getMethod().toString(), mRequestUrl).setTimeout(15000);
-        //        header = requestBuilder.getHeader();
-        //        body = requestBuilder.getBody();
-        //        iterator = header.keySet().iterator();
-        //        while (iterator.hasNext()) {
-        //            key = iterator.next();
-        //            builder.addHeader(key, header.get(key));
-        //        }
-        //        iterator = body.keySet().iterator();
-        //        while (iterator.hasNext()) {
-        //            key = iterator.next();
-        //            builder.setBodyParameter(key, header.get(key));
-        //        }
-        //        mRequestFuture = builder.asString().setCallback(this);
         mRequestFuture = IonBuilder.build(context, requestBuilder).asString().setCallback(this);
     }
 

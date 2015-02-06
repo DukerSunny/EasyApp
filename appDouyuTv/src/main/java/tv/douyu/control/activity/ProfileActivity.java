@@ -12,7 +12,6 @@ import com.harreke.easyapp.frameworks.base.ActivityFramework;
 import com.harreke.easyapp.helpers.ImageLoaderHelper;
 import com.harreke.easyapp.widgets.rippleeffects.RippleDrawable;
 import com.harreke.easyapp.widgets.rippleeffects.RippleOnClickListener;
-import com.harreke.easyapp.widgets.transitions.SwipeToFinishLayout;
 
 import tv.douyu.R;
 import tv.douyu.control.application.DouyuTv;
@@ -53,11 +52,6 @@ public class ProfileActivity extends ActivityFramework {
         RippleOnClickListener.attach(profile_phone_root, mOnClickListener);
         RippleOnClickListener.attach(profile_qq_root, mOnClickListener);
         RippleOnClickListener.attach(profile_logout, mOnClickListener);
-    }
-
-    @Override
-    protected void configActivity() {
-        attachTransition(new SwipeToFinishLayout(this));
     }
 
     @Override

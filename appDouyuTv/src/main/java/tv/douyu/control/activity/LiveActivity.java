@@ -7,19 +7,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.harreke.easyapp.frameworks.base.IFramework;
 import com.harreke.easyapp.frameworks.base.ActivityFramework;
+import com.harreke.easyapp.frameworks.base.IFramework;
 import com.harreke.easyapp.frameworks.recyclerview.GridItemDecoration;
 import com.harreke.easyapp.frameworks.recyclerview.RecyclerFramework;
 import com.harreke.easyapp.frameworks.recyclerview.RecyclerHolder;
-import com.harreke.easyapp.widgets.transitions.SwipeToFinishLayout;
 
 import tv.douyu.R;
-import tv.douyu.misc.api.API;
 import tv.douyu.control.application.DouyuTv;
+import tv.douyu.misc.api.API;
 import tv.douyu.model.bean.Room;
-import tv.douyu.wrapper.holder.RoomHolder;
 import tv.douyu.model.parser.RoomListParser;
+import tv.douyu.wrapper.holder.RoomHolder;
 
 /**
  * 由 Harreke（harreke@live.cn） 创建于 2014/12/18
@@ -46,11 +45,6 @@ public class LiveActivity extends ActivityFramework {
 
     @Override
     public void attachCallbacks() {
-    }
-
-    @Override
-    protected void configActivity() {
-        attachTransition(new SwipeToFinishLayout(this));
     }
 
     @Override

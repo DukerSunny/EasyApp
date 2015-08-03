@@ -3,11 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/EasyApp.iml" filepath="$PROJECT_DIR$/EasyApp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/appDouyuTv/appDouyuTv.iml" filepath="$PROJECT_DIR$/appDouyuTv/appDouyuTv.iml" />
-      <module fileurl="file://$PROJECT_DIR$/libEasyApp/libEasyApp.iml" filepath="$PROJECT_DIR$/libEasyApp/libEasyApp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/libIjkMediaPlayer/libIjkMediaPlayer.iml" filepath="$PROJECT_DIR$/libIjkMediaPlayer/libIjkMediaPlayer.iml" />
-      <module fileurl="file://$PROJECT_DIR$/libSocialSdk/libSocialSdk.iml" filepath="$PROJECT_DIR$/libSocialSdk/libSocialSdk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sample/sample.iml" filepath="$PROJECT_DIR$/sample/sample.iml" />
     </modules>
   </component>
 </project>
-

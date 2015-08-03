@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    style="@style/mm">
-
-    <include
-        layout="@layout/widget_recycler_pullable"/>
-
-</FrameLayout>

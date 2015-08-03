@@ -1,4 +1,2 @@
-include ':appDouyuTv'
-include ':libEasyApp'
-include ':libIjkMediaPlayer'
-include ':libSocialSdk'
+include ':library'
+include ':sample'

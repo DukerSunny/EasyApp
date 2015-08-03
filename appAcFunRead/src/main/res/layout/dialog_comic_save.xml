@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<EditText
-    android:id="@+id/comic_save_input"
-    style="@style/mw"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:inputType="text"
-    android:padding="16dp"
-    android:singleLine="true"
-    android:textAppearance="@style/Subhead"/>

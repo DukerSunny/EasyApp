@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    style="@style/ww.h"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/shape_toast"
+    android:gravity="center"
+    android:padding="16dp">
+
+    <com.harreke.easyapp.widgets.circluarprogresses.CircularProgressView
+        android:id="@+id/toast_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"/>
+
+    <TextView
+        android:id="@+id/toast_text"
+        style="@style/ww"
+        android:layout_marginLeft="8dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/Body"/>
+
+</LinearLayout>

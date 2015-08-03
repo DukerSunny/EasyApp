@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="app">
+        <attr name="drawable" format="reference"/>
+        <attr name="drawableWidth" format="dimension"/>
+        <attr name="drawableHeight" format="dimension"/>
+        <attr name="progress" format="float"/>
+        <attr name="progressColor" format="color"/>
+        <attr name="ratio" format="float"/>
+        <attr name="grid_row_max" format="integer"/>
+        <attr name="grid_row_divider" format="reference"/>
+        <attr name="grid_row_divider_width" format="dimension"/>
+        <attr name="grid_line_max" format="integer"/>
+        <attr name="grid_line_divider" format="reference"/>
+        <attr name="grid_line_divider_height" format="dimension"/>
+        <attr name="panelMargin" format="dimension"/>
+
+        <attr name="circularProgressViewStyle" format="reference"/>
+        <attr name="gridImageViewStyle" format="reference"/>
+        <attr name="ratioFrameLayoutStyle" format="reference"/>
+        <attr name="ratioImageViewStyle" format="reference"/>
+        <attr name="sizableDrawableTextViewStyle" format="reference"/>
+        <attr name="slidingPanelLayoutStyle" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="CircularProgressView">
+        <attr name="progress"/>
+        <attr name="progressColor"/>
+    </declare-styleable>
+
+    <declare-styleable name="RatioFrameLayout">
+        <attr name="ratio"/>
+    </declare-styleable>
+
+    <declare-styleable name="RatioImageView">
+        <attr name="ratio"/>
+    </declare-styleable>
+
+    <declare-styleable name="SizableDrawableTextView">
+        <attr name="drawableWidth"/>
+        <attr name="drawableHeight"/>
+    </declare-styleable>
+
+    <declare-styleable name="GridImageView">
+        <attr name="grid_row_max"/>
+        <attr name="grid_row_divider"/>
+        <attr name="grid_row_divider_width"/>
+        <attr name="grid_line_max"/>
+        <attr name="grid_line_divider"/>
+        <attr name="grid_line_divider_height"/>
+    </declare-styleable>
+
+    <declare-styleable name="SlidingPanelLayout">
+        <attr name="panelMargin"/>
+    </declare-styleable>
+
+</resources>

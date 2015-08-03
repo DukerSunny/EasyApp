@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item name="key" type="id"/>
+    <item name="value" type="id"/>
+    <item name="hashCode" type="id"/>
+    <item name="imageUrl" type="id"/>
+
+</resources>

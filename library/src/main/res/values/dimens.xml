@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="Display4">112sp</dimen>
+
+    <dimen name="Display3">56sp</dimen>
+
+    <dimen name="Display2">45sp</dimen>
+
+    <dimen name="Display1">34sp</dimen>
+
+    <dimen name="Headline">24sp</dimen>
+
+    <dimen name="Title">20sp</dimen>
+
+    <dimen name="Subhead">16sp</dimen>
+
+    <dimen name="Body">14sp</dimen>
+
+    <dimen name="Caption">12sp</dimen>
+
+    <dimen name="ActionBarSize">56dp</dimen>
+
+    <dimen name="ActionBarSize_Half">28dp</dimen>
+
+    <dimen name="ActionBarSize_Half_Plus">-28dp</dimen>
+
+</resources>

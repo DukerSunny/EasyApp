@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.EasyApp.Base" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="actionBarTheme">@style/Theme.EasyApp.Widget.ActionBar</item>
+
+        <item name="circularProgressViewStyle">@style/Theme.EasyApp.Widget.CircularProgressView</item>
+        <item name="gridImageViewStyle">@style/Theme.EasyApp.Widget.GridImageView</item>
+        <item name="ratioFrameLayoutStyle">@style/Theme.EasyApp.Widget.RatioFrameLayout</item>
+        <item name="ratioImageViewStyle">@style/Theme.EasyApp.Widget.RatioImageView</item>
+        <item name="sizableDrawableTextViewStyle">@style/Theme.EasyApp.Widget.SizableDrawableTextView</item>
+        <item name="slidingPanelLayoutStyle">@style/Theme.EasyApp.Widget.SlidingPanelLayout</item>
+    </style>
+
+    <style name="Theme.EasyApp" parent="Theme.EasyApp.Base"/>
+
+    <style name="Theme.EasyApp.Widget"/>
+
+    <style name="Theme.EasyApp.Widget.ActionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:background">@color/transparent</item>
+    </style>
+
+    <style name="Theme.EasyApp.Widget.CircularProgressView">
+        <item name="progress">0</item>
+        <item name="progressColor">?attr/colorPrimary</item>
+    </style>
+
+    <style name="Theme.EasyApp.Widget.GridImageView">
+        <item name="grid_row_max">2</item>
+        <item name="grid_row_divider">@drawable/shape_divider_vertical</item>
+        <item name="grid_row_divider_width">1dp</item>
+        <item name="grid_line_max">2</item>
+        <item name="grid_line_divider">@drawable/shape_divider_horizontal</item>
+        <item name="grid_line_divider_height">1dp</item>
+    </style>
+
+    <style name="Theme.EasyApp.Widget.RatioImageView">
+        <item name="ratio">1.78</item>
+    </style>
+
+    <style name="Theme.EasyApp.Widget.RatioFrameLayout">
+        <item name="ratio">1.78</item>
+    </style>
+
+    <style name="Theme.EasyApp.Widget.SizableDrawableTextView">
+        <item name="drawableWidth">0dp</item>
+        <item name="drawableHeight">0dp</item>
+    </style>
+
+    <style name="Theme.EasyApp.Widget.SlidingPanelLayout">
+        <item name="panelMargin">0dp</item>
+    </style>
+
+</resources>

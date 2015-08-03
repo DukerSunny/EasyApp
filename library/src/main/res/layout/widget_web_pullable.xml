@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.harreke.easyapp.widgets.pullablelayout.PullableLayout
+    android:id="@+id/web_pullable"
+    style="@style/mm"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/background">
+
+    <WebView
+        android:id="@+id/web_solid"
+        style="@style/mm"
+        android:fadeScrollbars="true"/>
+
+    <include layout="@layout/widget_empty"/>
+
+</com.harreke.easyapp.widgets.pullablelayout.PullableLayout>
